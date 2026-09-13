@@ -1,4 +1,4 @@
-import { mix, pillGeometry, pillProgress } from './header-morph-model';
+import { headerItemY, mix, pillGeometry, pillProgress } from './header-morph-model';
 
 export function initializeHeaderMorph() {
   const header = document.querySelector<HTMLElement>('.site-header')!;
@@ -31,6 +31,7 @@ export function initializeHeaderMorph() {
     const m = metrics;
     const progress = pillProgress(window.scrollY, m.buttonTop, m.inset, reduced.matches);
     const docked = progress > 0;
+    header.classList.toggle('is-docking', docked);
     const targetControlsWidth = mobile.matches ? 44 : m.controlsWidth;
     const target = pillGeometry(m.viewport, targetControlsWidth, m.buttonWidth, mobile.matches);
     header.style.setProperty('--pill-progress', String(progress));
@@ -39,8 +40,8 @@ export function initializeHeaderMorph() {
     const currentControlsWidth = mix(m.controlsWidth, targetControlsWidth, progress);
     const baseControlsX = m.viewport - m.inset - currentControlsWidth;
     const desiredControlsX = mix(m.viewport - m.inset - m.controlsWidth, target.controlsX, progress);
-    controls.style.transform = `translate3d(${desiredControlsX - baseControlsX}px, ${mix(0, (64 - m.controlsHeight) / 2, progress)}px, 0)`;
-    identity.style.transform = `translate3d(${mix(m.inset, target.logoX, progress) - m.inset}px, ${progress * 10}px, 0)`;
+    controls.style.transform = `translate3d(${desiredControlsX - baseControlsX}px, ${headerItemY(progress, m.inset, m.controlsHeight)}px, 0)`;
+    identity.style.transform = `translate3d(${mix(m.inset, target.logoX, progress) - m.inset}px, ${headerItemY(progress, m.inset, 44)}px, 0)`;
     identity.style.width = `${mix(m.logoWidth, target.logoWidth, progress)}px`;
     fullLogo.style.opacity = String(1 - progress);
     compactLogo.style.opacity = String(progress);
@@ -87,6 +88,7 @@ export function initializeHeaderMorph() {
     reduced.removeEventListener('change', render);
     mobile.removeEventListener('change', measure);
     observer.disconnect();
+    header.classList.remove('is-docking');
     relocate(false);
   });
 }

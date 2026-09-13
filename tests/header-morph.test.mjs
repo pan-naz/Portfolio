@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { pillGeometry, pillProgress, pillTravel } from '../src/scripts/header-morph-model.ts';
+import { headerItemY, pillGeometry, pillProgress, pillTravel } from '../src/scripts/header-morph-model.ts';
 const buttonTop = 552, inset = 32, trigger = buttonTop - inset;
 for (const scroll of [0,64,200,trigger]) assert.equal(pillProgress(scroll,buttonTop,inset),0);
 assert.equal(pillProgress(trigger + pillTravel / 2,buttonTop,inset),.5);
@@ -10,6 +10,9 @@ const reverse = Array.from({length:221},(_,i)=>pillProgress(trigger+220-i,button
 assert.deepEqual(reverse, [...forward].reverse(), 'Scrolling up exactly reverses the merge');
 assert.equal(pillProgress(trigger,buttonTop,inset,true),0);
 assert.equal(pillProgress(trigger+1,buttonTop,inset,true),1);
+assert.equal(headerItemY(0,32,44),0, 'Expanded absolute header has no viewport compensation');
+assert.ok(headerItemY(.001,32,44)<-75, 'Controls return from above the viewport, not a sticky bar');
+assert.equal(headerItemY(1,32,44),10, 'Docked controls are centered in the pill');
 for (const width of [320,390,768,1280,1600]) {
   const mobile = width < 768;
   const controls = mobile ? 44 : 205;

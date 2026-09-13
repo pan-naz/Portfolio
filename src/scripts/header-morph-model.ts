@@ -4,6 +4,11 @@ export function pillProgress(scroll: number, buttonTop: number, inset: number, r
   return reduced ? (raw > 0 ? 1 : 0) : raw * raw * (3 - 2 * raw);
 }
 export const mix = (from: number, to: number, progress: number) => from + (to - from) * progress;
+export function headerItemY(progress: number, inset: number, height: number) {
+  // Before docking, the absolute header scrolls with the document. Its controls
+  // re-enter from just above the viewport only after the CTA starts the merge.
+  return progress === 0 ? 0 : mix(-inset - height, (64 - height) / 2, progress);
+}
 export function pillGeometry(viewport: number, controlsWidth: number, buttonWidth: number, mobile: boolean) {
   const padding = mobile ? 8 : 12;
   const gap = mobile ? 8 : 24;
