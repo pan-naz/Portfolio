@@ -1,0 +1,6 @@
+---
+import '../styles/feedback.css';
+interface Props { tone?: 'success' | 'info' | 'warning' | 'danger'; title: string; }
+const { tone = 'info', title } = Astro.props;
+---
+<div class:list={['feedback', `feedback--${tone}`]}><strong class="feedback__title">{title}</strong><div class="feedback__body"><slot /></div></div>

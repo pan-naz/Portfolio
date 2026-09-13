@@ -1,0 +1,10 @@
+---
+interface Props { showDS?: boolean; }
+const { showDS = true } = Astro.props;
+---
+<nav class="desktop-nav" aria-label="Main navigation">
+  <a class="nav-link" href="/#work">Work</a>
+  <a class="nav-link" href="/#about">About</a>
+  <span class="nav-link nav-link--disabled" aria-disabled="true" title="CV coming soon">CV</span>
+  {showDS && <a class="nav-link" href="/design-system/">DS</a>}
+</nav>

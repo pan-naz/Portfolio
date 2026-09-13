@@ -1,0 +1,16 @@
+---
+import Button from './Button.astro';
+import SkillTag from './SkillTag.astro';
+import SkillMarquee from './SkillMarquee.astro';
+import TypewriterHeading from './TypewriterHeading.astro';
+---
+<section id="top" class="hero" aria-labelledby="hero-title" tabindex="-1">
+  <div class="process-tags" aria-label="Design process">{['Workflows','Testing','Feedback'].map((label,index) => <SkillTag label={label} index={index} />)}</div>
+  <div class="container hero-content">
+    <p class="hero-eyebrow">NAZAR / DESIGNER</p>
+    <TypewriterHeading />
+    <p class="hero-description">Successfully launched B2B products from <span class="accent-stat">0 → 1</span>, improved product adoption, and contributed to ARR growth. Passionate about solving complex problems with elegant, user-centered solutions.</p>
+    <div class="hero-cta-slot" data-hero-cta><Button href="#contact" arrow="up">Get in touch</Button></div>
+  </div>
+  <SkillMarquee />
+</section>

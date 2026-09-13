@@ -1,0 +1,9 @@
+---
+import SkillTag from './SkillTag.astro';
+const skills = ['Accessibility', 'Design systems', 'Prototyping', 'Product thinking', 'UX research & synthesis', 'Interaction & motion', 'UX design', 'User testing'];
+---
+<div class="skill-marquee" aria-label="Design skills">
+  <div class="skill-track">
+    {[0,1].map(copy => <div class="skill-group" aria-hidden={copy === 1 ? 'true' : undefined}>{skills.map((label,index) => <SkillTag label={label} index={index} />)}</div>)}
+  </div>
+</div>

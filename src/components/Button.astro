@@ -1,0 +1,7 @@
+---
+import Arrow from './Arrow.astro';
+interface Props { href?: string; variant?: 'primary' | 'secondary'; disabled?: boolean; arrow?: 'up' | 'down' | 'right'; }
+const { href, variant = 'primary', disabled = false, arrow } = Astro.props;
+const Tag = href && !disabled ? 'a' : 'button';
+---
+<Tag class:list={['button', `button--${variant}`]} href={!disabled ? href : undefined} type={Tag === 'button' ? 'button' : undefined} disabled={Tag === 'button' && disabled}><slot />{arrow && <Arrow direction={arrow} />}</Tag>

@@ -1,0 +1,29 @@
+---
+import '@fontsource-variable/urbanist';
+import '../styles/global.css';
+import { profile } from '../data/portfolio';
+interface Props { title?: string; }
+const { title = `${profile.name} — naz.wtf` } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={profile.description} />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#FAF8F7" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <script is:inline>
+      (() => {
+        let saved;
+        try { saved = localStorage.getItem('naz-theme'); } catch {}
+        const dark = saved === 'dark' || (saved !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        document.querySelector('meta[name="theme-color"]').content = dark ? '#171716' : '#FAF8F7';
+      })();
+    </script>
+  </head>
+  <body><a class="skip-link" href="#main">Skip to content</a><slot /><script>import '../scripts/theme';</script></body>
+</html>

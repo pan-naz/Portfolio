@@ -1,0 +1,27 @@
+---
+import type { Project } from '../data/portfolio';
+import Arrow from './Arrow.astro';
+interface Props { project: Project; lead?: boolean; }
+const { project, lead = false } = Astro.props;
+const Tag = project.href && !project.pending ? 'a' : 'div';
+---
+<article class:list={['project', { 'project--lead': lead }]}>
+  <Tag class="project-surface" href={project.href && !project.pending ? project.href : undefined}>
+    <div class:list={['project-media', { 'project-media--pending': !project.image }]}>
+      {project.image ? (
+        <img src={project.image} alt={project.imageAlt} width={lead ? 1600 : 1200} height={1000} loading="lazy" decoding="async" />
+      ) : (
+        <div class="media-placeholder" aria-label={`Image placeholder for ${project.title}`}>
+          <div class="placeholder-top"><span class="eyebrow">Selected work / {project.id}</span><span class="placeholder-cross" aria-hidden="true">+</span></div>
+          <span class="placeholder-number" aria-hidden="true">{project.id}<span>—</span></span>
+          <div class="placeholder-bottom"><span>Space for<br />something good.</span><span class="eyebrow">Project image<br />to follow</span></div>
+        </div>
+      )}
+    </div>
+    <div class="project-caption">
+      <div class="project-heading"><span class="eyebrow project-index">{project.id}</span><h3>{project.title}</h3>{project.href && !project.pending && <Arrow direction="up" />}</div>
+      <p>{project.pending ? 'Project details to follow.' : project.description}</p>
+      <div class="project-meta"><span>{project.pending ? 'Awaiting project content' : project.role}</span>{project.year && <span>{project.year}</span>}</div>
+    </div>
+  </Tag>
+</article>

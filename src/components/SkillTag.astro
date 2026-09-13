@@ -1,0 +1,5 @@
+---
+interface Props { label: string; index?: number; }
+const { label, index = 0 } = Astro.props;
+---
+<span class="skill-tag" style={`--tag-index:${index}`}>{label}</span>

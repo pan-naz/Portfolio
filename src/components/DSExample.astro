@@ -1,0 +1,13 @@
+---
+interface Props { id: string; name: string; markup: string; specs: string[][]; rules: string[]; source: string; }
+const { id, name, markup, specs, rules, source } = Astro.props;
+const tabs = ['Preview', 'Markup', 'Specs', 'Rules'];
+---
+<div class="ds-example" data-example>
+  <div class="ds-example-tabs" role="tablist" aria-label={`${name} documentation`} hidden>{tabs.map((tab,i) => <button type="button" role="tab" id={`${id}-tab-${i}`} aria-controls={`${id}-panel-${i}`} aria-selected={i===0 ? 'true':'false'} tabindex={i===0 ? 0:-1}>{tab}</button>)}</div>
+  <div class="ds-example-panel ds-example-preview" id={`${id}-panel-0`} data-panel><slot /></div>
+  <div class="ds-example-panel" id={`${id}-panel-1`} data-panel><h3 class="ds-fallback-heading">Markup</h3><pre><code>{markup}</code></pre></div>
+  <div class="ds-example-panel" id={`${id}-panel-2`} data-panel><h3 class="ds-fallback-heading">Specs</h3><dl class="ds-specs">{specs.map(([key,value]) => <div><dt>{key}</dt><dd>{value}</dd></div>)}</dl></div>
+  <div class="ds-example-panel" id={`${id}-panel-3`} data-panel><h3 class="ds-fallback-heading">Rules</h3><ul class="ds-guidelines">{rules.map(rule => <li>{rule}</li>)}</ul></div>
+  <div class="ds-example-source"><code>{source}</code><span>Shared component</span></div>
+</div>
