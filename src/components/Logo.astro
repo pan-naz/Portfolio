@@ -2,4 +2,4 @@
 interface Props { compact?: boolean; }
 const { compact = false } = Astro.props;
 ---
-<span class="wordmark" aria-label="naz.wtf">{compact ? 'n' : 'naz'}<span class="wordmark-dot" aria-hidden="true">{compact ? '.' : '·'}</span>{!compact && 'wtf'}</span>
+<span class="wordmark" aria-label="naz.wtf">naz{!compact && <span class="wordmark-dot" aria-hidden="true">·</span>}{!compact && 'wtf'}</span>

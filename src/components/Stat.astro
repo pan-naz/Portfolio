@@ -1,0 +1,6 @@
+---
+import type { ImpactMetric } from '../data/portfolio';
+interface Props extends ImpactMetric {}
+const { value, label, note } = Astro.props;
+---
+<div class="stat"><dt><span class="stat-value">{value}</span><span class="stat-label">{label}</span></dt><dd>{note}</dd></div>

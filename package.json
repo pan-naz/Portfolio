@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
-    "build": "astro build",
+    "build": "pnpm validate:ds && pnpm validate:contrast && astro build && node scripts/validate-static-catalog.mjs",
     "preview": "astro preview --host 127.0.0.1",
-    "check": "astro check"
+    "check": "pnpm validate:ds && pnpm validate:contrast && astro check",
+    "validate:ds": "node scripts/validate-design-system.mjs",
+    "validate:contrast": "node tests/text-contrast.test.mjs"
   },
   "dependencies": {
     "@fontsource-variable/urbanist": "^5.3.0",

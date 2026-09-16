@@ -1,0 +1,10 @@
+---
+import { projects, impactGroups } from '../data/portfolio';
+import SectionHeading from './SectionHeading.astro';
+import ProjectIdentity from './ProjectIdentity.astro';
+import Stat from './Stat.astro';
+---
+<section id="impact" class="impact container chapter" aria-labelledby="impact-title" tabindex="-1">
+  <SectionHeading id="impact-title" label="02 / Impact">The numbers behind the latest work.<p slot="description" class="section-description">Results from DataGPT and Voximplant Kit — products I helped take from zero to launch.</p></SectionHeading>
+  <div class="impact-groups">{impactGroups.map(group => { const project = projects.find(p => p.id === group.projectId)!; return <section class="impact-group" aria-label={`${project.title} results`}><h3><ProjectIdentity title={project.title} logo={project.logo} /></h3><dl class="impact-metrics">{group.metrics.map(metric => <Stat {...metric} />)}</dl></section>; })}</div>
+</section>

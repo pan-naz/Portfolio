@@ -24,7 +24,7 @@ let colorSeen = false;
 let verifyGroupColor = false;
 let verifiedGroupIcons = 0;
 let drawX = 0, drawY = 0;
-const shades = createAccentPalette('#111111', '#F86A46', '#FAF8F7');
+const shades = createAccentPalette('#111111', '#171716', '#FAF8F7');
 const grayColors = new Set(shades.filter((_, index) => index % (accentBlendSteps + 1) === 0));
 const accentColors = new Set(shades.filter((_, index) => index % (accentBlendSteps + 1) === accentBlendSteps));
 const context = {
@@ -33,7 +33,7 @@ const context = {
   stroke(path) {
     assert.equal(this.globalAlpha, 1, 'Every icon is drawn at full opacity, including overlapping icons');
     if (verifyGroupColor && (drawX - 400) ** 2 + (drawY - 400) ** 2 < 220 ** 2) {
-      assert.ok(accentColors.has(this.strokeStyle), 'Every symbol inside the settled region uses solid accent shades');
+      assert.ok(accentColors.has(this.strokeStyle), 'Every symbol inside the settled region uses solid primary-ink shades');
       verifiedGroupIcons++;
     }
     if (!grayColors.has(this.strokeStyle)) colorSeen = true;
@@ -44,7 +44,7 @@ const context = {
 globalThis.Path2D = class { addPath() {} arc() {} roundRect() {} };
 globalThis.DOMMatrix = class { scale() { return this; } };
 globalThis.devicePixelRatio = 1.5;
-globalThis.getComputedStyle = () => ({ getPropertyValue: name => ({ '--accent':'#F86A46', '--canvas':'#FAF8F7', '--waterfall-ink':'#111111' })[name] });
+globalThis.getComputedStyle = () => ({ getPropertyValue: name => ({ '--text-primary':'#171716', '--canvas':'#FAF8F7', '--waterfall-ink':'#111111' })[name] });
 const events = new Map();
 const handlers = {
   addEventListener(name, fn) { events.set(name, fn); },
@@ -80,10 +80,13 @@ globalThis.setTimeout = (callback, delay) => { startupCallback = callback; start
 globalThis.clearTimeout = () => { startupCallback = undefined; };
 const animation = initializeWaterfall();
 assert.ok(animation);
-assert.equal(nextFrame, undefined, 'No animation frames before startup delay');
+assert.equal(nextFrame, undefined, 'No animation frames during the independent startup delay');
 assert.equal(field.dataset.motion, 'waiting');
 assert.equal(frameSymbols.size, 0, 'Canvas remains blank during startup delay');
-assert.equal(startupDelay, 1000);
+assert.equal(startupDelay, 2000);
+const firstTimer = startupCallback;
+events.get('load')();
+assert.equal(startupCallback, firstTimer, 'Repeated load cannot restart the delay');
 startupCallback();
 startupCallback = undefined;
 for (let frame = 0; frame < 60 * 180; frame++) {
@@ -112,11 +115,23 @@ assert.equal(nextFrame, undefined);
 animation.destroy();
 document.readyState = 'loading';
 const pending = initializeWaterfall();
-assert.equal(startupCallback, undefined, 'Do not start timer before page load');
-events.get('load')();
-assert.equal(startupDelay, 1000);
 assert.equal(nextFrame, undefined);
+assert.equal(startupCallback, undefined, 'Delay waits for page load');
+events.get('load')();
+assert.equal(startupDelay, 2000);
+pending.setSuspended(true);
+startupCallback();
+startupCallback = undefined;
+assert.equal(nextFrame, undefined, 'Startup delay respects an open menu');
+pending.setSuspended(false);
+assert.ok(nextFrame, 'Rain resumes after menu dismissal');
 pending.destroy();
-assert.equal(startupCallback, undefined, 'Cancel pending startup timer on cleanup');
+const cancelled = initializeWaterfall();
+events.get('load')();
+const lateCallback = startupCallback;
+cancelled.destroy();
+assert.equal(startupCallback, undefined, 'Pending startup timer is cancelled on cleanup');
+lateCallback();
+assert.equal(nextFrame, undefined, 'Late timer cannot restart a disposed renderer');
 console.log(`PASS: 10,800 real-renderer frames; no simultaneous repeats or exhausted pool; peak ${peak} visible icons, including hover and catch-up.`);
-console.log('PASS: blank canvas and no RAF until 1 second after load; late initialization and timer cleanup covered.');
+console.log('PASS: independent two-second page-load delay, blank canvas, no early RAF, suspension and timer cleanup.');

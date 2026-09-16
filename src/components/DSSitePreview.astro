@@ -1,0 +1,8 @@
+---
+const targets = [['top','Hero'], ['work','Work'], ['impact','Impact'], ['about','Experience'], ['contact','Contact']];
+---
+<div class="ds-site-preview">
+  <nav class="ds-preview-links" aria-label="Static website preview sections">{targets.map(([id,label]) => <a href={`/design-system/preview/#${id}`} target="ds-website-preview">{label}</a>)}</nav>
+  <iframe name="ds-website-preview" title="Static portfolio using the shared website components" src="/design-system/preview/" sandbox="allow-same-origin" loading="lazy"></iframe>
+  <p class="ds-spec-note">The same page composition, without animation scripts. Scroll to inspect its sections. <a href="/" target="_blank" rel="noopener">Open the website ↗</a></p>
+</div>

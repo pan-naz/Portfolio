@@ -1,4 +1,5 @@
-import { headerItemY, mix, pillGeometry, pillProgress } from './header-morph-model';
+import { advancePill, advancePillExit, mix, nextPillState, pillDockOffset, pillExitY, pillGeometry, pillLabels, pillReturnViewportBuffer, pillShape } from './header-morph-model';
+import { createNativeMotion, revealEffects } from './native-motion';
 
 export function initializeHeaderMorph() {
   const header = document.querySelector<HTMLElement>('.site-header')!;
@@ -7,88 +8,175 @@ export function initializeHeaderMorph() {
   const compactLogo = header.querySelector<HTMLElement>('.header-compact-logo')!;
   const controls = header.querySelector<HTMLElement>('.header-controls')!;
   const theme = controls.querySelector<HTMLButtonElement>('.theme-toggle')!;
-  const menu = controls.querySelector<HTMLButtonElement>('.menu-toggle')!;
   const surface = header.querySelector<HTMLElement>('.header-pill-surface')!;
   const slot = document.querySelector<HTMLElement>('[data-hero-cta]')!;
+  const hero = slot.closest<HTMLElement>('.hero')!;
+  const buttonHome = slot.querySelector<HTMLElement>('.hero-cta-entrance') ?? slot;
   const button = slot.querySelector<HTMLAnchorElement>('.button')!;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const mobile = matchMedia('(max-width: 767px)');
   let metrics: { inset: number; buttonTop: number; buttonX: number; buttonWidth: number; buttonHeight: number;
-    logoWidth: number; controlsWidth: number; controlsHeight: number; viewport: number } | undefined;
-  let queued = 0;
+    controlsWidth: number; viewport: number } | undefined;
+  let queued = 0, previousTime = 0, previousScroll = window.scrollY, progress = 0;
+  let expanded = false, releasing = false, disposed = false;
+  let exit = 0;
+  let returnMotion: ReturnType<typeof createNativeMotion> | undefined;
+
+  function revealReturnedButton(focused: boolean) {
+    buttonHome.classList.add('is-restored');
+    returnMotion?.cancel();
+    returnMotion = undefined;
+    if (disposed || reduced.matches || typeof buttonHome.animate !== 'function' || focused) {
+      buttonHome.style.opacity = '1';
+      buttonHome.style.transform = 'translateY(0px)';
+      return;
+    }
+    const tokens = getComputedStyle(hero);
+    returnMotion = createNativeMotion(revealEffects([buttonHome], {
+      duration: parseFloat(tokens.getPropertyValue('--duration-copy-reveal')),
+      distance: parseFloat(tokens.getPropertyValue('--distance-text-reveal')),
+      easing: tokens.getPropertyValue('--ease-entrance').trim(),
+    }), { onComplete: () => { returnMotion = undefined; } });
+  }
 
   function relocate(docked: boolean) {
     if ((button.parentElement === header) === docked) return;
     const focused = document.activeElement === button;
-    (docked ? header : slot).append(button);
+    if (docked) {
+      returnMotion?.cancel();
+      returnMotion = undefined;
+      buttonHome.classList.remove('is-restored');
+      buttonHome.style.removeProperty('opacity');
+      buttonHome.style.removeProperty('transform');
+    }
+    (docked ? header : buttonHome).append(button);
     button.classList.toggle('header-cta', docked);
-    if (!docked) { button.style.removeProperty('transform'); button.style.removeProperty('width'); }
+    if (!docked) {
+      button.style.removeProperty('transform');
+      button.style.removeProperty('width');
+      revealReturnedButton(focused);
+    }
     if (focused) button.focus({ preventScroll: true });
   }
-  function render() {
-    queued = 0;
+  function paint() {
     if (!metrics) return;
     const m = metrics;
-    const progress = pillProgress(window.scrollY, m.buttonTop, m.inset, reduced.matches);
-    const docked = progress > 0;
+    const docked = expanded || progress > 0;
     header.classList.toggle('is-docking', docked);
+    header.style.setProperty('--pill-progress', docked ? '1' : '0');
+    header.dataset.pillProgress = progress.toFixed(3);
+    header.dataset.pillState = docked ? (!expanded ? 'hiding' : progress === 1 ? 'expanded' : 'expanding') : 'hero';
+    header.dataset.pillExit = exit.toFixed(3);
+    header.dataset.pillTrigger = (m.buttonTop - m.inset).toFixed(1);
+    relocate(docked);
+    if (!docked) {
+      identity.style.cssText = '';
+      controls.style.cssText = '';
+      fullLogo.style.opacity = '1';
+      compactLogo.style.opacity = '0';
+      identity.inert = controls.inert = theme.inert = false;
+      surface.style.opacity = '0';
+      return;
+    }
+    const shape = pillShape(progress), labels = pillLabels(progress);
     const targetControlsWidth = mobile.matches ? 44 : m.controlsWidth;
     const target = pillGeometry(m.viewport, targetControlsWidth, m.buttonWidth, mobile.matches);
-    header.style.setProperty('--pill-progress', String(progress));
-    header.dataset.pillProgress = progress.toFixed(3);
-    header.dataset.pillTrigger = (m.buttonTop - m.inset).toFixed(1);
-    const currentControlsWidth = mix(m.controlsWidth, targetControlsWidth, progress);
-    const baseControlsX = m.viewport - m.inset - currentControlsWidth;
-    const desiredControlsX = mix(m.viewport - m.inset - m.controlsWidth, target.controlsX, progress);
-    controls.style.transform = `translate3d(${desiredControlsX - baseControlsX}px, ${headerItemY(progress, m.inset, m.controlsHeight)}px, 0)`;
-    identity.style.transform = `translate3d(${mix(m.inset, target.logoX, progress) - m.inset}px, ${headerItemY(progress, m.inset, 44)}px, 0)`;
-    identity.style.width = `${mix(m.logoWidth, target.logoWidth, progress)}px`;
-    fullLogo.style.opacity = String(1 - progress);
-    compactLogo.style.opacity = String(progress);
-    if (mobile.matches && progress > .5 && document.activeElement === theme) menu.focus({ preventScroll: true });
-    theme.inert = mobile.matches && progress > .5;
-    surface.style.width = `${mix(m.buttonWidth, target.width, progress)}px`;
-    surface.style.transform = `translate3d(${mix(m.buttonX, target.left, progress)}px, 0, 0)`;
-    surface.style.opacity = String(progress);
-    relocate(docked);
-    if (docked) {
-      button.style.width = `${m.buttonWidth}px`;
-      button.style.transform = `translate3d(${mix(m.buttonX, target.buttonX, progress)}px, ${mix(0, (64 - m.buttonHeight) / 2, progress)}px, 0)`;
-    }
+    const width = Math.min(m.viewport - 48, mix(m.buttonWidth, target.width, shape));
+    const center = Math.max(width / 2 + 24, Math.min(m.viewport - width / 2 - 24,
+      mix(m.buttonX + m.buttonWidth / 2, m.viewport / 2, shape)));
+    const left = center - width / 2;
+    const paddingLeft = mix(0, target.paddingLeft, shape);
+    const paddingRight = mix(0, target.paddingRight, shape);
+    // Exit translates the whole capsule upward without shrinking or morphing
+    // back. Return the real CTA to its hero slot only once fully offscreen.
+    const y = pillDockOffset(progress, m.inset) + pillExitY(exit, m.inset);
+    surface.style.width = `${width}px`;
+    surface.style.height = `${mix(m.buttonHeight, 64, shape)}px`;
+    surface.style.transform = `translate3d(${left}px, ${y}px, 0)`;
+    surface.style.opacity = String(Math.min(1, shape * 4));
+    button.style.width = `${m.buttonWidth}px`;
+    button.style.transform = `translate3d(${left + width - paddingRight - m.buttonWidth}px, ${y + (64 - m.buttonHeight) / 2 * shape}px, 0)`;
+    // Reveal within the capsule late; nothing flies in from the header corners.
+    const logoX = left + paddingLeft;
+    const controlsX = logoX + target.logoWidth + target.logoGap;
+    identity.style.transform = `translate3d(${logoX - m.inset}px, ${y + 10}px, 0)`;
+    identity.style.width = `${target.logoWidth}px`;
+    identity.style.opacity = String(labels);
+    fullLogo.style.opacity = '0';
+    compactLogo.style.opacity = '1';
+    controls.style.transform = `translate3d(${controlsX - (m.viewport - m.inset - targetControlsWidth)}px, ${y + 10}px, 0)`;
+    controls.style.opacity = String(labels);
+    const hideControls = labels < .1 || !expanded;
+    if (hideControls && (identity.contains(document.activeElement) || controls.contains(document.activeElement))) button.focus({ preventScroll: true });
+    identity.inert = controls.inert = hideControls;
+    theme.inert = mobile.matches;
+  }
+  function frame(time: number) {
+    queued = 0;
+    progress = advancePill(progress, expanded, time - previousTime, reduced.matches);
+    exit = advancePillExit(exit, expanded, time - previousTime, reduced.matches);
+    if (!expanded && exit === 1) progress = 0;
+    previousTime = time;
+    paint();
+    if (expanded ? progress < 1 || exit > 0 : progress > 0) queued = requestAnimationFrame(frame);
+  }
+  function wake() {
+    if (!queued) { previousTime = performance.now(); queued = requestAnimationFrame(frame); }
+  }
+  function updateTarget() {
+    if (!metrics || disposed) return;
+    const scroll = window.scrollY;
+    const state = nextPillState(
+      scroll,
+      previousScroll,
+      metrics.buttonTop - metrics.inset,
+      metrics.inset + metrics.buttonHeight + pillReturnViewportBuffer,
+      expanded,
+      releasing,
+    );
+    if (state.expanded && !expanded && progress === 0) exit = 0;
+    previousScroll = scroll;
+    expanded = state.expanded;
+    releasing = state.releasing;
+    wake();
   }
   function measure() {
-    // All layout reads are isolated to resize/font changes, never the scroll loop.
+    if (disposed) return;
     header.style.setProperty('--pill-progress', '0');
     const slotRect = slot.getBoundingClientRect();
-    const width = button.offsetWidth;
-    const height = button.offsetHeight;
+    const width = button.offsetWidth, height = button.offsetHeight;
     slot.style.setProperty('--cta-width', `${width}px`);
     slot.style.setProperty('--cta-height', `${height}px`);
     metrics = {
       inset: parseFloat(getComputedStyle(header).top), buttonTop: slotRect.top + window.scrollY,
       buttonX: slotRect.left, buttonWidth: width, buttonHeight: height,
-      logoWidth: fullLogo.offsetWidth, controlsWidth: controls.offsetWidth,
-      controlsHeight: controls.offsetHeight, viewport: window.innerWidth,
+      controlsWidth: controls.offsetWidth, viewport: window.innerWidth,
     };
-    render();
+    updateTarget();
+    paint();
   }
-  function requestRender() { if (!queued) queued = requestAnimationFrame(render); }
-  window.addEventListener('scroll', requestRender, { passive: true });
+  window.addEventListener('scroll', updateTarget, { passive: true });
   window.addEventListener('resize', measure);
-  reduced.addEventListener('change', render);
+  reduced.addEventListener('change', updateTarget);
   mobile.addEventListener('change', measure);
   document.fonts.ready.then(measure);
   const observer = new ResizeObserver(measure);
   observer.observe(document.querySelector('.hero-content')!);
   measure();
   if (import.meta.hot) import.meta.hot.dispose(() => {
+    disposed = true;
     if (queued) cancelAnimationFrame(queued);
-    window.removeEventListener('scroll', requestRender);
+    window.removeEventListener('scroll', updateTarget);
     window.removeEventListener('resize', measure);
-    reduced.removeEventListener('change', render);
+    reduced.removeEventListener('change', updateTarget);
     mobile.removeEventListener('change', measure);
     observer.disconnect();
+    returnMotion?.cancel();
     header.classList.remove('is-docking');
+    identity.inert = controls.inert = theme.inert = false;
     relocate(false);
+    buttonHome.classList.remove('is-restored');
+    buttonHome.style.removeProperty('opacity');
+    buttonHome.style.removeProperty('transform');
   });
 }

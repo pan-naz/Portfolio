@@ -4,6 +4,6 @@ const skills = ['Accessibility', 'Design systems', 'Prototyping', 'Product think
 ---
 <div class="skill-marquee" aria-label="Design skills">
   <div class="skill-track">
-    {[0,1].map(copy => <div class="skill-group" aria-hidden={copy === 1 ? 'true' : undefined}>{skills.map((label,index) => <SkillTag label={label} index={index} />)}</div>)}
+    {[0,1].map(copy => <div class="skill-group" aria-hidden={copy === 1 ? 'true' : undefined}>{skills.map((label,index) => <SkillTag label={label} index={copy * skills.length + index} />)}</div>)}
   </div>
 </div>

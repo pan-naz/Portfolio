@@ -1,0 +1,13 @@
+---
+import ProjectCard from './ProjectCard.astro';
+import { projects } from '../data/portfolio';
+import SectionHeading from './SectionHeading.astro';
+import SectionNavigation from './SectionNavigation.astro';
+---
+<section id="work" class="work chapter" aria-labelledby="work-title" tabindex="-1">
+  <div class="container work-content">
+    <SectionHeading id="work-title" label="01 / Selected work">Projects worth a closer look.<p slot="description" class="section-description">Shaped with care, from the first question to the final detail.</p></SectionHeading>
+    <div class="work-rail"><SectionNavigation /></div>
+    <div id="project-list" class="projects">{projects.map((project, index) => <ProjectCard project={project} lead={index === 0} />)}</div>
+  </div>
+</section>

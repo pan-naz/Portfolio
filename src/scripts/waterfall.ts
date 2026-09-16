@@ -187,7 +187,7 @@ export function initializeWaterfall() {
     context.lineCap = 'round';
     context.lineJoin = 'round';
     const style = getComputedStyle(field);
-    palette = createAccentPalette(style.getPropertyValue('--waterfall-ink').trim(), style.getPropertyValue('--accent').trim(), style.getPropertyValue('--canvas').trim());
+    palette = createAccentPalette(style.getPropertyValue('--waterfall-ink').trim(), style.getPropertyValue('--text-primary').trim(), style.getPropertyValue('--canvas').trim());
     columns = Math.floor(width / pitch);
     offset = (width - (columns - 1) * pitch) / 2;
     draw();
@@ -221,7 +221,7 @@ export function initializeWaterfall() {
       if (disposed) return;
       loaded = true;
       synchronize();
-    }, 1000);
+    }, 2000);
   };
   window.addEventListener('pointermove', move, { passive: true });
   document.documentElement.addEventListener('pointerleave', leave);
@@ -233,6 +233,7 @@ export function initializeWaterfall() {
   finePointer.addEventListener('change', leave);
   resize();
   synchronize();
+
   if (document.readyState === 'complete') load();
 
   const destroy = () => {

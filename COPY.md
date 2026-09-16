@@ -1,37 +1,15 @@
-# Portfolio copy — 12 September 2026
+# Portfolio copy — 15 September 2026
 
-Source: the user-supplied `../Html → Body.pdf`, a one-page, full-height LinkedIn profile capture. Its About and Experience sections were extracted and visually checked. This is original portfolio wording based on the user's profile, not a claim of independent employment verification.
+The user-supplied `../figma-home.svg` (Figma node 67:15) is the approved homepage copy source. It supersedes the earlier LinkedIn-derived content, archived in `../reference-research/figma-migration/COPY-before-figma.md`.
 
-## Editorial decisions
+- Project titles, outcomes, descriptions, discipline tags and imagery come from this export.
+- All six impact metrics and their notes are transcribed from the export, including **~85% customer adoption**, not −85%. They are user-supplied claims, not independently measured results.
+- The seven-row experience timeline, 10+ years heading, dates, durations, locations and summaries follow the approved design. This differs from the earlier profile capture, including the DataGPT “2023 — now” entry. Dates/durations are static supplied copy, not calculated at runtime.
+- The first hero role is now “System thinker.”; the existing Web designer / App designer role cycle and its timing remain. The hero paragraph uses the shortened Figma copy.
+- “A way of thinking” and its animation were explicitly approved for removal. No approach copy remains on the website.
+- Contact: “I’d love to hear from you.” and “Open to product design roles, remote.” Email and LinkedIn retain the user's supplied destinations.
+- The download is the user's `../CV Nazarii Pankiv.pdf`, copied unchanged into public assets. The separate LinkedIn capture remains local.
+- The Hooko App Store destination was verified against the [Apple listing](https://apps.apple.com/us/app/blow-up-hooko/id6758728094), which identifies Nazarii Pankiv as its developer.
+- No case-study destinations were provided in the SVG. Project cards therefore show the complete design and content without pretending to be links. The rail uses existing Work, Impact and Experience destinations because the exported page has no Websites or Misc sections.
 
-| Choice | Source | Application |
-|---|---|---|
-| Nazarii Pankiv | Profile heading | Replaces the earlier assumed spelling Nazariy; the supplied LinkedIn URL remains unchanged. |
-| Product Designer; 7+ years | Headline and About | Uses the profile's stated experience, without calculating a larger total from dates. |
-| SaaS, UX research, interaction design, design systems, team leadership | About and skills | Drives the introduction, approach statement and biography. |
-| Previous DataGPT and Voximplant leadership | Experience | Uses past tense. DataGPT ends December 2025 in the supplied capture. |
-| Six chronological roles | Experience | Preserves displayed job titles, companies and month/year dates. Capitalization normalized only. |
-| LinkedIn contact route | User-provided URL and profile | A real contact destination without inventing an email address or claiming availability. |
-| Existing visual direction | DESIGN.md and approved motion | No layout redesign or animation changes; heading hierarchy updated for the populated experience section. |
-
-## Deliberately not inferred
-
-- No revenue numbers, adoption percentages, client outcomes or project responsibilities. The profile mentions broad commercial impact but supplies no supporting figures, and individual role descriptions are collapsed.
-- No claim of current employment, location, availability or a UX certification from the education heading alone.
-- No private profile analytics, suggested contacts, recommendation text, unrelated people, social-feed imagery or LinkedIn UI wording reused.
-- Featured project slots remain pending. The export shows two older project entries and truncated descriptions, but does not supply enough material to choose and write the user's featured case studies.
-- The PDF remains a local source outside the website's public assets. No profile document or screenshot is published.
-
-## Main copy
-
-**Headline:** Complexity. Made clear.
-
-**Introduction:** I’m Naz, a product designer with 7+ years shaping SaaS products, design systems and teams.
-
-**Approach:** Understand how people work. Map the problem, test the idea and refine the interaction. Then build the systems that help a product grow—from the first useful experience to the details people use every day.
-
-**About:** I’ve led design at DataGPT and Voximplant, working across web, mobile and enterprise SaaS. My practice brings together UX research, interaction design and design systems—from early discovery to delivery. Alongside hands-on design, I’ve hired designers, shaped teams and helped bring B2B products from idea to launch.
-
-**Contact:** Have a product in mind? Let’s talk about what you’re building. / Connect on LinkedIn
-
-Refero's copywriting guidance informed the fact-first wording and removal of unsupported hype. The PDF skill informed extraction and visual verification; the Sites workflow preserves the existing local-only portfolio.
+No public deployment was requested. All website and DS changes are local source/build output.

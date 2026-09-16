@@ -1,0 +1,22 @@
+---
+import SiteHeader from './SiteHeader.astro';
+import HeroWaterfall from './HeroWaterfall.astro';
+import Hero from './Hero.astro';
+import WorkSection from './WorkSection.astro';
+import ImpactSection from './ImpactSection.astro';
+import AboutSection from './AboutSection.astro';
+import ContactSection from './ContactSection.astro';
+import SiteFooter from './SiteFooter.astro';
+---
+<SiteHeader />
+<div id="page-content">
+  <HeroWaterfall />
+  <main id="main" tabindex="-1">
+    <Hero />
+    <WorkSection />
+    <ImpactSection />
+    <AboutSection />
+    <ContactSection />
+  </main>
+  <SiteFooter />
+</div>

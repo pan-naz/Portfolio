@@ -1,0 +1,79 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { heroIntroTiming } from '../src/scripts/hero-intro.ts';
+import { revealEffects } from '../src/scripts/native-motion.ts';
+const read = path => readFileSync(new URL(path, import.meta.url), 'utf8');
+const source = read('../src/scripts/hero-intro.ts');
+const native = read('../src/scripts/native-motion.ts');
+const roles = read('../src/scripts/hero-role-transition.ts');
+const tokens = read('../src/styles/tokens.css');
+const css = read('../src/styles/global.css');
+const heading = read('../src/components/TypewriterHeading.astro');
+const marquee = read('../src/components/SkillMarquee.astro');
+assert.ok(marquee.includes('index={copy * skills.length + index}'), 'Loop copies must continue, not restart, the entrance order');
+assert.ok(marquee.includes("aria-hidden={copy === 1 ? 'true' : undefined}"));
+assert.ok(source.includes('tagIntro = createNativeMotion(rightTags.flatMap'), 'Right-side tags have their own completion stage');
+assert.ok(source.includes('tagIntro?.cancel()') && source.includes('tagIntro?.setPaused(value)'), 'Tag intro shares reset and pause lifecycle');
+const tagEffects = revealEffects(Array.from({ length: 16 }, () => ({})), {
+  duration: 900, delay: 200, stagger: 150, distance: 8, easing: 'ease-out',
+});
+assert.equal(tagEffects[0].delay, 200);
+assert.equal(tagEffects[7].delay, 1250);
+assert.equal(tagEffects[8].delay, 1400, 'Repeated Accessibility remains hidden during the early reveal');
+assert.equal(tagEffects[15].delay, 2450);
+const token = name => Number(tokens.match(new RegExp(`--${name}: ([0-9.]+)ms`))[1]);
+assert.equal(token('duration-role-hold'), 1000);
+assert.equal(token('duration-role-exit'), 450);
+assert.equal(token('duration-title-reveal'), 900);
+assert.equal(token('stagger-title-reveal'), 35);
+assert.equal(token('duration-copy-reveal'), token('duration-entrance'));
+for (const count of [3, 5]) {
+  const timing = heroIntroTiming(15, 900, 35, 900, 900, .5);
+  assert.equal(timing.processStart, 0, 'Both label groups begin immediately; header is already present');
+  assert.equal(timing.eyebrowStart, 450, 'Greeting starts at the midpoint of the labels core reveal');
+  assert.equal(timing.titleStart, 900, 'Title starts halfway through greeting');
+  assert.equal(timing.roleStart, 1350, 'Role starts halfway through the title core reveal');
+  assert.equal(timing.copyStart, 1800, 'Copy starts halfway through the role core reveal');
+  assert.equal(timing.ctaStart, 2250, 'CTA starts halfway through the copy core reveal');
+  assert.equal(timing.tagsStart, timing.processStart, 'Both label groups start together');
+  const lines = Array.from({ length: count }, () => ({}));
+  const effects = revealEffects(lines, { duration: 900, stagger: 100, delay: timing.copyStart, distance: 8, easing: 'ease-out' });
+  effects.forEach((effect, index) => {
+    assert.equal(effect.delay, timing.copyStart + index * 100);
+    assert.equal(effect.duration, 900);
+    assert.deepEqual(effect.keyframes, [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'translateY(0px)' }]);
+  });
+  assert.equal(effects.at(-1).duration + effects.at(-1).delay, timing.copyStart + 900 + (count - 1) * 100);
+}
+assert.ok(source.includes('Internal letter/line') && source.includes('duration * stageProgress'));
+assert.ok(source.includes('roleRevealEffects(phrases[0], roleOptions, timing.roleStart)'));
+assert.ok(source.includes('revealEffects(split.lines') && source.includes('revealEffects(letters'));
+assert.ok(source.includes('revealEffects([eyebrow]') && source.includes('revealEffects([cta]'));
+assert.ok(source.includes('rightTags.flatMap(tag => revealEffects([tag]'), 'Tag entrances share the same native recipe');
+assert.ok(source.includes('timing.tagsStart + Number(tag.style.getPropertyValue') && source.includes('* tagStagger'));
+assert.ok(!source.includes('headerIntro') && !source.includes("querySelector<HTMLElement>('.site-header')"), 'Top bar is outside the intro animation');
+assert.ok(!tokens.includes('--duration-header-reveal'), 'Retired header animation token removed');
+assert.ok(css.includes('.hero.is-tags-ready .skill-track'), 'Marquee waits until its own entrance is complete');
+assert.ok(read('../src/scripts/interactions.ts').includes('initializeHeroIntro();'), 'Rain is independent of intro completion');
+assert.ok(!source.includes('onComplete();') && !tokens.includes('--overlap-intro'), 'Retired completion callback and fixed overlap token removed');
+assert.ok(tokens.includes('--intro-stage-progress: .5;'));
+for (const text of [source, roles, native]) {
+  assert.ok(!/import .*gsap|CustomEase|requestAnimationFrame|setTimeout|setInterval/.test(text), 'No GSAP hero engine, timers or render loop remain');
+}
+assert.ok(!/is-copy-revealing|is-copy-finished|copy-line-index|keyframes tag-in/.test(source + css), 'Retired copy/tag CSS animation plumbing removed');
+assert.ok(source.includes('document.createRange()') && source.includes('--glyph-x'), 'Keep native kerning');
+assert.equal((source.match(/permanent.textContent = 'Product Designer';/g) ?? []).length, 1, 'Do not rebuild title on completion');
+assert.ok(source.includes("['System thinker', 'AI builder', 'Web designer', 'App designer']"), 'Approved four-role cycle stays in order without punctuation');
+assert.ok(source.includes('document.fonts.ready') && source.includes('getBoundingClientRect().top'));
+assert.ok(source.includes('if (width === paragraphWidth) return;'));
+assert.ok(source.includes('restoreParagraph();'));
+assert.ok(source.includes("cta.addEventListener('focusin', () => intro?.finish())"));
+assert.ok(source.includes("reduced.addEventListener('change', reset)"));
+assert.ok(source.includes("reduced.matches || typeof permanent.animate !== 'function'"));
+assert.ok(source.includes('intro?.cancel()') && source.includes('roleMotion?.destroy()'));
+assert.ok(source.includes('intro?.setPaused(value)') && source.includes('roleMotion?.setPaused(value)'));
+assert.ok(!/blur\(|filter:/.test(source));
+assert.ok(heading.includes('class="sr-only"') && heading.includes('role-cycle'));
+assert.equal((heading.match(/<h1\b/g) ?? []).length, 1);
+assert.ok(!/caret|data-typewriter/.test(heading));
+console.log('PASS: shared native reveal recipes, exact title/role/copy timings, 3/5-line responsive sequences, accessibility and no retired animation plumbing.');

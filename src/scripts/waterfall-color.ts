@@ -21,22 +21,23 @@ export function updateParticleAccent(state: AccentState, inside: boolean, groupA
   }
 }
 
-export function createAccentPalette(ink: string, accent: string, background: string) {
+export function createAccentPalette(ink: string, activeInk: string, background: string) {
   const channels = (value: string, fallback: string) => {
     const hex = /^#[0-9a-f]{6}$/i.test(value) ? value.slice(1) : fallback;
     return [0, 2, 4].map(offset => parseInt(hex.slice(offset, offset + 2), 16));
   };
   const from = channels(ink, '111111');
-  const to = channels(accent, 'f86a46');
+  const to = channels(activeInk, '171716');
   const canvas = channels(background, 'faf8f7');
-  // Precompose both gray and accent tails into the actual theme background.
+  // Precompose quiet gray and active primary-ink tails into the theme background.
   // The hot loop only selects a cached solid color; no per-icon alpha or RGB work.
   return Array.from({ length: (trailShadeSteps + 1) * (accentBlendSteps + 1) }, (_, index) => {
     const blend = (index % (accentBlendSteps + 1)) / accentBlendSteps;
-    const strength = Math.floor(index / (accentBlendSteps + 1)) / trailShadeSteps * maximumTrailStrength;
+    const trail = Math.floor(index / (accentBlendSteps + 1)) / trailShadeSteps;
     return `rgb(${from.map((channel, i) => {
-      const foreground = channel + (to[i] - channel) * blend;
-      return Math.round(canvas[i] + (foreground - canvas[i]) * strength);
+      const quiet = (channel - canvas[i]) * maximumTrailStrength;
+      const active = to[i] - canvas[i];
+      return Math.round(canvas[i] + (quiet + (active - quiet) * blend) * trail);
     }).join(',')})`;
   });
 }

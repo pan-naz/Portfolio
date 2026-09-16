@@ -1,0 +1,115 @@
+---
+import Logo from './Logo.astro';
+import Button from './Button.astro';
+import IconButton from './IconButton.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import SkillTag from './SkillTag.astro';
+import ProjectCard from './ProjectCard.astro';
+import ProjectIdentity from './ProjectIdentity.astro';
+import NavLinks from './NavLinks.astro';
+import SectionNavigation from './SectionNavigation.astro';
+import SectionHeading from './SectionHeading.astro';
+import Stat from './Stat.astro';
+import ExperienceList from './ExperienceList.astro';
+import DSExample from './DSExample.astro';
+import DSSitePreview from './DSSitePreview.astro';
+import { projects, impactGroups, experience, profile, cvUrl } from '../data/portfolio';
+import { dsComponents } from '../data/ds-components';
+import tokenCSS from '../styles/tokens.css?raw';
+const readTokens = (block: string) => Object.fromEntries([...block.matchAll(/--([\w-]+):\s*([^;]+);/g)].map(([,key,value]) => [key,value.trim()]));
+const light = readTokens(tokenCSS.match(/:root\s*\{([^}]+)\}/)![1]);
+const dark = { ...light, ...readTokens(tokenCSS.match(/:root\[data-theme='dark'\][^{]*\{([^}]+)\}/)![1]) };
+const colors = [
+  ['ink','dark','Text and primary buttons'],
+  ['muted','dark-muted','Secondary text'],
+  ['canvas','bg','Page and light cards'],
+  ['surface','surface','Chips and floating navigation'],
+  ['accent','accent','Wordmark dot, arrows and display accents'],
+  ['divider','border','Hairlines'],
+];
+const spaces = [['space-1',4],['space-2',8],['space-3',12],['space-4',16],['space-6',24],['space-8',32],['space-12',48],['space-16',64],['space-24',96]] as const;
+const radii = [['radius-small','sm','12px'],['radius-medium','md','24px'],['radius-media','lg','40px'],['radius-chapter','xl','100px'],['radius-pill','full','999px']];
+const typeStyles = [
+  ['Display/XL','Black 900 · 88 / 80','text-display','Product Designer'],
+  ['Display/L','Black 900 · 56 / 64','text-h2','A few projects worth a closer look.'],
+  ['Heading/M','ExtraBold 800 · 24 / 32','ds-type-heading','Voximplant Kit'],
+  ['Body/L','Medium 500 · 20 / 30','ds-type-body-l','Successfully launched B2B products from 0 → 1, improved product adoption, and contributed to ARR growth.'],
+  ['Body/M','Medium 500 · 16 / 24','text-body-m','Designed and launched from scratch as a no-code contact center builder.'],
+  ['Body/M Strong','SemiBold 600 · 16 / 24','text-body-m-strong','Lead Product Designer'],
+  ['Body/S Strong','SemiBold 600 · 14 / 20','ds-type-small','Download CV'],
+  ['Label/M','Bold 700 · 14 / 20','eyebrow','01 / SELECTED WORK'],
+  ['Label/S','Medium 500 · 12 / 16','ds-type-label','Design system'],
+];
+---
+<main id="main" class="ds-main" tabindex="-1">
+  <section id="colors" class="ds-section" aria-labelledby="colors-title" tabindex="-1">
+    <header class="ds-heading"><p class="eyebrow">01 / Color</p><h1 id="colors-title" class="text-h2">Color</h1><p>Six semantic tokens, two modes. Ink and background swap in dark mode; the accent lifts to #FF6B42. Use primary ink for small text and reserve the light accent for graphics and bold display text.</p></header>
+    {(['light','dark'] as const).map(mode => <div class="ds-palette ds-mode" data-theme={mode}>
+      <h3>{mode === 'light' ? 'Light mode' : 'Dark mode'}</h3>
+      <div class="ds-swatches">{(mode === 'light' ? colors : [colors[0], colors[2], colors[3], colors[4], colors[5], colors[1]]).map(([token,name,usage]) => <div class="ds-swatch"><div class="ds-swatch-color" style={`background:var(--${token})`}></div><h4>{name}</h4><p>{(mode === 'light' ? light : dark)[token]}</p><p>{usage}</p></div>)}</div>
+    </div>)}
+    <p class="ds-spec-note">Primary and secondary text pass 4.5:1 on supported surfaces in both modes. Decorative tertiary and accent treatments have separate usage rules; they are not body-text defaults.</p>
+  </section>
+
+  <section id="typography" class="ds-section" aria-labelledby="typography-title" tabindex="-1">
+    <header class="ds-heading"><p class="eyebrow">02 / Typography</p><h2 id="typography-title">Typography</h2><p>One family — Urbanist — in five weights. Display uses −2.64px tracking; everything else is set at zero. The same locally served variable font and type scale run throughout the portfolio.</p></header>
+    <div class="ds-type-list">{typeStyles.map(([name,spec,style,copy]) => <div class="ds-type-row"><div class="ds-type-meta"><h3>{name}</h3><p>{spec}</p></div><p class={style}>{copy}</p></div>)}</div>
+    <p class="ds-spec-note">Mobile adapts Display/XL to 40px and Display/L to 26px. Text can wrap and enlarge. Label/S follows the Figma specimen at 12 / 16.</p>
+  </section>
+
+  <section id="shape" class="ds-section" aria-labelledby="shape-title" tabindex="-1">
+    <header class="ds-heading"><p class="eyebrow">03 / Space, radius, elevation, grid</p><h2 id="shape-title">Space &amp; shape</h2><p>An 8-based scale with 4 and 12 for tight UI. Rounded cards float above the canvas, while generous section corners give the page its rhythm.</p></header>
+    <div class="ds-foundation-block"><h3>Spacing</h3><p>Shared steps used by controls and page composition. The 48px step supports the existing website layout.</p><div class="ds-spacing-list">{spaces.map(([token,value]) => <div><span>{`space/${value}`}</span><div class="ds-spacing-bar" style={`width:var(--${token})`}></div><span>{value}</span></div>)}</div></div>
+    <div class="ds-foundation-block"><h3>Radius</h3><p>Icon geometry, floating surfaces, project media, section sheets and pill controls.</p><div class="ds-radius-list">{radii.map(([token,name,value]) => <div><div class="ds-radius-shape" style={`border-radius:var(--${token})`}></div><p>{name} · {value}</p></div>)}</div></div>
+    <div class="ds-foundation-block"><h3>Elevation</h3><p>Resting media has no shadow. Floating navigation and raised chips share one elevation.</p><div class="ds-elevation"><div><div></div><p>Resting · none</p></div><div><div style="box-shadow:var(--shadow-floating)"></div><p>Floating · 0 8px 24px / 10%</p></div></div></div>
+    <div class="ds-foundation-block"><h3>Layout grid — 12 columns / 1728</h3><p>1200px content width, 264px margins and 24px gaps. The website adapts to 64px desktop gutters and 24px mobile gutters; columns stack on small screens.</p><div class="ds-grid-demo" aria-label="Twelve-column grid">{Array.from({length:12}, () => <span></span>)}</div></div>
+  </section>
+
+  <section id="components" class="ds-section" aria-labelledby="components-title" tabindex="-1">
+    <header class="ds-heading"><p class="eyebrow">04 / Components</p><h2 id="components-title">Components</h2><p>The components below are used on the website. Their color, typography, spacing and shape come from the same tokens. These specimens render the actual implementations.</p></header>
+    <DSExample id="tags" name="Chip & label" description="Tags for skills and project disciplines. Labels are content, not controls." source="SkillTag.astro" notes="Tag and raised variants use Label/S, a 28px minimum height and pill corners. Plain process labels use 12 / 16, medium weight and primary ink. Labels wrap rather than truncate.">
+      <div class="ds-row"><SkillTag label="Product design" /><SkillTag label="Design system" /><SkillTag label="Branding" /><SkillTag label="Web design" /></div>
+      <div class="ds-row"><SkillTag label="Product design" variant="raised" /><SkillTag label="Design system" variant="raised" /></div>
+      <div class="ds-row">{['Workflows','Testing','Feedback'].map(label => <SkillTag label={label} variant="plain" />)}</div>
+    </DSExample>
+    <DSExample id="buttons" name="Button" description="Primary for the main action; secondary for supporting destinations. Large is 48px, small is 36px." source="Button.astro · Arrow.astro" notes="Links navigate; buttons perform actions. Shared keyboard focus and disabled states remain visible. This catalog disables motion; the website keeps its existing hover and press behavior.">
+      <div class="ds-row"><Button href={`mailto:${profile.email}`} arrow="up">Get in touch</Button><Button href={cvUrl} size="small" variant="secondary" arrow="up">Download CV (PDF)</Button><Button href="/design-system/" size="small" variant="secondary">Design system</Button></div>
+      <div class="ds-state-row"><div><p>Default</p><Button>Get in touch</Button></div><div><p>Disabled state</p><Button disabled>Get in touch</Button></div></div>
+    </DSExample>
+    <DSExample id="project-identity" name="Logo" description="The portfolio wordmark and the three original project marks. Project names and their 32px marks stay together." source="Logo.astro · ProjectIdentity.astro" notes="Marks have empty alternative text beside the readable project name. Project cards and result groups consume the same identity component.">
+      <div class="ds-row"><Logo /></div><div class="ds-row">{projects.map(project => <ProjectIdentity title={project.title} logo={project.logo} />)}</div>
+    </DSExample>
+    <DSExample id="cards" name="Project card" description="Project identity and disciplines, then outcome and description, followed by the original project artwork." source="ProjectCard.astro → ProjectIdentity.astro · SkillTag.astro" notes="The homepage is the source for this final composition. Cards stay in Light mode on dark sheets. At mobile widths the two-column caption stacks; artwork keeps its original aspect ratio. Case-study links appear only when a real destination exists.">
+      <ProjectCard project={projects[0]} />
+    </DSExample>
+    <DSExample id="navigation" name="Navigation" description="Top-bar links, floating-pill links and the project-category filter all consume the same navigation-item component. Selected work contains the current portfolio; Websites and Misc are reserved for future projects." source="NavLinks.astro · SectionNavigation.astro → NavigationItem.astro · ThemeToggle.astro → IconButton.astro" notes="Every navigation item stays background-free and uses the same 12px horizontal padding, 6px accent dot, 6px dot-to-label gap and 12px text push for hover, focus and active states. Horizontal navigation bars use space/12 (12px) between links, the theme toggle and pill sections at every breakpoint; the vertical mobile menu keeps a 0px item gap. The floating pill uses the compact ‘naz’ wordmark without punctuation, centered in a 44px wrapper with a 1px optical lift and 20px desktop / 12px mobile leading inset. The dot occupies the shared leading slot, moving in from the left while fading and scaling smoothly from its center over 420ms with the gentle entrance easing. The floating pill morphs in over 560ms and exits upward over 240ms only when the hero CTA starts entering the viewport. Once restored, the hero CTA reuses its original 900ms opacity-and-8px-rise reveal; reduced motion and keyboard focus resolve immediately. The filter exposes pressed state and a live result count. The mobile dialog restores focus. Catalog specimens are static.">
+      <div class="ds-row" inert><NavLinks showDS={false} /><ThemeToggle /><IconButton label="Open navigation"><span aria-hidden="true">☰</span></IconButton></div>
+      <div class="ds-index-specimen" inert><SectionNavigation /></div>
+    </DSExample>
+    <DSExample id="section-heading" name="Section header" description="Number, title and supporting copy. The title occupies the right-hand half of a desktop section." source="SectionHeading.astro" notes="The same composition stacks on mobile. The website reveals this component on entry; the catalog displays its complete resting state.">
+      <SectionHeading id="sample-work-title" label="01 / Selected work">Projects worth a closer look.<p slot="description" class="section-subtitle">Shaped with care, from the first question to the final detail.</p></SectionHeading>
+    </DSExample>
+    <DSExample id="stats" name="Stat" description="A value, label and note for the impact section. The source homepage uses accent-colored values." source="Stat.astro" notes="Metrics use a semantic definition list. Three columns on desktop become one column with hairline separators on mobile.">
+      <dl class="ds-stat-sample"><Stat {...impactGroups[0].metrics[0]} /></dl>
+    </DSExample>
+    <DSExample id="timeline" name="Timeline row" description="Dates, role and company, summary and duration. Real content from the experience section." source="ExperienceList.astro → ExperienceRow.astro" notes="Four desktop columns stack into a readable timeline on mobile. Rows are shown on the dark surface used by the website.">
+      <div class="ds-timeline ds-mode" data-theme="dark"><ExperienceList items={experience.slice(0,2)} /></div>
+    </DSExample>
+  </section>
+
+  <section id="dark-mode" class="ds-section ds-dark-section ds-mode" data-theme="dark" aria-labelledby="dark-title" tabindex="-1">
+    <header class="ds-heading"><p class="eyebrow">05 / Dark mode</p><h2 id="dark-title">Dark mode</h2><p>The same components, with the dark tokens. Ink and background swap, surface becomes #222320 and accent lifts to #FF6B42. Sheets use surface; project cards on sheets stay in Light mode.</p></header>
+    <div class="ds-dark-example"><h3>Text on dark</h3><p class="text-h2">Product Designer</p><p class="text-body-m">Successfully launched B2B products from 0 → 1, improved product adoption, and contributed to ARR growth.</p><p class="text-body-m text-secondary">Secondary copy and timeline metadata use ink at 64%.</p><p class="eyebrow">01 / Label on dark</p></div>
+    <div class="ds-dark-example"><h3>Buttons</h3><div class="ds-row"><Button href={`mailto:${profile.email}`} arrow="up">Get in touch</Button><Button size="small" variant="secondary" href={cvUrl} arrow="up">Download CV (PDF)</Button></div></div>
+    <div class="ds-dark-example"><h3>Chips & navigation</h3><div class="ds-row"><SkillTag label="Product design" /><SkillTag label="Design system" /><SkillTag label="Prototyping" /></div><div class="ds-row" inert><NavLinks showDS={false} /><ThemeToggle /></div></div>
+    <div class="ds-dark-example"><h3>Stat</h3><dl class="ds-stat-sample"><Stat {...impactGroups[0].metrics[0]} /></dl></div>
+    <div class="ds-dark-example"><h3>Project card on a sheet</h3><ProjectCard project={projects[1]} /></div>
+  </section>
+
+  <section id="website-components" class="ds-section" aria-labelledby="website-title" tabindex="-1">
+    <header class="ds-heading"><p class="eyebrow">06 / In context</p><h2 id="website-title">Website</h2><p>A static view of the actual page, assembled from the same components. The website retains its animations; this design system has no animated examples.</p></header>
+    <DSSitePreview />
+    <details class="ds-connections"><summary>Connected components · {dsComponents.length}</summary><ul>{dsComponents.map(component => <li><a href={`#${component.section}`}>{component.name}</a><span>{component.description}</span></li>)}</ul></details>
+  </section>
+  <footer class="ds-footer"><p>Folio / naz.wtf</p><a href="/">Back to portfolio ↗</a></footer>
+</main>

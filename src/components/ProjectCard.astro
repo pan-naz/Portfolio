@@ -1,27 +1,20 @@
 ---
 import type { Project } from '../data/portfolio';
 import Arrow from './Arrow.astro';
+import ProjectIdentity from './ProjectIdentity.astro';
+import SkillTag from './SkillTag.astro';
 interface Props { project: Project; lead?: boolean; }
 const { project, lead = false } = Astro.props;
-const Tag = project.href && !project.pending ? 'a' : 'div';
+const Tag = project.href ? 'a' : 'div';
 ---
-<article class:list={['project', { 'project--lead': lead }]}>
-  <Tag class="project-surface" href={project.href && !project.pending ? project.href : undefined}>
-    <div class:list={['project-media', { 'project-media--pending': !project.image }]}>
-      {project.image ? (
-        <img src={project.image} alt={project.imageAlt} width={lead ? 1600 : 1200} height={1000} loading="lazy" decoding="async" />
-      ) : (
-        <div class="media-placeholder" aria-label={`Image placeholder for ${project.title}`}>
-          <div class="placeholder-top"><span class="eyebrow">Selected work / {project.id}</span><span class="placeholder-cross" aria-hidden="true">+</span></div>
-          <span class="placeholder-number" aria-hidden="true">{project.id}<span>—</span></span>
-          <div class="placeholder-bottom"><span>Space for<br />something good.</span><span class="eyebrow">Project image<br />to follow</span></div>
-        </div>
-      )}
-    </div>
+<article id={`project-${project.id}`} class:list={['project', { 'project--lead': lead }]} data-project-category={project.category}>
+  <Tag class="project-surface" href={project.href}>
     <div class="project-caption">
-      <div class="project-heading"><span class="eyebrow project-index">{project.id}</span><h3>{project.title}</h3>{project.href && !project.pending && <Arrow direction="up" />}</div>
-      <p>{project.pending ? 'Project details to follow.' : project.description}</p>
-      <div class="project-meta"><span>{project.pending ? 'Awaiting project content' : project.role}</span>{project.year && <span>{project.year}</span>}</div>
+      <div class="project-details"><h3 class="project-heading"><ProjectIdentity title={project.title} logo={project.logo} />{project.href && <Arrow direction="up" />}</h3><div class="project-tags">{project.tags.map(label => <SkillTag label={label} variant="raised" />)}</div></div>
+      <div class="project-copy"><p class="project-outcome">{project.outcome}</p><p class="project-description">{project.description}</p></div>
+    </div>
+    <div class="project-media" style={`--media-ratio:1200 / ${project.imageHeight}`}>
+      <img src={project.image} srcset={`${project.image.replace('.webp', '-800.webp')} 800w, ${project.image} 1800w`} sizes="(max-width: 767px) calc(100vw - 48px), (max-width: 1328px) calc(100vw - 128px), 1200px" alt={project.imageAlt} width="1200" height={project.imageHeight} loading="lazy" decoding="async" />
     </div>
   </Tag>
 </article>

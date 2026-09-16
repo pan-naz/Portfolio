@@ -1,7 +1,0 @@
-.feedback { padding: var(--space-6); border: 1px solid var(--feedback-border); border-radius: var(--radius-small); background: var(--feedback-bg); color: var(--feedback-fg); font-size: var(--text-small); }
-.feedback__title { display: block; font-weight: 700; margin-bottom: var(--space-1); }
-.feedback__body { line-height: 1.5; }
-.feedback--success { --feedback-bg: var(--success-bg); --feedback-border: var(--success-border); --feedback-fg: var(--success-fg); }
-.feedback--info { --feedback-bg: var(--info-bg); --feedback-border: var(--info-border); --feedback-fg: var(--info-fg); }
-.feedback--warning { --feedback-bg: var(--warning-bg); --feedback-border: var(--warning-border); --feedback-fg: var(--warning-fg); }
-.feedback--danger { --feedback-bg: var(--danger-bg); --feedback-border: var(--danger-border); --feedback-fg: var(--danger-fg); }

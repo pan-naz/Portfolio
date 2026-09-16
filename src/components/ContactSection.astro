@@ -1,0 +1,11 @@
+---
+import { profile, cvUrl, hookoAppUrl } from '../data/portfolio';
+import Button from './Button.astro';
+import Arrow from './Arrow.astro';
+---
+<section id="contact" class="contact container chapter" aria-labelledby="contact-title" tabindex="-1">
+  <p class="eyebrow">04 / Contact</p>
+  <div class="contact-layout"><div><h2 id="contact-title" class="text-display" data-reveal>I’d love to hear<br />from you.</h2><p class="contact-description">Open to product design roles, remote.</p><div class="contact-actions"><Button href={`mailto:${profile.email}`} arrow="up">Get in touch</Button><Button href={cvUrl} variant="secondary" download>Download CV (PDF)</Button></div></div>
+    <div class="contact-links"><a href={profile.linkedin}>LinkedIn <Arrow direction="up" /></a><a href={hookoAppUrl} class="contact-app">App Store — Hooko <Arrow direction="up" /></a></div>
+  </div>
+</section>

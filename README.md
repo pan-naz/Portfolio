@@ -1,41 +1,47 @@
 # naz.wtf portfolio
 
-Local-only responsive Astro homepage. The visual source of truth is `../DESIGN.md`.
+Responsive Astro portfolio and connected static design-system catalog. The approved visual source is `../DESIGN.md`, based on the user-supplied `../figma-ds.svg` and `../figma-home.svg`.
 
 ## Run
 
-Use Node.js 22.12+ (a supported even-numbered release) and pnpm.
+Use Node.js 22.12+ and pnpm.
 
 ```sh
 pnpm install
 pnpm dev
+pnpm check
 pnpm build
+node --test tests/*.test.mjs
 ```
 
-The Astro development URL is printed when starting the server. This project has not been published. The draft includes `noindex, nofollow`; review and remove it before a future public launch.
+Run commands inside this folder. Astro prints the local preview URL. The site remains unpublished and retains its draft `noindex, nofollow` metadata.
 
-## Add your content
+## Content and assets
 
-Edit `src/data/portfolio.ts`: name, professional title, original introduction, biography, contact email, projects and experience. Put approved project images in `public/projects/` and reference them as `/projects/filename.webp`. Set `pending: false` only when the project content is real. Project links render only for non-pending entries with a destination. No contact email, company, client, metric or testimonial has been invented.
+`src/data/portfolio.ts` contains project cards, six impact metrics, seven experience rows and contact destinations transcribed from the approved homepage export. See `COPY.md` for provenance. Project images and original marks live in `public/projects/`; responsive WebP versions preserve the supplied artwork. The supplied CV is served from `/nazarii-pankiv-cv.pdf`.
 
-The three initial project slots are intentional placeholders, authorized while the user gathers the content. Replace their media, titles and descriptions. The homepage copy and six experience entries now use the user's LinkedIn PDF, reviewed on 12 September 2026. The displayed name follows that profile's spelling, Nazarii Pankiv. See `COPY.md` for the source and editorial decisions. No email is provided; the contact action links to the supplied LinkedIn profile.
+Project-card destinations are optional: add `href` only when a real case-study destination is ready. Cards currently present the full approved content without a fabricated case-study link. The project rail filters Selected work, Websites and Misc; the latter two currently have no projects.
 
-## Design and reference decisions
+The extraction script and reference renders are in `../reference-research/figma-migration/`. No flattened homepage screenshot is used as website content. The waterfall remains the existing live canvas animation.
 
-- `../DESIGN.md`: gray canvas, Urbanist, heavy editorial headings, fine rules, rounded media, restrained shadows and orange accent.
-- Yash Sonwaney's homepage: broad sequence of introduction, work and personal/experience information. No wording, assets, logos, project data, biography or testimonial text was reused. Category filters and testimonial carousel were omitted because no corresponding user content exists yet.
-- The user-requested rotating circular `naz.wtf` mark is an explicit exception to the design system's default ban on decorative loops. It has a pause control and stops for reduced motion.
-- Astro generates the static document. TypeScript handles interactions; GSAP/ScrollTrigger handles entrances and the short desktop scroll-emphasis sequence. Lenis provides user-requested desktop wheel smoothing. No React, CMS or database.
-- Genie Studio is a motion-only reference for the staged hero entrance, smooth scroll and project-media settling. No illustrations, branding, text or source code were copied. See `MOTION.md` for the reference-to-implementation mapping.
+## Shared design system
 
-## Behavior
+The 26 public components are registered in `src/data/ds-components.ts`. Both the website and `/design-system/` use these actual implementations and the same `src/styles/tokens.css`. `PortfolioPage.astro` composes the homepage and `/design-system/preview/`; the latter uses a script-free `DSLayout` and is embedded in a sandbox that blocks scripts. `src/data/design-system.ts` supplies the 13 catalog anchors; `src/data/navigation.ts` supplies website links.
 
-- Semantic anchor navigation, preserved URL fragments and destination focus. Lenis smooths desktop wheel input on fine-pointer screens; touch and small screens keep native scrolling. Reduced motion disables smoothing and entrances.
-- A roughly 1.5-second overlapping hero intro, interrupted immediately by scrolling, touch or keyboard focus. Deep links and restored scroll positions skip it.
-- Staggered heading/caption reveals and scroll-linked desktop project panels; mobile panels use short one-time entrances.
-- Compact desktop navigation after the hero; native modal navigation drawer on mobile with Escape, focus containment and restoration.
-- Pause/resume logo rotation; system reduced-motion preference also respected.
-- One 160svh desktop narrative with a 100svh sticky viewport. Natural flow on mobile, short viewports, reduced motion or when enlarged text cannot fit.
-- All meaningful content renders without JavaScript. No fake case-study buttons or dead email links.
+The catalog follows the Figma specimen sheet: color, typography, space and shape, used components, dark-mode examples and a static website view. Search, tabbed examples, unused component sections and animated demos are removed. The mobile anchor index wraps above the sheet. Color readouts are extracted from the shared token CSS at build time. Scoped dark tokens render both modes together; component visual styles are never redefined by catalog CSS.
 
-Production readiness depends on the user's featured projects, approval of the rewritten copy, and a final contact/launch review. Profile, title and visible experience entries are populated; case studies remain pending. Visual and interaction validation is recorded in `QA.md` after review.
+Every visual website change must update its shared component, consumer, registry and DS documentation together. Routes compose components rather than containing page-specific designs. Documentation styles use the `ds-` prefix and do not fork component styles. Source changes update both views through Astro HMR; production output requires rebuilding.
+
+## Motion and responsive behavior
+
+The hero uses native staged reveals and cycles through System thinker, AI builder, Web designer and App designer. Stages begin at 450ms intervals over 900ms core reveals; the header is visible immediately and the waterfall starts after its independent two-second delay. Skills loop, header docking, project reveals, theme toggle and drawer behavior remain active. Shared navigation items use an accent dot and label shift for hover, focus and active states. The retired “A way of thinking” section and its dedicated animation were removed. Reduced motion reveals content immediately and suppresses decorative motion.
+
+`static-preview.css` is loaded only by `DSLayout`. It disables animation, transitions, smooth scrolling and moving hover treatments; the static skills list shows one complete copy. The catalog never initializes website motion or persists a theme choice. The normal website continues to use `BaseLayout` and its existing scripts.
+
+No mobile Figma design was provided. The implementation adapts desktop with stacked card headers, metrics and timeline rows, wrapping labels, 24px gutters and the existing accessible drawer. Desktop content is centered at 1200px; the hero keeps the supplied frame’s wider inset. Dark sheets use surface and project cards remain pinned to Light, as specified by the DS.
+
+## Validation
+
+`pnpm check` and `pnpm build` run the DS structural guard and foreground/background contrast checks. `node --test tests/*.test.mjs` covers typography, contrast and animation behavior. Primary and secondary text pass 4.5:1 on the supported surfaces; the contrast utility composites Figma’s alpha-muted colors before calculating ratios. Accent and decorative tertiary uses require their own size/context checks and are not covered by a blanket accessibility claim.
+
+Review website, DS examples and documentation together, including both themes, keyboard focus, responsive behavior and reduced-motion fallbacks. See `QA.md` for the latest verification.

@@ -1,10 +1,11 @@
 ---
-interface Props { showDS?: boolean; }
-const { showDS = true } = Astro.props;
+import { siteLinks } from '../data/navigation';
+import NavigationItem from './NavigationItem.astro';
+interface Props { showDS?: boolean; layout?: 'desktop' | 'mobile'; }
+const { showDS = true, layout = 'desktop' } = Astro.props;
 ---
-<nav class="desktop-nav" aria-label="Main navigation">
-  <a class="nav-link" href="/#work">Work</a>
-  <a class="nav-link" href="/#about">About</a>
-  <span class="nav-link nav-link--disabled" aria-disabled="true" title="CV coming soon">CV</span>
-  {showDS && <a class="nav-link" href="/design-system/">DS</a>}
+<nav class:list={{ 'desktop-nav': layout === 'desktop' }} aria-label={layout === 'desktop' ? 'Main navigation' : 'Mobile navigation'}>
+  {siteLinks.filter(link => showDS || !('catalog' in link)).map(link => 'disabled' in link
+    ? <NavigationItem label={link.label} disabled layout={layout} />
+    : <NavigationItem label={link.label} href={link.href} layout={layout} />)}
 </nav>

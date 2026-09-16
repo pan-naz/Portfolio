@@ -2,8 +2,8 @@
 import '@fontsource-variable/urbanist';
 import '../styles/global.css';
 import { profile } from '../data/portfolio';
-interface Props { title?: string; }
-const { title = `${profile.name} — naz.wtf` } = Astro.props;
+interface Props { title?: string; resetToTopOnReload?: boolean; }
+const { title = `${profile.name} — naz.wtf`, resetToTopOnReload = false } = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
@@ -24,6 +24,22 @@ const { title = `${profile.name} — naz.wtf` } = Astro.props;
         document.querySelector('meta[name="theme-color"]').content = dark ? '#171716' : '#FAF8F7';
       })();
     </script>
+    {resetToTopOnReload && <script is:inline>
+      (() => {
+        const navigation = performance.getEntriesByType('navigation')[0];
+        if (navigation?.type !== 'reload') return;
+        history.scrollRestoration = 'manual';
+        document.documentElement.dataset.reloadToTop = 'true';
+        const reset = () => window.scrollTo(0, 0);
+        history.replaceState(history.state, '', `${location.pathname}${location.search}#top`);
+        reset();
+        addEventListener('load', () => requestAnimationFrame(() => requestAnimationFrame(() => {
+          reset();
+          history.scrollRestoration = 'auto';
+          delete document.documentElement.dataset.reloadToTop;
+        })), { once: true });
+      })();
+    </script>}
   </head>
   <body><a class="skip-link" href="#main">Skip to content</a><slot /><script>import '../scripts/theme';</script></body>
 </html>

@@ -1,5 +1,5 @@
 ---
-interface Props { label: string; index?: number; }
-const { label, index = 0 } = Astro.props;
+interface Props { label: string; index?: number; variant?: 'tag' | 'plain' | 'raised'; }
+const { label, index = 0, variant = 'tag' } = Astro.props;
 ---
-<span class="skill-tag" style={`--tag-index:${index}`}>{label}</span>
+<span class:list={['skill-tag', { 'skill-tag--plain': variant === 'plain', 'skill-tag--raised': variant === 'raised' }]} style={`--tag-index:${index}`}><span>{label}</span></span>

@@ -1,42 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import SiteHeader from '../components/SiteHeader.astro';
-import Logo from '../components/Logo.astro';
-import Arrow from '../components/Arrow.astro';
-import Button from '../components/Button.astro';
-import ProjectCard from '../components/ProjectCard.astro';
-import HeroWaterfall from '../components/HeroWaterfall.astro';
-import Hero from '../components/Hero.astro';
-import { profile, projects, experience } from '../data/portfolio';
+import PortfolioPage from '../components/PortfolioPage.astro';
 ---
-<BaseLayout>
-  <SiteHeader />
-  <div id="page-content">
-    <HeroWaterfall />
-    <main id="main" tabindex="-1">
-      <Hero />
-        <section id="work" class="work container chapter" aria-labelledby="work-title" tabindex="-1">
-          <div class="section-heading" data-reveal><p class="eyebrow section-index">01 / Work</p><div><h2 id="work-title">A few things<br />worth a closer look.</h2><p class="section-description">Selected projects, from the first question to the final detail.</p></div></div>
-          <div class="projects">{projects.map((project, index) => <ProjectCard project={project} lead={index === 0} />)}</div>
-        </section>
-
-        <section id="about" class="approach chapter" aria-labelledby="about-title" tabindex="-1">
-          <div class="approach-sticky"><div class="container approach-content"><div class="approach-top"><p class="eyebrow">02 / A way of thinking</p><span class="approach-marker" aria-hidden="true">✳</span></div><h2 id="about-title" class="approach-words">{profile.approach.split(' ').map(word => <span>{word}{' '}</span>)}</h2><div class="approach-bottom"><span class="eyebrow">The whole matters.<br />So does every detail.</span><span class="eyebrow">naz.wtf</span></div></div></div>
-        </section>
-
-        <section class="about-details container chapter" aria-labelledby="details-title">
-          <div class="section-heading" data-reveal><p class="eyebrow section-index">Behind the work</p><div><h2 id="details-title">Hi, I'm Naz.</h2><p class="biography">{profile.biography || 'There’s more to a person than a project grid. This is where I’ll share a little of my story.'}</p>{!profile.biography && <p class="pending-note">Biography and professional details to follow.</p>}</div></div>
-          {experience.length > 0 && <section class="experience-list" aria-labelledby="experience-title"><h3 id="experience-title" class="eyebrow">Experience</h3>{experience.map(item => <div class="experience-row"><h4>{item.role}</h4><p>{item.company}</p><p>{item.period}</p></div>)}</section>}
-        </section>
-
-        <section id="contact" class="contact container chapter" aria-labelledby="contact-title" tabindex="-1">
-          <div class="contact-top"><p class="eyebrow">03 / What's next?</p><a class="back-top" href="#top">Back to top <Arrow direction="up" /></a></div>
-          <h2 id="contact-title" data-reveal>Have a product<br />in mind?</h2>
-          <div class="contact-bottom"><p>Let’s talk about what you’re building.</p>{profile.email ? <Button href={`mailto:${profile.email}`} arrow="up">{profile.email}</Button> : <Button href={profile.linkedin} arrow="up">Connect on LinkedIn</Button>}</div>
-        </section>
-
-    </main>
-    <footer class="container footer"><a href="#top" aria-label="naz.wtf — back to top"><Logo /></a><p>© {new Date().getFullYear()} {profile.name}</p><a class="nav-link" href="/design-system/">Design system ↗</a></footer>
-  </div>
+<BaseLayout resetToTopOnReload>
+  <PortfolioPage />
   <script>import '../scripts/interactions';</script>
 </BaseLayout>

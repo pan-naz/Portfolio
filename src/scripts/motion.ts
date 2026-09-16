@@ -14,7 +14,7 @@ export function scrollToSection(target: HTMLElement) {
   target.focus({ preventScroll: true });
   if (smoothScroll) {
     // Lenis already reads CSS scroll-padding and scroll-margin for element targets.
-    smoothScroll.scrollTo(target.id === 'top' ? 0 : target, { duration: .95, lerp: 0 });
+    smoothScroll.scrollTo(target.id === 'top' ? 0 : target, { duration: .65, lerp: 0 });
   } else if (target.id === 'top') {
     window.scrollTo({ top: 0, behavior: reduced ? 'instant' : 'smooth' });
   } else {
@@ -25,9 +25,11 @@ export function scrollToSection(target: HTMLElement) {
 export function initializeMotion() {
   const media = gsap.matchMedia();
 
-  // Smooth wheel input only. Touch, small screens and reduced motion stay native.
+  // Light wheel smoothing: follow input closely without a long trailing glide.
+  // Touch, small screens and reduced motion stay native.
   media.add('(min-width: 768px) and (pointer: fine) and (prefers-reduced-motion: no-preference)', () => {
-    const lenis = new Lenis({ lerp: .1, smoothWheel: true, syncTouch: false, anchors: false, prevent: node => node.closest('#mobile-menu') !== null });
+    const lenis = new Lenis({ lerp: .18, smoothWheel: true, syncTouch: false, anchors: false, prevent: node => node.closest('#mobile-menu') !== null });
+    if (document.documentElement.dataset.reloadToTop === 'true') lenis.scrollTo(0, { immediate: true });
     smoothScroll = lenis;
     const tick = (time: number) => lenis.raf(time * 1000);
     lenis.on('scroll', ScrollTrigger.update);
@@ -49,7 +51,7 @@ export function initializeMotion() {
 
   media.add('(prefers-reduced-motion: no-preference)', () => {
     const small = window.matchMedia('(max-width: 767px)').matches;
-    // The hero owns its typing sequence; section reveals stay independent.
+    // The hero owns its intro sequence; section reveals stay independent.
     const reveals: { element: HTMLElement; animation: gsap.core.Tween }[] = [];
     document.querySelectorAll<HTMLElement>('[data-reveal], .project-caption').forEach(element => {
       const children = element.matches('.section-heading')
@@ -87,4 +89,5 @@ export function initializeMotion() {
 
   // Font metrics affect the start/end positions of all scroll scenes.
   document.fonts.ready.then(() => ScrollTrigger.refresh());
+  return { refresh: () => ScrollTrigger.refresh() };
 }

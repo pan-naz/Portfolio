@@ -1,8 +1,8 @@
 ---
+import IconButton from './IconButton.astro';
 import Logo from './Logo.astro';
 import ThemeToggle from './ThemeToggle.astro';
 import NavLinks from './NavLinks.astro';
-const links = [{label:'Work',href:'/#work'}, {label:'About',href:'/#about'}];
 ---
 <header class="site-header">
   <div class="header-pill-surface" aria-hidden="true"></div>
@@ -10,10 +10,10 @@ const links = [{label:'Work',href:'/#work'}, {label:'About',href:'/#about'}];
   <div class="header-controls">
     <NavLinks showDS={false} />
     <ThemeToggle />
-    <button class="menu-toggle" type="button" aria-label="Open navigation" aria-controls="mobile-menu" aria-expanded="false"><span class="menu-label">Menu</span><span aria-hidden="true">☰</span></button>
+    <IconButton class="menu-toggle" label="Open navigation" aria-controls="mobile-menu" aria-expanded="false"><span class="menu-label">Menu</span><span aria-hidden="true">☰</span></IconButton>
   </div>
 </header>
 <dialog id="mobile-menu" class="mobile-menu" aria-label="Navigation">
-  <div class="drawer-top"><Logo /><ThemeToggle /><button class="icon-button menu-close" aria-label="Close navigation" type="button">×</button></div>
-  <nav aria-label="Mobile navigation">{links.map(link => <a href={link.href}>{link.label === 'DS' ? 'Design system' : link.label}</a>)}<span aria-disabled="true" class="nav-link--disabled">CV <small>Coming soon</small></span></nav>
+  <div class="drawer-top"><Logo /><ThemeToggle /><IconButton class="menu-close" label="Close navigation">×</IconButton></div>
+  <NavLinks layout="mobile" showDS={false} />
 </dialog>

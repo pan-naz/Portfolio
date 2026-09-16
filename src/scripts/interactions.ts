@@ -1,11 +1,9 @@
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { initializeMotion, pauseScroll, resumeScroll, scrollToSection } from './motion';
 import { initializeWaterfall } from './waterfall';
-import { initializeHeroTyping } from './hero-typing';
+import { initializeHeroIntro } from './hero-intro';
 import { initializeHeaderMorph } from './header-morph';
+import { initializeWorkFilter } from './work-filter';
 
-gsap.registerPlugin(ScrollTrigger);
 document.documentElement.classList.add('enhanced');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const mobile = window.matchMedia('(max-width: 767px)');
@@ -15,14 +13,14 @@ const page = document.querySelector<HTMLElement>('#page-content')!;
 const header = document.querySelector<HTMLElement>('.site-header')!;
 const hero = document.querySelector<HTMLElement>('.hero')!;
 const waterfall = initializeWaterfall();
-const typing = initializeHeroTyping();
+const heroIntro = initializeHeroIntro();
 let closeTimer: ReturnType<typeof setTimeout> | undefined;
 let afterClose: (() => void) | undefined;
 let heroInView = true;
 const updateHeroMotion = () => {
   const suspended = menu.open || !heroInView || document.hidden;
   hero.classList.toggle('is-motion-paused', suspended);
-  typing?.setPaused(suspended);
+  heroIntro?.setPaused(suspended);
   waterfall?.setSuspended(menu.open);
 };
 new IntersectionObserver(entries => {
@@ -101,44 +99,7 @@ window.addEventListener('scroll', () => {
   scrollTick = true;
   requestAnimationFrame(() => { updateHeader(); scrollTick = false; });
 }, { passive: true });
-// gsap.matchMedia reverts active effects when reduced-motion preferences change.
-const media = gsap.matchMedia();
-initializeMotion();
+const siteMotion = initializeMotion();
+initializeWorkFilter(() => requestAnimationFrame(siteMotion.refresh));
 initializeHeaderMorph();
-media.add('(min-width: 1024px) and (min-height: 700px) and (prefers-reduced-motion: no-preference)', () => {
-  const section = document.querySelector<HTMLElement>('.approach')!;
-  const content = document.querySelector<HTMLElement>('.approach-content')!;
-  const words = [...document.querySelectorAll<HTMLElement>('.approach-words span')];
-  let narrative: gsap.core.Tween | undefined;
-  let resizeTimer: ReturnType<typeof setTimeout> | undefined;
-  const configure = () => {
-    narrative?.scrollTrigger?.kill();
-    narrative?.kill();
-    section.classList.remove('is-pinned');
-    gsap.set(words, { clearProps: 'color' });
-    // Fall back to normal flow when zoom, fonts or viewport height would clip text.
-    if (content.offsetHeight > window.innerHeight - 32) return;
-    section.classList.add('is-pinned');
-    // Set every word before staggering, so future words never flash white.
-    gsap.set(words, { color: '#AAAAAA' });
-    narrative = gsap.to(words, {
-      color: '#FFFFFF', duration: 1, stagger: .08, ease: 'none',
-      scrollTrigger: { trigger: section, start: 'top top', end: () => `+=${section.offsetHeight - window.innerHeight}`, scrub: true, invalidateOnRefresh: true },
-    });
-    ScrollTrigger.refresh();
-  };
-  const observer = new ResizeObserver(() => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(configure, 100);
-  });
-  observer.observe(content);
-  configure();
-  return () => {
-    observer.disconnect(); clearTimeout(resizeTimer);
-    narrative?.scrollTrigger?.kill(); narrative?.kill();
-    section.classList.remove('is-pinned');
-    gsap.set(words, { clearProps: 'color' });
-  };
-});
-
 updateHeader();

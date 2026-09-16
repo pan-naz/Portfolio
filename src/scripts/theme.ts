@@ -17,3 +17,11 @@ document.querySelectorAll('.theme-toggle').forEach(button => button.addEventList
 }));
 preference.addEventListener('change', event => { if (!explicit) syncTheme(event.matches); });
 syncTheme(root.dataset.theme === 'dark');
+
+// Keep the DS's real-site preview and other open pages on the same saved theme.
+window.addEventListener('storage', event => {
+  if (event.key !== 'naz-theme' && event.key !== null) return;
+  const saved = event.key === null ? null : event.newValue;
+  explicit = saved === 'light' || saved === 'dark';
+  syncTheme(explicit ? saved === 'dark' : preference.matches);
+});

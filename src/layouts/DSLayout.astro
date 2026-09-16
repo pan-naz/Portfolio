@@ -1,0 +1,19 @@
+---
+import '@fontsource-variable/urbanist';
+import '../styles/global.css';
+import '../styles/static-preview.css';
+interface Props { title?: string; }
+const { title = 'Folio design system — naz.wtf' } = Astro.props;
+---
+<!doctype html>
+<html lang="en" data-theme="light" data-static>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#FAF8F7" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body><a class="skip-link" href="#main">Skip to content</a><slot /></body>
+</html>
