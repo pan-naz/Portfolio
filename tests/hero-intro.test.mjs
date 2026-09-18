@@ -4,6 +4,7 @@ import { heroIntroTiming } from '../src/scripts/hero-intro.ts';
 import { revealEffects } from '../src/scripts/native-motion.ts';
 const read = path => readFileSync(new URL(path, import.meta.url), 'utf8');
 const source = read('../src/scripts/hero-intro.ts');
+const textReveal = read('../src/scripts/text-reveal.ts');
 const native = read('../src/scripts/native-motion.ts');
 const roles = read('../src/scripts/hero-role-transition.ts');
 const tokens = read('../src/styles/tokens.css');
@@ -54,17 +55,17 @@ assert.ok(source.includes('timing.tagsStart + Number(tag.style.getPropertyValue'
 assert.ok(!source.includes('headerIntro') && !source.includes("querySelector<HTMLElement>('.site-header')"), 'Top bar is outside the intro animation');
 assert.ok(!tokens.includes('--duration-header-reveal'), 'Retired header animation token removed');
 assert.ok(css.includes('.hero.is-tags-ready .skill-track'), 'Marquee waits until its own entrance is complete');
-assert.ok(read('../src/scripts/interactions.ts').includes('initializeHeroIntro();'), 'Rain is independent of intro completion');
+assert.ok(read('../src/scripts/interactions.ts').includes('initializeHeroIntro(workStage);'), 'Rain and work stage are independent of intro completion');
 assert.ok(!source.includes('onComplete();') && !tokens.includes('--overlap-intro'), 'Retired completion callback and fixed overlap token removed');
 assert.ok(tokens.includes('--intro-stage-progress: .5;'));
 for (const text of [source, roles, native]) {
   assert.ok(!/import .*gsap|CustomEase|requestAnimationFrame|setTimeout|setInterval/.test(text), 'No GSAP hero engine, timers or render loop remain');
 }
 assert.ok(!/is-copy-revealing|is-copy-finished|copy-line-index|keyframes tag-in/.test(source + css), 'Retired copy/tag CSS animation plumbing removed');
-assert.ok(source.includes('document.createRange()') && source.includes('--glyph-x'), 'Keep native kerning');
+assert.ok(textReveal.includes('document.createRange()') && textReveal.includes('--glyph-x'), 'Keep native kerning in the shared title-reveal helper');
 assert.equal((source.match(/permanent.textContent = 'Product Designer';/g) ?? []).length, 1, 'Do not rebuild title on completion');
 assert.ok(source.includes("['System thinker', 'AI builder', 'Web designer', 'App designer']"), 'Approved four-role cycle stays in order without punctuation');
-assert.ok(source.includes('document.fonts.ready') && source.includes('getBoundingClientRect().top'));
+assert.ok(source.includes('document.fonts.ready') && textReveal.includes('getBoundingClientRect().top'));
 assert.ok(source.includes('if (width === paragraphWidth) return;'));
 assert.ok(source.includes('restoreParagraph();'));
 assert.ok(source.includes("cta.addEventListener('focusin', () => intro?.finish())"));
@@ -72,6 +73,7 @@ assert.ok(source.includes("reduced.addEventListener('change', reset)"));
 assert.ok(source.includes("reduced.matches || typeof permanent.animate !== 'function'"));
 assert.ok(source.includes('intro?.cancel()') && source.includes('roleMotion?.destroy()'));
 assert.ok(source.includes('intro?.setPaused(value)') && source.includes('roleMotion?.setPaused(value)'));
+assert.ok(source.includes('workStage?.startIntro({ duration: copy.duration, delay: timing.ctaStart, easing })'), 'Work panel begins on the CTA stage clock');
 assert.ok(!/blur\(|filter:/.test(source));
 assert.ok(heading.includes('class="sr-only"') && heading.includes('role-cycle'));
 assert.equal((heading.match(/<h1\b/g) ?? []).length, 1);

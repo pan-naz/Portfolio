@@ -19,9 +19,35 @@ const { title = `${profile.name} — naz.wtf`, resetToTopOnReload = false } = As
       (() => {
         let saved;
         try { saved = localStorage.getItem('naz-theme'); } catch {}
-        const dark = saved === 'dark' || (saved !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+        const dark = saved === 'dark';
         document.documentElement.dataset.theme = dark ? 'dark' : 'light';
         document.querySelector('meta[name="theme-color"]').content = dark ? '#171716' : '#FAF8F7';
+      })();
+    </script>
+    <script is:inline>
+      (() => {
+        const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reduced) {
+          document.documentElement.dataset.sectionRevealMotion = 'true';
+          addEventListener('load', () => requestAnimationFrame(() => {
+            if (!document.documentElement.classList.contains('section-reveals-ready')) {
+              delete document.documentElement.dataset.sectionRevealMotion;
+            }
+          }), { once: true });
+        }
+        const desktopStage = matchMedia('(hover: hover)').matches
+          && matchMedia('(pointer: fine)').matches
+          && navigator.maxTouchPoints === 0;
+        if (!desktopStage) return;
+        document.documentElement.dataset.workStageLayout = 'true';
+        const canShift = !reduced;
+        if (!canShift) return;
+        document.documentElement.dataset.workStageMotion = 'true';
+        addEventListener('load', () => requestAnimationFrame(() => {
+          if (!document.querySelector('[data-work-stage].work-stage-can-shift')) {
+            delete document.documentElement.dataset.workStageMotion;
+          }
+        }), { once: true });
       })();
     </script>
     {resetToTopOnReload && <script is:inline>

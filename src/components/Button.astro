@@ -5,4 +5,4 @@ interface Props extends Omit<HTMLAttributes<'button'>, 'disabled'> { href?: stri
 const { href, size = 'large', variant = 'primary', disabled = false, arrow, class: className, ...attributes } = Astro.props;
 const Tag = href && !disabled ? 'a' : 'button';
 ---
-<Tag {...attributes} class:list={['button', 'text-body-m-strong', `button--${variant}`, `button--${size}`, className]} href={!disabled ? href : undefined} type={Tag === 'button' ? (attributes.type ?? 'button') : undefined} disabled={Tag === 'button' && disabled}><slot />{arrow && <Arrow direction={arrow} />}</Tag>
+<Tag {...attributes} class:list={['button', size === 'small' ? 'text-body-s' : 'text-body-m-strong', `button--${variant}`, `button--${size}`, className]} href={!disabled ? href : undefined} type={Tag === 'button' ? (attributes.type ?? 'button') : undefined} disabled={Tag === 'button' && disabled}><slot />{arrow && <Arrow direction={arrow} />}</Tag>

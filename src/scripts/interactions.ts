@@ -1,8 +1,15 @@
-import { initializeMotion, pauseScroll, resumeScroll, scrollToSection } from './motion';
+import { refreshViewportPointer } from './viewport-pointer';
+import { initializeMotion, pauseScroll, resumeScroll, scrollToSection, repositionWork } from './motion';
 import { initializeWaterfall } from './waterfall';
+import { initializeFooterPile } from './footer-pile';
 import { initializeHeroIntro } from './hero-intro';
 import { initializeHeaderMorph } from './header-morph';
 import { initializeWorkFilter } from './work-filter';
+import { initializeWorkStage } from './work-stage';
+import { initializeSectionReveals } from './section-reveals';
+import { initializeProjectTilt } from './project-tilt';
+import { initializeProjectCursor } from './project-cursor';
+import { initializeCaseStudies } from './case-studies';
 
 document.documentElement.classList.add('enhanced');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -13,15 +20,26 @@ const page = document.querySelector<HTMLElement>('#page-content')!;
 const header = document.querySelector<HTMLElement>('.site-header')!;
 const hero = document.querySelector<HTMLElement>('.hero')!;
 const waterfall = initializeWaterfall();
-const heroIntro = initializeHeroIntro();
+const footerPile = initializeFooterPile();
+const projectTilt = initializeProjectTilt();
+const projectCursor = initializeProjectCursor();
+const workStage = initializeWorkStage();
+const heroIntro = initializeHeroIntro(workStage);
+let sectionReveals: ReturnType<typeof initializeSectionReveals> | undefined;
 let closeTimer: ReturnType<typeof setTimeout> | undefined;
 let afterClose: (() => void) | undefined;
 let heroInView = true;
+let caseStudyOpen = false;
 const updateHeroMotion = () => {
-  const suspended = menu.open || !heroInView || document.hidden;
+  const suspended = menu.open || caseStudyOpen || !heroInView || document.hidden;
   hero.classList.toggle('is-motion-paused', suspended);
   heroIntro?.setPaused(suspended);
-  waterfall?.setSuspended(menu.open);
+  workStage?.setPaused(menu.open || caseStudyOpen || document.hidden);
+  sectionReveals?.setPaused(menu.open || caseStudyOpen || document.hidden);
+  waterfall?.setSuspended(menu.open || caseStudyOpen);
+  footerPile?.setPaused(menu.open || caseStudyOpen);
+  projectTilt?.setPaused(menu.open || caseStudyOpen || document.hidden);
+  projectCursor?.setPaused(menu.open || caseStudyOpen || document.hidden);
 };
 new IntersectionObserver(entries => {
   heroInView = entries[0].isIntersecting;
@@ -100,6 +118,9 @@ window.addEventListener('scroll', () => {
   requestAnimationFrame(() => { updateHeader(); scrollTick = false; });
 }, { passive: true });
 const siteMotion = initializeMotion();
-initializeWorkFilter(() => requestAnimationFrame(siteMotion.refresh));
+sectionReveals = initializeSectionReveals();
+const workFilter = initializeWorkFilter(() => { requestAnimationFrame(siteMotion.refresh); refreshViewportPointer(); }, repositionWork);
 initializeHeaderMorph();
 updateHeader();
+
+initializeCaseStudies(projectCursor, open => { caseStudyOpen = open; updateHeroMotion(); }, filter => workFilter?.select(filter));

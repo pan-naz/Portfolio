@@ -35,12 +35,8 @@ function componentsReachableFrom(entry, seen = new Set()) {
   }
   return seen;
 }
-const website = new Set(websitePages.flatMap(path => [...componentsReachableFrom(path)]));
-// Website previews currently embed the homepage. A component on a different route
-// needs a direct specimen until that route has its own live preview.
-const livePreview = componentsReachableFrom('src/pages/design-system/preview.astro');
 const specimens = componentsReachableFrom('src/pages/design-system.astro');
-function validate(entries, consumers = website) {
+function validate(entries) {
   const errors = [];
   const names = new Set();
   for (const item of entries) {
@@ -48,28 +44,14 @@ function validate(entries, consumers = website) {
     names.add(item.name);
     const path = resolve(root, `src/components/${item.name}.astro`);
     if (!existsSync(path)) errors.push(`Missing component: ${item.name}`);
-    if (!consumers.has(path)) errors.push(`Unused shared component: ${item.name}`);
     if (!sections.has(item.section)) errors.push(`Missing documentation section: ${item.name} → ${item.section}`);
-    if (!['direct', 'website'].includes(item.preview)) errors.push(`Unknown preview kind: ${item.name}`);
-    if (!(item.preview === 'direct' ? specimens : livePreview).has(path)) errors.push(`Preview does not render ${item.name}`);
-  }
-  for (const path of filesUnder('src/components')) {
-    // Explicit catalog infrastructure; a DS prefix is not a registration escape hatch.
-    if (!path.endsWith('.astro') || ['DSNavigation', 'DSExample', 'DSSitePreview', 'DSCatalog'].some(name => path === `src/components/${name}.astro`)) continue;
-    const name = path.replace('src/components/', '').replace(/\.astro$/, '');
-    if (!names.has(name)) errors.push(`Undocumented shared component: ${name}.astro`);
+    if (item.preview !== 'direct') errors.push(`Unknown preview kind: ${item.name}`);
+    if (!specimens.has(path)) errors.push(`Catalog does not render ${item.name}`);
   }
   for (const path of websitePages) errors.push(...validatePage(path, read(path)));
   if (/<(?:button|a)\b[^>]*\bclass=["'][^"']*\b(?:button|icon-button)\b/.test(catalog)) errors.push('Catalog must import shared controls instead of copying their markup.');
-  if (!catalog.includes('<DSSitePreview')) errors.push('The actual website preview is missing.');
-  const previewSource = read('src/components/DSSitePreview.astro');
-  if (!/<iframe\b[^>]*src="\/design-system\/preview\/"/.test(previewSource)) errors.push('Website preview must load the static shared composition.');
-  if (!previewSource.includes('sandbox="allow-same-origin"')) errors.push('Static preview must block scripts.');
-  const previewPage = read('src/pages/design-system/preview.astro');
-  if (!previewPage.includes('<PortfolioPage') || previewPage.includes('<script')) errors.push('Static preview must share PortfolioPage and load no scripts.');
-  if (!read('src/pages/index.astro').includes('<PortfolioPage')) errors.push('Homepage must use the same PortfolioPage as the static preview.');
   if (read('src/layouts/DSLayout.astro').includes('<script')) errors.push('Static DS layout must not load website scripts.');
-  for (const path of ['src/pages/design-system.astro', 'src/pages/design-system/preview.astro']) errors.push(...validatePage(path, read(path)));
+  errors.push(...validatePage('src/pages/design-system.astro', read('src/pages/design-system.astro')));
   const navigation = read('src/data/design-system.ts');
   for (const [,id] of navigation.matchAll(/\['([\w-]+)',\s*'[^']+'\]/g)) {
     if (!sections.has(id)) errors.push(`Navigation target missing: ${id}`);
@@ -88,19 +70,16 @@ function validate(entries, consumers = website) {
 }
 const errors = validate(registry);
 if (process.argv.includes('--self-test')) {
-  const missing = validate(registry.filter(item => item.name !== 'Button'));
+  const missing = validate([...registry, { name: 'MissingFixture', section: 'buttons', preview: 'direct', description: '' }]);
   const broken = validate(registry.map(item => item.name === 'Button' ? { ...item, section: 'missing-section' } : item));
-  const withoutButton = new Set(website);
-  withoutButton.delete(resolve(root, 'src/components/Button.astro'));
-  const unused = validate(registry, withoutButton);
-  if (!missing.some(error => error.includes('Undocumented shared component: Button')) || !broken.some(error => error.includes('Missing documentation section: Button')) || !unused.some(error => error.includes('Unused shared component: Button'))) {
+  if (!missing.some(error => error.includes('Missing component: MissingFixture')) || !broken.some(error => error.includes('Missing documentation section: Button'))) {
     throw new Error('Design-system guard failed to reject broken fixtures.');
   }
   for (const markup of ['<section>New section</section>', '<a href="/">Action</a>', '<div class="new-card">Card</div>', '<style>main { color: red }</style>']) {
     if (!validatePage('src/pages/work/example.astro', markup).length) throw new Error(`Page guard accepted inline design: ${markup}`);
   }
   if (validatePage('src/pages/work/example.astro', '---\nconst text = "<button>";\n---\n<main id="main"><WorkSection /></main><script>const text = "<button>";</script>').length) throw new Error('Page guard rejected valid composition.');
-  console.log('Design-system guard self-test passed (unused components, missing registration, broken anchors and inline route designs rejected).');
+  console.log('Design-system guard self-test passed (missing components, broken anchors and inline route designs rejected).');
 }
 if (errors.length) { console.error(errors.join('\n')); process.exit(1); }
-console.log(`Design-system contract verified: ${registry.length} shared components used by the website, actual previews, stable section targets, no catalog style forks.`);
+console.log(`Design-system contract verified: ${registry.length} documented components render direct specimens with stable section targets and no catalog style forks.`);

@@ -36,3 +36,9 @@ assert.throws(() => contrastRatio('rgb(256 0 0)', '#ffffff'));
 assert.throws(() => contrastRatio('rgb(0 0 0 / 2)', '#ffffff'));
 assert.equal(light.accent, '#F25A30');
 assert.equal(dark.accent, '#FF6B42');
+assert.equal(dark.canvas, '#161715', 'Dark mode preserves the original main page canvas');
+assert.equal(dark.surface, '#0F100E', 'Dark containers use a separate neutral darker than the original canvas');
+for (const token of ['floating-ink', 'floating-ink-hover', 'floating-surface', 'floating-surface-subtle', 'floating-accent', 'floating-on-primary', 'floating-focus-ring', 'shadow-floating-light']) {
+  assert.equal(dark[token], light[token], `${token} stays pinned to the Light palette in dark mode`);
+}
+assert.ok(passesNormalTextAA(contrastRatio(light['floating-ink'], light['floating-surface'])), 'Theme-invariant floating-control text passes AA on its white surface');

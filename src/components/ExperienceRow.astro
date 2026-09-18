@@ -3,4 +3,12 @@ import type { Experience } from '../data/portfolio';
 interface Props { item: Experience; }
 const { item } = Astro.props;
 ---
-<li class="experience-row"><p class="experience-period">{item.period}</p><div><h3>{item.role}</h3><p class="experience-company">{item.company} · {item.location}</p></div><p class="experience-summary">{item.summary}</p><p class="experience-duration">{item.duration}</p></li>
+<li class="experience-row" data-section-item>
+  <p class="experience-period text-body-s">{item.period}</p>
+  <div>
+    <h3 class="text-body-m-strong">{item.role}</h3>
+    <p class="experience-company text-body-s">{item.company} · {item.location}</p>
+  </div>
+  <p class="experience-summary text-body-m">{item.summary}</p>
+  <p class="experience-duration text-body-s">{item.duration}</p>
+</li>

@@ -30,3 +30,32 @@ assert.ok(/\.navigation-item\s*\{[^}]*--navigation-item-padding-inline: 12px[^}]
 assert.ok(!/\[aria-current\][^}]*\[aria-pressed='true'\][^{]*\{[^}]*padding-inline-end/.test(css));
 assert.ok(!/\[aria-current\][^{]*\{[^}]*background:/.test(css));
 console.log('PASS: real project filters, pressed semantics, live status and one shared push-dot navigation item.');
+
+const { arrangeProjectCards } = await import('../src/scripts/work-filter-model.ts');
+const { projects, conceptProjects } = await import('../src/data/portfolio.ts');
+const allProjects = [...projects, ...conceptProjects];
+assert.equal(projects.length, 3);
+assert.equal(conceptProjects.filter(p => p.category === 'websites').length, 5);
+assert.equal(conceptProjects.filter(p => p.category === 'misc').length, 7);
+assert.equal(new Set(allProjects.map(p => p.id)).size, 15, 'All three collections have distinct project identities');
+assert.ok(conceptProjects.every(p => p.placeholder && !p.href), 'Fictional samples do not pretend to be delivered case studies');
+assert.equal(new Set(conceptProjects.map(p => p.image)).size, 12, 'Each concept has its own photo');
+for (const project of conceptProjects) {
+  const image = readFileSync(new URL(`../public${project.image}`, import.meta.url));
+  assert.equal(image.toString('ascii', 0, 4), 'RIFF');
+  assert.equal(image.toString('ascii', 8, 12), 'WEBP', 'Every sample photo is a local WebP');
+}
+const heights = [400, 550, 500, 460, 620, 330, 580];
+for (const columns of [1, 2]) {
+  const packed = arrangeProjectCards(heights, columns, 24);
+  const bottoms = Array(columns).fill(0);
+  packed.positions.forEach(({ column, top }, i) => {
+    assert.equal(top, bottoms[column], 'Each card follows the prior card with an exact gap');
+    assert.equal(top, Math.min(...bottoms), 'The next card occupies the shortest available column');
+    bottoms[column] = top + heights[i] + 24;
+    if (i) assert.ok(top >= packed.positions[i - 1].top, 'Visual reading order follows source order');
+  });
+  assert.equal(packed.height, Math.max(...bottoms) - 24, 'Collection ends exactly at the lowest card');
+}
+assert.deepEqual(arrangeProjectCards([], 2, 24), { positions: [], height: 0 });
+console.log('PASS: three distinct collections, all 12 local assets, natural-height masonry, responsive source order and precise last-card bounds.');

@@ -1,6 +1,6 @@
 # naz.wtf portfolio
 
-Responsive Astro portfolio and connected static design-system catalog. The approved visual source is `../DESIGN.md`, based on the user-supplied `../figma-ds.svg` and `../figma-home.svg`.
+Responsive Astro portfolio with a separately maintained static design-system catalog. The approved visual source is `../DESIGN.md`, based on the user-supplied `../figma-ds.svg` and `../figma-home.svg`.
 
 ## Run
 
@@ -26,22 +26,22 @@ The extraction script and reference renders are in `../reference-research/figma-
 
 ## Shared design system
 
-The 26 public components are registered in `src/data/ds-components.ts`. Both the website and `/design-system/` use these actual implementations and the same `src/styles/tokens.css`. `PortfolioPage.astro` composes the homepage and `/design-system/preview/`; the latter uses a script-free `DSLayout` and is embedded in a sandbox that blocks scripts. `src/data/design-system.ts` supplies the 13 catalog anchors; `src/data/navigation.ts` supplies website links.
+`src/data/ds-components.ts` registers only the components currently documented through direct catalog specimens. The website and `/design-system/` share `src/styles/tokens.css`, while `PortfolioPage.astro` composes only the homepage. `src/data/design-system.ts` supplies the 12 catalog anchors; `src/data/navigation.ts` supplies website links.
 
-The catalog follows the Figma specimen sheet: color, typography, space and shape, used components, dark-mode examples and a static website view. Search, tabbed examples, unused component sections and animated demos are removed. The mobile anchor index wraps above the sheet. Color readouts are extracted from the shared token CSS at build time. Scoped dark tokens render both modes together; component visual styles are never redefined by catalog CSS.
+The catalog follows the Figma specimen sheet: color, typography, space and shape, selected component specimens and dark-mode examples. The Website section, embedded portfolio preview, search, tabs and animated demos are removed. The mobile anchor index wraps above the sheet. Color readouts are extracted from the shared token CSS at build time. Scoped dark tokens render both modes together; component visual styles are never redefined by catalog CSS.
 
-Every visual website change must update its shared component, consumer, registry and DS documentation together. Routes compose components rather than containing page-specific designs. Documentation styles use the `ds-` prefix and do not fork component styles. Source changes update both views through Astro HMR; production output requires rebuilding.
+The design system is maintained independently and changes only when the user explicitly requests a DS update. Website work does not require a catalog registration or documentation edit. Routes still compose components rather than containing page-specific designs, and documentation styles use the `ds-` prefix so they do not fork component styles.
 
 ## Motion and responsive behavior
 
 The hero uses native staged reveals and cycles through System thinker, AI builder, Web designer and App designer. Stages begin at 450ms intervals over 900ms core reveals; the header is visible immediately and the waterfall starts after its independent two-second delay. Skills loop, header docking, project reveals, theme toggle and drawer behavior remain active. Shared navigation items use an accent dot and label shift for hover, focus and active states. The retired “A way of thinking” section and its dedicated animation were removed. Reduced motion reveals content immediately and suppresses decorative motion.
 
-`static-preview.css` is loaded only by `DSLayout`. It disables animation, transitions, smooth scrolling and moving hover treatments; the static skills list shows one complete copy. The catalog never initializes website motion or persists a theme choice. The normal website continues to use `BaseLayout` and its existing scripts.
+`static-preview.css` is loaded only by `DSLayout`. It disables animation, transitions, smooth scrolling and moving hover treatments in catalog specimens. The catalog never initializes website motion or persists a theme choice. The normal website continues to use `BaseLayout` and its existing scripts.
 
 No mobile Figma design was provided. The implementation adapts desktop with stacked card headers, metrics and timeline rows, wrapping labels, 24px gutters and the existing accessible drawer. Desktop content is centered at 1200px; the hero keeps the supplied frame’s wider inset. Dark sheets use surface and project cards remain pinned to Light, as specified by the DS.
 
 ## Validation
 
-`pnpm check` and `pnpm build` run the DS structural guard and foreground/background contrast checks. `node --test tests/*.test.mjs` covers typography, contrast and animation behavior. Primary and secondary text pass 4.5:1 on the supported surfaces; the contrast utility composites Figma’s alpha-muted colors before calculating ratios. Accent and decorative tertiary uses require their own size/context checks and are not covered by a blanket accessibility claim.
+`pnpm check` and `pnpm build` run the catalog specimen guard and foreground/background contrast checks. The guard validates only components intentionally documented in the DS; it does not require every website component to appear there. `node --test tests/*.test.mjs` covers typography, contrast and animation behavior. Primary and secondary text pass 4.5:1 on the supported surfaces; the contrast utility composites Figma’s alpha-muted colors before calculating ratios. Accent and decorative tertiary uses require their own size/context checks and are not covered by a blanket accessibility claim.
 
-Review website, DS examples and documentation together, including both themes, keyboard focus, responsive behavior and reduced-motion fallbacks. See `QA.md` for the latest verification.
+When design-system work is explicitly requested, review its examples and documentation in both themes with keyboard, responsive and reduced-motion checks. See `QA.md` for the latest verification.

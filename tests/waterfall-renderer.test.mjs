@@ -50,19 +50,20 @@ const handlers = {
   addEventListener(name, fn) { events.set(name, fn); },
   removeEventListener(name) { events.delete(name); },
 };
-globalThis.window = handlers;
+globalThis.window = { ...handlers, innerWidth: 1000, innerHeight: 900 };
 globalThis.matchMedia = query => ({ matches: query.includes('pointer: fine'), ...handlers });
 const canvas = { getContext: () => context };
+let fieldTop = 0;
 const field = {
   dataset: {}, clientWidth: 800, style: { setProperty() {} },
   querySelector: () => canvas,
-  getBoundingClientRect: () => ({ left: 0, top: 0 }),
+  getBoundingClientRect: () => ({ left: 0, top: fieldTop }),
 };
 const elements = {
   '[data-waterfall]': field, '.hero': { offsetHeight: 728 },
   '#page-content': { style: { setProperty() {} } }, '.site-header': { offsetHeight: 72 },
 };
-globalThis.document = { readyState: 'complete', hidden: false, ...handlers,
+globalThis.document = { readyState: 'complete', hidden: false, elementFromPoint: () => null, ...handlers,
   documentElement: handlers, querySelector: selector => elements[selector] };
 globalThis.ResizeObserver = class { observe() {} disconnect() {} };
 globalThis.IntersectionObserver = class {
@@ -110,6 +111,11 @@ assert.ok(colorSeen, 'Real rendered icons acquire the accent during pointer inte
 assert.ok(verifiedGroupIcons > 1000, 'Group color verified across many glyph replacements');
 assert.ok(peak > 600);
 assert.ok(peak < 1044);
+events.get('pointermove')({ pointerType: 'mouse', clientX: 400, clientY: 400 });
+fieldTop = -120;
+events.get('scroll')(); nextFrame(181000);
+assert.equal(field.dataset.pointerY, '520.00', 'Rain repulsion reprojects after scrolling without a new mousemove');
+assert.equal(field.dataset.pointerX, '400.00');
 animation.setPaused(true);
 assert.equal(nextFrame, undefined);
 animation.destroy();

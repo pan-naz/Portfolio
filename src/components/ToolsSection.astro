@@ -1,0 +1,14 @@
+---
+import { tools } from '../data/portfolio';
+import ToolCard from './ToolCard.astro';
+---
+<section class="tools-section" aria-labelledby="tools-title" data-section-item>
+  <h3 id="tools-title" class="eyebrow">03 / Tools I use</h3>
+  <ul class="tools-grid" aria-label="Tools I use">
+    {tools.map(tool => <li><ToolCard tool={tool} /></li>)}
+  </ul>
+</section>
+
+<script>
+  import '../scripts/tool-card-tooltips';
+</script>

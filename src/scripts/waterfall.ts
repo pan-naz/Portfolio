@@ -1,3 +1,4 @@
+import { refreshViewportPointer, watchViewportPointer, type ViewportPointer } from './viewport-pointer';
 import { advanceLocalFallClock, catchUpFallClock, pointerRepulsion, repulsionRadius, streamStates, stretchedIconY, trailOpacity } from './waterfall-model';
 import { createWaterfallPaths, waterfallIconSize, waterfallIconGap } from './waterfall-icons';
 import { WaterfallSymbols } from './waterfall-symbols';
@@ -174,6 +175,7 @@ export function initializeWaterfall() {
     field.dataset.motion = reduced.matches ? 'reduced' : !loaded && !disposed ? 'waiting' : running ? 'running' : 'paused';
     if (reduced.matches) draw();
     if (running) frame = requestAnimationFrame(tick);
+    if (running) refreshViewportPointer();
   };
 
   const resize = () => {
@@ -191,6 +193,7 @@ export function initializeWaterfall() {
     columns = Math.floor(width / pitch);
     offset = (width - (columns - 1) * pitch) / 2;
     draw();
+    refreshViewportPointer();
   };
   const observer = new ResizeObserver(resize);
   observer.observe(field);
@@ -202,16 +205,18 @@ export function initializeWaterfall() {
   });
   visibility.observe(field);
 
-  const move = (event: PointerEvent) => {
-    if (!finePointer.matches || event.pointerType === 'touch' || paused || suspended || reduced.matches || !inView) return;
+  const move = (event: ViewportPointer) => {
+    if (!event.active || !finePointer.matches || paused || suspended || reduced.matches || !inView) { pointer.active = false; return; }
     const rect = field.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
     pointer.active = x >= -horizontalBleed && x <= width + horizontalBleed && y >= 0 && y <= height;
     if (!pointer.active) return;
-    if (!pointer.strength) { pointer.x = x; pointer.y = y; }
+    if (!pointer.strength || event.viewportChanged) { pointer.x = x; pointer.y = y; }
     pointer.targetX = x;
     pointer.targetY = y;
+    field.dataset.pointerX = x.toFixed(2);
+    field.dataset.pointerY = y.toFixed(2);
   };
   const leave = () => { pointer.active = false; };
   const load = () => {
@@ -223,9 +228,7 @@ export function initializeWaterfall() {
       synchronize();
     }, 2000);
   };
-  window.addEventListener('pointermove', move, { passive: true });
-  document.documentElement.addEventListener('pointerleave', leave);
-  window.addEventListener('blur', leave);
+  const unwatch = watchViewportPointer(move);
   window.addEventListener('themechange', resize);
   window.addEventListener('load', load, { once: true });
   document.addEventListener('visibilitychange', synchronize);
@@ -242,9 +245,7 @@ export function initializeWaterfall() {
     synchronize();
     observer.disconnect();
     visibility.disconnect();
-    window.removeEventListener('pointermove', move);
-    document.documentElement.removeEventListener('pointerleave', leave);
-    window.removeEventListener('blur', leave);
+    unwatch();
     window.removeEventListener('themechange', resize);
     window.removeEventListener('load', load);
     document.removeEventListener('visibilitychange', synchronize);
@@ -253,8 +254,8 @@ export function initializeWaterfall() {
   };
   if (import.meta.hot) import.meta.hot.dispose(destroy);
   return {
-    setPaused(value: boolean) { paused = value; pointer.active = false; synchronize(); },
-    setSuspended(value: boolean) { suspended = value; pointer.active = false; synchronize(); },
+    setPaused(value: boolean) { if (paused === value) return; paused = value; if (value) pointer.active = false; synchronize(); },
+    setSuspended(value: boolean) { if (suspended === value) return; suspended = value; if (value) pointer.active = false; synchronize(); },
     destroy,
   };
 }

@@ -1,5 +1,5 @@
 ---
-interface Props { id: string; label: string; }
-const { id, label } = Astro.props;
+interface Props { id: string; label: string; reveal?: boolean; }
+const { id, label, reveal = true } = Astro.props;
 ---
-<div class="section-heading" data-reveal><div class="section-index"><slot name="index"><p class="eyebrow">{label}</p></slot></div><div><h2 id={id}><slot /></h2><slot name="description" /></div></div>
+<div class="section-heading" data-section-reveal={reveal ? '' : undefined}><div class="section-index"><slot name="index"><p class="eyebrow">{label}</p></slot></div><div><h2 id={id}><slot /></h2><slot name="description" /></div></div>

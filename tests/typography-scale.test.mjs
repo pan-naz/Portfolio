@@ -22,11 +22,26 @@ const global = read('../src/styles/global.css');
 assert.ok(/\.desktop-nav\s*\{[^}]*gap: var\(--space-3\)/.test(global) && /\.navigation-item\s*\{[^}]*--navigation-item-padding-inline: 12px[^}]*padding: 10px var\(--navigation-item-padding-inline\)/.test(global), 'Horizontal NavLinks use space/12 with shared 12px item padding');
 assert.ok(/\.header-controls\s*\{[^}]*gap: var\(--space-3\)/.test(global), 'Horizontal header components use space/12');
 assert.ok(/\.mobile-menu nav\s*\{[^}]*gap: 0/.test(global), 'Vertical navigation keeps zero inter-item gap');
+assert.ok(/body\s*\{[^}]*font-size: var\(--text-body\)[^}]*line-height: 1\.5[^}]*font-weight: 400/.test(global), 'Body/L is the shared 20/30 Regular default');
+assert.ok(/\.text-body-l\s*\{[^}]*font-size: var\(--text-body\)[^}]*line-height: 1\.5[^}]*letter-spacing: 0[^}]*font-weight: 400/.test(global), 'Body/L is one shared 20/30 Regular role');
+assert.ok(/\.text-body-m\s*\{[^}]*font-size: var\(--text-body-m\)[^}]*line-height: 1\.5[^}]*letter-spacing: 0[^}]*font-weight: 400/.test(global), 'Body/M is one shared 16/24 Regular role');
 assert.ok(/\.text-body-m-strong\s*\{[^}]*font-size: var\(--text-body-m\)[^}]*line-height: 1\.5[^}]*letter-spacing: 0[^}]*font-weight: 600/.test(global), 'Body/M Strong is one shared 16/24 Semibold role');
-assert.ok(read('../src/components/Button.astro').includes("'text-body-m-strong'"), 'Pill buttons consume Body/M Strong');
+assert.ok(/\.text-body-s\s*\{[^}]*font-size: var\(--text-small\)[^}]*line-height: 1\.428571[^}]*letter-spacing: 0[^}]*font-weight: 400/.test(global), 'Body/S is one shared 14/20 Regular role');
+const button = read('../src/components/Button.astro');
+assert.ok(button.includes("size === 'small' ? 'text-body-s' : 'text-body-m-strong'"), 'Buttons consume Body/M Strong at default size and Body/S at small size');
 assert.ok(read('../src/components/NavLinks.astro').includes("import NavigationItem from './NavigationItem.astro'"), 'Desktop and floating-pill navigation consume the shared item');
 assert.ok(read('../src/components/NavigationItem.astro').includes("'text-body-m-strong'"), 'Shared navigation item consumes Body/M Strong');
-assert.ok(read('../src/components/SectionNavigation.astro').includes('section-navigation text-body-m-strong'), 'Left section menu consumes Body/M Strong');
+const sectionNavigation = read('../src/components/SectionNavigation.astro');
+assert.ok(sectionNavigation.includes('section-navigation') && sectionNavigation.includes('text-body-m-strong'), 'Left section menu consumes Body/M Strong');
+assert.ok(sectionNavigation.includes('floating-control-theme floating-control-surface'), 'Left section menu consumes the shared theme-invariant floating-control treatment');
+const experienceRow = read('../src/components/ExperienceRow.astro');
+assert.match(experienceRow, /<h3 class="text-body-m-strong">/, 'Experience positions consume Body/M Strong');
+assert.match(experienceRow, /experience-summary text-body-m/, 'Experience descriptions consume Body/M');
+for (const metadataClass of ['experience-period text-body-s', 'experience-company text-body-s', 'experience-duration text-body-s']) {
+  assert.ok(experienceRow.includes(metadataClass), `${metadataClass} consumes Body/S`);
+}
+assert.ok(read('../src/components/Hero.astro').includes('hero-description text-body-l'), 'Homepage hero copy consumes Body/L');
+assert.ok(read('../src/components/ProjectCard.astro').includes('project-outcome text-body-l') && read('../src/components/ProjectCard.astro').includes('project-description text-body-m'), 'Homepage project copy consumes shared Body/L and Body/M roles');
 assert.ok(!/\.hero-title\s*\{[^}]*font-size/.test(global), 'Hero uses the shared Display class');
 assert.ok(/\.hero-title\s*\{[^}]*text-wrap: wrap/.test(global));
 assert.ok(/grid-template-columns: minmax\(0, 1fr\)/.test(global));
@@ -35,6 +50,7 @@ assert.ok(read('../src/components/TypewriterHeading.astro').includes('type-line 
 assert.ok(/\.type-line--display,\s*\.role-cycle\s*\{[^}]*translateX\(-\.06em\)/.test(global), 'Display and cycling lines share the same responsive optical edge');
 assert.ok(read('../src/components/TypewriterHeading.astro').includes('type-line text-h2 role-cycle'), 'Cycling text uses the shared heading size and accent role');
 const ds = read('../src/components/DSCatalog.astro');
-for (const role of ['text-display', 'text-h2']) assert.ok(ds.includes(`'${role}'`), 'Catalog typography data uses shared type classes');
+for (const role of ['text-display', 'text-h2', 'text-body-l', 'text-body-m', 'text-body-m-strong', 'text-body-s']) assert.ok(ds.includes(`'${role}'`), 'Catalog typography data uses shared type classes');
+assert.ok(!ds.includes('Body/S Strong') && !global.includes('text-body-s-strong'), 'Retired Body/S Strong naming cannot drift back into the shared system');
 assert.ok(ds.includes('class={style}'), 'Catalog renders the shared type class from its specimen data');
 console.log('PASS: shared 40/26 → 88/56 Figma scale, minimum 20% steps, 320–2560px and 100–200% font preferences.');

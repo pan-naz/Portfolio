@@ -1,0 +1,10 @@
+---
+import type { Tool } from '../data/portfolio';
+interface Props { tool: Tool; }
+const { tool } = Astro.props;
+const tooltipId = `tool-${tool.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-tooltip`;
+---
+<div class="tool-card" role="group" tabindex="0" aria-labelledby={tooltipId}>
+  <img src={tool.logo} alt="" width={tool.width} height={tool.height} loading="lazy" decoding="async" />
+  <span id={tooltipId} class="tool-card-tooltip text-body-m" role="tooltip">{tool.name}</span>
+</div>

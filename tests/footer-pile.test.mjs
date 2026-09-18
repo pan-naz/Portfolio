@@ -1,0 +1,195 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import ts from 'typescript';
+
+const modules = new Map();
+function compile(path) {
+  if (modules.has(path)) return modules.get(path);
+  let source = readFileSync(path, 'utf8');
+  source = source.replaceAll('import.meta.hot', 'undefined');
+  source = source.replace("from 'matter-js'", `from '${pathToFileURL(resolve('node_modules/matter-js/build/matter.js')).href}'`);
+  source = source.replace(/from '(\.\/[^']+)'/g, (_, specifier) => `from '${compile(resolve(dirname(path), specifier + '.ts'))}'`);
+  const js = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
+  const url = `data:text/javascript;base64,${Buffer.from(js).toString('base64')}`;
+  modules.set(path, url);
+  return url;
+}
+const { FooterPile, pileRadius, pileCursorRadius } = await import(compile(resolve('src/scripts/footer-pile-model.ts')));
+const { waterfallIconManifest } = await import(compile(resolve('src/scripts/waterfall-icon-data.ts')));
+const { footerInterfaceIcons } = await import(compile(resolve('src/scripts/footer-interface-icons.ts')));
+assert.ok(footerInterfaceIcons.every(index => waterfallIconManifest[index].group === 'User Interface'));
+assert.equal(pileCursorRadius * 2, 100, 'The contact circle is 100px in diameter');
+const none = { x: 0, y: 0, active: false };
+const idle = new FooterPile(1200, waterfallIconManifest.length);
+const original = structuredClone(idle.icons);
+for (let i = 0; i < 600; i++) idle.advance(1 / 60, none);
+assert.deepEqual(idle.icons, original, 'Random deposition settles before the first paint and stays completely still');
+assert.equal(new Set(idle.icons.map(icon => icon.icon)).size, idle.icons.length, 'Initial icons are unique');
+assert.deepEqual(new FooterPile(1200, waterfallIconManifest.length).icons, original, 'A seed can be replayed for static previews');
+assert.notDeepEqual(new FooterPile(1200, waterfallIconManifest.length, 123).icons.map(i => [i.x, i.y, i.icon]), original.map(i => [i.x, i.y, i.icon]), 'A fresh seed changes the outline, positions and identities');
+for (const width of [272, 342, 640, 1200]) {
+  for (const seed of [1827, 123, 4234]) {
+    const pile = new FooterPile(width, waterfallIconManifest.length, seed);
+    const minX = Math.min(...pile.icons.map(i => i.x)), maxX = Math.max(...pile.icons.map(i => i.x));
+    assert.ok(minX > 0 && maxX < width, 'The initial pile leaves the divider endpoints clear');
+    assert.ok(Math.abs((minX + maxX) / 2 - width / 2) < width * .15, 'Uneven shoulders stay near the center');
+    assert.ok(Math.min(...pile.icons.map(i => i.y)) > -110, 'The random skyline clears the contact content');
+    assert.ok(!pile.icons.some(i => i.fallen || i.removed), 'No icons fall during initial deposition');
+    pile.destroy();
+  }
+}
+const entering = new FooterPile(1200, waterfallIconManifest.length);
+const beforeEntry = structuredClone(entering.icons);
+const target = { x: entering.icons[80].x, y: entering.icons[80].y, active: true };
+entering.advance(1 / 60, target);
+for (let i = 0; i < entering.icons.length; i++) {
+  const distance = Math.hypot(entering.icons[i].x - beforeEntry[i].x, entering.icons[i].y - beforeEntry[i].y);
+  assert.ok(distance < 14, 'Deep cursor entry grows into contact instead of teleporting a full circle');
+  if (Math.hypot(beforeEntry[i].x - target.x, beforeEntry[i].y - target.y) > 100) assert.ok(distance < .01, 'There is no long-range repulsion');
+}
+for (let i = 0; i < 1200; i++) entering.advance(1 / 60, target);
+assert.ok(Math.min(...entering.icons.filter(i => !i.fallen).map(i => Math.hypot(i.x - target.x, i.y - target.y))) >= pileCursorRadius - 1, 'Icons vacate the solid cursor area');
+assert.ok(entering.sleeping, 'A stationary cursor holds its space without an endless animation loop');
+
+function sweep(fps, from, to, seed = 1827, duration = 3) {
+  const pile = new FooterPile(800, waterfallIconManifest.length, seed);
+  const before = structuredClone(pile.icons);
+  let maxStep = 0;
+  for (let frame = 0; frame < fps * duration; frame++) {
+    const previous = pile.icons.map(icon => [icon.x, icon.y]);
+    pile.advance(1 / fps, { x: from + (to - from) * frame / (fps * duration), y: -10, active: true });
+    for (let i = 0; i < pile.icons.length; i++) {
+      const icon = pile.icons[i];
+      if (!icon.fallen) assert.ok(icon.y <= -pileRadius + .01, 'Cursor cannot squeeze icons down through the divider');
+      if (!icon.removed && !icon.fallen) maxStep = Math.max(maxStep, Math.hypot(icon.x - previous[i][0], icon.y - previous[i][1]));
+    }
+  }
+  for (let frame = 0; frame < fps * 20; frame++) pile.advance(1 / fps, none);
+  assert.deepEqual(pile.icons.map(icon => icon.icon), before.map(i => i.icon), 'Glyphs never change and icons never respawn');
+  assert.ok(pile.icons.filter(icon => icon.removed).length > pile.icons.length * .10, 'One normal sweep clears a meaningful group off the endpoint');
+  assert.ok(pile.icons.filter((icon, i) => Math.abs(icon.x - before[i].x) > 50).length > pile.icons.length * .65, 'A sweep displaces most icons by at least 50px rather than barely stirring them');
+  assert.ok(maxStep < 35, 'Substeps prevent sudden position jumps during a sweep');
+  assert.ok(pile.sleeping, 'Physics stops after settling');
+  const settled = structuredClone(pile.icons);
+  for (let frame = 0; frame < fps * 2; frame++) pile.advance(1 / fps, none);
+  assert.deepEqual(pile.icons, settled, 'Displacement persists without resetting');
+  return pile;
+}
+const right = sweep(60, 80, 890);
+const left = sweep(60, 720, -90);
+sweep(60, 80, 890, 123);
+sweep(60, 80, 890, 4234);
+assert.ok(right.icons.some(icon => icon.fallen && icon.x > 800));
+assert.ok(left.icons.some(icon => icon.fallen && icon.x < 0));
+function fixedPointer(fps) {
+  const pile = new FooterPile(500, waterfallIconManifest.length);
+  for (let f = 0; f < fps * 2; f++) pile.advance(1 / fps, { x: 310, y: -10, active: true });
+  for (let f = 0; f < fps * 12; f++) pile.advance(1 / fps, none);
+  return pile.icons;
+}
+const at60 = fixedPointer(60), at120 = fixedPointer(120);
+for (let i = 0; i < at60.length; i++) {
+  assert.ok(Math.abs(at60[i].x - at120[i].x) < .1 && Math.abs(at60[i].y - at120[i].y) < .1, '60Hz and 120Hz share the same physics');
+}
+const removed = right.icons.filter(icon => icon.removed).map(icon => icon.id);
+right.resize(400);
+for (let f = 0; f < 600; f++) right.advance(1 / 60, none);
+assert.ok(removed.every(id => right.icons.find(icon => icon.id === id).removed), 'Resizing does not restore cleared icons');
+const gutter = new FooterPile(800, waterfallIconManifest.length, 1827, 240, 240);
+for (let frame = 0; frame < 180; frame++) {
+  gutter.advance(1 / 60, { x: 80 + (900 - 80) * frame / 180, y: -10, active: true });
+}
+assert.ok(gutter.icons.some(icon => icon.fallen && icon.x > 800 && !icon.removed),
+  'Icons remain drawable after leaving the divider while they cross the viewport gutter');
+console.log('PASS: random settled interface piles, solid 100px cursor, strong sweeps, no divider penetration, endpoint spills, continuous motion, persistence and fixed-step physics.');
+
+// Exercise the actual browser lifecycle with deterministic pointer/RAF events.
+let clock = 0, nextFrame = 0, paintCount = 0, visible;
+const frames = new Map(), windowEvents = new Map(), documentEvents = new Map();
+const colors = new Set();
+const context = { setTransform() {}, clearRect() { paintCount++; }, stroke() { colors.add(this.strokeStyle); } };
+const canvas = { style: {}, getContext: () => context };
+const footer = { offsetHeight: 101 };
+let fieldTop = 600;
+const field = { dataset: {}, clientWidth: 800, closest: () => footer,
+  querySelector: () => canvas, getBoundingClientRect: () => ({ left: 100, right: 900, top: fieldTop }) };
+const reduced = { matches: false, addEventListener() {}, removeEventListener() {} };
+const fine = { ...reduced, matches: true };
+globalThis.document = { hidden: false, elementFromPoint: () => null, querySelector: () => field,
+  documentElement: { hasAttribute: () => false, addEventListener() {}, removeEventListener() {} },
+  addEventListener: (type, fn) => documentEvents.set(type, fn), removeEventListener: type => documentEvents.delete(type) };
+globalThis.window = { innerWidth: 1000, innerHeight: 900,
+  addEventListener: (type, fn) => windowEvents.set(type, fn), removeEventListener: type => windowEvents.delete(type) };
+Object.defineProperty(globalThis, 'navigator', { configurable: true, value: { maxTouchPoints: 0 } });
+Object.defineProperty(globalThis, 'performance', { configurable: true, value: { now: () => clock } });
+globalThis.matchMedia = query => query.includes('reduced-motion') ? reduced : fine;
+globalThis.devicePixelRatio = 1;
+globalThis.getComputedStyle = () => ({ getPropertyValue: name => ({ '--footer-icon-ink': '#b8b8b8' }[name]) });
+globalThis.requestAnimationFrame = fn => { frames.set(++nextFrame, fn); return nextFrame; };
+globalThis.cancelAnimationFrame = id => frames.delete(id);
+globalThis.ResizeObserver = class { observe() {} disconnect() {} };
+globalThis.IntersectionObserver = class { constructor(fn) { visible = fn; } observe() {} disconnect() {} };
+globalThis.DOMMatrix = class { scale() { return this; } };
+globalThis.Path2D = class { addPath() {} arc() {} roundRect() {} };
+const { initializeFooterPile } = await import(compile(resolve('src/scripts/footer-pile.ts')));
+let testRandom = .42;
+const realRandom = Math.random;
+Math.random = () => testRandom;
+const live = initializeFooterPile();
+const initialSeed = field.dataset.seed;
+assert.ok(windowEvents.has('scroll'), 'Scrolling reprojects the stationary pointer; it does not apply a page-bottom impulse');
+assert.equal(canvas.style.left, '-100px', 'The canvas begins at the viewport edge instead of clipping at a fixed gutter');
+assert.equal(canvas.style.width, '1000px', 'The canvas remains visible across the complete viewport');
+assert.deepEqual([...colors], ['#b8b8b8'], 'Every icon uses exactly the same gray ink');
+windowEvents.get('themechange')();
+assert.equal(field.dataset.seed, initialSeed, 'Theme changes keep the same random pile');
+visible([{ isIntersecting: true }]);
+assert.equal(frames.size, 0, 'No animation loop while the pile is initially still');
+const move = (x, type = 'mouse') => windowEvents.get('pointermove')({ clientX: x + 100, clientY: 590, pointerType: type });
+move(700, 'touch');
+assert.equal(frames.size, 0, 'Touch does not move the pile');
+navigator.maxTouchPoints = 1;
+move(700);
+assert.equal(frames.size, 0, 'Touch-capable laptops are also static');
+navigator.maxTouchPoints = 0;
+reduced.matches = true;
+move(700);
+assert.equal(frames.size, 0, 'Reduced motion does not start physics');
+reduced.matches = false;
+function runFrame() {
+  clock += 1000 / 60;
+  const pending = [...frames.values()]; frames.clear();
+  pending.forEach(fn => fn(clock));
+}
+move(700);
+fieldTop = 650; windowEvents.get('scroll')(); runFrame();
+assert.equal(field.dataset.pointerY, '-60.00', 'The brush follows the stationary viewport cursor as the footer moves');
+fieldTop = 600; windowEvents.get('scroll')(); runFrame();
+move(400); for (let i = 0; i < 20; i++) runFrame();
+assert.equal(field.dataset.disturbed, 'true');
+live.setPaused(true);
+const pausedPaint = paintCount;
+move(700); runFrame();
+assert.equal(paintCount, pausedPaint, 'Menu suspension pauses input and drawing');
+live.setPaused(false);
+for (let i = 0; i < 180; i++) { move(80 + i * 4.5); runFrame(); }
+visible([{ isIntersecting: false }]);
+assert.equal(frames.size, 0, 'Offscreen work has no RAF');
+visible([{ isIntersecting: true }]);
+for (let i = 0; i < 1200; i++) runFrame();
+assert.ok(Number(field.dataset.spilled) > 0, 'Real pointer events spill icons');
+assert.equal(frames.size, 0, 'A settled renderer releases its animation loop');
+const survivors = field.dataset.remaining;
+windowEvents.get('themechange')();
+assert.equal(field.dataset.remaining, survivors, 'Theme changes never refill the shelf');
+live.destroy();
+assert.equal(frames.size, 0);
+assert.ok(!windowEvents.has('pointermove'), 'Cleanup removes input listeners');
+testRandom = .64;
+const reloaded = initializeFooterPile();
+assert.notEqual(field.dataset.seed, initialSeed, 'Reload selects a new random arrangement');
+reloaded.destroy();
+Math.random = realRandom;
+console.log('PASS: actual renderer has static touch/reduced-motion fallbacks, pointer sweeps, menu/offscreen pause, idle shutdown, theme persistence and cleanup.');

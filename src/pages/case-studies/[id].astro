@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CaseStudyPage from '../../components/CaseStudyPage.astro';
+import { projects, conceptProjects } from '../../data/portfolio';
+export function getStaticPaths() {
+  return [...projects, ...conceptProjects].map(project => ({ params: { id: project.id }, props: { project } }));
+}
+const { project } = Astro.props;
+---
+<BaseLayout title={`${project.title} — naz.wtf`}>
+  <CaseStudyPage project={project} />
+</BaseLayout>

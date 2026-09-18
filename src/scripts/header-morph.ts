@@ -13,6 +13,9 @@ export function initializeHeaderMorph() {
   const hero = slot.closest<HTMLElement>('.hero')!;
   const buttonHome = slot.querySelector<HTMLElement>('.hero-cta-entrance') ?? slot;
   const button = slot.querySelector<HTMLAnchorElement>('.button')!;
+  // The frame loop owns placement in both parents. A generic button transform
+  // transition can interpolate from the header origin during the DOM handoff.
+  button.classList.add('cta-morph-managed');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const mobile = matchMedia('(max-width: 767px)');
   let metrics: { inset: number; buttonTop: number; buttonX: number; buttonWidth: number; buttonHeight: number;
@@ -62,11 +65,16 @@ export function initializeHeaderMorph() {
     if (!metrics) return;
     const m = metrics;
     const docked = expanded || progress > 0;
+    if (docked && button.parentElement !== header) {
+      // Re-read the actual source at handoff, after fonts/responsive layout settle.
+      m.buttonX = slot.getBoundingClientRect().left;
+    }
     header.classList.toggle('is-docking', docked);
     header.style.setProperty('--pill-progress', docked ? '1' : '0');
     header.dataset.pillProgress = progress.toFixed(3);
     header.dataset.pillState = docked ? (!expanded ? 'hiding' : progress === 1 ? 'expanded' : 'expanding') : 'hero';
     header.dataset.pillExit = exit.toFixed(3);
+    header.dataset.pillSourceX = m.buttonX.toFixed(2);
     header.dataset.pillTrigger = (m.buttonTop - m.inset).toFixed(1);
     relocate(docked);
     if (!docked) {
@@ -175,6 +183,7 @@ export function initializeHeaderMorph() {
     header.classList.remove('is-docking');
     identity.inert = controls.inert = theme.inert = false;
     relocate(false);
+    button.classList.remove('cta-morph-managed');
     buttonHome.classList.remove('is-restored');
     buttonHome.style.removeProperty('opacity');
     buttonHome.style.removeProperty('transform');

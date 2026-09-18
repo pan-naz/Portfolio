@@ -54,6 +54,7 @@ export function createNativeMotion(effects: MotionEffect[], options: { paused?: 
       const last = keyframes[keyframes.length - 1];
       if (last.opacity !== undefined) element.style.opacity = String(last.opacity);
       if (last.transform !== undefined) element.style.transform = String(last.transform);
+      if (last.borderRadius !== undefined) element.style.borderRadius = String(last.borderRadius);
     }
     // Commit endpoints before releasing effects; never flash back to initial styles.
     cancel();
