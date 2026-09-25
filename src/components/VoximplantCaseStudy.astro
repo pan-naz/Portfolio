@@ -1,0 +1,258 @@
+---
+import agentIcon from '../assets/personas/agent.svg?raw';
+import marketingSpecialistIcon from '../assets/personas/marketing-specialist.svg?raw';
+import operationsLeadIcon from '../assets/personas/operations-lead.svg?raw';
+import supervisorIcon from '../assets/personas/supervisor.svg?raw';
+import type { Project } from '../data/portfolio';
+import CaseStudyDecisionCard from './CaseStudyDecisionCard.astro';
+import CaseStudyMedia from './CaseStudyMedia.astro';
+import ProjectIdentity from './ProjectIdentity.astro';
+import SkillTag from './SkillTag.astro';
+import Stat from './Stat.astro';
+import '../styles/voximplant-case-study.css';
+
+interface Props { project: Project; }
+const { project } = Astro.props;
+const asset = (name: string, extension: 'webp' | 'png' | 'mp4' = 'webp') => `/projects/voximplant-case-study/${name}.${extension}`;
+
+const personas = [
+  {
+    icon: operationsLeadIcon,
+    group: 'Buy and sets up',
+    title: 'Operations or customer-service lead',
+    description: 'Small and mid-size company, 10 - 200 people. IT services, finance, education, delivery, retail, car dealers.',
+    need: 'A working contact center in days, not months, without hiring developers. Predictable cost per seat.',
+    current: 'Custom code on the platform, a dedicated engineer, months of delay and a large bill.',
+  },
+  {
+    icon: marketingSpecialistIcon,
+    group: 'Buy and sets up',
+    title: 'Marketing specialist',
+    description: 'Marketing or operations specialist who designs IVR menus and outbound campaigns. Not a programmer.',
+    need: 'To build call logic, check it and change it without waiting for engineering.',
+    current: 'Logic lived in code. Every change was a ticket, and the only way to test is to publish and call the number.',
+  },
+  {
+    icon: supervisorIcon,
+    group: 'Works in it every day',
+    title: 'Supervisor',
+    description: 'Runs the team: queues, shifts, quality and reporting.',
+    need: 'A live view of every call and chat, a way to step into a conversation, and reports by agent and queue.',
+    current: 'Calls and chats in separate tools, so no single view of the team and no way to coach in real time.',
+  },
+  {
+    icon: agentIcon,
+    group: 'Works in it every day',
+    title: 'Agent',
+    description: 'Handles calls and messages all day across phone, SMS, Whatsapp, Telegram, Messenger, Viber and web chat.',
+    need: "One call and message interface for every channel, the customer's details, and a fast transfer.",
+    current: 'A different tool per channel and no shared customer profile.',
+  },
+];
+
+const competitors = [
+  ['Twilio Flex', 'A programmable platform: developers build the contact center on it. Implementation projects start around $10k.', 'Twilio Studio: strong no-code/low-code flow builder for IVR and SMS.', 'No native campaign tool. Outbound is built with APIs or partners.', 'Voice, SMS, WhatsApp, chat and more through Conversations.', '$1 per active user-hour or $150 per user/month, plus usage.', 'Teams with developers who want full control.'],
+  ['Amazon Connect', 'AWS account and console. Fast if you know AWS.', 'Contact flow editor: drag-and-drop, capable.', 'Outbound campaigns added in 2021, priced for high volume.', 'Voice and chat; SMS and other channels came later.', 'Pay as you go, about $0.018–0.038 per minute, no seat fee.', 'Teams already on AWS with cloud engineers.'],
+  ['Talkdesk', 'Sales-led. Contracts, historically with multi-year minimums.', 'Talkdesk Studio: low-code flow designer for admins.', 'Dialer sold as an add-on.', 'Voice in the base plan; digital channels as an add-on.', 'From $75 per user/month in 2021, $85+ later.', 'Mid-market teams that need deep CRM integrations.'],
+  ['Genesys Cloud CX', 'Enterprise rollout. Powerful and long to learn.', 'Architect: full flow builder for voice and digital.', 'Built in: predictive, progressive and preview dialing.', 'All channels, but only from the CX 2 tier.', '$75 (voice) to $115 (omnichannel) per user/month.', 'Large contact centers.'],
+  ['Five9', 'Sales-led onboarding.', 'IVR designer, voice-centric.', 'The strongest dialers: predictive, power, preview.', 'Voice first; digital channels on higher tiers.', 'From about $149 per user/month.', 'Outbound-heavy sales and collections teams.'],
+  ['Aircall', 'Self-serve, set up in minutes.', 'Drag-and-drop IVR menus only. No scenario logic.', 'Power dialer for call lists, no campaign automation.', 'Voice and SMS.', '$30–50 per user/month.', 'Small teams that mostly take calls.'],
+];
+
+const hypotheses = [
+  ['Call logic should be in a visual editor rather than written in code, so a non-technical user can build branching call scenarios.', 'Create visual ', 'scenario editor', '.'],
+  ['If a scenario can be run inside the editor, users will find errors before they publish.', 'Add ', 'test mode', '.'],
+  ['When new scenarios start from templates, the first campaign launches faster.', 'Add ', 'template gallery', ': meeting confirmation, order confirmation, NPS, CSI surveys etc...'],
+  ['If campaign setup as guided sequence, users will not need help with contact lists and variables.', 'Create four-step ', 'campaign creator', ': strategy, contacts, variable mapping, summary.'],
+  ['If buying a number add to onboarding, users will not hit a dead end later.', 'Add ', 'numbers', ', to onboarding flow.'],
+];
+
+const testingMetrics = [
+  { value: '10+', label: 'core pages prototyped', note: '30+ screens each' },
+  { value: '2', label: 'test formats', note: 'corridor tests and moderated sessions' },
+  { value: '15+', label: 'participants', note: 'current MVP users, prospects and call-center managers' },
+  { value: '≈87%', label: 'task completion', note: 'unassisted, on the redesigned flows in the final round' },
+];
+
+const impactMetrics = [
+  { value: '4.8/5', label: 'rating on G2', note: 'Voximplant Kit, verified user reviews' },
+  { value: '20K', label: 'calls automated per month', note: "Skyeng's outbound campaigns, with a 17% increase in call volume" },
+  { value: '≤ 30 min', label: 'to launch a contact center', note: 'self-serve, without engineers' },
+  { value: '80%', label: 'of routine calls can be automated', note: 'with AI and IVR scenarios' },
+  { value: '5', label: 'enterprise clients in production', note: 'Rappi, KFC, Burger King, Hyundai, Jaguar' },
+  { value: '10+', label: 'designers led', note: 'across product, brand and web, plus a research function' },
+];
+---
+<article class="case-study-content case-study-content--voximplant" data-case-content>
+  <div class="case-study-artwork">
+    <video data-case-video muted loop playsinline preload="none" poster={project.image} width="1272" height="720" aria-label={project.imageAlt}>
+      <source data-src={asset('promo-voxkit', 'mp4')} type="video/mp4" />
+      <img src={project.image} alt={project.imageAlt} width="1200" height={project.imageHeight} decoding="async" />
+    </video>
+  </div>
+
+  <div class="case-study-body vox-case">
+    <section class="vox-intro" aria-labelledby="vox-title">
+      <div class="vox-project">
+        <ProjectIdentity title={project.title} logo={project.logo} />
+        <div class="project-tags">{project.tags.map(label => <SkillTag label={label} variant="raised" />)}</div>
+        <a class="vox-product-link text-body-s" href="https://voximplant.com/kit" target="_blank" rel="noopener noreferrer">voximplant.com/kit</a>
+      </div>
+      <div class="vox-summary">
+        <h1 id="vox-title" class="sr-only" data-case-title>{project.title}</h1>
+        <p class="vox-lede">Designed and launched from scratch as a no-code contact center builder. Scaled from MVP to a core SaaS product.</p>
+        <p class="text-body-m">Voximplant Kit is intelligent cloud contact center. Offering an easy to use drag &amp; drop interface and industry leading AI automation.</p>
+      </div>
+    </section>
+
+    <section class="vox-meta" aria-label="Project role and team">
+      <div>
+        <p class="vox-label">My role</p>
+        <p>Only designer for the first <span class="vox-accent">1.5 year</span>, then <span class="vox-accent">lead</span> when a second designer joined.</p>
+        <p>I owned the product end to end:</p>
+        <ul>
+          <li>Discovery and interviews</li><li>UX Research</li><li>Competitive Analysis</li><li>Prototypes and usability testing</li><li>UI, design system, developer hand-off</li><li>Post-release testing</li><li>Led the promo/marketing materials</li>
+        </ul>
+      </div>
+      <div>
+        <p class="vox-label">Team</p>
+        <ul><li>Product designer</li><li>Product manager</li><li>Product analyst</li><li>Voximplant engineering</li></ul>
+      </div>
+    </section>
+
+    <section class="vox-section vox-problem" aria-labelledby="vox-problem-title">
+      <p class="vox-label">Problem</p>
+      <h2 id="vox-problem-title" class="vox-display">Powerful for developers, out of reach for the people who run contact centers.</h2>
+      <div class="vox-problem-grid">
+        <div class="vox-copy-stack">
+          <div><h3>Business context</h3><p>Voximplant is a cloud communications platform with voice, video and messaging embedded through APIs and SDKs. But its customers' contact-center teams <strong class="vox-accent">are not developers.</strong></p></div>
+          <blockquote>“Setting up a contact center required complex code and dedicated developers, lengthy delays, and high development costs.”</blockquote>
+          <div class="vox-copy-divider"><h3>User pains</h3><p>Kit existed as a rudimentary MVP. Interviews with current and potential users gathered every pain point and barrier, and were paired with a hypothesis and a priority.</p><p>Two audiences had different needs: the business that buys and configures the product, and the agents and supervisors who live in it every day.</p></div>
+        </div>
+        <aside class="vox-goal"><p class="vox-accent">Goal</p><p>Let any business set up and run omnichannel contact center without developers.</p></aside>
+      </div>
+    </section>
+
+    <section class="vox-section" aria-labelledby="vox-discovery-title">
+      <p class="vox-label">Process</p>
+      <h2 id="vox-discovery-title" class="vox-display">Discovery</h2>
+      <div class="vox-two-column vox-research">
+        <div class="vox-copy-stack">
+          <div><h3>Research</h3><p>With the product manager, I built user portraits from the interviews, then buyer personas. Later I ran usability tests on the MVP and interviewed call-center managers to validate the flows and the terminology.</p><p>I put every finding into a table, one per product area, and compared Kit with competitors.</p></div>
+          <div class="vox-copy-divider"><h3>What I did</h3><ul><li>Interviews with current and potential users, by product area</li><li>User portraits, then buyer personas</li><li>Usability tests on the MVP</li><li>Interviews with call-center managers on flows and terminology</li><li>Competitive analysis with PM</li></ul></div>
+        </div>
+        <img src={asset('research')} alt="Layered research tables with pain points, hypotheses and priority columns." width="990" height="738" loading="lazy" decoding="async" />
+      </div>
+    </section>
+
+    <section class="vox-section vox-audience" aria-labelledby="vox-audience-title">
+      <div class="vox-audience-intro">
+        <h3 id="vox-audience-title">Who is user</h3>
+        <p>The interviews split the audience in two:</p>
+        <ul><li>People who buy and set up</li><li>People who work in it every day</li></ul>
+        <p>Each group had different tasks and different problems, and the product had to serve both without a developer in between.</p>
+      </div>
+      <div class="vox-personas">
+        {personas.map(persona => <article class="vox-persona">
+          <div class="vox-persona-head"><span class="vox-persona-icon" aria-hidden="true" set:html={persona.icon} /><span class="vox-persona-group">{persona.group}</span></div>
+          <h3>{persona.title}</h3>
+          <p>{persona.description}</p>
+          <div class="vox-persona-needs"><div><h4>Need</h4><p>{persona.need}</p></div><div><h4>Current</h4><p>{persona.current}</p></div></div>
+        </article>)}
+      </div>
+    </section>
+
+    <section class="vox-section" aria-labelledby="vox-competitive-title">
+      <div class="vox-copy-narrow">
+        <h3 id="vox-competitive-title">Competitive analysis</h3>
+        <p>We benchmarked Kit against the products a small or mid-size company would choose across the workflow for a non-technical team: setup and learning curve, the visual scenario editor, outbound campaigns, channels, entry price, and best fit.</p>
+        <p>Six products covered: developer platforms (<strong>Twilio Flex, Amazon Connect</strong>), enterprise suites (<strong>Talkdesk, Genesys Cloud CX</strong>), an outbound specialist (<strong>Five9</strong>), and a cloud phone system (<strong>Aircall</strong>).</p>
+      </div>
+      <div class="sr-only">
+        <table>
+          <caption>Competitive analysis</caption>
+          <thead><tr><th>Product</th><th>Setup and learning curve</th><th>Visual scenario editor</th><th>Campaigns</th><th>Channels</th><th>Entry price</th><th>Best fit</th></tr></thead>
+          <tbody>{competitors.map(row => <tr>{row.map(cell => <td>{cell}</td>)}</tr>)}</tbody>
+        </table>
+      </div>
+      <img src={asset('competitive-analysis-table', 'png')} alt="" width="1248" height="763" loading="lazy" decoding="async" aria-hidden="true" />
+      <p class="vox-subhead">Outcome</p>
+      <div class="vox-outcomes">
+        <article><h3>The gap is in the middle</h3><ol><li>Platforms had strong flow builders but assumed engineers and an implementation project.</li><li>Phone systems were self-serve but stopped at IVR menus.</li><li>Nobody offered a full scenario builder that a non-technical person could use on day one.</li></ol></article>
+        <article><h3>Price</h3><ol><li>Enterprise suites started at $75–150 per seat with contracts and sales calls.</li><li>Pay-as-you-go platforms looked cheap but needed engineers.</li><li>A self-serve product at around $45 a seat would sit below the enterprise floor without hiding a services bill.</li></ol></article>
+        <article><h3>Call campaigns</h3><ol><li>Campaigns were an add-on at Talkdesk, a build-your-own at Twilio, and a higher tier at Genesys.</li><li>Digital channels were tiered the same way.</li><li>Only the outbound specialists had dialers built in, and they were voice-first.</li></ol></article>
+      </div>
+      <div class="vox-copy-narrow vox-meant"><h3>What it meant for Kit</h3><ul><li>Onboarding had to include a number buying and templates, so a first campaign was possible in one session.</li><li>The editor had to match the developer platforms on power and beat them on learnability.</li><li>Campaigns had to be a core flow, not an add-on.</li><li>Every channel had to land in one agent workspace in the base product, not in a higher tier.</li></ul></div>
+    </section>
+
+    <section class="vox-section" aria-labelledby="vox-ideation-title">
+      <p class="vox-label">Process</p>
+      <h2 id="vox-ideation-title" class="vox-display">Ideation</h2>
+      <div class="vox-copy-narrow"><h3>Hypotheses that shaped release 1</h3><p>Every interview finding went into one table per product area.</p></div>
+      <ol class="vox-hypotheses">{hypotheses.map(([hypothesis, responseStart, responseAccent, responseEnd], index) => <li><span>{String(index + 1).padStart(2, '0')}</span><div><strong>{hypothesis}</strong><p>{responseStart}<strong>{responseAccent}</strong>{responseEnd}</p></div></li>)}</ol>
+      <div class="vox-copy-narrow"><h3>IA and structure</h3><p>I structured and validated the information architecture, confirmed the core functionality with the team, and mapped primary and secondary flows for every key interaction. A user-story map set the priorities for the first release.</p></div>
+      <img src={asset('ia-map', 'png')} alt="Voximplant Kit information architecture and user-story map." width="1248" height="490" loading="lazy" decoding="async" />
+      <div class="vox-copy-narrow"><h3>Prototyping and usability testing</h3><p>Clickable prototypes covered full journeys, from the start page to password recovery: 10+ core pages with 30+ screens each. Testing ran in two formats. Corridor tests inside Voximplant gave fast answers on single screens. Moderated sessions with current MVP users, potential customers and call-center managers covered whole tasks: build a scenario, launch a campaign, handle a call.</p></div>
+      <img src={asset('prototypes', 'png')} alt="Low-fidelity Voximplant Kit prototypes covering the scenario editor and campaign flows." width="1248" height="467" loading="lazy" decoding="async" />
+      <div class="vox-copy-narrow"><h3>What changed after testing</h3><ul><li>Terminology. Labels for queues, skills, scenarios and campaigns were validated before they went into the UI.</li><li>Test mode inside the editor was validated in sessions, replacing the old routine of publishing a scenario and calling the number to check it.</li><li>The canvas was confirmed over a step-by-step form.</li><li>Every flow was validated before visual design started, so UI work did not reopen structure.</li></ul></div>
+      <dl class="vox-stats vox-stats--four">{testingMetrics.map(metric => <Stat {...metric} />)}</dl>
+
+      <h3 class="vox-section-title">Key decisions</h3>
+      <div class="vox-decisions">
+        <CaseStudyDecisionCard title="A canvas, not a form builder.">
+          <ul><li>Real call flows branch: verification, IVR menus, hand-offs, voicemail detection, retries.</li><li>A canvas keeps large scenarios readable. A step-by-step form hides the logic.</li></ul>
+          <Fragment slot="impact"><p>A non-technical team launches a contact center in <strong>≤ 30 minutes</strong> (Voximplant).</p><p>Five enterprise clients: <strong>Rappi, KFC, Burger King, Hyundai, Jaguar</strong> run production call flows built on the canvas</p></Fragment>
+        </CaseStudyDecisionCard>
+        <CaseStudyDecisionCard title="Test mode inside the editor.">
+          <p>Simulation highlights the active block in real time. Users test a scenario in the same place they build it, without publishing it first.</p>
+          <Fragment slot="impact"><p>Validated in usability sessions with call-center managers before visual design. After launch, users reported <strong>better task completion</strong> and <strong>faster onboarding</strong> on the redesigned flows.</p></Fragment>
+        </CaseStudyDecisionCard>
+        <CaseStudyDecisionCard title="Templates before a blank scenario.">
+          <p>Ready-made scenarios for common business goals — meeting confirmation, order confirmation, NPS and CSI surveys — so a first campaign starts from a working flow.</p>
+          <Fragment slot="impact"><p>Skyeng runs <strong>20,000</strong> automated outbound calls a month on templated campaigns, with a <strong>17%</strong> average lift in call volume.</p><p>Automated outbound engagement is up to <strong>50%</strong> higher and <strong>30%</strong> more cost-effective than human calls (BusinessWire).</p></Fragment>
+        </CaseStudyDecisionCard>
+      </div>
+    </section>
+
+    <section class="vox-solution" aria-labelledby="vox-solution-title">
+      <div class="vox-solution-inner">
+        <div class="vox-solution-head"><p class="vox-label">Solution</p><div class="vox-solution-stats"><div><strong>10+</strong><span>product sections fully designed and validated</span></div><div><strong>∞</strong><span>user flows created, tested and documented</span></div></div></div>
+        <h2 id="vox-solution-title" class="sr-only">Solution</h2>
+        <div class="vox-product-feature"><h3>Onboarding</h3><ul><li>The first screen after sign-up asks one question: what did you come here to do?</li><li>Three guided tours — AI-powered outbound calls, interactive voice recognition, and the contact center — take four steps each, and the tour a user picks becomes their first task.</li></ul><CaseStudyMedia src={asset('onboarding', 'mp4')} poster={asset('onboarding')} alt="Voximplant Kit onboarding flow showing navigation areas and guided product tours." width={1920} height={1036} /></div>
+        <div class="vox-product-feature"><h3>Visual scenario editor</h3><ul><li>Users build a scenario, the call flow, on a canvas from blocks: speech-to-text, text-to-speech, interactive menu, data verification, call forwarding, HTTP request and more.</li><li>Blocks connect with lines, so a large inbound or outbound scenario stays readable. An onboarding tour shows how to make the first connection.</li></ul><CaseStudyMedia src={asset('scenario-editor', 'mp4')} poster={asset('scenario-editor')} alt="Voximplant visual scenario editor with connected call-flow blocks." width={1280} height={684} /></div>
+        <div class="vox-product-feature"><h3>Editing blocks</h3><ul><li>Each block has its own settings: variables and stop words for speech-to-text, skills and priorities for call properties.</li><li>A context menu with shortcuts, colour coding and lock/duplicate keeps large scenarios manageable. Version history and autosave protect every change.</li></ul><img src={asset('editing-blocks', 'png')} alt="Scenario editor details showing block settings, menus and navigation preferences." width="2402" height="1810" loading="lazy" decoding="async" /></div>
+        <div class="vox-product-feature"><h3>Scenarios and templates</h3><ul><li>Scenarios are stored in folders and can be copied and shared.</li><li>New scenarios start from a template gallery — meeting confirmation, order confirmation, NPS and CSI surveys etc... instead of a blank canvas.</li></ul><img src={asset('templates', 'png')} alt="Voximplant scenario library with folders and template gallery." width="2400" height="1276" loading="lazy" decoding="async" /></div>
+        <div class="vox-product-feature"><h3>Automated call campaigns</h3><ul><li>Campaigns run outbound calls at scale without an agent on each call: surveys, reminders, confirmations and announcements, from a scenario, on a schedule or a trigger.</li><li>Setup takes four steps: call strategy, contacts, variable mapping, summary.</li><li>Each campaign reports its results in real time.</li></ul><img src={asset('campaigns', 'png')} alt="Outbound campaign dashboard and contact database upload step." width="2446" height="1547" loading="lazy" decoding="async" /></div>
+        <div class="vox-product-feature"><h3>Numbers</h3><ul><li>Buying a virtual number is the first onboarding step: it enables outbound campaigns and inbound calls.</li><li>Country, region, category, capabilities and price are in one dialog.</li></ul><img src={asset('numbers', 'png')} alt="Voximplant phone-number management and purchase interface." width="2400" height="1640" loading="lazy" decoding="async" /></div>
+      </div>
+    </section>
+
+    <section class="vox-contact-center" aria-labelledby="vox-contact-title">
+      <div class="vox-chapter-head"><p class="vox-label">Solution</p><div><h2 id="vox-contact-title" class="vox-display">Contact center</h2><p>One cloud contact center for every channel. Calls and chats from WhatsApp, Telegram, Messenger, Viber, SMS and web chat come into one workspace, and routine work is automated.</p></div></div>
+      <img src={asset('contact-center', 'png')} alt="Voximplant Contact Center agent workspace with live call controls and customer details." width="2398" height="1430" loading="lazy" decoding="async" />
+      <div class="vox-product-feature"><h3>Live dashboard</h3><ul><li>Real-time statistics on calls and agents: missed and handled calls, answer, hold and handle times, service level, and agents in the queue by status.</li><li>Supervisors use it to track team performance and automation results.</li></ul><img src={asset('dashboard', 'png')} alt="Live contact-center dashboard with service-level metrics and queue charts." width="2392" height="2013" loading="lazy" decoding="async" /></div>
+      <div class="vox-product-feature"><h3>Live Conversations</h3><ul><li>Supervisors monitor agents in real time.</li><li>Every active call and chat is listed by queue with the agent's status and service time.</li><li>A supervisor can listen to a call, whisper to the agent, join the call or take it over, and follow chats on every channel.</li></ul><img src={asset('conversations', 'png')} alt="Live conversations list showing agents, queues, calls and chats." width="2392" height="1404" loading="lazy" decoding="async" /></div>
+      <div class="vox-product-feature"><h3>Workspace</h3><ul><li>Agents handle calls and messages from every channel — Telegram, WhatsApp, Viber, Messenger, SMS, web chat — in one interface.</li><li>The active call and transfer are in the centre, the client card and conversation tags on the right.</li><li>Outgoing calls use the built-in softphone.</li></ul><img src={asset('workspace', 'png')} alt="Agent workspace with conversation, customer details, and built-in softphone keypad." width="2436" height="1476" loading="lazy" decoding="async" /><img src={asset('workspace2', 'png')} alt="Agent workspace handling a live call and transfer beside customer details and conversation tags." width="2490" height="1572" loading="lazy" decoding="async" /></div>
+      <div class="vox-product-feature"><h3>Agent profile</h3><ul><li>Each agent has a profile with personal and account details, role, queue and skills, and a full conversation history with response and handle times per contact.</li><li>Supervisors can open any conversation from the history.</li></ul><img src={asset('agent-profile', 'png')} alt="Agent profile and conversation history interface." width="2496" height="2276" loading="lazy" decoding="async" /></div>
+      <div class="vox-product-feature"><h3>Chat widget</h3><ul><li>Admins add channels without a developer.</li><li>The web-chat widget is configured with a live preview — header text, position, colours, opening message — and added to a site with a generated code snippet.</li><li>Roles and permissions control access.</li></ul><img src={asset('settings', 'png')} alt="Web-chat widget settings with live preview and colour controls." width="2496" height="2060" loading="lazy" decoding="async" /></div>
+      <div class="vox-product-feature"><h3>Queue Settings</h3><ul><li>Each queue has an assignment strategy: longest waiting, most qualified or least qualified agent.</li><li>Admins set limits for waiting time, queue size and reaction time, and auto-replies for each stage.</li><li>The softphone and contacts list handle calls between agents.</li></ul><img src={asset('queues', 'png')} alt="Queue settings, auto replies, softphone and contact list." width="2496" height="2670" loading="lazy" decoding="async" /></div>
+      <div class="vox-product-feature vox-product-feature--messaging-history"><h3>Messaging history</h3><p>A searchable log of every chat. Filter by date, queue, channel or tag, see the lead contact and first response time, and export to XLS or CSV.</p><CaseStudyMedia src={asset('messaging-history', 'mp4')} poster={asset('messaging-history')} alt="Messaging-history table with date, queue, channel and tag filters." width={2732} height={1138} /></div>
+      <div class="vox-product-feature"><h3>Reports</h3><ul><li>Reports by agent, queue, channel and tag, plus a busiest-time heat map for planning shifts.</li><li>Conversation tags are included, so topics like billing questions can be tracked over time. All reports export to XLS and CSV.</li></ul><img src={asset('reports-overview', 'png')} alt="Contact-center reports for conversation tags and agent performance." width="2496" height="3074" loading="lazy" decoding="async" /><img src={asset('reports-queues', 'png')} alt="Contact-center busiest-time heat map and queue performance reports." width="2496" height="2812" loading="lazy" decoding="async" /></div>
+      <div class="vox-product-feature vox-product-feature--design-system"><h3>Design system</h3><ul><li>Every component was built as an interactive block with all its states — focus, hover, press, error, disabled — and connected to the others.</li><li>Over time this became the Kit Design Library with usage guidelines.</li></ul><img src={asset('ds-components', 'png')} alt="Kit Design Library component states and interaction guidelines." width="1176" height="2416" loading="lazy" decoding="async" /><img src={asset('ds-colour', 'png')} alt="Kit Design Library colour palette and shadow foundations." width="1176" height="2016" loading="lazy" decoding="async" /></div>
+    </section>
+
+    <section class="vox-impact" aria-labelledby="vox-impact-title">
+      <div class="vox-chapter-head"><p class="vox-label">Impact</p><div><h2 id="vox-impact-title" class="vox-display">Kit in numbers.</h2><p>Results from Voximplant Kit, a product I designed from scratch and took to launch.</p></div></div>
+      <dl class="vox-stats vox-stats--impact">{impactMetrics.map(metric => <Stat {...metric} />)}</dl>
+      <div class="vox-final-cards">
+        <article><h3>For the business</h3><ul><li>Kit became one of Voximplant's two product lines.</li><li>Companies that needed months and a development team to set up a contact center now do it themselves in 30 minutes or less.</li></ul></article>
+        <article><h3>For the team</h3><ul><li>As Kit grew, the design team grew with it.</li><li>I led a team of 10+ across product, brand and web, and started a research function.</li></ul></article>
+      </div>
+    </section>
+  </div>
+</article>
+
+<script>
+  import { initializeCaseStudyVideos } from '../scripts/case-study-videos';
+  initializeCaseStudyVideos();
+</script>

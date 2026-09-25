@@ -1,11 +1,11 @@
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { createNativeMotion, revealEffects, type MotionEffect } from './native-motion.ts';
+import { createNativeMotion, readMotionToken, revealEffects, type MotionEffect } from './native-motion.ts';
 import { splitLetters } from './text-reveal.ts';
 
 /** Work's heading recipe, shared by every homepage chapter. Keeps explicit line breaks. */
 export function headingRevealEffects(title: HTMLElement, index?: HTMLElement | null, description?: HTMLElement | null): MotionEffect[] {
   const tokens = getComputedStyle(title);
-  const number = (name: string) => parseFloat(tokens.getPropertyValue(name));
+  const number = (name: string) => readMotionToken(tokens, name);
   const duration = number('--duration-title-reveal');
   const distance = number('--distance-text-reveal');
   const easing = tokens.getPropertyValue('--ease-entrance').trim();
@@ -62,7 +62,7 @@ export function sectionRevealEffects(
   content: HTMLElement[],
 ): MotionEffect[] {
   const tokens = getComputedStyle(title);
-  const number = (name: string) => parseFloat(tokens.getPropertyValue(name));
+  const number = (name: string) => readMotionToken(tokens, name);
   const duration = number('--duration-copy-reveal');
   const progress = number('--intro-stage-progress');
   const itemDuration = number('--section-item-reveal-duration') || duration;
@@ -134,7 +134,7 @@ export function initializeSectionReveals() {
     register(element, [element], () => {
       const tokens = getComputedStyle(element);
       return revealEffects([element], {
-        duration: parseFloat(tokens.getPropertyValue('--duration-copy-reveal')),
+        duration: readMotionToken(tokens, '--duration-copy-reveal'),
         distance: parseFloat(tokens.getPropertyValue('--distance-text-reveal')),
         easing: tokens.getPropertyValue('--ease-entrance').trim(),
       });

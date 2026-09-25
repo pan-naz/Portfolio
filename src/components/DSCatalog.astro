@@ -1,6 +1,7 @@
 ---
 import Logo from './Logo.astro';
 import Button from './Button.astro';
+import TextLink from './TextLink.astro';
 import IconButton from './IconButton.astro';
 import ThemeToggle from './ThemeToggle.astro';
 import SkillTag from './SkillTag.astro';
@@ -12,7 +13,7 @@ import SectionHeading from './SectionHeading.astro';
 import Stat from './Stat.astro';
 import ExperienceList from './ExperienceList.astro';
 import DSExample from './DSExample.astro';
-import { projects, impactGroups, experience, profile, cvUrl } from '../data/portfolio';
+import { projects, impactGroups, experience, profile, cvUrl, hookoAppUrl } from '../data/portfolio';
 import tokenCSS from '../styles/tokens.css?raw';
 const readTokens = (block: string) => Object.fromEntries([...block.matchAll(/--([\w-]+):\s*([^;]+);/g)].map(([,key,value]) => [key,value.trim()]));
 const light = readTokens(tokenCSS.match(/:root\s*\{([^}]+)\}/)![1]);
@@ -31,9 +32,9 @@ const colors = [
 const spaces = [['space-1',4],['space-2',8],['space-3',12],['space-4',16],['space-6',24],['space-8',32],['space-12',48],['space-16',64],['space-24',96]] as const;
 const radii = [['radius-small','sm','12px'],['radius-medium','md','24px'],['radius-media','lg','40px'],['radius-chapter','xl','40–100px'],['radius-pill','full','999px']];
 const typeStyles = [
-  ['Display/XL','Black 900 · 88 / 80','text-display','Product Designer'],
-  ['Display/L','Black 900 · 56 / 64','text-h2','A few projects worth a closer look.'],
-  ['Heading/M','ExtraBold 800 · 24 / 32','ds-type-heading','Voximplant Kit'],
+  ['Display/XL','Semibold 600 · 88 / 80','text-display','Product Designer'],
+  ['Display/L','Semibold 600 · 56 / 64','text-h2','A few projects worth a closer look.'],
+  ['Heading/M','Semibold 600 · 24 / 32','ds-type-heading','Voximplant Kit'],
   ['Body/L','Regular 400 · 20 / 30','text-body-l','Successfully launched B2B products from 0 → 1, improved product adoption, and contributed to ARR growth.'],
   ['Body/M','Regular 400 · 16 / 24','text-body-m','Designed and launched from scratch as a no-code contact center builder.'],
   ['Body/M Strong','SemiBold 600 · 16 / 24','text-body-m-strong','Lead Product Designer'],
@@ -53,7 +54,7 @@ const typeStyles = [
   </section>
 
   <section id="typography" class="ds-section" aria-labelledby="typography-title" tabindex="-1">
-    <header class="ds-heading"><p class="eyebrow">02 / Typography</p><h2 id="typography-title">Typography</h2><p>One family — Urbanist — in five weights. Display uses −2.64px tracking; everything else is set at zero. The same locally served variable font and type scale run throughout the portfolio.</p></header>
+    <header class="ds-heading"><p class="eyebrow">02 / Typography</p><h2 id="typography-title">Typography</h2><p>One family — Urbanist — in five weights. Every heading, wordmark and display number consumes the shared <code>--font-weight-heading</code> token at 600. Display uses −2.64px tracking; everything else is set at zero.</p></header>
     <div class="ds-type-list">{typeStyles.map(([name,spec,style,copy]) => <div class="ds-type-row"><div class="ds-type-meta"><h3>{name}</h3><p>{spec}</p></div><p class={style}>{copy}</p></div>)}</div>
     <p class="ds-spec-note">Mobile adapts Display/XL to 40px and Display/L to 26px. Text can wrap and enlarge. Label/S follows the Figma specimen at 12 / 16.</p>
   </section>
@@ -73,11 +74,14 @@ const typeStyles = [
       <div class="ds-row"><SkillTag label="Product design" variant="raised" /><SkillTag label="Design system" variant="raised" /></div>
       <div class="ds-row">{['Workflows','Testing','Feedback'].map(label => <SkillTag label={label} variant="plain" />)}</div>
     </DSExample>
-    <DSExample id="buttons" name="Button" description="Primary for the main action; secondary for supporting destinations. Large is 48px with Body/M Strong; small is 36px with Body/S." source="Button.astro · Arrow.astro" notes="Links navigate; buttons perform actions. Shared keyboard focus and disabled states remain visible. This catalog disables motion; the website keeps its existing hover and press behavior.">
+    <DSExample id="buttons" name="Button" description="Primary for the main action; secondary for supporting destinations. Large is 48px with Body/M Strong; small is 36px with Body/S." source="Button.astro · Arrow.astro" notes="Links navigate; buttons perform actions. Shared keyboard focus and disabled states remain visible. This catalog disables motion. On the website, primary buttons with arrows expand their contrasting arrow circle across the pill over 450ms; the label color fades and the orange arrow swaps position. The colors use the active theme tokens, and reduced motion resolves instantly.">
       <div class="ds-row"><Button href={`mailto:${profile.email}`} arrow="up">Get in touch</Button><Button href={cvUrl} size="small" variant="secondary" arrow="up">Download CV (PDF)</Button><Button href="/design-system/" size="small" variant="secondary">Design system</Button></div>
       <div class="ds-state-row"><div><p>Default</p><Button>Get in touch</Button></div><div><p>Disabled state</p><Button disabled>Get in touch</Button></div></div>
     </DSExample>
-    <DSExample id="project-identity" name="Logo" description="The portfolio wordmark and the three original project marks. Project names and their 32px marks stay together." source="Logo.astro · ProjectIdentity.astro" notes="Marks have empty alternative text beside the readable project name. Project cards and result groups consume the same identity component.">
+    <DSExample id="text-links" name="Text link" description="Contact destinations use Body/M Strong text with a stronger 20px north-east arrow. Accent marks the App Store destination." source="TextLink.astro → Arrow.astro" notes="Both links use native anchors and the shared focus ring. On the website, hovering shifts the arrow about 3px toward the north-east, matching secondary Buttons, without an added underline. Reduced motion and this catalog keep the arrow still.">
+      <div class="ds-text-link-stack"><TextLink href={profile.linkedin}>LinkedIn</TextLink><TextLink href={hookoAppUrl} accent>App Store — Hooko</TextLink></div>
+    </DSExample>
+    <DSExample id="project-identity" name="Logo" description="The portfolio wordmark and the original project marks use Semibold 600. Project names and their 32px marks stay together." source="Logo.astro · ProjectIdentity.astro" notes="Marks have empty alternative text beside the readable project name. The wordmark and project names share the heading system's 600 weight. Project cards and result groups consume the same identity component.">
       <div class="ds-row"><Logo /></div><div class="ds-row">{projects.map(project => <ProjectIdentity title={project.title} logo={project.logo} />)}</div>
     </DSExample>
     <DSExample id="cards" name="Project card" description="Project identity and disciplines, then outcome and description, followed by the original project artwork." source="ProjectCard.astro → ProjectIdentity.astro · SkillTag.astro" notes="The homepage is the source for this final composition. Card chrome follows the active theme: Dark uses the global #161715 black above the darker #0F100E Work sheet, light text and #222320 raised chips. The supplied artwork, logo files, crop and aspect ratio remain unchanged in both themes. At mobile widths the two-column caption stacks. On the website, each complete card is one Work-timeline item: it fades and rises 8px over 900ms, starts 450ms after the prior stage, and remains hidden before its turn. Caption and media never animate separately. Keyboard focus resolves the waiting section and reduced motion shows it immediately. Case-study links appear only when a real destination exists. This catalog specimen is static.">
@@ -90,7 +94,7 @@ const typeStyles = [
     <DSExample id="section-heading" name="Section header" description="Number, title and supporting copy. The title occupies the right-hand half of a desktop section." source="SectionHeading.astro" notes="The same composition stacks on mobile. Every homepage chapter owns one native top-to-bottom timeline: the index and 35ms-staggered title glyphs begin when the chapter top reaches 90% of the viewport, and the subtitle starts 450ms later. Work, Impact and Contact content blocks use the shared 900ms opacity-and-8px-rise recipe at 450ms intervals. Experience keeps the same first-row handoff, then uses 620ms row reveals beginning 160ms apart. Later content remains hidden until its turn. Contact retains its explicit title line break. On precise-pointer non-touch desktop, Work applies the same 90% trigger to its visible inset-background edge; only the background shifts later at the top 2% threshold. The independent filter still waits for background expansion. Touch uses the same ordered content timeline on a static full-width background. Reduced motion and keyboard focus show the complete section immediately. The catalog displays the resting state.">
       <SectionHeading id="sample-work-title" label="01 / Selected work">Projects worth a closer look.<p slot="description" class="section-description text-body-l">Shaped with care, from the first question to the final detail.</p></SectionHeading>
     </DSExample>
-    <DSExample id="stats" name="Stat" description="A value, label and note for the impact section. The source homepage uses accent-colored values." source="Stat.astro" notes="Stats do not animate separately on the website. Each project identity and its three metrics form one complete Impact-row item, which uses the shared 900ms fade and 8px rise and starts 450ms after the prior stage. Reduced motion shows everything immediately; this specimen is static. Metrics use a semantic definition list. Three columns on desktop become one column with hairline separators on mobile.">
+    <DSExample id="stats" name="Stat" description="A value, label and note for the impact section. Accent-colored values use the shared heading weight token at 600." source="Stat.astro" notes="Stats do not animate separately on the website. Each project identity and its three metrics form one complete Impact-row item, which uses the shared 900ms fade and 8px rise and starts 450ms after the prior stage. Reduced motion shows everything immediately; this specimen is static. Metrics use the design system's shared heading weight and a semantic definition list. Three columns on desktop become one column with hairline separators on mobile.">
       <dl class="ds-stat-sample"><Stat {...impactGroups[0].metrics[0]} /></dl>
     </DSExample>
     <DSExample id="timeline" name="Timeline row" description="Role in Body/M Strong, description in Body/M, and all supporting metadata in Body/S." source="ExperienceList.astro → ExperienceRow.astro" notes="Dates, company/location and duration share the muted metadata treatment at 14/20 Regular. Four desktop columns stack into a readable timeline on mobile. Complete rows reveal top-to-bottom inside Experience’s single timeline over 620ms, beginning 160ms apart with the shared 8px rise. Keyboard focus and reduced motion resolve the complete waiting section. Rows are static here, on the dark surface used by the website.">
@@ -103,6 +107,7 @@ const typeStyles = [
     <div class="ds-dark-example"><h3>Surface hierarchy</h3><div class="ds-surface-hierarchy"><span>Main background · #161715</span><div><span>Container · #0F100E</span></div></div></div>
     <div class="ds-dark-example"><h3>Text on dark</h3><p class="text-h2">Product Designer</p><p class="text-body-m">Successfully launched B2B products from 0 → 1, improved product adoption, and contributed to ARR growth.</p><p class="text-body-m text-secondary">Secondary body copy uses ink at 64%.</p><p class="text-body-s text-secondary">Timeline metadata uses Body/S at the same muted color.</p><p class="eyebrow">01 / Label on dark</p></div>
     <div class="ds-dark-example"><h3>Buttons</h3><div class="ds-row"><Button href={`mailto:${profile.email}`} arrow="up">Get in touch</Button><Button size="small" variant="secondary" href={cvUrl} arrow="up">Download CV (PDF)</Button></div></div>
+    <div class="ds-dark-example"><h3>Text links</h3><div class="ds-text-link-stack"><TextLink href={profile.linkedin}>LinkedIn</TextLink><TextLink href={hookoAppUrl} accent>App Store — Hooko</TextLink></div></div>
     <div class="ds-dark-example"><h3>Chips & navigation</h3><div class="ds-row"><SkillTag label="Product design" /><SkillTag label="Design system" /><SkillTag label="Prototyping" /></div><div class="ds-row" inert><NavLinks showDS={false} /><ThemeToggle /></div></div>
     <div class="ds-dark-example"><h3>Floating pill &amp; project filter</h3><div class="ds-floating-control-row"><div class="ds-floating-pill floating-control-theme floating-control-surface" inert><span class="ds-floating-logo"><Logo compact /></span><NavLinks showDS={false} /><ThemeToggle /><Button href={`mailto:${profile.email}`} arrow="up">Get in touch</Button></div><div class="ds-index-specimen" inert><SectionNavigation /></div></div><p class="ds-spec-note">Both specimens consume the same fixed Light floating-control tokens used by the website. Theme changes do not recolor these surfaces.</p></div>
     <div class="ds-dark-example"><h3>Stat</h3><dl class="ds-stat-sample"><Stat {...impactGroups[0].metrics[0]} /></dl></div>

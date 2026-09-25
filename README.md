@@ -16,6 +16,8 @@ node --test tests/*.test.mjs
 
 Run commands inside this folder. Astro prints the local preview URL. The site remains unpublished and retains its draft `noindex, nofollow` metadata.
 
+For phones and tablets on the same Wi-Fi, run `pnpm build` then `pnpm preview:lan` and open the Network URL printed by Astro. Keep the Mac awake and the server running. Rebuild after changes. Use this preview server for video byte-range requests; Python's basic `http.server` sends the whole video even when a browser asks for a small chunk. Videos load and play only when visible, and keep their posters with reduced motion enabled.
+
 ## Content and assets
 
 `src/data/portfolio.ts` contains project cards, six impact metrics, seven experience rows and contact destinations transcribed from the approved homepage export. See `COPY.md` for provenance. Project images and original marks live in `public/projects/`; responsive WebP versions preserve the supplied artwork. The supplied CV is served from `/nazarii-pankiv-cv.pdf`.

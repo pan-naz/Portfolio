@@ -1,0 +1,17 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  poster: string;
+}
+
+const { src, alt, width, height, poster } = Astro.props;
+---
+<figure class="case-study-media">
+  <video data-case-video muted loop playsinline preload="none" poster={poster} width={width} height={height} aria-label={alt}>
+    <source data-src={src} type="video/mp4" />
+    <img src={poster} alt={alt} width={width} height={height} loading="lazy" decoding="async" />
+  </video>
+</figure>

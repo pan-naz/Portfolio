@@ -1,5 +1,5 @@
 import { advancePill, advancePillExit, mix, nextPillState, pillDockOffset, pillExitY, pillGeometry, pillLabels, pillReturnViewportBuffer, pillShape } from './header-morph-model';
-import { createNativeMotion, revealEffects } from './native-motion';
+import { createNativeMotion, readMotionToken, revealEffects } from './native-motion';
 
 export function initializeHeaderMorph() {
   const header = document.querySelector<HTMLElement>('.site-header')!;
@@ -36,7 +36,7 @@ export function initializeHeaderMorph() {
     }
     const tokens = getComputedStyle(hero);
     returnMotion = createNativeMotion(revealEffects([buttonHome], {
-      duration: parseFloat(tokens.getPropertyValue('--duration-copy-reveal')),
+      duration: readMotionToken(tokens, '--duration-copy-reveal'),
       distance: parseFloat(tokens.getPropertyValue('--distance-text-reveal')),
       easing: tokens.getPropertyValue('--ease-entrance').trim(),
     }), { onComplete: () => { returnMotion = undefined; } });

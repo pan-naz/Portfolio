@@ -1,4 +1,4 @@
-import { createNativeMotion } from './native-motion.ts';
+import { createNativeMotion, readMotionToken } from './native-motion.ts';
 import { sectionRevealEffects } from './section-reveals';
 import { canShiftWorkStage, nextWorkStageExpanded } from './work-stage-model.ts';
 
@@ -30,7 +30,7 @@ export function initializeWorkStage(): WorkStageController | undefined {
   const content = [...section.querySelectorAll<HTMLElement>('[data-section-item]')];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const tokens = getComputedStyle(section);
-  const number = (name: string) => parseFloat(tokens.getPropertyValue(name));
+  const number = (name: string) => readMotionToken(tokens, name);
   const entranceEase = () => tokens.getPropertyValue('--ease-entrance').trim();
   const stageEase = () => tokens.getPropertyValue('--ease-work-stage').trim();
   const sectionRevealRatio = number('--section-reveal-trigger-viewport-ratio');

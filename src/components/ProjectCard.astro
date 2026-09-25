@@ -7,6 +7,7 @@ interface Props { project: Project; lead?: boolean; compact?: boolean; }
 const { project, lead = false, compact = false } = Astro.props;
 const caseUrl = `/case-studies/${project.id}/`;
 const imageSrcSet = project.placeholder ? project.imageSrcSet : `${project.image.replace('.webp', '-800.webp')} 800w, ${project.image} 1800w`;
+const imageSizes = compact ? '(max-width: 767px) calc(100vw - 48px), (max-width: 1328px) calc((100vw - 152px) / 2), 588px' : '(max-width: 767px) calc(100vw - 48px), (max-width: 1328px) calc(100vw - 128px), 1200px';
 ---
 <article id={`project-${project.id}`} class:list={['project', { 'project--lead': lead, 'project--compact': compact }]} data-project-category={project.category} data-project-reveal={!compact || undefined} data-section-item={!compact || undefined}>
   <a class="project-surface" href={caseUrl} data-case-link={project.id} aria-label={`View ${project.title} case study`}>
@@ -15,7 +16,10 @@ const imageSrcSet = project.placeholder ? project.imageSrcSet : `${project.image
       <div class="project-copy"><p class="project-outcome text-body-l">{project.outcome}</p><p class="project-description text-body-m">{project.description}</p></div>
     </div>
     <div class="project-media" style={`--media-ratio:1200 / ${project.imageHeight}`}>
-      <img src={project.image} srcset={imageSrcSet} sizes={compact ? '(max-width: 767px) calc(100vw - 48px), (max-width: 1328px) calc((100vw - 152px) / 2), 588px' : '(max-width: 767px) calc(100vw - 48px), (max-width: 1328px) calc(100vw - 128px), 1200px'} alt={project.imageAlt} width="1200" height={project.imageHeight} loading="lazy" decoding="async" />
+      {project.id === 'voximplant' ? <video data-project-video muted loop playsinline preload="none" poster={project.image} aria-hidden="true">
+        <source data-src="/projects/voximplant-case-study/promo-voxkit.mp4" type="video/mp4" />
+        <img src={project.image} srcset={imageSrcSet} sizes={imageSizes} alt="" width="1200" height={project.imageHeight} loading="lazy" decoding="async" />
+      </video> : <img src={project.image} srcset={imageSrcSet} sizes={imageSizes} alt={project.imageAlt} width="1200" height={project.imageHeight} loading="lazy" decoding="async" />}
     </div>
   </a>
 </article>

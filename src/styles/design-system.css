@@ -8,7 +8,7 @@
 .ds-nav-group > p { margin: 0 0 6px 12px; font-size: var(--text-label-s); font-weight: 500; color: var(--text-secondary); }
 .ds-navigation a { display: flex; align-items: center; min-height: 36px; padding: 6px 12px; border-radius: var(--radius-small); font-size: .875rem; line-height: 20px; font-weight: 500; }
 .ds-navigation a:hover { background: var(--surface); }
-.ds-navigation a[aria-current] { background: var(--surface); font-weight: 700; }
+.ds-navigation a[aria-current] { background: var(--surface); font-weight: 600; }
 .ds-return { display: inline-block; margin-top: 28px; font-size: var(--text-label-s); font-weight: 500; padding: 8px 12px; }
 .ds-main { max-width: 1200px; width: calc(100% - 528px); margin-inline: auto; padding-top: 96px; }
 .ds-section { margin-bottom: 160px; scroll-margin-top: 40px; }
@@ -19,10 +19,10 @@
 .ds-mode { color: var(--text-primary); background: var(--canvas); }
 .ds-palette { padding: 32px; border: 1px solid var(--divider); border-radius: var(--radius-medium); }
 .ds-palette + .ds-palette { margin-top: 48px; }
-.ds-palette > h3 { margin-bottom: 24px; font-size: var(--text-body-m); line-height: 24px; font-weight: 600; }
+.ds-palette > h3 { margin-bottom: 24px; font-size: var(--text-body-m); line-height: 24px; font-weight: var(--font-weight-heading); }
 .ds-swatches { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 16px; }
 .ds-swatch-color { height: 96px; border: 1px solid var(--divider); border-radius: var(--radius-small); margin-bottom: 12px; }
-.ds-swatch h4 { font-size: 16px; line-height: 24px; font-weight: 600; margin: 0 0 4px; }
+.ds-swatch h4 { font-size: 16px; line-height: 24px; font-weight: var(--font-weight-heading); margin: 0 0 4px; }
 .ds-swatch p { font-size: var(--text-label-s); line-height: 16px; font-weight: 500; color: var(--text-secondary); overflow-wrap: anywhere; }
 .ds-swatch p + p { margin-top: 4px; }
 .ds-spec-note { font-size: var(--text-label-s); line-height: 1.5; font-weight: 500; color: var(--text-secondary); margin-top: 24px; max-width: 800px; }
@@ -30,12 +30,12 @@
 .ds-type-row { display: grid; grid-template-columns: 240px minmax(0,1fr); gap: 48px; padding-block: 24px; border-bottom: 1px solid var(--divider); align-items: center; }
 .ds-type-row:first-child { padding-top: 0; }
 .ds-type-row > p { overflow-wrap: anywhere; }
-.ds-type-meta h3 { font-size: var(--text-body-m); line-height: 24px; font-weight: 600; }
+.ds-type-meta h3 { font-size: var(--text-body-m); line-height: 24px; font-weight: var(--font-weight-heading); }
 .ds-type-meta p { font-size: var(--text-label-s); font-weight: 500; color: var(--text-secondary); margin-top: 4px; }
-.ds-type-heading { font-size: var(--text-heading-m); line-height: 1.333333; font-weight: 800; }
+.ds-type-heading { font-size: var(--text-heading-m); line-height: 1.333333; font-weight: var(--font-weight-heading); }
 .ds-type-label { font-size: var(--text-label-s); line-height: 1.333333; font-weight: 500; }
 .ds-foundation-block { margin-top: 64px; }
-.ds-foundation-block > h3 { font-size: var(--text-body-m); line-height: 24px; font-weight: 600; }
+.ds-foundation-block > h3 { font-size: var(--text-body-m); line-height: 24px; font-weight: var(--font-weight-heading); }
 .ds-foundation-block > p { color: var(--text-secondary); font-size: var(--text-label-s); font-weight: 500; max-width: 780px; margin-top: 8px; }
 .ds-spacing-list { display: grid; gap: 8px; margin-top: 24px; }
 .ds-spacing-list > div { display: flex; align-items: center; gap: 16px; font-size: var(--text-label-s); font-weight: 500; }
@@ -50,11 +50,12 @@
 .ds-grid-demo { display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); gap: 24px; height: 160px; margin-top: 24px; border: 1px solid var(--divider); border-radius: var(--radius-small); overflow: hidden; }
 .ds-grid-demo span { background: color-mix(in srgb, var(--accent) 12%, var(--surface)); }
 .ds-example { border-top: 1px solid var(--divider); padding-block: 40px 64px; scroll-margin-top: 32px; }
-.ds-example-heading > h3, .ds-dark-example > h3 { font-size: var(--text-body-m); line-height: 24px; font-weight: 600; }
+.ds-example-heading > h3, .ds-dark-example > h3 { font-size: var(--text-body-m); line-height: 24px; font-weight: var(--font-weight-heading); }
 .ds-example-heading > p { max-width: 800px; font-size: var(--text-label-s); font-weight: 500; color: var(--text-secondary); line-height: 1.5; margin-top: 8px; }
 .ds-example-preview { margin-top: 32px; min-width: 0; }
 .ds-row { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; }
 .ds-row + .ds-row { margin-top: 24px; }
+.ds-text-link-stack { display: grid; gap: 4px; width: min(100%, 320px); }
 .ds-source { color: var(--text-secondary); font-size: var(--text-label-s); font-weight: 500; margin-top: 12px; overflow-wrap: anywhere; }
 .ds-state-row { display: flex; flex-wrap: wrap; gap: 32px; margin-top: 32px; }
 .ds-state-row p { font-size: var(--text-label-s); font-weight: 500; color: var(--text-secondary); margin-bottom: 12px; }

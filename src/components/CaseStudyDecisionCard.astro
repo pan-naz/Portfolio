@@ -1,0 +1,13 @@
+---
+interface Props { title: string; }
+const { title } = Astro.props;
+---
+
+<article class="case-study-decision-card">
+  <h3>{title}</h3>
+  <div class="case-study-decision-card__copy"><slot /></div>
+  <div class="case-study-decision-card__impact">
+    <h4>Impact:</h4>
+    <slot name="impact" />
+  </div>
+</article>

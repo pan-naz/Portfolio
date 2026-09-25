@@ -26,6 +26,11 @@ function validatePage(path, source) {
   }
   return errors;
 }
+function selectorUses(source, selector, declaration) {
+  return [...source.matchAll(/([^{}]+)\{([^{}]*)\}/g)].some(([, selectors, body]) =>
+    selectors.split(',').map(value => value.trim()).includes(selector) && body.includes(declaration)
+  );
+}
 function componentsReachableFrom(entry, seen = new Set()) {
   const path = resolve(root, entry);
   if (seen.has(path)) return seen;
@@ -65,6 +70,22 @@ function validate(entries) {
     if (/\.(?:button|wordmark|arrow|nav-link|desktop-nav|skill-tag|project(?:-[\w-]+)?|placeholder-[\w-]+|theme-toggle|icon-button|hero(?:-[\w-]+)?)\b/.test(selector)) {
       errors.push(`Catalog CSS overrides a shared component: ${selector}`);
     }
+  }
+  const tokens = read('src/styles/tokens.css');
+  if (!/--font-weight-heading:\s*600\s*;/.test(tokens)) errors.push('Shared heading weight token must resolve to 600.');
+  const headingWeight = 'font-weight: var(--font-weight-heading)';
+  const linkedSelectors = [
+    ['src/styles/global.css', '.text-display'],
+    ['src/styles/global.css', '.wordmark'],
+    ['src/styles/global.css', '.project-identity'],
+    ['src/styles/global.css', '.stat-value'],
+    ['src/styles/global.css', '.case-study-metric'],
+    ['src/styles/voximplant-case-study.css', '.vox-display'],
+    ['src/styles/voximplant-case-study.css', '.vox-solution-stats strong'],
+    ['src/styles/design-system.css', '.ds-type-heading'],
+  ];
+  for (const [path, selector] of linkedSelectors) {
+    if (!selectorUses(read(path), selector, headingWeight)) errors.push(`${selector} must consume --font-weight-heading in ${path}.`);
   }
   return errors;
 }

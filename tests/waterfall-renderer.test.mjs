@@ -47,9 +47,13 @@ globalThis.devicePixelRatio = 1.5;
 globalThis.getComputedStyle = () => ({ getPropertyValue: name => ({ '--text-primary':'#171716', '--canvas':'#FAF8F7', '--waterfall-ink':'#111111' })[name] });
 const events = new Map();
 const handlers = {
-  addEventListener(name, fn) { events.set(name, fn); },
-  removeEventListener(name) { events.delete(name); },
+  addEventListener(name, fn) {
+    if (!events.has(name)) events.set(name, new Set());
+    events.get(name).add(fn);
+  },
+  removeEventListener(name, fn) { events.get(name)?.delete(fn); },
 };
+const fire = (name, event) => { for (const handler of events.get(name) ?? []) handler(event); };
 globalThis.window = { ...handlers, innerWidth: 1000, innerHeight: 900 };
 globalThis.matchMedia = query => ({ matches: query.includes('pointer: fine'), ...handlers });
 const canvas = { getContext: () => context };
@@ -86,7 +90,7 @@ assert.equal(field.dataset.motion, 'waiting');
 assert.equal(frameSymbols.size, 0, 'Canvas remains blank during startup delay');
 assert.equal(startupDelay, 2000);
 const firstTimer = startupCallback;
-events.get('load')();
+fire('load');
 assert.equal(startupCallback, firstTimer, 'Repeated load cannot restart the delay');
 startupCallback();
 startupCallback = undefined;
@@ -97,7 +101,7 @@ for (let frame = 0; frame < 60 * 180; frame++) {
     : second < 80 ? [400, 400]
     : second < 130 ? [400 + Math.sin(second) * 440, 400 + Math.cos(second * .6) * 240]
     : second < 155 ? [20, 650] : [-1000, -1000];
-  events.get('pointermove')({ pointerType: 'mouse', clientX: point[0], clientY: point[1] });
+  fire('pointermove', { pointerType: 'mouse', clientX: point[0], clientY: point[1] });
   assert.ok(nextFrame);
   verifyGroupColor = second > 34 && second < 80;
   nextFrame((frame + 1) * 1000 / 60);
@@ -111,9 +115,29 @@ assert.ok(colorSeen, 'Real rendered icons acquire the accent during pointer inte
 assert.ok(verifiedGroupIcons > 1000, 'Group color verified across many glyph replacements');
 assert.ok(peak > 600);
 assert.ok(peak < 1044);
-events.get('pointermove')({ pointerType: 'mouse', clientX: 400, clientY: 400 });
+const touch = (identifier, clientX, clientY) => ({ identifier, clientX, clientY });
+fire('touchstart', { changedTouches: [touch(7, 400, 400)] });
+fire('pointermove', { pointerType: 'touch', clientX: 400, clientY: 400 });
+fire('touchmove', { changedTouches: [touch(8, 100, 100)] });
+assert.equal(field.dataset.pointerX, '400.00', 'Another finger cannot steal the active repulsion field');
+fire('touchmove', { changedTouches: [touch(7, 500, 400)] });
+assert.equal(field.dataset.pointerX, '500.00', 'The active finger moves the repulsion field');
 fieldTop = -120;
-events.get('scroll')(); nextFrame(181000);
+fire('scroll');
+assert.equal(field.dataset.pointerY, '520.00', 'An active touch stays under the finger as the page scrolls');
+fieldTop = 0;
+fire('scroll');
+for (let frame = 0; frame < 120; frame++) nextFrame(180000 + (frame + 1) * 1000 / 60);
+assert.ok(Number(field.dataset.accentedIcons) > 0, 'A touch drag repels and colors nearby icons');
+fire('touchend', { changedTouches: [touch(8, 100, 100)] });
+fire('touchmove', { changedTouches: [touch(7, 400, 400)] });
+assert.equal(field.dataset.pointerX, '400.00', 'The primary touch survives another finger lifting');
+fire('touchend', { changedTouches: [touch(7, 400, 400)] });
+for (let frame = 0; frame < 180; frame++) nextFrame(182000 + (frame + 1) * 1000 / 60);
+assert.equal(Number(field.dataset.accentedIcons), 0, 'Icons settle after the finger lifts');
+fire('pointermove', { pointerType: 'mouse', clientX: 400, clientY: 400 });
+fieldTop = -120;
+fire('scroll'); nextFrame(185017);
 assert.equal(field.dataset.pointerY, '520.00', 'Rain repulsion reprojects after scrolling without a new mousemove');
 assert.equal(field.dataset.pointerX, '400.00');
 animation.setPaused(true);
@@ -123,7 +147,7 @@ document.readyState = 'loading';
 const pending = initializeWaterfall();
 assert.equal(nextFrame, undefined);
 assert.equal(startupCallback, undefined, 'Delay waits for page load');
-events.get('load')();
+fire('load');
 assert.equal(startupDelay, 2000);
 pending.setSuspended(true);
 startupCallback();
@@ -133,7 +157,7 @@ pending.setSuspended(false);
 assert.ok(nextFrame, 'Rain resumes after menu dismissal');
 pending.destroy();
 const cancelled = initializeWaterfall();
-events.get('load')();
+fire('load');
 const lateCallback = startupCallback;
 cancelled.destroy();
 assert.equal(startupCallback, undefined, 'Pending startup timer is cancelled on cleanup');
@@ -141,3 +165,4 @@ lateCallback();
 assert.equal(nextFrame, undefined, 'Late timer cannot restart a disposed renderer');
 console.log(`PASS: 10,800 real-renderer frames; no simultaneous repeats or exhausted pool; peak ${peak} visible icons, including hover and catch-up.`);
 console.log('PASS: independent two-second page-load delay, blank canvas, no early RAF, suspension and timer cleanup.');
+console.log('PASS: a single touch drag repels the rain, ignores other fingers and settles after release.');

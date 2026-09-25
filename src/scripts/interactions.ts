@@ -9,7 +9,9 @@ import { initializeWorkStage } from './work-stage';
 import { initializeSectionReveals } from './section-reveals';
 import { initializeProjectTilt } from './project-tilt';
 import { initializeProjectCursor } from './project-cursor';
+import { initializeWorkFilterMagnet } from './work-filter-magnet';
 import { initializeCaseStudies } from './case-studies';
+import { initializeCaseStudyVideos } from './case-study-videos';
 
 document.documentElement.classList.add('enhanced');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -23,8 +25,10 @@ const waterfall = initializeWaterfall();
 const footerPile = initializeFooterPile();
 const projectTilt = initializeProjectTilt();
 const projectCursor = initializeProjectCursor();
+const workFilterMagnet = initializeWorkFilterMagnet();
 const workStage = initializeWorkStage();
 const heroIntro = initializeHeroIntro(workStage);
+const projectVideos = initializeCaseStudyVideos();
 let sectionReveals: ReturnType<typeof initializeSectionReveals> | undefined;
 let closeTimer: ReturnType<typeof setTimeout> | undefined;
 let afterClose: (() => void) | undefined;
@@ -34,12 +38,14 @@ const updateHeroMotion = () => {
   const suspended = menu.open || caseStudyOpen || !heroInView || document.hidden;
   hero.classList.toggle('is-motion-paused', suspended);
   heroIntro?.setPaused(suspended);
+  projectVideos.setPaused(menu.open || caseStudyOpen);
   workStage?.setPaused(menu.open || caseStudyOpen || document.hidden);
   sectionReveals?.setPaused(menu.open || caseStudyOpen || document.hidden);
   waterfall?.setSuspended(menu.open || caseStudyOpen);
   footerPile?.setPaused(menu.open || caseStudyOpen);
   projectTilt?.setPaused(menu.open || caseStudyOpen || document.hidden);
   projectCursor?.setPaused(menu.open || caseStudyOpen || document.hidden);
+  workFilterMagnet?.setPaused(menu.open || caseStudyOpen || document.hidden);
 };
 new IntersectionObserver(entries => {
   heroInView = entries[0].isIntersecting;

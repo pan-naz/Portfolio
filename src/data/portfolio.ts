@@ -84,6 +84,7 @@ export const tools: Tool[] = [
   { name: 'Claude Code', logo: '/tools/claude-code.svg', width: 112, height: 70 },
   { name: 'Codex', logo: '/tools/codex.svg', width: 70, height: 70 },
   { name: 'Replit', logo: '/tools/replit.svg', width: 58, height: 70 },
+  { name: 'Paper', logo: '/tools/paper.svg', width: 70, height: 70 },
   { name: 'Figma', logo: '/tools/figma.svg', width: 47, height: 70 },
 ];
 export const cvUrl = '/nazarii-pankiv-cv.pdf';

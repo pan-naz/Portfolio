@@ -19,8 +19,14 @@ for (const project of all) {
   assert.ok(html.includes('data-case-home'), 'Direct visits have a return control');
   assert.equal([...html.matchAll(/<h1\b/g)].length, 1, 'Each standalone case has one main title');
   const imageSources = [...html.matchAll(/<img[^>]+src="([^"]+)"/g)].map(match => match[1]);
-  assert.equal(imageSources.length, 3, 'Hero plus two gallery images on every case');
+  if (project.id === 'voximplant') {
+    assert.ok(imageSources.length >= 20, 'The full Voximplant case study has its product and process imagery');
+    assert.ok(html.includes('For the business') && html.includes('For the team'), 'The full case study reaches its impact ending');
+    assert.ok(!html.includes('Draft case study'), 'The full case study is not labeled as a draft');
+  } else {
+    assert.equal(imageSources.length, 3, 'Sample cases have a hero and two gallery images');
+    assert.ok(html.includes(project.placeholder ? 'fictional concept' : 'Draft case study'), 'Samples do not imply new verified project claims');
+  }
   for (const src of imageSources) assert.ok(existsSync(new URL(`../public${src}`, import.meta.url)), `Local image exists: ${src}`);
-  assert.ok(html.includes(project.placeholder ? 'fictional concept' : 'Draft case study'), 'Samples do not imply new verified project claims');
 }
-console.log('PASS: all 15 cards have shareable built pages, individual draft narratives, valid three-image galleries and return controls.');
+console.log('PASS: all 15 cards have shareable built pages, valid local imagery and return controls; Voximplant has its full case study.');

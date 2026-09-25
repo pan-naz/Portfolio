@@ -4,5 +4,16 @@ import type { HTMLAttributes } from 'astro/types';
 interface Props extends Omit<HTMLAttributes<'button'>, 'disabled'> { href?: string; download?: boolean; size?: 'large' | 'small'; variant?: 'primary' | 'secondary'; disabled?: boolean; arrow?: 'up' | 'down' | 'right'; }
 const { href, size = 'large', variant = 'primary', disabled = false, arrow, class: className, ...attributes } = Astro.props;
 const Tag = href && !disabled ? 'a' : 'button';
+const hasArrowFill = variant === 'primary' && Boolean(arrow);
 ---
-<Tag {...attributes} class:list={['button', size === 'small' ? 'text-body-s' : 'text-body-m-strong', `button--${variant}`, `button--${size}`, className]} href={!disabled ? href : undefined} type={Tag === 'button' ? (attributes.type ?? 'button') : undefined} disabled={Tag === 'button' && disabled}><slot />{arrow && <Arrow direction={arrow} />}</Tag>
+<Tag {...attributes} class:list={['button', size === 'small' ? 'text-body-s' : 'text-body-m-strong', `button--${variant}`, `button--${size}`, arrow && `button--arrow-${arrow}`, hasArrowFill && 'button--arrow-fill', className]} href={!disabled ? href : undefined} type={Tag === 'button' ? (attributes.type ?? 'button') : undefined} disabled={Tag === 'button' && disabled}>
+  {hasArrowFill ? (
+    <>
+      <span class="button-fill-label"><slot /></span>
+      <span class="button-arrow-orb" aria-hidden="true">
+        <span class="button-arrow-icon button-arrow-icon--out"><Arrow direction={arrow} /></span>
+        <span class="button-arrow-icon button-arrow-icon--in"><Arrow direction={arrow} /></span>
+      </span>
+    </>
+  ) : <><slot />{arrow && <Arrow direction={arrow} />}</>}
+</Tag>

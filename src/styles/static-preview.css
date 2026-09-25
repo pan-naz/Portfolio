@@ -6,6 +6,7 @@ html[data-static] *, html[data-static] *::before, html[data-static] *::after {
   scroll-behavior: auto !important;
 }
 html[data-static] .button:hover .arrow,
+html[data-static] .text-link:hover .arrow,
 html[data-static] .button:active,
 html[data-static] .theme-toggle-glyph { transform: none !important; }
 html[data-static] .skill-marquee { mask-image: none; height: auto; }

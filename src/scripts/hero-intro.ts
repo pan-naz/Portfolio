@@ -1,4 +1,4 @@
-import { createNativeMotion, revealEffects } from './native-motion.ts';
+import { createNativeMotion, readMotionToken, revealEffects } from './native-motion.ts';
 import { createRoleAnimator, roleRevealEffects } from './hero-role-transition.ts';
 import { splitLetters, splitLines } from './text-reveal.ts';
 import type { WorkStageController } from './work-stage.ts';
@@ -36,7 +36,7 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
   const roots = [permanent, cycling, paragraph, eyebrow, cta, ...tags];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const tokens = getComputedStyle(hero);
-  const number = (name: string) => parseFloat(tokens.getPropertyValue(name));
+  const number = (name: string) => readMotionToken(tokens, name);
   const easing = tokens.getPropertyValue('--ease-entrance').trim();
   const distance = number('--distance-text-reveal');
   let intro: ReturnType<typeof createNativeMotion> | undefined;

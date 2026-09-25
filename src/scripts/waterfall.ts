@@ -36,6 +36,9 @@ export function initializeWaterfall() {
   let palette: string[] = [];
   let accentElapsed = 0;
   const pointer = { x: -1000, y: -1000, targetX: -1000, targetY: -1000, strength: 0, active: false };
+  let activeTouchId: number | null = null;
+  let touchClientX = 0;
+  let touchClientY = 0;
   const particles = new Map<number, {
     column: number; row: number; cycle: number; speed: number; elapsed: number; start: number;
     rate: number; shadeIndex: number; dx: number; dy: number; accent: number;
@@ -194,6 +197,7 @@ export function initializeWaterfall() {
     offset = (width - (columns - 1) * pitch) / 2;
     draw();
     refreshViewportPointer();
+    refreshTouchPosition();
   };
   const observer = new ResizeObserver(resize);
   observer.observe(field);
@@ -205,18 +209,56 @@ export function initializeWaterfall() {
   });
   visibility.observe(field);
 
-  const move = (event: ViewportPointer) => {
-    if (!event.active || !finePointer.matches || paused || suspended || reduced.matches || !inView) { pointer.active = false; return; }
+  const trackPosition = (clientX: number, clientY: number, snap: boolean, preserveOutside = false) => {
     const rect = field.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    pointer.active = x >= -horizontalBleed && x <= width + horizontalBleed && y >= 0 && y <= height;
-    if (!pointer.active) return;
-    if (!pointer.strength || event.viewportChanged) { pointer.x = x; pointer.y = y; }
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    const inside = x >= -horizontalBleed && x <= width + horizontalBleed && y >= 0 && y <= height;
+    if (!inside) { if (!preserveOutside) pointer.active = false; return false; }
+    pointer.active = true;
+    if (!pointer.strength || snap) { pointer.x = x; pointer.y = y; }
     pointer.targetX = x;
     pointer.targetY = y;
     field.dataset.pointerX = x.toFixed(2);
     field.dataset.pointerY = y.toFixed(2);
+    return true;
+  };
+  const move = (event: ViewportPointer) => {
+    if (activeTouchId !== null) return;
+    if (!event.active || !finePointer.matches || paused || suspended || reduced.matches || !inView) { pointer.active = false; return; }
+    trackPosition(event.clientX, event.clientY, event.viewportChanged);
+  };
+  const findTouch = (touches: TouchList, id: number) => {
+    for (let i = 0; i < touches.length; i++) if (touches[i].identifier === id) return touches[i];
+    return null;
+  };
+  const endTouch = () => { activeTouchId = null; pointer.active = false; };
+  const refreshTouchPosition = () => {
+    if (activeTouchId !== null && !paused && !suspended && !reduced.matches && inView) {
+      trackPosition(touchClientX, touchClientY, true);
+    }
+  };
+  const onTouchStart = (event: TouchEvent) => {
+    if (activeTouchId !== null || paused || suspended || reduced.matches || !inView) return;
+    for (let i = 0; i < event.changedTouches.length; i++) {
+      const touch = event.changedTouches[i];
+      if (!trackPosition(touch.clientX, touch.clientY, true, true)) continue;
+      activeTouchId = touch.identifier;
+      touchClientX = touch.clientX;
+      touchClientY = touch.clientY;
+      break;
+    }
+  };
+  const onTouchMove = (event: TouchEvent) => {
+    if (activeTouchId === null) return;
+    const touch = findTouch(event.changedTouches, activeTouchId);
+    if (!touch) return;
+    touchClientX = touch.clientX;
+    touchClientY = touch.clientY;
+    if (!paused && !suspended && !reduced.matches && inView) trackPosition(touchClientX, touchClientY, true);
+  };
+  const onTouchEnd = (event: TouchEvent) => {
+    if (activeTouchId !== null && findTouch(event.changedTouches, activeTouchId)) endTouch();
   };
   const leave = () => { pointer.active = false; };
   const load = () => {
@@ -229,9 +271,16 @@ export function initializeWaterfall() {
     }, 2000);
   };
   const unwatch = watchViewportPointer(move);
+  window.addEventListener('touchstart', onTouchStart, { passive: true });
+  window.addEventListener('touchmove', onTouchMove, { passive: true });
+  window.addEventListener('touchend', onTouchEnd, { passive: true });
+  window.addEventListener('touchcancel', onTouchEnd, { passive: true });
+  window.addEventListener('scroll', refreshTouchPosition, { passive: true, capture: true });
+  window.addEventListener('blur', endTouch);
   window.addEventListener('themechange', resize);
   window.addEventListener('load', load, { once: true });
-  document.addEventListener('visibilitychange', synchronize);
+  const onVisibilityChange = () => { if (document.hidden) endTouch(); synchronize(); };
+  document.addEventListener('visibilitychange', onVisibilityChange);
   reduced.addEventListener('change', synchronize);
   finePointer.addEventListener('change', leave);
   resize();
@@ -246,16 +295,22 @@ export function initializeWaterfall() {
     observer.disconnect();
     visibility.disconnect();
     unwatch();
+    window.removeEventListener('touchstart', onTouchStart);
+    window.removeEventListener('touchmove', onTouchMove);
+    window.removeEventListener('touchend', onTouchEnd);
+    window.removeEventListener('touchcancel', onTouchEnd);
+    window.removeEventListener('scroll', refreshTouchPosition, true);
+    window.removeEventListener('blur', endTouch);
     window.removeEventListener('themechange', resize);
     window.removeEventListener('load', load);
-    document.removeEventListener('visibilitychange', synchronize);
+    document.removeEventListener('visibilitychange', onVisibilityChange);
     reduced.removeEventListener('change', synchronize);
     finePointer.removeEventListener('change', leave);
   };
   if (import.meta.hot) import.meta.hot.dispose(destroy);
   return {
-    setPaused(value: boolean) { if (paused === value) return; paused = value; if (value) pointer.active = false; synchronize(); },
-    setSuspended(value: boolean) { if (suspended === value) return; suspended = value; if (value) pointer.active = false; synchronize(); },
+    setPaused(value: boolean) { if (paused === value) return; paused = value; if (value) endTouch(); synchronize(); },
+    setSuspended(value: boolean) { if (suspended === value) return; suspended = value; if (value) endTouch(); synchronize(); },
     destroy,
   };
 }

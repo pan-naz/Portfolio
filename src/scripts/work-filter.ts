@@ -1,5 +1,6 @@
 import { workCategories } from '../data/work-categories.ts';
 import { arrangeProjectCards } from './work-filter-model.ts';
+import { readMotionToken } from './native-motion.ts';
 
 export type WorkFilter = 'selected' | 'websites' | 'misc';
 export const matchesWorkFilter = (filter: WorkFilter, category: string) => filter === category;
@@ -22,11 +23,7 @@ export function initializeWorkFilter(onChange?: () => void, onReposition?: (top:
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const small = matchMedia('(max-width: 767px)');
   const tokens = getComputedStyle(list);
-  const number = (name: string) => {
-    const value = tokens.getPropertyValue(name).trim();
-    // Production CSS may normalize milliseconds to seconds (300ms → .3s).
-    return parseFloat(value) * (value.endsWith('s') && !value.endsWith('ms') ? 1000 : 1);
-  };
+  const number = (name: string) => readMotionToken(tokens, name);
   const ease = tokens.getPropertyValue('--ease-entrance').trim();
   const scale = number('--scale-filter');
   const enterDuration = number('--duration-filter-enter');

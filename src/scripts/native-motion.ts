@@ -14,6 +14,14 @@ export interface RevealOptions {
   easing: string;
 }
 
+/** CSS builds may shorten 900ms to .9s; the animation APIs always need milliseconds.
+ * Unitless motion ratios/distances and the legacy unitless timings keep their values.
+ */
+export function readMotionToken(tokens: Pick<CSSStyleDeclaration, 'getPropertyValue'>, name: string): number {
+  const value = tokens.getPropertyValue(name).trim();
+  return parseFloat(value) * (value.endsWith('s') && !value.endsWith('ms') ? 1000 : 1);
+}
+
 /** Shared opacity-and-rise recipe for letters, lines, labels and controls. */
 export function revealEffects(elements: HTMLElement[], options: RevealOptions): MotionEffect[] {
   return elements.map((element, index) => ({

@@ -4,6 +4,7 @@ import { caseStudySamples } from '../data/case-studies';
 import { projects, conceptProjects } from '../data/portfolio';
 import { impactGroups } from '../data/portfolio';
 import SkillTag from './SkillTag.astro';
+import VoximplantCaseStudy from './VoximplantCaseStudy.astro';
 interface Props { project: Project; }
 const { project } = Astro.props;
 const sample = caseStudySamples[project.id];
@@ -11,7 +12,7 @@ const allProjects = [...projects, ...conceptProjects];
 const related = sample.related?.map(id => allProjects.find(item => item.id === id)!).filter(Boolean);
 const metrics = impactGroups.find(group => group.projectId === project.id)?.metrics;
 ---
-<article class="case-study-content" data-case-content>
+{project.id === 'voximplant' ? <VoximplantCaseStudy project={project} /> : <article class="case-study-content" data-case-content>
   <div class="case-study-artwork"><img src={project.image} alt={project.imageAlt} width="1200" height={project.imageHeight} decoding="async" /></div>
   <div class="case-study-body">
   <div class="case-study-intro">
@@ -22,7 +23,7 @@ const metrics = impactGroups.find(group => group.projectId === project.id)?.metr
     </div>
     <div class="case-study-summary"><p class="case-study-outcome">{project.outcome}</p><p class="text-body-l">{project.description}</p></div>
   </div>
-  {metrics && <section class="case-study-impact" aria-label="Project impact">{metrics.map(metric => <div><p class="case-study-metric">{metric.value}</p><h2 class="text-body-m">{metric.label}</h2><p class="text-body-m">{metric.note}</p></div>)}</section>}
+  {metrics && <section class="case-study-impact" aria-label="Project impact">{metrics.map(metric => <div><p class="case-study-metric">{metric.value}</p><h2 class="text-body-m-strong">{metric.label}</h2><p class="text-body-m">{metric.note}</p></div>)}</section>}
   <div class="case-study-draft text-body-s">{project.placeholder ? 'Sample case study · fictional concept, copy and reference imagery' : 'Draft case study · sample narrative with existing project artwork'}</div>
   <section class="case-study-story"><p class="case-study-label">01 / Context</p><div><h2>The starting point</h2><p class="text-body-l">{sample.context}</p></div></section>
   <section class="case-study-story"><p class="case-study-label">02 / Direction</p><div><h2>{project.placeholder ? 'Exploring the idea' : 'Shaping the experience'}</h2><p class="text-body-l">{sample.direction}</p></div></section>
@@ -34,4 +35,4 @@ const metrics = impactGroups.find(group => group.projectId === project.id)?.metr
   </div>
   <section class="case-study-story"><p class="case-study-label">03 / Details</p><div><h2>A closer look</h2><p class="text-body-l">{sample.detail}</p></div></section>
   </div>
-</article>
+</article>}

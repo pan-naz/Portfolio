@@ -2,11 +2,13 @@ import type { WorkFilter } from './work-filter';
 import type { initializeProjectCursor } from './project-cursor';
 import { pauseScroll, resumeScroll } from './motion';
 import { refreshViewportPointer } from './viewport-pointer';
+import { initializeCaseStudyVideos } from './case-study-videos';
 
 type Cursor = NonNullable<ReturnType<typeof initializeProjectCursor>>;
 const duration = 700;
 const closeDuration = 400;
 const closeCaptionDuration = 600;
+const closeCaptionDelay = 100;
 const ease = 'cubic-bezier(.22,.75,.25,1)';
 
 export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (open: boolean) => void, selectFilter?: (filter: WorkFilter) => void) {
@@ -23,6 +25,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
   let artwork: HTMLElement | null = null;
   let phase: 'closed' | 'opening' | 'open' | 'closing' = 'closed';
   let animations: Animation[] = [];
+  let caseVideos: ReturnType<typeof initializeCaseStudyVideos> | undefined;
   let revision = 0;
   let closeRequested = false;
   let oldTitle = document.title;
@@ -112,6 +115,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     pauseScroll();
     document.documentElement.classList.add('case-study-open');
     dialog.showModal();
+    caseVideos = initializeCaseStudyVideos(scroll);
     scroll.scrollTop = 0;
     // Measure the destination at its final layout, before applying travel frames.
     Object.assign(panel.style, fullFrame());
@@ -157,6 +161,8 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
   const close = async () => {
     if (phase === 'closed' || phase === 'closing' || !active || !control) return;
     phase = 'closing';
+    caseVideos?.destroy();
+    caseVideos = undefined;
     lockScroll(false);
     control.hidden = true;
     const ticket = ++revision;
@@ -176,7 +182,6 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     dialog.classList.add('is-closing');
     dialog.close();
     document.documentElement.classList.remove('case-study-open');
-    onChange(false);
     resumeScroll();
     const destination = cardFrame();
     const card = active.closest<HTMLElement>('.project')!;
@@ -188,8 +193,8 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     cardMedia.style.visibility = 'hidden';
     cardCaption.style.visibility = 'hidden';
     card.style.removeProperty('visibility');
-    // Counter the panel's travel so the caption only moves through its own
-    // gentle 16px rise, starting with the surface and hero return.
+    // Counter the panel's travel so the caption fades in while rising gently
+    // from 16px below, together with the surface and hero return.
     let captionFade: Promise<unknown> | undefined;
     if (clone) {
       clone.style.opacity = '1';
@@ -201,7 +206,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
       captionFade = play(clone, [
         { opacity: 0, transform: contentOffset() },
         { opacity: 1, transform: 'none' },
-      ], { duration: closeCaptionDuration });
+      ], { delay: closeCaptionDelay, duration: closeCaptionDuration });
     }
     const returnScrollY = window.scrollY;
     const followPageScroll = () => { panel.style.transform = `translateY(${returnScrollY - window.scrollY}px)`; };
@@ -229,6 +234,10 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     active = null;
     phase = 'closed';
     closeRequested = false;
+    // Keep card tilt paused until the real card has replaced the return layer.
+    // Releasing it here lets the spring ease from neutral toward a stationary
+    // pointer instead of completing behind the closing panel and appearing to snap.
+    onChange(false);
     refreshViewportPointer();
     // A Forward action can arrive while the reverse transition is still running.
     reconcileLocation();
@@ -273,5 +282,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
   window.addEventListener('resize', () => {
     if (phase === 'open' && control) control.style.transform = topCenter();
   });
-  reduced.addEventListener('change', () => { if (reduced.matches) animations.forEach(animation => animation.finish()); });
+  reduced.addEventListener('change', () => {
+    if (reduced.matches) animations.forEach(animation => animation.finish());
+  });
 }

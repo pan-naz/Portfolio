@@ -14,6 +14,12 @@ export const dsComponents = [
     "description": "Default and small pill actions"
   },
   {
+    "name": "TextLink",
+    "section": "text-links",
+    "preview": "direct",
+    "description": "Contact destinations with a strong directional arrow"
+  },
+  {
     "name": "IconButton",
     "section": "navigation",
     "preview": "direct",

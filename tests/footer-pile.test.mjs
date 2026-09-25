@@ -107,21 +107,33 @@ console.log('PASS: random settled interface piles, solid 100px cursor, strong sw
 
 // Exercise the actual browser lifecycle with deterministic pointer/RAF events.
 let clock = 0, nextFrame = 0, paintCount = 0, visible;
-const frames = new Map(), windowEvents = new Map(), documentEvents = new Map();
+const frames = new Map(), windowEvents = new Map(), documentEvents = new Map(), windowOptions = new Map();
+const addListener = (events, type, fn) => {
+  if (!events.has(type)) events.set(type, new Set());
+  events.get(type).add(fn);
+};
+const removeListener = (events, type, fn) => {
+  const listeners = events.get(type);
+  listeners?.delete(fn);
+  if (!listeners?.size) events.delete(type);
+};
+const fireWindow = (type, event) => { for (const fn of windowEvents.get(type) ?? []) fn(event); };
 const colors = new Set();
 const context = { setTransform() {}, clearRect() { paintCount++; }, stroke() { colors.add(this.strokeStyle); } };
 const canvas = { style: {}, getContext: () => context };
 const footer = { offsetHeight: 101 };
-let fieldTop = 600;
+let fieldTop = 600, fieldLeft = 100;
 const field = { dataset: {}, clientWidth: 800, closest: () => footer,
-  querySelector: () => canvas, getBoundingClientRect: () => ({ left: 100, right: 900, top: fieldTop }) };
+  querySelector: () => canvas, getBoundingClientRect: () => ({ left: fieldLeft, right: fieldLeft + field.clientWidth, top: fieldTop }) };
 const reduced = { matches: false, addEventListener() {}, removeEventListener() {} };
 const fine = { ...reduced, matches: true };
 globalThis.document = { hidden: false, elementFromPoint: () => null, querySelector: () => field,
   documentElement: { hasAttribute: () => false, addEventListener() {}, removeEventListener() {} },
-  addEventListener: (type, fn) => documentEvents.set(type, fn), removeEventListener: type => documentEvents.delete(type) };
+  addEventListener: (type, fn) => addListener(documentEvents, type, fn),
+  removeEventListener: (type, fn) => removeListener(documentEvents, type, fn) };
 globalThis.window = { innerWidth: 1000, innerHeight: 900,
-  addEventListener: (type, fn) => windowEvents.set(type, fn), removeEventListener: type => windowEvents.delete(type) };
+  addEventListener: (type, fn, options) => { addListener(windowEvents, type, fn); windowOptions.set(type, options); },
+  removeEventListener: (type, fn) => removeListener(windowEvents, type, fn) };
 Object.defineProperty(globalThis, 'navigator', { configurable: true, value: { maxTouchPoints: 0 } });
 Object.defineProperty(globalThis, 'performance', { configurable: true, value: { now: () => clock } });
 globalThis.matchMedia = query => query.includes('reduced-motion') ? reduced : fine;
@@ -139,20 +151,21 @@ const realRandom = Math.random;
 Math.random = () => testRandom;
 const live = initializeFooterPile();
 const initialSeed = field.dataset.seed;
+assert.equal(windowOptions.get('touchmove')?.passive, true, 'Touch brushing leaves native page scrolling enabled');
 assert.ok(windowEvents.has('scroll'), 'Scrolling reprojects the stationary pointer; it does not apply a page-bottom impulse');
 assert.equal(canvas.style.left, '-100px', 'The canvas begins at the viewport edge instead of clipping at a fixed gutter');
 assert.equal(canvas.style.width, '1000px', 'The canvas remains visible across the complete viewport');
 assert.deepEqual([...colors], ['#b8b8b8'], 'Every icon uses exactly the same gray ink');
-windowEvents.get('themechange')();
+fireWindow('themechange');
 assert.equal(field.dataset.seed, initialSeed, 'Theme changes keep the same random pile');
 visible([{ isIntersecting: true }]);
 assert.equal(frames.size, 0, 'No animation loop while the pile is initially still');
-const move = (x, type = 'mouse') => windowEvents.get('pointermove')({ clientX: x + 100, clientY: 590, pointerType: type });
+const move = (x, type = 'mouse') => fireWindow('pointermove', { clientX: x + 100, clientY: 590, pointerType: type });
 move(700, 'touch');
-assert.equal(frames.size, 0, 'Touch does not move the pile');
+assert.equal(frames.size, 0, 'A touch pointer event alone does not start the brush');
 navigator.maxTouchPoints = 1;
 move(700);
-assert.equal(frames.size, 0, 'Touch-capable laptops are also static');
+assert.equal(frames.size, 0, 'Mouse hover stays inactive on a touch-capable laptop');
 navigator.maxTouchPoints = 0;
 reduced.matches = true;
 move(700);
@@ -164,9 +177,9 @@ function runFrame() {
   pending.forEach(fn => fn(clock));
 }
 move(700);
-fieldTop = 650; windowEvents.get('scroll')(); runFrame();
+fieldTop = 650; fireWindow('scroll'); runFrame();
 assert.equal(field.dataset.pointerY, '-60.00', 'The brush follows the stationary viewport cursor as the footer moves');
-fieldTop = 600; windowEvents.get('scroll')(); runFrame();
+fieldTop = 600; fireWindow('scroll'); runFrame();
 move(400); for (let i = 0; i < 20; i++) runFrame();
 assert.equal(field.dataset.disturbed, 'true');
 live.setPaused(true);
@@ -182,14 +195,46 @@ for (let i = 0; i < 1200; i++) runFrame();
 assert.ok(Number(field.dataset.spilled) > 0, 'Real pointer events spill icons');
 assert.equal(frames.size, 0, 'A settled renderer releases its animation loop');
 const survivors = field.dataset.remaining;
-windowEvents.get('themechange')();
+fireWindow('themechange');
 assert.equal(field.dataset.remaining, survivors, 'Theme changes never refill the shelf');
 live.destroy();
 assert.equal(frames.size, 0);
 assert.ok(!windowEvents.has('pointermove'), 'Cleanup removes input listeners');
 testRandom = .64;
+field.clientWidth = 342;
+fieldLeft = 24;
+window.innerWidth = 390;
 const reloaded = initializeFooterPile();
 assert.notEqual(field.dataset.seed, initialSeed, 'Reload selects a new random arrangement');
+visible([{ isIntersecting: true }]);
+navigator.maxTouchPoints = 1;
+const touch = (identifier, x) => ({ identifier, clientX: x + fieldLeft, clientY: 590 });
+reduced.matches = true;
+fireWindow('touchstart', { changedTouches: [touch(7, 40)] });
+assert.equal(frames.size, 0, 'Reduced motion keeps touch brushing static');
+reduced.matches = false;
+fireWindow('touchstart', { changedTouches: [touch(7, 40)] });
+assert.ok(frames.size > 0, 'A finger starts the same live brush on a touch screen');
+fireWindow('touchmove', { changedTouches: [touch(8, 300)] });
+assert.equal(field.dataset.pointerX, '40.00', 'Another finger cannot move the active brush');
+fieldTop = 650;
+fireWindow('scroll');
+assert.equal(field.dataset.pointerY, '-60.00', 'The brush stays under the finger while the footer scrolls');
+fieldTop = 600;
+fireWindow('scroll');
+for (let i = 0; i < 180; i++) {
+  fireWindow('touchmove', { changedTouches: [touch(7, 40 + i * 2)] });
+  runFrame();
+}
+assert.equal(field.dataset.disturbed, 'true', 'Dragging a finger sweeps the real icon physics');
+fireWindow('touchend', { changedTouches: [touch(8, 300)] });
+fireWindow('touchmove', { changedTouches: [touch(7, 400)] });
+assert.equal(field.dataset.pointerX, '400.00', 'The brush survives another finger lifting');
+fireWindow('touchend', { changedTouches: [touch(7, 400)] });
+for (let i = 0; i < 1200; i++) runFrame();
+assert.ok(Number(field.dataset.spilled) > 0, 'A finger sweep can wipe icons beyond the shelf endpoint');
+assert.equal(frames.size, 0, 'The touch-driven pile sleeps after settling');
 reloaded.destroy();
+assert.ok(!windowEvents.has('touchmove'), 'Cleanup removes touch input listeners');
 Math.random = realRandom;
-console.log('PASS: actual renderer has static touch/reduced-motion fallbacks, pointer sweeps, menu/offscreen pause, idle shutdown, theme persistence and cleanup.');
+console.log('PASS: actual renderer supports identical mouse and touch brush physics, reduced-motion fallback, menu/offscreen pause, idle shutdown, theme persistence and cleanup.');
