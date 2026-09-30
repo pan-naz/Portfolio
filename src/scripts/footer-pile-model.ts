@@ -83,6 +83,15 @@ export class FooterPile {
   private brushRadius = 1;
   private brushMoving = false;
 
+  /** A distant pointer cannot wake a settled pile until its collider reaches an icon. */
+  needsPointerStep(x: number, y: number) {
+    if (!this.sleeping || this.brush) return true;
+    const reach = pileCursorRadius + pileRadius + 2;
+    const reachSquared = reach * reach;
+    return this.icons.some(icon => !icon.removed && !icon.fallen
+      && (icon.x - x) ** 2 + (icon.y - y) ** 2 < reachSquared);
+  }
+
   constructor(public width: number, iconCount: number, public readonly seed = pilePreviewSeed,
     public viewLeft = pileBleed, public viewRight = pileBleed) {
     this.icons = createPile(width, iconCount, seed);

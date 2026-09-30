@@ -9,11 +9,13 @@ import CaseStudyMedia from './CaseStudyMedia.astro';
 import ProjectIdentity from './ProjectIdentity.astro';
 import SkillTag from './SkillTag.astro';
 import Stat from './Stat.astro';
+import TextLink from './TextLink.astro';
 import '../styles/voximplant-case-study.css';
 
 interface Props { project: Project; }
 const { project } = Astro.props;
 const asset = (name: string, extension: 'webp' | 'png' | 'mp4' = 'webp') => `/projects/voximplant-case-study/${name}.${extension}`;
+const productUrl = 'https://voximplant.com/kit';
 
 const personas = [
   {
@@ -21,7 +23,7 @@ const personas = [
     group: 'Buy and sets up',
     title: 'Operations or customer-service lead',
     description: 'Small and mid-size company, 10 - 200 people. IT services, finance, education, delivery, retail, car dealers.',
-    need: 'A working contact center in days, not months, without hiring developers. Predictable cost per seat.',
+    need: 'A working contact center in days, not months, without hiring developers. Predictable pricing.',
     current: 'Custom code on the platform, a dedicated engineer, months of delay and a large bill.',
   },
   {
@@ -85,9 +87,9 @@ const impactMetrics = [
 ---
 <article class="case-study-content case-study-content--voximplant" data-case-content>
   <div class="case-study-artwork">
-    <video data-case-video muted loop playsinline preload="none" poster={project.image} width="1272" height="720" aria-label={project.imageAlt}>
+    <video data-case-video muted loop playsinline preload="none" poster={project.image} width="1272" height="720" style="aspect-ratio: 1272 / 720" aria-label={project.imageAlt}>
       <source data-src={asset('promo-voxkit', 'mp4')} type="video/mp4" />
-      <img src={project.image} alt={project.imageAlt} width="1200" height={project.imageHeight} decoding="async" />
+      <img src={project.image} alt={project.imageAlt} width={project.imageWidth ?? 1200} height={project.imageHeight} decoding="async" />
     </video>
   </div>
 
@@ -96,7 +98,7 @@ const impactMetrics = [
       <div class="vox-project">
         <ProjectIdentity title={project.title} logo={project.logo} />
         <div class="project-tags">{project.tags.map(label => <SkillTag label={label} variant="raised" />)}</div>
-        <a class="vox-product-link text-body-s" href="https://voximplant.com/kit" target="_blank" rel="noopener noreferrer">voximplant.com/kit</a>
+        <TextLink href={productUrl} accent compact>voximplant.com/kit</TextLink>
       </div>
       <div class="vox-summary">
         <h1 id="vox-title" class="sr-only" data-case-title>{project.title}</h1>
@@ -157,7 +159,7 @@ const impactMetrics = [
           <div class="vox-persona-head"><span class="vox-persona-icon" aria-hidden="true" set:html={persona.icon} /><span class="vox-persona-group">{persona.group}</span></div>
           <h3>{persona.title}</h3>
           <p>{persona.description}</p>
-          <div class="vox-persona-needs"><div><h4>Need</h4><p>{persona.need}</p></div><div><h4>Current</h4><p>{persona.current}</p></div></div>
+          <div class="vox-persona-needs"><div><h4>Need</h4><p>{persona.need}</p></div><div><h4>Current approach</h4><p>{persona.current}</p></div></div>
         </article>)}
       </div>
     </section>
@@ -248,6 +250,7 @@ const impactMetrics = [
         <article><h3>For the business</h3><ul><li>Kit became one of Voximplant's two product lines.</li><li>Companies that needed months and a development team to set up a contact center now do it themselves in 30 minutes or less.</li></ul></article>
         <article><h3>For the team</h3><ul><li>As Kit grew, the design team grew with it.</li><li>I led a team of 10+ across product, brand and web, and started a research function.</li></ul></article>
       </div>
+      <div class="vox-end-link"><TextLink href={productUrl} accent compact>voximplant.com/kit</TextLink></div>
     </section>
   </div>
 </article>

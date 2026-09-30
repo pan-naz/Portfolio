@@ -25,6 +25,9 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
   const hero = document.querySelector<HTMLElement>('.hero');
   const heading = hero?.querySelector<HTMLElement>('[data-hero-heading]');
   if (!hero || !heading) return;
+  const header = document.querySelector<HTMLElement>('.site-header');
+  const root = document.documentElement;
+  const releaseGate = () => { delete root.dataset.homeIntro; };
   const permanent = heading.querySelector<HTMLElement>('[data-permanent]')!;
   const cycling = heading.querySelector<HTMLElement>('[data-cycling]')!;
   const paragraph = hero.querySelector<HTMLElement>('.hero-description')!;
@@ -40,10 +43,14 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
   const easing = tokens.getPropertyValue('--ease-entrance').trim();
   const distance = number('--distance-text-reveal');
   let intro: ReturnType<typeof createNativeMotion> | undefined;
+  let headerIntro: ReturnType<typeof createNativeMotion> | undefined;
   let tagIntro: ReturnType<typeof createNativeMotion> | undefined;
   let roleMotion: ReturnType<typeof createRoleAnimator> | undefined;
   let restoreLines: (() => void) | undefined;
   let paused = document.hidden;
+  let introStarted = false;
+  let headerFrame = 0;
+  let finishHeader = () => {};
   let generation = 0;
 
   const restoreParagraph = () => {
@@ -52,12 +59,18 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
   };
   const reset = () => {
     const current = ++generation;
+    if (headerFrame) cancelAnimationFrame(headerFrame);
+    headerFrame = 0;
+    finishHeader = () => {};
     intro?.cancel();
+    headerIntro?.cancel();
     tagIntro?.cancel();
     roleMotion?.destroy();
     intro = undefined;
+    headerIntro = undefined;
     tagIntro = undefined;
     roleMotion = undefined;
+    introStarted = false;
     restoreParagraph();
     permanent.textContent = 'Product Designer';
     cycling.textContent = heroRoles[0];
@@ -67,12 +80,53 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
       element.style.removeProperty('opacity');
       element.style.removeProperty('transform');
     });
+    header?.style.removeProperty('opacity');
     // No-JS, reduced motion and unsupported browsers retain complete readable copy.
     if (reduced.matches || typeof permanent.animate !== 'function') {
       hero.classList.add('is-tags-ready');
+      releaseGate();
       return;
     }
     roots.forEach(element => { element.style.opacity = '0'; });
+    let headerDone = !header;
+    let introPrepared = false;
+    let startWork = () => {};
+    const startContent = () => {
+      if (current !== generation || !headerDone || !introPrepared || introStarted) return;
+      introStarted = true;
+      // Every content effect is already installed at its backwards-fill state.
+      intro?.setPaused(paused);
+      tagIntro?.setPaused(paused);
+      roleMotion?.setPaused(paused);
+      startWork();
+      releaseGate();
+      if (cta.matches(':focus-within')) intro?.finish();
+    };
+    if (header) {
+      finishHeader = () => {
+        if (headerDone) return;
+        if (headerIntro) headerIntro.finish();
+        else {
+          headerDone = true;
+          header.style.opacity = '1';
+          startContent();
+        }
+      };
+      // A native clock started during module evaluation can finish before Chrome
+      // paints its first frame. Start on that frame, still with no timed delay.
+      headerFrame = requestAnimationFrame(() => {
+        headerFrame = 0;
+        if (current !== generation || headerDone) return;
+        headerIntro = createNativeMotion([{
+          element: header, keyframes: [{ opacity: 0 }, { opacity: 1 }],
+          duration: number('--duration-layout'), easing: 'linear',
+        }], { paused: document.hidden, onComplete: () => {
+          headerDone = true;
+          startContent();
+        } });
+        if (header.matches(':focus-within')) finishHeader();
+      });
+    }
     void document.fonts.ready.then(() => {
       if (current !== generation || reduced.matches) return;
       const letters = splitLetters(permanent, 'Product Designer');
@@ -92,17 +146,17 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
         distance, ease: easing,
       };
       roleMotion = createRoleAnimator(phrases, roleOptions);
-      roleMotion.setPaused(paused);
+      roleMotion.setPaused(true);
       const entrance = number('--duration-entrance');
       const tagStagger = number('--stagger-tag-reveal');
       const timing = heroIntroTiming(letters.length, roleOptions.enter, roleOptions.stagger,
         entrance, number('--duration-copy-reveal'), number('--intro-stage-progress'));
       const copy = { duration: number('--duration-copy-reveal'), distance, easing };
-      workStage?.startIntro({ duration: copy.duration, delay: timing.ctaStart, easing });
+      startWork = () => workStage?.startIntro({ duration: copy.duration, delay: timing.ctaStart, easing });
       tagIntro = createNativeMotion(rightTags.flatMap(tag => revealEffects([tag], {
         duration: entrance, distance, easing,
         delay: timing.tagsStart + Number(tag.style.getPropertyValue('--tag-index')) * tagStagger,
-      })), { paused, onComplete: () => {
+      })), { paused: true, onComplete: () => {
         if (current !== generation) return;
         hero.classList.add('is-tags-ready');
       } });
@@ -118,16 +172,28 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
           ...copy, delay: timing.copyStart, stagger: number('--stagger-copy-reveal'),
         }),
         ...revealEffects([cta], { ...copy, delay: timing.ctaStart }),
-      ], { paused, onComplete: () => {
+      ], { paused: true, onComplete: () => {
         if (current === generation) roleMotion?.startCycling();
       } });
       // Effects already supply backwards-fill states before these containers show.
       [permanent, cycling, paragraph].forEach(element => { element.style.opacity = '1'; });
-      if (cta.matches(':focus-within')) intro.finish();
+      introPrepared = true;
+      startContent();
+    }).catch(() => {
+      // Font/animation setup failure degrades to the readable server content.
+      if (current !== generation) return;
+      headerIntro?.finish(); intro?.cancel(); tagIntro?.cancel(); roleMotion?.destroy();
+      restoreParagraph();
+      permanent.textContent = 'Product Designer';
+      cycling.textContent = heroRoles[0];
+      roots.forEach(element => { element.style.opacity = '1'; element.style.removeProperty('transform'); });
+      if (header) header.style.opacity = '1';
+      releaseGate();
     });
   };
   // Focus finishes the same native group; no separate class or timing workaround.
   cta.addEventListener('focusin', () => intro?.finish());
+  header?.addEventListener('focusin', () => finishHeader());
   let paragraphWidth = paragraph.clientWidth;
   window.addEventListener('resize', () => {
     const width = paragraph.clientWidth;
@@ -140,10 +206,17 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
   }, { passive: true });
   reduced.addEventListener('change', reset);
   reset();
+  root.classList.add('hero-intro-ready');
   return { setPaused(value: boolean) {
     paused = value;
-    intro?.setPaused(value);
-    tagIntro?.setPaused(value);
-    roleMotion?.setPaused(value);
+    if (introStarted) intro?.setPaused(value);
+    // The header remains usable when the hero scrolls away or a menu opens.
+    // Only backgrounding the document should suspend the header fade.
+    headerIntro?.setPaused(document.hidden);
+    if (value && !document.hidden && window.scrollY > 0) finishHeader();
+    if (introStarted) {
+      tagIntro?.setPaused(value);
+      roleMotion?.setPaused(value);
+    }
   } };
 }

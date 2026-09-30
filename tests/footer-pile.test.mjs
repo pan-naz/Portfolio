@@ -26,6 +26,8 @@ const idle = new FooterPile(1200, waterfallIconManifest.length);
 const original = structuredClone(idle.icons);
 for (let i = 0; i < 600; i++) idle.advance(1 / 60, none);
 assert.deepEqual(idle.icons, original, 'Random deposition settles before the first paint and stays completely still');
+assert.equal(idle.needsPointerStep(-50, -500), false, 'A pointer far above the settled icons does not wake physics');
+assert.equal(idle.needsPointerStep(idle.icons[0].x, idle.icons[0].y), true, 'Approaching an icon still starts the brush');
 assert.equal(new Set(idle.icons.map(icon => icon.icon)).size, idle.icons.length, 'Initial icons are unique');
 assert.deepEqual(new FooterPile(1200, waterfallIconManifest.length).icons, original, 'A seed can be replayed for static previews');
 assert.notDeepEqual(new FooterPile(1200, waterfallIconManifest.length, 123).icons.map(i => [i.x, i.y, i.icon]), original.map(i => [i.x, i.y, i.icon]), 'A fresh seed changes the outline, positions and identities');
@@ -123,11 +125,17 @@ const context = { setTransform() {}, clearRect() { paintCount++; }, stroke() { c
 const canvas = { style: {}, getContext: () => context };
 const footer = { offsetHeight: 101 };
 let fieldTop = 600, fieldLeft = 100;
-const field = { dataset: {}, clientWidth: 800, closest: () => footer,
+const layerStyles = new Map();
+const layer = { style: { setProperty: (name, value) => layerStyles.set(name, value) } };
+const darkSection = { getBoundingClientRect: () => ({ bottom: fieldTop - 500 }) };
+const contact = {};
+let observedVisibilityTarget;
+const field = { dataset: {}, clientWidth: 800, parentElement: layer, closest: () => footer,
   querySelector: () => canvas, getBoundingClientRect: () => ({ left: fieldLeft, right: fieldLeft + field.clientWidth, top: fieldTop }) };
 const reduced = { matches: false, addEventListener() {}, removeEventListener() {} };
 const fine = { ...reduced, matches: true };
-globalThis.document = { hidden: false, elementFromPoint: () => null, querySelector: () => field,
+globalThis.document = { hidden: false, elementFromPoint: () => null,
+  querySelector: selector => ({ '[data-footer-pile]': field, '.about-details': darkSection, '#contact': contact })[selector] ?? null,
   documentElement: { hasAttribute: () => false, addEventListener() {}, removeEventListener() {} },
   addEventListener: (type, fn) => addListener(documentEvents, type, fn),
   removeEventListener: (type, fn) => removeListener(documentEvents, type, fn) };
@@ -142,7 +150,7 @@ globalThis.getComputedStyle = () => ({ getPropertyValue: name => ({ '--footer-ic
 globalThis.requestAnimationFrame = fn => { frames.set(++nextFrame, fn); return nextFrame; };
 globalThis.cancelAnimationFrame = id => frames.delete(id);
 globalThis.ResizeObserver = class { observe() {} disconnect() {} };
-globalThis.IntersectionObserver = class { constructor(fn) { visible = fn; } observe() {} disconnect() {} };
+globalThis.IntersectionObserver = class { constructor(fn) { visible = fn; } observe(target) { observedVisibilityTarget = target; } disconnect() {} };
 globalThis.DOMMatrix = class { scale() { return this; } };
 globalThis.Path2D = class { addPath() {} arc() {} roundRect() {} };
 const { initializeFooterPile } = await import(compile(resolve('src/scripts/footer-pile.ts')));
@@ -155,12 +163,18 @@ assert.equal(windowOptions.get('touchmove')?.passive, true, 'Touch brushing leav
 assert.ok(windowEvents.has('scroll'), 'Scrolling reprojects the stationary pointer; it does not apply a page-bottom impulse');
 assert.equal(canvas.style.left, '-100px', 'The canvas begins at the viewport edge instead of clipping at a fixed gutter');
 assert.equal(canvas.style.width, '1000px', 'The canvas remains visible across the complete viewport');
+assert.equal(layerStyles.get('--pile-above'), '560px', 'The pile layer reaches past the Contact chapter to the dark section');
+assert.equal(canvas.style.top, '-560px', 'The canvas has drawing space above the former 170px cutoff');
+assert.equal(canvas.style.height, '661px', 'The canvas still reaches the bottom of the footer');
+assert.equal(observedVisibilityTarget, layer, 'The expanded pile stays active while its upper drawing area is visible');
 assert.deepEqual([...colors], ['#b8b8b8'], 'Every icon uses exactly the same gray ink');
 fireWindow('themechange');
 assert.equal(field.dataset.seed, initialSeed, 'Theme changes keep the same random pile');
 visible([{ isIntersecting: true }]);
 assert.equal(frames.size, 0, 'No animation loop while the pile is initially still');
 const move = (x, type = 'mouse') => fireWindow('pointermove', { clientX: x + 100, clientY: 590, pointerType: type });
+move(-50);
+assert.equal(frames.size, 0, 'Scrolling across empty Contact space does not wake the large footer canvas');
 move(700, 'touch');
 assert.equal(frames.size, 0, 'A touch pointer event alone does not start the brush');
 navigator.maxTouchPoints = 1;

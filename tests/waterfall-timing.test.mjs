@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict';
-import { advanceLocalFallClock, catchUpFallClock, streamStates, stretchedIconY, trailOpacity } from '../src/scripts/waterfall-model.ts';
+import { advanceLocalFallClock, catchUpFallClock, streamDrops, streamStates, stretchedIconY, trailOpacity } from '../src/scripts/waterfall-model.ts';
+
+const reusableDrops = streamDrops(999, 0, 800);
+assert.strictEqual(streamDrops(999, 1 / 60, 800), reusableDrops, 'The live renderer reuses each column schedule between frames');
 
 function simulate(fps) {
   const snapshots = [];

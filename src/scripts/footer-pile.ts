@@ -7,7 +7,10 @@ export function initializeFooterPile() {
   const canvas = field?.querySelector('canvas');
   const context = canvas?.getContext('2d');
   const footer = field?.closest<HTMLElement>('.footer');
-  if (!field || !footer || !canvas || !context || document.documentElement.hasAttribute('data-static')) return;
+  const layer = field?.parentElement;
+  if (!field || !footer || !layer || !canvas || !context || document.documentElement.hasAttribute('data-static')) return;
+  const darkSection = document.querySelector<HTMLElement>('.about-details');
+  const contact = document.querySelector<HTMLElement>('#contact');
   let paths: Path2D[];
   try { paths = createWaterfallPaths(); } catch { return; }
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -20,7 +23,7 @@ export function initializeFooterPile() {
   const seed = Math.floor(Math.random() * 0x100000000);
   let ink = '';
   let width = 0, height = 0, ratio = 1, viewLeft = pileBleed, viewRight = pileBleed;
-  const above = pileAbove;
+  let above = pileAbove;
   let inView = false, paused = false, disposed = false;
   let frame = 0, last = 0;
   const allowed = () => !reduced.matches && inView && !paused && !document.hidden && !disposed;
@@ -31,8 +34,11 @@ export function initializeFooterPile() {
     context.lineWidth = 1;
     context.lineCap = 'round'; context.lineJoin = 'round';
     context.strokeStyle = ink;
+    let remaining = 0, spilled = 0;
     for (const icon of pile.icons) {
+      if (icon.fallen) spilled++;
       if (icon.removed) continue;
+      remaining++;
       const c = Math.cos(icon.angle), s = Math.sin(icon.angle);
       const half = waterfallIconSize / 2;
       context.setTransform(c * ratio, s * ratio, -s * ratio, c * ratio,
@@ -41,8 +47,8 @@ export function initializeFooterPile() {
       context.stroke(paths[icon.icon]);
     }
     // Small DOM diagnostics also make the canvas interaction inspectable in QA.
-    field.dataset.remaining = String(pile.icons.filter(icon => !icon.removed).length);
-    field.dataset.spilled = String(pile.icons.filter(icon => icon.fallen).length);
+    field.dataset.remaining = String(remaining);
+    field.dataset.spilled = String(spilled);
     field.dataset.disturbed = String(pile.disturbed);
     field.dataset.seed = String(seed);
     field.dataset.motion = reduced.matches ? 'static' : pile.sleeping ? 'resting' : 'moving';
@@ -66,6 +72,12 @@ export function initializeFooterPile() {
     const nextWidth = field.clientWidth;
     if (!nextWidth) return;
     const rect = field.getBoundingClientRect();
+    // The settled pile is small, but an upward sweep can carry icons across the
+    // entire Contact chapter. Keep the drawing surface open through the dark edge.
+    const darkBottom = darkSection?.getBoundingClientRect().bottom;
+    above = darkBottom === undefined ? pileAbove
+      : Math.max(pileAbove, Math.ceil(rect.top - darkBottom + pileCursorRadius + waterfallIconSize));
+    layer.style.setProperty('--pile-above', `${above}px`);
     const nextViewLeft = Math.max(pileBleed, rect.left);
     const nextViewRight = Math.max(pileBleed, window.innerWidth - rect.right);
     if (!pile || (!pile.disturbed && nextWidth !== width)) {
@@ -80,8 +92,11 @@ export function initializeFooterPile() {
     viewRight = nextViewRight;
     height = above + footer.offsetHeight;
     ratio = Math.min(devicePixelRatio || 1, 2);
-    canvas.width = Math.round((width + viewLeft + viewRight) * ratio);
-    canvas.height = Math.round(height * ratio);
+    const pixelWidth = Math.round((width + viewLeft + viewRight) * ratio);
+    const pixelHeight = Math.round(height * ratio);
+    // Assigning canvas dimensions clears and reallocates its backing store.
+    if (canvas.width !== pixelWidth) canvas.width = pixelWidth;
+    if (canvas.height !== pixelHeight) canvas.height = pixelHeight;
     canvas.style.left = `${-viewLeft}px`;
     canvas.style.width = `${width + viewLeft + viewRight}px`;
     canvas.style.height = `${height}px`;
@@ -104,7 +119,7 @@ export function initializeFooterPile() {
     pointer.x = x; pointer.y = y; pointer.active = true;
     field.dataset.pointerX = x.toFixed(2);
     field.dataset.pointerY = y.toFixed(2);
-    wake();
+    if (pile.needsPointerStep(x, y)) wake();
     return true;
   };
   const move = (event: ViewportPointer) => {
@@ -151,8 +166,10 @@ export function initializeFooterPile() {
   });
   const sizing = new ResizeObserver(resize);
   resize();
-  visibility.observe(footer);
+  visibility.observe(layer);
   sizing.observe(footer);
+  if (darkSection) sizing.observe(darkSection);
+  if (contact) sizing.observe(contact);
   const unwatch = watchViewportPointer(move);
   window.addEventListener('touchstart', onTouchStart, { passive: true });
   window.addEventListener('touchmove', onTouchMove, { passive: true });

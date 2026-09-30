@@ -23,6 +23,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
   let control: HTMLElement | null = null;
   let clone: HTMLElement | null = null;
   let artwork: HTMLElement | null = null;
+  let borrowedVideo: { video: HTMLVideoElement; home: HTMLElement; hidden: string | null; label: string | null } | null = null;
   let phase: 'closed' | 'opening' | 'open' | 'closing' = 'closed';
   let animations: Animation[] = [];
   let caseVideos: ReturnType<typeof initializeCaseStudyVideos> | undefined;
@@ -57,17 +58,34 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     const bounds = element.getBoundingClientRect();
     return {
       left: `${bounds.left - container.left}px`, top: `${bounds.top - container.top}px`,
-      width: `${bounds.width}px`, height: `${bounds.height}px`, borderRadius: getComputedStyle(element).borderRadius,
+      width: `${bounds.width}px`, height: `${bounds.height}px`,
     };
+  };
+  const reserveVideoSpace = (video: HTMLVideoElement) => {
+    const placeholder = document.createElement('div');
+    placeholder.style.aspectRatio = `${video.width || video.videoWidth} / ${video.height || video.videoHeight}`;
+    placeholder.setAttribute('aria-hidden', 'true');
+    video.replaceWith(placeholder);
+  };
+  const videoSource = (video: HTMLVideoElement) => {
+    const source = video.querySelector('source');
+    return video.currentSrc || video.src || (source && new URL(source.dataset.src || source.src, document.baseURI).href);
   };
   const createArtwork = (source: HTMLElement) => {
     artwork = document.createElement('div');
     artwork.className = 'case-study-transition-artwork';
     artwork.setAttribute('aria-hidden', 'true');
-    const image = source.querySelector('img')!.cloneNode(true) as HTMLImageElement;
-    image.loading = 'eager';
-    artwork.append(image);
     panel.append(artwork);
+    const video = source.querySelector('video');
+    if (video) {
+      reserveVideoSpace(video);
+      artwork.append(video);
+      caseVideos?.refresh();
+    } else {
+      const image = source.querySelector('img')!.cloneNode(true) as HTMLImageElement;
+      image.loading = 'eager';
+      artwork.append(image);
+    }
   };
 
   const open = async (link: HTMLAnchorElement, point?: { x: number; y: number }, push = true) => {
@@ -115,13 +133,25 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     pauseScroll();
     document.documentElement.classList.add('case-study-open');
     dialog.showModal();
-    caseVideos = initializeCaseStudyVideos(scroll);
     scroll.scrollTop = 0;
     // Measure the destination at its final layout, before applying travel frames.
     Object.assign(panel.style, fullFrame());
     const hero = scroll.querySelector<HTMLElement>('.case-study-artwork')!;
     const destinationArtwork = artworkFrame(hero, panel.getBoundingClientRect());
+    const cardVideo = media.querySelector('video');
+    const heroVideo = hero.querySelector('video');
+    if (cardVideo && heroVideo && videoSource(cardVideo) === videoSource(heroVideo)) {
+      borrowedVideo = { video: cardVideo, home: media, hidden: cardVideo.getAttribute('aria-hidden'), label: cardVideo.getAttribute('aria-label') };
+      reserveVideoSpace(cardVideo);
+      cardVideo.removeAttribute('aria-hidden');
+      cardVideo.setAttribute('aria-label', heroVideo.getAttribute('aria-label') || '');
+      hero.replaceChildren(cardVideo);
+    }
     createArtwork(hero);
+    // Include the traveling video as well as the case's body videos. It keeps
+    // the same owner when it moves into the hero after the flight.
+    caseVideos = initializeCaseStudyVideos(panel);
+    caseVideos.refresh();
     hero.style.visibility = 'hidden';
     active.closest<HTMLElement>('.project')!.style.visibility = 'hidden';
     const source = cardFrame();
@@ -147,6 +177,11 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     control.style.transform = topCenter();
     control.querySelector('svg')!.style.transform = 'rotate(225deg)';
     clone.style.opacity = '0';
+    const travelingVideo = artwork?.querySelector('video');
+    if (travelingVideo) {
+      hero.replaceChildren(travelingVideo);
+      caseVideos?.refresh();
+    }
     hero.style.removeProperty('visibility');
     artwork?.remove(); artwork = null;
     // Release the real hero to native scrolling at 700ms, while the decorative
@@ -161,8 +196,6 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
   const close = async () => {
     if (phase === 'closed' || phase === 'closing' || !active || !control) return;
     phase = 'closing';
-    caseVideos?.destroy();
-    caseVideos = undefined;
     lockScroll(false);
     control.hidden = true;
     const ticket = ++revision;
@@ -216,6 +249,17 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     await Promise.all([travel, imageTravel, captionFade]);
     window.removeEventListener('scroll', followPageScroll);
     if (ticket !== revision) return;
+    if (borrowedVideo) {
+      const { video, home, hidden, label } = borrowedVideo;
+      home.replaceChildren(video);
+      for (const [name, value] of [['aria-hidden', hidden], ['aria-label', label]] as const) {
+        if (value === null) video.removeAttribute(name);
+        else video.setAttribute(name, value);
+      }
+      borrowedVideo = null;
+    }
+    caseVideos?.destroy();
+    caseVideos = undefined;
     cardMedia.style.removeProperty('visibility');
     cardCaption.style.removeProperty('visibility');
     control.hidden = true;

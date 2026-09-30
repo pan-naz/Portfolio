@@ -8,8 +8,8 @@ export interface WorkStageController {
   setPaused(value: boolean): void;
 }
 
-const restingTransform = 'translate3d(var(--hero-visual-gutter), 0px, 0px)';
-const expandedTransform = 'translate3d(0px, 0px, 0px)';
+const restingTransform = 'translate(var(--hero-visual-gutter), 0px)';
+const expandedTransform = 'translate(0px, 0px)';
 
 /**
  * The work background is static in its inset intro position, then owns one
@@ -71,11 +71,13 @@ export function initializeWorkStage(): WorkStageController | undefined {
   };
   const revealRail = () => {
     railMotion?.cancel();
+    section.classList.remove('is-work-rail-moving');
     if (getComputedStyle(rail).display === 'none') return;
     if (reduced.matches || typeof rail.animate !== 'function') {
       showRailImmediately();
       return;
     }
+    section.classList.add('is-work-rail-moving');
     railMotion = createNativeMotion([{
       element: rail,
       keyframes: [
@@ -84,10 +86,14 @@ export function initializeWorkStage(): WorkStageController | undefined {
       ],
       duration: number('--duration-title-reveal'),
       easing: entranceEase(),
-    }], { paused, onComplete: () => { railMotion = undefined; } });
+    }], { paused, onComplete: () => {
+      railMotion = undefined;
+      section.classList.remove('is-work-rail-moving');
+    } });
   };
   const dismissRail = (immediate = false) => {
     railMotion?.cancel();
+    section.classList.remove('is-work-rail-moving');
     if (immediate || reduced.matches || typeof rail.animate !== 'function') {
       hideRailImmediately();
       return;
@@ -95,6 +101,7 @@ export function initializeWorkStage(): WorkStageController | undefined {
     const style = getComputedStyle(rail);
     rail.style.opacity = style.opacity;
     rail.style.transform = style.transform === 'none' ? railVisibleTransform : style.transform;
+    section.classList.add('is-work-rail-moving');
     railMotion = createNativeMotion([{
       element: rail,
       keyframes: [
@@ -103,7 +110,10 @@ export function initializeWorkStage(): WorkStageController | undefined {
       ],
       duration: number('--duration-layout'),
       easing: stageEase(),
-    }], { paused, onComplete: () => { railMotion = undefined; } });
+    }], { paused, onComplete: () => {
+      railMotion = undefined;
+      section.classList.remove('is-work-rail-moving');
+    } });
   };
 
   const revealHeading = () => {
@@ -138,6 +148,7 @@ export function initializeWorkStage(): WorkStageController | undefined {
           { offset: 0.28, borderRadius: targetRadius },
           { offset: 1, borderRadius: targetRadius },
         ];
+    section.classList.add('is-work-shifting');
     shiftMotion = createNativeMotion([
       {
         element: panel,
@@ -153,6 +164,7 @@ export function initializeWorkStage(): WorkStageController | undefined {
       },
     ], { paused, onComplete: () => {
       shiftMotion = undefined;
+      section.classList.remove('is-work-shifting');
       onComplete?.();
     } });
   };
@@ -163,6 +175,7 @@ export function initializeWorkStage(): WorkStageController | undefined {
     expanded = nextExpanded;
     shiftMotion?.cancel();
     shiftMotion = undefined;
+    section.classList.remove('is-work-shifting');
     panel.style.transform = current;
     panel.style.borderRadius = currentRadius;
     section.classList.toggle('is-work-expanded', expanded);
@@ -234,6 +247,8 @@ export function initializeWorkStage(): WorkStageController | undefined {
   reduced.addEventListener('change', () => {
     shiftMotion?.cancel();
     railMotion?.cancel();
+    shiftMotion = railMotion = undefined;
+    section.classList.remove('is-work-shifting', 'is-work-rail-moving');
     headingMotion?.finish();
     if (reduced.matches) {
       panel.style.transform = expandedTransform;

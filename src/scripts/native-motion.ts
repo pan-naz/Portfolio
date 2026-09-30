@@ -72,8 +72,10 @@ export function createNativeMotion(effects: MotionEffect[], options: { paused?: 
     const now = effects[0]?.element.ownerDocument.timeline.currentTime;
     const elapsed = lead?.currentTime ?? 0;
     for (const animation of animations) {
+      // Explicitly resume first; setting startTime alone can leave a paused
+      // animation suspended in some browser implementations.
+      animation.play();
       if (typeof now === 'number' && typeof elapsed === 'number') animation.startTime = now - elapsed;
-      else animation.play();
     }
   };
   if (lead) {

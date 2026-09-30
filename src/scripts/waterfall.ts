@@ -1,14 +1,14 @@
 import { refreshViewportPointer, watchViewportPointer, type ViewportPointer } from './viewport-pointer';
-import { advanceLocalFallClock, catchUpFallClock, pointerRepulsion, repulsionRadius, streamStates, stretchedIconY, trailOpacity } from './waterfall-model';
+import { advanceLocalFallClock, catchUpFallClock, pointerRepulsion, repulsionRadius, streamDrops, stretchedIconY, trailOpacity } from './waterfall-model';
 import { createWaterfallPaths, waterfallIconSize, waterfallIconGap } from './waterfall-icons';
+import { createWaterfallRenderer } from './waterfall-renderer';
 import { WaterfallSymbols } from './waterfall-symbols';
 import { accentBlendSteps, accentDurationSeconds, accentProgress, createAccentPalette, trailShadeIndex, updateParticleAccent } from './waterfall-color';
 
 export function initializeWaterfall() {
   const field = document.querySelector<HTMLElement>('[data-waterfall]');
   const canvas = field?.querySelector('canvas');
-  const context = canvas?.getContext('2d');
-  if (!field || !canvas || !context) return;
+  if (!field || !canvas) return;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
   const hero = document.querySelector<HTMLElement>('.hero')!;
@@ -16,11 +16,13 @@ export function initializeWaterfall() {
   let icons: Path2D[];
   try { icons = createWaterfallPaths(); } catch { return; }
   const symbols = new WaterfallSymbols(icons.length);
+  const renderer = createWaterfallRenderer(canvas, icons);
+  if (!renderer) return;
   let ratio = 1;
   let width = 800;
   // Leave room for the maximum 130px cursor push, plus the icon/stroke.
   const horizontalBleed = 160;
-  const height = 800;
+  let height = 800;
   let time = 0;
   let symbolTime = 0;
   let last = 0;
@@ -56,29 +58,28 @@ export function initializeWaterfall() {
     let unassigned = 0;
     let accented = 0;
     let maxAccent = 0;
-    context.setTransform(ratio, 0, 0, ratio, 0, 0);
-    context.clearRect(0, 0, width + horizontalBleed * 2, height);
-    context.globalAlpha = 1;
-    if (reduced.matches || !icons.length) return; // Blank until motion and icons are ready.
+    renderer.begin();
+    if (reduced.matches || !icons.length) { renderer.end(); return; } // Blank until motion and icons are ready.
     symbols.beginFrame();
     const attackEase = 1 - Math.exp(-delta * 18);
     const returnEase = 1 - Math.exp(-delta * 6);
     accentElapsed = pointer.active ? Math.min(accentDurationSeconds, accentElapsed + delta) : 0;
     const groupAccent = accentProgress(accentElapsed);
-    let currentColor = -1;
     for (let column = 0; column < columns; column++) {
-      for (const stream of streamStates(column, time, height)) {
+      for (const stream of streamDrops(column, time, height)) {
+        if (time > stream.end) continue;
+        const streamElapsed = time - stream.start;
         for (let row = 0; row < Math.min(12, Math.ceil(stream.tail / pitch)); row++) {
           // Full cycle identity lets a locally delayed icon outlive its source drop.
           const id = (stream.cycle * 64 + column) * 16 + row;
           if (particles.has(id)) continue;
-          const y = stretchedIconY(stream.elapsed, row, stream.speed, pitch);
+          const y = stretchedIconY(streamElapsed, row, stream.speed, pitch);
           if (y === null || y < -waterfallIconSize / 2 || y > height + waterfallIconSize / 2) continue;
           const shadeStrength = trailOpacity(row * pitch, stream.tail);
           if (shadeStrength < .012) continue;
           particles.set(id, { column, row, cycle: stream.cycle, speed: stream.speed,
-            start: time - stream.elapsed,
-            elapsed: Math.max(0, stream.elapsed - delta), rate: 1, shadeIndex: trailShadeIndex(shadeStrength), dx: 0, dy: 0,
+            start: time - streamElapsed,
+            elapsed: Math.max(0, streamElapsed - delta), rate: 1, shadeIndex: trailShadeIndex(shadeStrength), dx: 0, dy: 0,
             accent: 0, accentExitFrom: 0, accentExitElapsed: accentDurationSeconds });
         }
       }
@@ -92,11 +93,19 @@ export function initializeWaterfall() {
       const affected = pointer.active && px * px + py * py < repulsionRadius * repulsionRadius;
       const referenceElapsed = time - particle.start;
       const lag = Math.max(0, referenceElapsed - delta - particle.elapsed);
-      const fall = affected
-        ? advanceLocalFallClock(particle.rate, delta, true)
-        : catchUpFallClock(particle.rate, delta, lag, 3 + particle.row * .045);
-      particle.rate = fall.rate;
-      particle.elapsed = Math.min(referenceElapsed, particle.elapsed + fall.elapsed);
+      if (affected) {
+        const fall = advanceLocalFallClock(particle.rate, delta, true);
+        particle.rate = fall.rate;
+        particle.elapsed = Math.min(referenceElapsed, particle.elapsed + fall.elapsed);
+      } else if (lag <= 0 && particle.rate >= 1) {
+        // The common steady-fall path needs no temporary result object.
+        particle.rate = 1;
+        particle.elapsed = Math.min(referenceElapsed, particle.elapsed + delta);
+      } else {
+        const fall = catchUpFallClock(particle.rate, delta, lag, 3 + particle.row * .045);
+        particle.rate = fall.rate;
+        particle.elapsed = Math.min(referenceElapsed, particle.elapsed + fall.elapsed);
+      }
       const y = stretchedIconY(particle.elapsed, particle.row, particle.speed, pitch);
       if (y === null) continue;
       // Retain delayed icons until even maximum upward repulsion cannot expose them.
@@ -125,20 +134,16 @@ export function initializeWaterfall() {
       visibleSymbols?.add(iconIndex);
       const colorIndex = Math.round(particle.accent * accentBlendSteps);
       const paletteIndex = particle.shadeIndex * (accentBlendSteps + 1) + colorIndex;
-      if (paletteIndex !== currentColor) {
-        context.strokeStyle = palette[paletteIndex];
-        currentColor = paletteIndex;
-      }
       if (sample && colorIndex > 0) accented++;
       if (sample) maxAccent = Math.max(maxAccent, particle.accent);
-      context.setTransform(ratio, 0, 0, ratio,
-        (horizontalBleed + x + particle.dx - waterfallIconSize / 2) * ratio,
-        (y + particle.dy - waterfallIconSize / 2) * ratio);
-      context.stroke(icons[iconIndex]);
+      renderer.draw(iconIndex, paletteIndex,
+        horizontalBleed + x + particle.dx - waterfallIconSize / 2,
+        y + particle.dy - waterfallIconSize / 2);
       drawn++;
       if (particle.rate < .99) slowed++;
       if (particle.rate > 1.01) catchingUp++;
     }
+    renderer.end();
     symbols.endFrame();
     if (sample) {
       field.dataset.sampleSecond = String(Math.floor(time));
@@ -171,28 +176,31 @@ export function initializeWaterfall() {
   };
 
   const synchronize = () => {
-    if (frame) cancelAnimationFrame(frame);
-    frame = 0;
-    last = 0;
     const running = loaded && icons.length > 0 && inView && !document.hidden && !paused && !suspended && !reduced.matches && !disposed;
     field.dataset.motion = reduced.matches ? 'reduced' : !loaded && !disposed ? 'waiting' : running ? 'running' : 'paused';
-    if (reduced.matches) draw();
-    if (running) frame = requestAnimationFrame(tick);
-    if (running) refreshViewportPointer();
+    if (!running) {
+      if (frame) cancelAnimationFrame(frame);
+      frame = 0;
+      last = 0;
+      if (reduced.matches) draw();
+    } else if (!frame) {
+      // Repeated observer notifications must not keep resetting the fall clock.
+      last = 0;
+      frame = requestAnimationFrame(tick);
+      refreshViewportPointer();
+    }
   };
 
   const resize = () => {
     width = field.clientWidth;
+    // Follow the existing responsive hero without changing the Work position.
+    height = hero.offsetHeight;
+    field.parentElement!.style.setProperty('--waterfall-height', `${height}px`);
     ratio = Math.min(devicePixelRatio || 1, 1.5);
     field.style.setProperty('--waterfall-bleed', `${horizontalBleed}px`);
-    canvas.width = Math.round((width + horizontalBleed * 2) * ratio);
-    canvas.height = Math.round(height * ratio);
-    context.setTransform(ratio, 0, 0, ratio, 0, 0);
-    context.lineWidth = 1;
-    context.lineCap = 'round';
-    context.lineJoin = 'round';
     const style = getComputedStyle(field);
     palette = createAccentPalette(style.getPropertyValue('--waterfall-ink').trim(), style.getPropertyValue('--text-primary').trim(), style.getPropertyValue('--canvas').trim());
+    renderer.resize(width + horizontalBleed * 2, height, ratio, palette);
     columns = Math.floor(width / pitch);
     offset = (width - (columns - 1) * pitch) / 2;
     draw();
@@ -292,6 +300,7 @@ export function initializeWaterfall() {
     disposed = true;
     if (startupTimer !== undefined) clearTimeout(startupTimer);
     synchronize();
+    renderer.destroy();
     observer.disconnect();
     visibility.disconnect();
     unwatch();

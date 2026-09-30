@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import ts from 'typescript';
 import { calculateWorkFilterBoundaryKick, calculateWorkFilterMagnet, resolveWorkFilterSpringSpeed } from '../src/scripts/work-filter-magnet.ts';
 
 const bounds = { left: 100, right: 280, top: 100, bottom: 256 };
@@ -30,3 +32,41 @@ assert.equal(calculateWorkFilterBoundaryKick(10, atBottom, atBottom), 1, 'contin
 assert.equal(calculateWorkFilterBoundaryKick(10, atTop, atTop), 0, 'scrolling away from the upper boundary cannot kick it');
 
 console.log('PASS: work-filter magnet pulls up to 32px, slows inside the menu and activates boundary motion only on continued endpoint scrolling.');
+
+// Scroll events may arrive several times between paints. They must share one
+// sticky-boundary measurement while retaining the same endpoint impulse.
+const events = new Map(), jobs = new Map();
+let nextJob = 0, menuReads = 0, railReads = 0, clock = 0;
+const rail = { getBoundingClientRect: () => { railReads++; return { top: 100, bottom: 500 }; } };
+const menu = {
+  dataset: {}, style: { transform: '', removeProperty() {} },
+  closest: selector => selector === '.work-rail' ? rail : null,
+  getBoundingClientRect: () => { menuReads++; return { left: 100, right: 280, top: 100, bottom: 256 }; },
+};
+globalThis.document = { documentElement: { dataset: { workStageLayout: 'true' } },
+  querySelector: selector => selector === '.work-rail .section-navigation' ? menu : null };
+globalThis.window = { scrollY: 1000,
+  addEventListener: (name, callback) => events.set(name, callback) };
+globalThis.matchMedia = () => ({ matches: true, addEventListener() {} });
+globalThis.getComputedStyle = () => ({ getPropertyValue: () => '' });
+globalThis.requestAnimationFrame = callback => { jobs.set(++nextJob, callback); return nextJob; };
+globalThis.cancelAnimationFrame = id => jobs.delete(id);
+globalThis.refreshViewportPointer = () => {};
+globalThis.watchViewportPointer = () => () => {};
+let runtime = readFileSync('src/scripts/work-filter-magnet.ts', 'utf8')
+  .replace("import { refreshViewportPointer, watchViewportPointer } from './viewport-pointer.ts';",
+    'const { refreshViewportPointer, watchViewportPointer } = globalThis;');
+runtime = ts.transpileModule(runtime, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
+const { initializeWorkFilterMagnet } = await import(`data:text/javascript;base64,${Buffer.from(runtime).toString('base64')}`);
+const controller = initializeWorkFilterMagnet();
+assert.equal(menuReads, 1);
+for (let i = 0; i < 20; i++) { window.scrollY--; events.get('scroll')(); }
+assert.equal(menuReads, 1, 'Scroll events do not force synchronous menu layout');
+assert.equal(railReads, 1, 'Scroll events do not force synchronous rail layout');
+assert.equal(jobs.size, 1, 'One paint handles the entire scroll burst');
+clock += 16.667;
+const pending = [...jobs.values()]; jobs.clear(); pending.forEach(callback => callback(clock));
+assert.equal(menuReads, 2, 'The menu boundary is measured once per frame');
+assert.equal(railReads, 2, 'The rail boundary is measured once per frame');
+assert.ok(jobs.size > 0, 'Continued upward scrolling at the top still starts the boundary spring');
+controller.destroy();

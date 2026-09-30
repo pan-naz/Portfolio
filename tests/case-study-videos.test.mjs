@@ -3,9 +3,16 @@ import { initializeCaseStudyVideos } from '../src/scripts/case-study-videos.ts';
 
 class Events {
   listeners = new Map();
-  addEventListener(name, fn) { this.listeners.set(name, fn); }
-  removeEventListener(name, fn) { if (this.listeners.get(name) === fn) this.listeners.delete(name); }
-  emit(name) { this.listeners.get(name)?.(); }
+  addEventListener(name, fn) {
+    if (!this.listeners.has(name)) this.listeners.set(name, new Set());
+    this.listeners.get(name).add(fn);
+  }
+  removeEventListener(name, fn) {
+    const listeners = this.listeners.get(name);
+    listeners?.delete(fn);
+    if (!listeners?.size) this.listeners.delete(name);
+  }
+  emit(name) { this.listeners.get(name)?.forEach(fn => fn()); }
 }
 const reduced = Object.assign(new Events(), { matches: false });
 globalThis.matchMedia = () => reduced;
@@ -67,6 +74,41 @@ assert.equal(belowFold.loads, 0, 'Reduced motion leaves unloaded videos on their
 reduced.matches = false;
 reduced.emit('change');
 assert.equal(belowFold.loads, 1, 'Visible media starts when motion is enabled again');
+
+// The same buffered video travels from its card into the case and back.
+controller.setPaused(true);
+hero.readyState = 4;
+hero.currentTime = 12.25;
+const detail = makeVideo();
+const caseRoot = { querySelectorAll: () => [hero, detail] };
+const caseController = initializeCaseStudyVideos(caseRoot);
+const caseObserver = observers.at(-1);
+caseController.refresh();
+const borrowedPauses = hero.pauses;
+const borrowedPlays = hero.plays;
+controller.setPaused(true);
+observer.enter(hero, false);
+assert.equal(hero.pauses, borrowedPauses, 'The paused homepage cannot pause a borrowed hero');
+assert.equal(hero.loads, 1, 'Borrowing reuses the already loaded source');
+assert.equal(hero.currentTime, 12.25, 'Borrowing preserves the current frame');
+assert.ok(borrowedPlays > plays, 'The traveling video resumes through its new owner');
+caseObserver.enter(detail);
+document.hidden = true;
+document.emit('visibilitychange');
+assert.ok(hero.pauses > borrowedPauses, 'Borrowed video still pauses when the page is hidden');
+document.hidden = false;
+document.emit('visibilitychange');
+caseController.destroy();
+assert.equal(detail.source.src, undefined, 'Closing unloads videos that belong only to the case');
+assert.equal(hero.source.src, '/clip.mp4', 'Closing keeps the borrowed hero source for its card');
+assert.equal(hero.loads, 1, 'Closing never calls load() on the returning hero');
+assert.equal(hero.currentTime, 12.25, 'The returning hero retains its playback position');
+const returnedPauses = hero.pauses;
+caseObserver.enter(hero, false);
+assert.equal(hero.pauses, returnedPauses, 'A stale case observer cannot pause the returned hero');
+observer.enter(hero);
+controller.setPaused(false);
+assert.ok(hero.plays > borrowedPlays, 'The homepage regains control when the case closes');
 
 controller.destroy();
 assert.equal(observer.disconnected, true);

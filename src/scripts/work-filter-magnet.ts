@@ -76,6 +76,8 @@ export function initializeWorkFilterMagnet() {
   const boundaryImpulse = overshoot * boundarySpringSpeed * Math.E;
   let paused = false;
   let frame = 0;
+  let boundaryFrame = 0;
+  let pendingScrollDelta = 0;
   let lastTime = 0;
   let pointerInside = false;
   let lastScrollY = window.scrollY;
@@ -104,6 +106,8 @@ export function initializeWorkFilterMagnet() {
     if (!frame) frame = requestAnimationFrame(tick);
   };
   const returnHome = (immediate = false) => {
+    if (!immediate && x.target === 0 && y.target === 0
+      && x.value === 0 && y.value === 0 && x.velocity === 0 && y.velocity === 0) return;
     x.target = y.target = 0;
     if (immediate) {
       cancelAnimationFrame(frame);
@@ -146,10 +150,10 @@ export function initializeWorkFilterMagnet() {
     };
   };
   boundaryState = readBoundaryState();
-  const onScroll = () => {
-    const scrollY = window.scrollY;
-    const delta = scrollY - lastScrollY;
-    lastScrollY = scrollY;
+  const updateBoundary = () => {
+    boundaryFrame = 0;
+    const delta = pendingScrollDelta;
+    pendingScrollDelta = 0;
     if (!delta || !capability.matches || paused) return;
     const current = readBoundaryState();
     if (!current.top) kickedTop = false;
@@ -168,8 +172,18 @@ export function initializeWorkFilterMagnet() {
     }
     boundaryState = current;
   };
+  const onScroll = () => {
+    const scrollY = window.scrollY;
+    const delta = scrollY - lastScrollY;
+    lastScrollY = scrollY;
+    if (!delta || !capability.matches || paused) return;
+    pendingScrollDelta += delta;
+    if (!boundaryFrame) boundaryFrame = requestAnimationFrame(updateBoundary);
+  };
   window.addEventListener('scroll', onScroll, { passive: true, signal });
   const resetCapability = () => {
+    cancelAnimationFrame(boundaryFrame);
+    boundaryFrame = pendingScrollDelta = 0;
     pointerInside = false;
     returnHome(true);
     boundaryState = readBoundaryState();
@@ -179,6 +193,8 @@ export function initializeWorkFilterMagnet() {
   };
   capability.addEventListener('change', resetCapability, { signal });
   const destroy = () => {
+    cancelAnimationFrame(boundaryFrame);
+    boundaryFrame = pendingScrollDelta = 0;
     pointerInside = false;
     returnHome(true);
     unwatch();
@@ -192,6 +208,8 @@ export function initializeWorkFilterMagnet() {
       if (paused === value) return;
       paused = value;
       if (paused) {
+        cancelAnimationFrame(boundaryFrame);
+        boundaryFrame = pendingScrollDelta = 0;
         pointerInside = false;
         returnHome(true);
       }

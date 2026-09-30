@@ -2,8 +2,8 @@
 import '@fontsource-variable/urbanist';
 import '../styles/global.css';
 import { profile } from '../data/portfolio';
-interface Props { title?: string; resetToTopOnReload?: boolean; }
-const { title = `${profile.name} — naz.wtf`, resetToTopOnReload = false } = Astro.props;
+interface Props { title?: string; resetToTopOnReload?: boolean; homeIntro?: boolean; }
+const { title = `${profile.name} — naz.wtf`, resetToTopOnReload = false, homeIntro = false } = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
@@ -50,6 +50,18 @@ const { title = `${profile.name} — naz.wtf`, resetToTopOnReload = false } = As
         }), { once: true });
       })();
     </script>
+    {homeIntro && <script is:inline>
+      (() => {
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches || typeof Element.prototype.animate !== 'function') return;
+        const root = document.documentElement;
+        // Set before body parsing: slow scripts must never expose the end state.
+        root.dataset.homeIntro = 'pending';
+        addEventListener('load', () => {
+          // A blocked/failed module must not leave the server-rendered page hidden.
+          if (!root.classList.contains('hero-intro-ready')) delete root.dataset.homeIntro;
+        }, { once: true });
+      })();
+    </script>}
     {resetToTopOnReload && <script is:inline>
       (() => {
         const navigation = performance.getEntriesByType('navigation')[0];

@@ -15,12 +15,13 @@ class NativeAnimationDouble {
     this.playState = 'running';
     this.onfinish = null;
     this.cancelled = false;
+    this.playCount = 0;
     allocated.push(this);
   }
   set startTime(value) { this.start = value; this.playState = 'running'; }
   get startTime() { return this.start; }
   pause() { this.playState = 'paused'; }
-  play() { this.playState = 'running'; }
+  play() { this.playCount++; this.playState = 'running'; }
   cancel() { this.cancelled = true; this.playState = 'idle'; }
   finish() {
     this.currentTime = (this.timing.delay ?? 0) + this.timing.duration;
@@ -46,6 +47,7 @@ assert.equal(live().length, roles[0].letters.length + 1);
 assert.ok(live().every(animation => animation.playState === 'paused'));
 assert.ok(roles[0].letters.every(letter => letter.style.opacity === '0'), 'Base glyph styles stay hidden until native effects begin');
 initial.setPaused(false);
+assert.ok(live().every(animation => animation.playCount === 1), 'Every paused effect explicitly resumes before clock alignment');
 assert.ok(live().every(animation => animation.startTime === timeline.currentTime), 'Line and glyph animations share one native start time');
 
 // These doubles verify scheduling/lifecycle; actual interpolation is checked in-browser.

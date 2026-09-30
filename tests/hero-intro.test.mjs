@@ -30,7 +30,7 @@ assert.equal(token('stagger-title-reveal'), 35);
 assert.equal(token('duration-copy-reveal'), token('duration-entrance'));
 for (const count of [3, 5]) {
   const timing = heroIntroTiming(15, 900, 35, 900, 900, .5);
-  assert.equal(timing.processStart, 0, 'Both label groups begin immediately; header is already present');
+  assert.equal(timing.processStart, 0, 'Content clock begins after the header has completed');
   assert.equal(timing.eyebrowStart, 450, 'Greeting starts at the midpoint of the labels core reveal');
   assert.equal(timing.titleStart, 900, 'Title starts halfway through greeting');
   assert.equal(timing.roleStart, 1350, 'Role starts halfway through the title core reveal');
@@ -52,18 +52,27 @@ assert.ok(source.includes('revealEffects(split.lines') && source.includes('revea
 assert.ok(source.includes('revealEffects([eyebrow]') && source.includes('revealEffects([cta]'));
 assert.ok(source.includes('rightTags.flatMap(tag => revealEffects([tag]'), 'Tag entrances share the same native recipe');
 assert.ok(source.includes('timing.tagsStart + Number(tag.style.getPropertyValue') && source.includes('* tagStagger'));
-assert.ok(!source.includes('headerIntro') && !source.includes("querySelector<HTMLElement>('.site-header')"), 'Top bar is outside the intro animation');
+assert.ok(source.includes('headerIntro = createNativeMotion') && source.includes("number('--duration-layout')"), 'Header uses the existing 500ms layout duration');
+assert.ok(source.includes("duration: number('--duration-layout'), easing: 'linear'") && !source.includes("delay: number('--duration-fast'), duration: number('--duration-layout')"), 'Header begins immediately and fades at a steady rate');
+assert.ok(source.includes('headerFrame = requestAnimationFrame(() => {') && source.includes('cancelAnimationFrame(headerFrame)'), 'Header clock starts on the first paint frame and stale starts are cancelled');
+assert.ok(source.includes('value && !document.hidden && window.scrollY > 0'), 'An initial observer update cannot skip the header fade');
+assert.ok(source.indexOf('headerIntro = createNativeMotion') < source.indexOf('document.fonts.ready.then'), 'Header starts before font measurement');
+assert.ok(source.includes('!headerDone || !introPrepared') && source.includes('introPrepared = true;') && source.includes('startContent();'), 'Content waits for both the header fade and its own effects');
+assert.ok(source.includes("keyframes: [{ opacity: 0 }, { opacity: 1 }]"), 'Header fades without movement');
+assert.ok(source.includes('headerIntro?.setPaused(document.hidden)') && source.includes('headerIntro?.cancel()'), 'Header uses the same lifecycle');
 assert.ok(!tokens.includes('--duration-header-reveal'), 'Retired header animation token removed');
 assert.ok(css.includes('.hero.is-tags-ready .skill-track'), 'Marquee waits until its own entrance is complete');
-assert.ok(read('../src/scripts/interactions.ts').includes('initializeHeroIntro(workStage);'), 'Rain and work stage are independent of intro completion');
+const interactions = read('../src/scripts/interactions.ts');
+assert.ok(interactions.includes('initializeHeroIntro(workStage);') && interactions.indexOf('initializeHeroIntro(workStage)') < interactions.indexOf('initializeWaterfall()'), 'Intro starts before the decorative rain initializes');
 assert.ok(!source.includes('onComplete();') && !tokens.includes('--overlap-intro'), 'Retired completion callback and fixed overlap token removed');
 assert.ok(tokens.includes('--intro-stage-progress: .5;'));
 for (const text of [source, roles, native]) {
-  assert.ok(!/import .*gsap|CustomEase|requestAnimationFrame|setTimeout|setInterval/.test(text), 'No GSAP hero engine, timers or render loop remain');
+  assert.ok(!/import .*gsap|CustomEase|setTimeout|setInterval/.test(text), 'No GSAP hero engine or timers remain');
 }
+assert.ok(!/requestAnimationFrame/.test(roles + native), 'Native and role groups have no render loop');
 assert.ok(!/is-copy-revealing|is-copy-finished|copy-line-index|keyframes tag-in/.test(source + css), 'Retired copy/tag CSS animation plumbing removed');
 assert.ok(textReveal.includes('document.createRange()') && textReveal.includes('--glyph-x'), 'Keep native kerning in the shared title-reveal helper');
-assert.equal((source.match(/permanent.textContent = 'Product Designer';/g) ?? []).length, 1, 'Do not rebuild title on completion');
+assert.equal((source.match(/permanent.textContent = 'Product Designer';/g) ?? []).length, 2, 'Title is only set on initialization or error recovery, never normal completion');
 assert.ok(source.includes("['System thinker', 'AI builder', 'Web designer', 'App designer']"), 'Approved four-role cycle stays in order without punctuation');
 assert.ok(source.includes('document.fonts.ready') && textReveal.includes('getBoundingClientRect().top'));
 assert.ok(source.includes('if (width === paragraphWidth) return;'));

@@ -21,13 +21,13 @@ const menuToggle = document.querySelector<HTMLButtonElement>('.menu-toggle')!;
 const page = document.querySelector<HTMLElement>('#page-content')!;
 const header = document.querySelector<HTMLElement>('.site-header')!;
 const hero = document.querySelector<HTMLElement>('.hero')!;
+const workStage = initializeWorkStage();
+const heroIntro = initializeHeroIntro(workStage);
 const waterfall = initializeWaterfall();
 const footerPile = initializeFooterPile();
 const projectTilt = initializeProjectTilt();
 const projectCursor = initializeProjectCursor();
 const workFilterMagnet = initializeWorkFilterMagnet();
-const workStage = initializeWorkStage();
-const heroIntro = initializeHeroIntro(workStage);
 const projectVideos = initializeCaseStudyVideos();
 let sectionReveals: ReturnType<typeof initializeSectionReveals> | undefined;
 let closeTimer: ReturnType<typeof setTimeout> | undefined;
@@ -129,4 +129,8 @@ const workFilter = initializeWorkFilter(() => { requestAnimationFrame(siteMotion
 initializeHeaderMorph();
 updateHeader();
 
-initializeCaseStudies(projectCursor, open => { caseStudyOpen = open; updateHeroMotion(); }, filter => workFilter?.select(filter));
+initializeCaseStudies(projectCursor, open => {
+  if (!open) projectTilt?.deferHoverUntilPointerMove();
+  caseStudyOpen = open;
+  updateHeroMotion();
+}, filter => workFilter?.select(filter));

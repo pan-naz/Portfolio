@@ -6,8 +6,11 @@ import SkillTag from './SkillTag.astro';
 interface Props { project: Project; lead?: boolean; compact?: boolean; }
 const { project, lead = false, compact = false } = Astro.props;
 const caseUrl = `/case-studies/${project.id}/`;
-const imageSrcSet = project.placeholder ? project.imageSrcSet : `${project.image.replace('.webp', '-800.webp')} 800w, ${project.image} 1800w`;
+const imageSrcSet = project.imageSrcSet ?? (project.placeholder ? undefined : `${project.image.replace('.webp', '-800.webp')} 800w, ${project.image} 1800w`);
 const imageSizes = compact ? '(max-width: 767px) calc(100vw - 48px), (max-width: 1328px) calc((100vw - 152px) / 2), 588px' : '(max-width: 767px) calc(100vw - 48px), (max-width: 1328px) calc(100vw - 128px), 1200px';
+const imageWidth = project.imageWidth ?? 1200;
+const mediaWidth = project.video?.width ?? imageWidth;
+const mediaHeight = project.video?.height ?? project.imageHeight;
 ---
 <article id={`project-${project.id}`} class:list={['project', { 'project--lead': lead, 'project--compact': compact }]} data-project-category={project.category} data-project-reveal={!compact || undefined} data-section-item={!compact || undefined}>
   <a class="project-surface" href={caseUrl} data-case-link={project.id} aria-label={`View ${project.title} case study`}>
@@ -15,11 +18,11 @@ const imageSizes = compact ? '(max-width: 767px) calc(100vw - 48px), (max-width:
       <div class="project-details"><h3 class="project-heading"><ProjectIdentity title={project.title} logo={project.logo} />{project.href && <Arrow direction="up" />}</h3><div class="project-tags">{project.tags.map(label => <SkillTag label={label} variant="raised" />)}</div>{project.placeholder && <p class="project-concept-label text-body-s">Concept project</p>}</div>
       <div class="project-copy"><p class="project-outcome text-body-l">{project.outcome}</p><p class="project-description text-body-m">{project.description}</p></div>
     </div>
-    <div class="project-media" style={`--media-ratio:1200 / ${project.imageHeight}`}>
-      {project.id === 'voximplant' ? <video data-project-video muted loop playsinline preload="none" poster={project.image} aria-hidden="true">
-        <source data-src="/projects/voximplant-case-study/promo-voxkit.mp4" type="video/mp4" />
-        <img src={project.image} srcset={imageSrcSet} sizes={imageSizes} alt="" width="1200" height={project.imageHeight} loading="lazy" decoding="async" />
-      </video> : <img src={project.image} srcset={imageSrcSet} sizes={imageSizes} alt={project.imageAlt} width="1200" height={project.imageHeight} loading="lazy" decoding="async" />}
+    <div class="project-media" style={`--media-ratio:${mediaWidth} / ${mediaHeight}`}>
+      {project.video ? <video data-project-video muted loop playsinline preload="none" poster={project.image} width={mediaWidth} height={mediaHeight} aria-hidden="true">
+        <source data-src={project.video.src} type="video/mp4" />
+        <img src={project.image} srcset={imageSrcSet} sizes={imageSizes} alt="" width={imageWidth} height={project.imageHeight} loading="lazy" decoding="async" />
+      </video> : <img src={project.image} srcset={imageSrcSet} sizes={imageSizes} alt={project.imageAlt} width={imageWidth} height={project.imageHeight} loading="lazy" decoding="async" />}
     </div>
   </a>
 </article>

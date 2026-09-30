@@ -1,3 +1,5 @@
+import { dataGPTMedia } from './datagpt-case-study.ts';
+
 // Profile contact details retained from the supplied resume; homepage copy from Figma.
 // See COPY.md for sources, editorial decisions and deliberately omitted claims.
 export const profile = {
@@ -21,17 +23,19 @@ export interface Project {
   logo?: string;
   image: string;
   imageAlt: string;
+  imageWidth?: number;
   imageHeight: number;
   imageSrcSet?: string;
+  video?: { src: string; width: number; height: number };
   placeholder?: boolean;
   href?: string;
 }
 
 // Copy and artwork transcribed from the user-supplied figma-home.svg, node 67:15.
 export const projects: Project[] = [
-  { id: 'voximplant', category: 'selected', title: 'Voximplant Kit', outcome: 'Designed and launched from scratch as a no-code contact center builder. Scaled from MVP to a core SaaS product.', description: 'Voximplant Kit is an intelligent cloud contact center. Offering an easy-to-use drag & drop interface and industry-leading AI automation.', tags: ['Product design', 'Design system', 'Branding', 'Web design'], logo: '/projects/voximplant-logo.png', image: '/projects/voximplant.webp', imageHeight: 600, imageAlt: 'Voximplant Kit outbound campaign builder and contact database upload flow.' },
-  { id: 'datagpt', category: 'selected', title: 'datagpt', outcome: 'Designed B2B product from 0 → 1', description: 'Conversational AI Analyst', tags: ['Product design', 'Design system', 'Branding', 'Web design'], logo: '/projects/datagpt-logo.svg', image: '/projects/datagpt.webp', imageHeight: 633, imageAlt: 'DataGPT conversational analytics interface with revenue charts and an AI analyst conversation.' },
-  { id: 'hooko', category: 'selected', title: 'Hooko', outcome: 'Designed, built, and shipped to the App Store solo. My end-to-end proof of turning a product into a live, published experience.', description: 'AI-powered app that analyzes short-form videos and gives creators actionable feedback.', tags: ['App design', 'App dev', 'Design system', 'Branding', 'Web design'], logo: '/projects/hooko-logo.png', image: '/projects/hooko.webp', imageHeight: 481, imageAlt: 'Hooko mobile video analysis screens presented on a dark purple background.' },
+  { id: 'voximplant', category: 'selected', title: 'Voximplant Kit', outcome: 'Designed and launched from scratch as a no-code contact center builder. Scaled from MVP to a core SaaS product.', description: 'Voximplant Kit is an intelligent cloud contact center. Offering an easy-to-use drag & drop interface and industry-leading AI automation.', tags: ['Product design', 'Design system', 'Branding', 'Web design'], logo: '/projects/voximplant-logo.png', image: '/projects/voximplant.webp', imageWidth: 1800, imageHeight: 900, imageAlt: 'Voximplant Kit outbound campaign builder and contact database upload flow.', video: { src: '/projects/voximplant-case-study/promo-voxkit.mp4', width: 1272, height: 720 } },
+  { id: 'datagpt', category: 'selected', title: 'Datagpt', outcome: 'I designed DataGPT, a conversational AI analyst, from the first interviews to a final product.', description: 'DataGPT lets business teams ask questions about their data in plain English and get answers with charts, drawn from their own data warehouse.', tags: ['Product design', 'Design system', 'Branding', 'Web design', 'AI / LLM UX'], logo: '/projects/datagpt-logo.svg', image: dataGPTMedia.hero.src, imageWidth: dataGPTMedia.hero.width, imageHeight: dataGPTMedia.hero.height, imageSrcSet: `${dataGPTMedia.hero.src} ${dataGPTMedia.hero.width}w`, imageAlt: dataGPTMedia.hero.alt, video: dataGPTMedia.heroVideo },
+  { id: 'hooko', category: 'selected', title: 'Hooko', outcome: 'Designed, built, and shipped to the App Store solo. My end-to-end proof of turning a product into a live, published experience.', description: 'AI-powered app that analyzes short-form videos and gives creators actionable feedback.', tags: ['App design', 'App dev', 'Design system', 'Branding', 'Web design'], logo: '/projects/hooko-logo.png', image: '/projects/hooko.webp', imageWidth: 1800, imageHeight: 722, imageAlt: 'Hooko mobile video analysis screens presented on a dark purple background.' },
 ];
 
 // Fictional concepts requested for testing the Website and Misc collections.
@@ -89,3 +93,4 @@ export const tools: Tool[] = [
 ];
 export const cvUrl = '/nazarii-pankiv-cv.pdf';
 export const hookoAppUrl = 'https://apps.apple.com/us/app/blow-up-hooko/id6758728094';
+export const hookoSiteUrl = 'https://hooko.app/';

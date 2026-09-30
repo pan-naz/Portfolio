@@ -23,10 +23,14 @@ for (const project of all) {
     assert.ok(imageSources.length >= 20, 'The full Voximplant case study has its product and process imagery');
     assert.ok(html.includes('For the business') && html.includes('For the team'), 'The full case study reaches its impact ending');
     assert.ok(!html.includes('Draft case study'), 'The full case study is not labeled as a draft');
+  } else if (project.id === 'datagpt') {
+    assert.ok(imageSources.length >= 12, 'The full DataGPT case study has its research, product and marketing imagery');
+    assert.ok(html.includes('dg-impact') && html.includes('dg-conclusion'), 'The full DataGPT story reaches its impact and conclusion');
+    assert.ok(!html.includes('Draft case study'), 'The full case study is not labeled as a draft');
   } else {
     assert.equal(imageSources.length, 3, 'Sample cases have a hero and two gallery images');
     assert.ok(html.includes(project.placeholder ? 'fictional concept' : 'Draft case study'), 'Samples do not imply new verified project claims');
   }
   for (const src of imageSources) assert.ok(existsSync(new URL(`../public${src}`, import.meta.url)), `Local image exists: ${src}`);
 }
-console.log('PASS: all 15 cards have shareable built pages, valid local imagery and return controls; Voximplant has its full case study.');
+console.log('PASS: all 15 cards have shareable built pages, valid local imagery and return controls; Voximplant and DataGPT have full case studies.');

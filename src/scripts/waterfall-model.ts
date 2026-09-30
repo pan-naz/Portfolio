@@ -4,10 +4,11 @@ export const variation = (index: number, salt: number) => {
   return value - Math.floor(value);
 };
 
-type Drop = { cycle: number; start: number; end: number; speed: number; tail: number };
+export type Drop = { cycle: number; start: number; end: number; speed: number; tail: number };
 const schedules = new Map<number, { time: number; height: number; nextStart: number; cycle: number; drops: Drop[] }>();
 
-export function streamStates(column: number, time: number, height: number) {
+/** Reuse the bounded per-column schedule in the live draw loop. */
+export function streamDrops(column: number, time: number, height: number): readonly Drop[] {
   let schedule = schedules.get(column);
   if (!schedule || time < schedule.time || height !== schedule.height) {
     schedule = { time, height, nextStart: .1 + variation(column, 1) * 2.4, cycle: 0, drops: [] };
@@ -30,7 +31,11 @@ export function streamStates(column: number, time: number, height: number) {
     // Keep three reusable drop slots; never evict a slower visible tail.
     if (schedule.drops.length === 3) schedule.nextStart = Math.max(schedule.nextStart, schedule.drops[0].end);
   }
-  return schedule.drops.filter(drop => time <= drop.end).map(drop => ({
+  return schedule.drops;
+}
+
+export function streamStates(column: number, time: number, height: number) {
+  return streamDrops(column, time, height).filter(drop => time <= drop.end).map(drop => ({
     cycle: drop.cycle, tail: drop.tail, speed: drop.speed,
     elapsed: time - drop.start, head: (time - drop.start) * drop.speed - 20,
   }));

@@ -4,14 +4,16 @@ interface Props {
   alt: string;
   width: number;
   height: number;
-  poster: string;
+  poster?: string;
+  kind?: 'image' | 'video';
+  presentation?: 'framed' | 'bare';
 }
 
-const { src, alt, width, height, poster } = Astro.props;
+const { src, alt, width, height, poster, kind = 'video', presentation = 'framed' } = Astro.props;
 ---
-<figure class="case-study-media">
-  <video data-case-video muted loop playsinline preload="none" poster={poster} width={width} height={height} aria-label={alt}>
+<figure class:list={['case-study-media', presentation === 'bare' && 'case-study-media--bare']}>
+  {kind === 'image' ? <img src={src} alt={alt} width={width} height={height} loading="lazy" decoding="async" /> : <video data-case-video muted loop playsinline preload="none" poster={poster} width={width} height={height} aria-label={alt}>
     <source data-src={src} type="video/mp4" />
     <img src={poster} alt={alt} width={width} height={height} loading="lazy" decoding="async" />
-  </video>
+  </video>}
 </figure>

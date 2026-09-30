@@ -23,6 +23,9 @@ export function initializeProjectTilt() {
   const controller = new AbortController();
   const signal = controller.signal;
   let paused = false;
+  let waitForPointerMove = false;
+  let lastPointerX = 0, lastPointerY = 0;
+  let deferredPointerX = 0, deferredPointerY = 0;
   let frame = 0;
   let lastTime = 0;
   const makeSpring = (): Spring => ({ value: 0, velocity: 0, target: 0 });
@@ -68,6 +71,13 @@ export function initializeProjectTilt() {
   };
   states.forEach(state => { state.card.dataset.tiltReady = 'true'; });
   const unwatch = watchViewportPointer(pointer => {
+    const movedSinceClose = pointer.clientX !== deferredPointerX || pointer.clientY !== deferredPointerY;
+    lastPointerX = pointer.clientX;
+    lastPointerY = pointer.clientY;
+    if (waitForPointerMove) {
+      if (!pointer.active || pointer.viewportChanged || !movedSinceClose) return;
+      waitForPointerMove = false;
+    }
     const card = pointer.target?.closest('.project');
     const canFollow = pointer.active && capability.matches && !paused && !work.querySelector('[aria-busy="true"]');
     states.forEach(state => {
@@ -99,5 +109,13 @@ export function initializeProjectTilt() {
     states.forEach(state => { delete state.card.dataset.tiltReady; });
   };
   window.addEventListener('pagehide', event => { if (!event.persisted) destroy(); }, { signal });
-  return { setPaused(value: boolean) { if (paused === value) return; paused = value; if (value) reset(); else refreshViewportPointer(); }, destroy };
+  return {
+    deferHoverUntilPointerMove() {
+      deferredPointerX = lastPointerX;
+      deferredPointerY = lastPointerY;
+      waitForPointerMove = true;
+    },
+    setPaused(value: boolean) { if (paused === value) return; paused = value; if (value) reset(); else refreshViewportPointer(); },
+    destroy,
+  };
 }

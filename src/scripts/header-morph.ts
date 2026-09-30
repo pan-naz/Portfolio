@@ -142,11 +142,14 @@ export function initializeHeaderMorph() {
       expanded,
       releasing,
     );
+    const changed = state.expanded !== expanded || state.releasing !== releasing;
     if (state.expanded && !expanded && progress === 0) exit = 0;
     previousScroll = scroll;
     expanded = state.expanded;
     releasing = state.releasing;
-    wake();
+    // Settled geometry is independent of scroll position. Repainting it on
+    // every wheel tick invalidates header styles while the canvas is drawing.
+    if (changed || (expanded ? progress < 1 || exit > 0 : progress > 0)) wake();
   }
   function measure() {
     if (disposed) return;

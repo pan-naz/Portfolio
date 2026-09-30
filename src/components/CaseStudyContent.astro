@@ -5,6 +5,7 @@ import { projects, conceptProjects } from '../data/portfolio';
 import { impactGroups } from '../data/portfolio';
 import SkillTag from './SkillTag.astro';
 import VoximplantCaseStudy from './VoximplantCaseStudy.astro';
+import DataGPTCaseStudy from './DataGPTCaseStudy.astro';
 interface Props { project: Project; }
 const { project } = Astro.props;
 const sample = caseStudySamples[project.id];
@@ -12,8 +13,8 @@ const allProjects = [...projects, ...conceptProjects];
 const related = sample.related?.map(id => allProjects.find(item => item.id === id)!).filter(Boolean);
 const metrics = impactGroups.find(group => group.projectId === project.id)?.metrics;
 ---
-{project.id === 'voximplant' ? <VoximplantCaseStudy project={project} /> : <article class="case-study-content" data-case-content>
-  <div class="case-study-artwork"><img src={project.image} alt={project.imageAlt} width="1200" height={project.imageHeight} decoding="async" /></div>
+{project.id === 'voximplant' ? <VoximplantCaseStudy project={project} /> : project.id === 'datagpt' ? <DataGPTCaseStudy project={project} /> : <article class="case-study-content" data-case-content>
+  <div class="case-study-artwork"><img src={project.image} alt={project.imageAlt} width={project.imageWidth ?? 1200} height={project.imageHeight} decoding="async" /></div>
   <div class="case-study-body">
   <div class="case-study-intro">
     <div>
@@ -29,7 +30,7 @@ const metrics = impactGroups.find(group => group.projectId === project.id)?.metr
   <section class="case-study-story"><p class="case-study-label">02 / Direction</p><div><h2>{project.placeholder ? 'Exploring the idea' : 'Shaping the experience'}</h2><p class="text-body-l">{sample.direction}</p></div></section>
   <div class="case-study-gallery">
     {(related ?? [project, project]).map((item, index) => <figure>
-      <div class:list={['case-study-gallery-image', { 'case-study-gallery-image--detail': !related }]}><img src={item.image} alt={related ? item.imageAlt : `${project.title} artwork detail ${index + 1}`} width="1200" height={item.imageHeight} loading="lazy" decoding="async" style={!related ? `object-position: ${index ? '85%' : '15%'} center` : undefined} /></div>
+      <div class:list={['case-study-gallery-image', { 'case-study-gallery-image--detail': !related }]}><img src={item.image} alt={related ? item.imageAlt : `${project.title} artwork detail ${index + 1}`} width={item.imageWidth ?? 1200} height={item.imageHeight} loading="lazy" decoding="async" style={!related ? `object-position: ${index ? '85%' : '15%'} center` : undefined} /></div>
       <figcaption class="text-body-s">{related ? `${index + 1 < 2 ? 'Atmosphere' : 'Visual direction'} · sample reference image` : `${index ? 'Interface composition' : 'A closer look'} · detail from existing artwork`}</figcaption>
     </figure>)}
   </div>

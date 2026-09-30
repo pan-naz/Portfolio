@@ -15,7 +15,7 @@ const previews = [
 ---
 <footer class="footer container">
   <p>© {new Date().getFullYear()} naz</p><p>Ivano-Frankivsk</p><Button href="/design-system/" variant="secondary" size="small" arrow="up">Design system</Button>
-  <div class="footer-icon-pile-clip" aria-hidden="true" style={`--pile-icon-size:${waterfallIconSize}px;--pile-height:${pilePreviewHeight}px;--pile-bleed:${pileBleed}px;--pile-above:${pileAbove}px`}>
+  <div class="footer-icon-pile-layer" aria-hidden="true" style={`--pile-icon-size:${waterfallIconSize}px;--pile-height:${pilePreviewHeight}px;--pile-bleed:${pileBleed}px;--pile-above:${pileAbove}px`}>
     <div class="footer-icon-pile" data-footer-pile>
       {previews.map(preview => <div class={`footer-icon-pile-rest footer-icon-pile-rest--${preview.name}`}>
         {preview.icons.map(icon => <svg width={waterfallIconSize} height={waterfallIconSize} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width={24 / waterfallIconSize} stroke-linecap="round" stroke-linejoin="round" style={`left:calc(50% + ${icon.x - preview.width / 2 - waterfallIconSize / 2}px);bottom:${-icon.y - waterfallIconSize / 2}px;transform:rotate(${icon.angle}rad)`}>
