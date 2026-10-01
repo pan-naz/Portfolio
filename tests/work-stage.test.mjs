@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { canShiftWorkStage, nextWorkStageExpanded, workStageCollapseScrollY, workStageExpandViewportRatio } from '../src/scripts/work-stage-model.ts';
+import { canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent, workStageCollapseScrollY, workStageExpandViewportRatio } from '../src/scripts/work-stage-model.ts';
 const read = path => readFileSync(new URL(path, import.meta.url), 'utf8');
 const source = read('../src/scripts/work-stage.ts');
 const work = read('../src/components/WorkSection.astro');
@@ -8,6 +8,10 @@ const css = read('../src/styles/global.css');
 const tokens = read('../src/styles/tokens.css');
 const layout = read('../src/layouts/BaseLayout.astro');
 
+assert.equal(shouldRevealWorkContent(600, 0, 900), false, 'In-view Work preview stays hidden on reload or resize at page top');
+assert.equal(shouldRevealWorkContent(600, -20, 900), false, 'Overscroll above the top does not reveal Work');
+assert.equal(shouldRevealWorkContent(899, 2, 900), true, 'Scrolling into the reveal threshold starts Work');
+assert.equal(shouldRevealWorkContent(901, 2, 900), false, 'Scrolling alone cannot reveal content below the threshold');
 assert.equal(workStageExpandViewportRatio, 0.02);
 assert.equal(workStageCollapseScrollY, 1);
 assert.equal(nextWorkStageExpanded(21, 780, false, 20), false);
@@ -29,7 +33,7 @@ assert.ok(source.includes("duration: number('--duration-work-stage')") && source
 assert.ok(source.includes("section.getBoundingClientRect().top") && source.includes("window.innerHeight * expandViewportRatio"), 'Expansion waits until the visible sheet edge nearly reaches the viewport top');
 assert.ok(source.includes('window.scrollY') && source.includes("number('--work-stage-collapse-scroll-y')"), 'The expanded stage remains open until the first screen returns to the top');
 assert.ok(source.includes('sectionRevealEffects(title, index, description, content)'), 'Work title and cards use the shared ordered chapter timeline');
-assert.ok(source.includes("number('--section-reveal-trigger-viewport-ratio')") && source.includes('stageTop <= window.innerHeight * sectionRevealRatio) revealHeading()'), 'The heading begins revealing when the section edge reaches the bottom 90% trigger');
+assert.ok(source.includes("number('--section-reveal-trigger-viewport-ratio')") && source.includes('shouldRevealWorkContent(stageTop, window.scrollY, window.innerHeight * sectionRevealRatio)'), 'The heading requires scroll progress and the bottom 90% trigger');
 assert.ok(source.includes('revealRail();'), 'The independent filter still waits until the background reaches full width');
 assert.ok(work.includes('data-work-stage-surface') && work.includes('data-work-rail') && !work.includes('reveal={false}'));
 assert.ok(css.includes('inset: calc(-1 * var(--work-preview-height))') && css.includes("html[data-work-stage-layout='true'] .work-panel { top: 0; border-radius: var(--radius-chapter) 0 0 0; }"), 'Desktop preview keeps only its top-left corner while peeking above the fold');

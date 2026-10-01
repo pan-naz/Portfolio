@@ -5,8 +5,15 @@ interface VideoController {
 }
 
 const controllers = new WeakMap<ParentNode, VideoController>();
-type VideoOwner = { active: boolean; visible: Set<HTMLVideoElement> };
+type VideoOwner = { active: boolean; visible: Set<HTMLVideoElement>; sync(video: HTMLVideoElement): void };
 const owners = new WeakMap<HTMLVideoElement, VideoOwner>();
+const playbackIntent = new WeakMap<HTMLVideoElement, boolean>();
+
+/** Explicit controls take precedence over autoplay, but never play offscreen. */
+export function setCaseVideoPlaying(video: HTMLVideoElement, playing: boolean) {
+  playbackIntent.set(video, playing);
+  owners.get(video)?.sync(video);
+}
 
 /** Posters render immediately; video bytes are requested only while in view. */
 export function initializeCaseStudyVideos(root: ParentNode = document): VideoController {
@@ -17,16 +24,17 @@ export function initializeCaseStudyVideos(root: ParentNode = document): VideoCon
   // pause it or release its source; the homepage keeps its observer for return.
   const previousOwners = new Map(videos.map(video => [video, owners.get(video)]));
   const visible = new Set(videos.filter(video => previousOwners.get(video)?.visible.has(video)));
-  const owner: VideoOwner = { active: true, visible };
+  const owner: VideoOwner = { active: true, visible, sync: video => syncVideo(video) };
   videos.forEach(video => owners.set(video, owner));
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let paused = false;
   let destroyed = false;
   const syncVideo = (video: HTMLVideoElement) => {
     if (destroyed || owners.get(video) !== owner) return;
-    if (paused || reduced.matches || document.hidden || !visible.has(video)) {
+    const intent = playbackIntent.get(video);
+    if (paused || intent === false || (reduced.matches && intent !== true) || document.hidden || !visible.has(video)) {
       video.pause();
-      if (reduced.matches && video.readyState > 0) video.currentTime = 0;
+      if (reduced.matches && intent === undefined && video.readyState > 0) video.currentTime = 0;
       return;
     }
     let loaded = false;

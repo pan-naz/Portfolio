@@ -1,0 +1,9 @@
+---
+interface Props {
+  value: string;
+  as?: 'span' | 'p' | 'strong';
+  class?: string;
+}
+const { value, as: Tag = 'span', class: className }: Props = Astro.props;
+---
+<Tag class:list={['font-heading', className]}>{value}</Tag>

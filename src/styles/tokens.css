@@ -25,6 +25,13 @@
   --section-reveal-trigger-viewport-ratio: .9; --work-stage-trigger-viewport-ratio: .02; --work-stage-collapse-scroll-y: 1;
   --radius-pill: 999px; --radius-medium: 24px; --radius-media: 40px; --radius-chapter: clamp(40px, 5.8vw, 100px);
   /* Figma desktop ramp; mobile sizes are a responsive adaptation. */
+  --font-body: 'Urbanist Variable', Urbanist, Arial, sans-serif;
+  --font-heading: var(--font-body);
+  --letter-spacing-display-xl: -2.64px;
+  --letter-spacing-display-l: -2px;
+  --letter-spacing-heading-m: -1px;
+  --letter-spacing-label-m: -0.5px;
+  --project-identity-tags-gap: var(--space-6);
   --text-display: clamp(2.5rem, calc(1rem + 4.167vw), 5.5rem);
   --text-heading: clamp(1.625rem, calc(.5rem + 3.333vw), 3.5rem);
   --text-h2: var(--text-heading);
@@ -46,6 +53,7 @@
   --duration-role-hold: 1000ms;
   --duration-role-exit: 450ms;
   --distance-text-reveal: 8px;
+  --distance-title-reveal: 16px;
   --duration-skills-loop: 13.075s;
   --duration-toggle-enter: 600ms;
   --duration-toggle-return: 600ms;

@@ -32,14 +32,14 @@ const colors = [
 const spaces = [['space-1',4],['space-2',8],['space-3',12],['space-4',16],['space-6',24],['space-8',32],['space-12',48],['space-16',64],['space-24',96]] as const;
 const radii = [['radius-small','sm','12px'],['radius-medium','md','24px'],['radius-media','lg','40px'],['radius-chapter','xl','40–100px'],['radius-pill','full','999px']];
 const typeStyles = [
-  ['Display/XL','Semibold 600 · 88 / 80','text-display','Product Designer'],
-  ['Display/L','Semibold 600 · 56 / 64','text-h2','A few projects worth a closer look.'],
-  ['Heading/M','Semibold 600 · 24 / 32','ds-type-heading','Voximplant Kit'],
+  ['Display/XL','Semibold 600 · 88 / 80 · −2.64px tracking','text-display','Product Designer'],
+  ['Display/L','Semibold 600 · 56 / 64 · −2px tracking','text-h2','A few projects worth a closer look.'],
+  ['Heading/M','Semibold 600 · 24 / 32 · −1px tracking','ds-type-heading','Voximplant Kit'],
   ['Body/L','Regular 400 · 20 / 30','text-body-l','Successfully launched B2B products from 0 → 1, improved product adoption, and contributed to ARR growth.'],
   ['Body/M','Regular 400 · 16 / 24','text-body-m','Designed and launched from scratch as a no-code contact center builder.'],
   ['Body/M Strong','SemiBold 600 · 16 / 24','text-body-m-strong','Lead Product Designer'],
   ['Body/S','Regular 400 · 14 / 20','text-body-s','Download CV'],
-  ['Label/M','Bold 700 · 14 / 20','eyebrow','01 / SELECTED WORK'],
+  ['Label/M','Bold 700 · 14 / 20 · −0.5px tracking','eyebrow','01 / SELECTED WORK'],
   ['Label/S','Medium 500 · 12 / 16','ds-type-label','Design system'],
 ];
 ---
@@ -54,7 +54,7 @@ const typeStyles = [
   </section>
 
   <section id="typography" class="ds-section" aria-labelledby="typography-title" tabindex="-1">
-    <header class="ds-heading"><p class="eyebrow">02 / Typography</p><h2 id="typography-title">Typography</h2><p>One family — Urbanist — in five weights. Every heading, wordmark and display number consumes the shared <code>--font-weight-heading</code> token at 600. Display uses −2.64px tracking; everything else is set at zero.</p></header>
+    <header class="ds-heading"><p class="eyebrow">02 / Typography</p><h2 id="typography-title">Typography</h2><p>One family — Urbanist — in five weights. Every heading, wordmark and display number consumes the shared <code>--font-weight-heading</code> token at 600. Shared letter-spacing tokens set Display/XL to −2.64px, Display/L to −2px and Heading/M to −1px on desktop and mobile. Label/M uses <code>--letter-spacing-label-m</code> at −0.5px. All other text uses 0 letter spacing. The website and these specimens share the same typography rules.</p></header>
     <div class="ds-type-list">{typeStyles.map(([name,spec,style,copy]) => <div class="ds-type-row"><div class="ds-type-meta"><h3>{name}</h3><p>{spec}</p></div><p class={style}>{copy}</p></div>)}</div>
     <p class="ds-spec-note">Mobile adapts Display/XL to 40px and Display/L to 26px. Text can wrap and enlarge. Label/S follows the Figma specimen at 12 / 16.</p>
   </section>

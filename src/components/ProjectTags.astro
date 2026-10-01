@@ -1,0 +1,6 @@
+---
+import SkillTag from './SkillTag.astro';
+interface Props { tags: string[]; }
+const { tags } = Astro.props;
+---
+<div class="project-tags">{tags.map(label => <SkillTag label={label} variant="raised" />)}</div>

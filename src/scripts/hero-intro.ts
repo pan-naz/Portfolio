@@ -42,6 +42,7 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
   const number = (name: string) => readMotionToken(tokens, name);
   const easing = tokens.getPropertyValue('--ease-entrance').trim();
   const distance = number('--distance-text-reveal');
+  const titleDistance = number('--distance-title-reveal');
   let intro: ReturnType<typeof createNativeMotion> | undefined;
   let headerIntro: ReturnType<typeof createNativeMotion> | undefined;
   let tagIntro: ReturnType<typeof createNativeMotion> | undefined;
@@ -143,7 +144,7 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
       const roleOptions = {
         hold: number('--duration-role-hold'), exit: number('--duration-role-exit'),
         enter: number('--duration-title-reveal'), stagger: number('--stagger-title-reveal'),
-        distance, ease: easing,
+        distance: titleDistance, ease: easing,
       };
       roleMotion = createRoleAnimator(phrases, roleOptions);
       roleMotion.setPaused(true);
@@ -165,7 +166,7 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
         ...revealEffects([eyebrow], { ...copy, delay: timing.eyebrowStart }),
         ...revealEffects(letters, {
           duration: roleOptions.enter, stagger: roleOptions.stagger,
-          delay: timing.titleStart, distance, easing,
+          delay: timing.titleStart, distance: titleDistance, easing,
         }),
         ...roleRevealEffects(phrases[0], roleOptions, timing.roleStart),
         ...revealEffects(split.lines, {

@@ -1,14 +1,14 @@
 .case-study-content--datagpt { padding-bottom: 0; }
 .dg-case { --dg-section-space: var(--space-24); --dg-bubble-cut: 4px; font-size: var(--text-body-m); line-height: 1.5; }
 .dg-case > section { padding-block: var(--dg-section-space); }
-.dg-case :is(h3, h4) { margin: 0; font-size: var(--text-body-m); font-weight: var(--font-weight-heading); line-height: 1.5; letter-spacing: 0; }
+.dg-case :is(h3, h4) { letter-spacing: 0; margin: 0; font-size: var(--text-body-m); font-weight: var(--font-weight-heading); line-height: 1.5; }
 .dg-case :is(h3, h4) + :is(p, ul) { margin-top: var(--space-2); }
 .dg-case :is(p, li) { text-wrap: pretty; }
 .dg-case ul { margin-block: 0; padding-left: 1.25em; }
 .dg-case li::marker { color: var(--muted); }
 .dg-case strong { font-weight: var(--font-weight-heading); }
-.dg-case .dg-label { font-size: var(--text-small); letter-spacing: 0; font-weight: 700; line-height: 1.3333; text-transform: uppercase; margin: 0 0 var(--space-6); }
-.dg-case .dg-display { max-width: 1100px; font-size: var(--text-heading); line-height: 1.142857; font-weight: var(--font-weight-heading); letter-spacing: -.045em; text-wrap: balance; }
+.dg-case .dg-label { letter-spacing: var(--letter-spacing-label-m); font-size: var(--text-small); font-weight: 700; line-height: 1.3333; text-transform: uppercase; margin: 0 0 var(--space-6); }
+.dg-case .dg-display { letter-spacing: var(--letter-spacing-display-l); max-width: 1100px; font-size: var(--text-heading); line-height: 1.142857; font-weight: var(--font-weight-heading); text-wrap: balance; }
 .dg-lede { max-width: 720px; margin-top: var(--space-6); }
 .dg-copy-width { max-width: 720px; }
 .dg-accent, .dg-accent li::marker { color: var(--accent); }
@@ -27,7 +27,7 @@
 .dg-card-heading + p { margin-top: var(--space-3); }
 .dg-badge { flex-shrink: 0; border-radius: var(--radius-pill); padding: var(--space-1) var(--space-3); background: var(--surface); box-shadow: var(--shadow-floating); font-size: var(--text-label-s); line-height: 1.5; }
 .dg-intro { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-16); border-bottom: 1px solid var(--divider); }
-.dg-identity { display: grid; align-content: start; gap: var(--space-4); }
+.dg-identity { display: grid; align-content: start; gap: var(--project-identity-tags-gap); }
 .dg-identity .project-identity { font-size: var(--text-heading-m); line-height: 1.3333; }
 .dg-identity .project-tags { margin: 0; }
 .dg-summary > p:first-child { font-size: var(--text-body); }
@@ -72,7 +72,7 @@
 .dg-results .stat { padding: var(--space-6); border-radius: var(--radius-medium); background: var(--surface); box-shadow: var(--shadow-floating); }
 .dg-results .stat dt { display: flex; height: 100%; flex-direction: column; gap: var(--space-4); }
 .dg-results .stat-label { order: -1; font-weight: 500; font-size: var(--text-small); line-height: 1.5; }
-.dg-results .stat-value { margin-top: auto; font-size: clamp(1.75rem, 3.5vw, 3rem); letter-spacing: -.045em; white-space: nowrap; }
+.dg-results .stat-value { margin-top: auto; font-size: clamp(1.75rem, 3.5vw, 3rem); white-space: nowrap; }
 .dg-testimonials figcaption { font-size: var(--text-small); }
 .dg-testimonials blockquote { position: relative; margin: var(--space-4) 0; padding: var(--space-4) var(--space-4) var(--space-4) var(--space-8); border-radius: var(--dg-bubble-cut) var(--radius-medium) var(--radius-medium); background: var(--floating-surface); color: var(--floating-ink); }
 .dg-testimonials blockquote::before { content: '“'; position: absolute; left: var(--space-3); top: var(--space-2); color: var(--accent); font-size: 2rem; font-weight: 600; }
@@ -92,14 +92,14 @@
   .case-study-content--datagpt { padding-bottom: 0; }
   .dg-case { --dg-section-space: var(--space-12); }
   .dg-intro, .dg-grid--two, .dg-grid--three, .dg-grid--four { grid-template-columns: 1fr; }
-  .dg-case .dg-display { font-size: clamp(1.75rem, 6.8vw, 2.5rem); letter-spacing: -.035em; }
+  .dg-case .dg-display { font-size: clamp(1.75rem, 6.8vw, 2.5rem); }
   .dg-block { margin-top: var(--space-8); }
   .dg-card { padding: var(--space-4); }
   .dg-persona .dg-card-heading { flex-direction: column-reverse; }
   .dg-persona .dg-badge { align-self: flex-end; }
   .dg-dark-inner { width: calc(100% - 48px); }
   .dg-research-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-3); }
-  .dg-research-stats .stat-value { font-size: 2.25rem; letter-spacing: -.045em; }
+  .dg-research-stats .stat-value { font-size: 2.25rem; }
   .dg-research-stats .stat-label { font-size: var(--text-label-s); line-height: 1.4; }
   .dg-results .stat-value { font-size: 2.5rem; }
   .dg-voice { grid-template-columns: 32px minmax(0, 1fr); }

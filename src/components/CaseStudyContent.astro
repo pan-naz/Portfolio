@@ -3,7 +3,8 @@ import type { Project } from '../data/portfolio';
 import { caseStudySamples } from '../data/case-studies';
 import { projects, conceptProjects } from '../data/portfolio';
 import { impactGroups } from '../data/portfolio';
-import SkillTag from './SkillTag.astro';
+import ProjectTags from './ProjectTags.astro';
+import MetricValue from './MetricValue.astro';
 import VoximplantCaseStudy from './VoximplantCaseStudy.astro';
 import DataGPTCaseStudy from './DataGPTCaseStudy.astro';
 interface Props { project: Project; }
@@ -20,11 +21,11 @@ const metrics = impactGroups.find(group => group.projectId === project.id)?.metr
     <div>
       <p class="case-study-label text-label">{project.placeholder ? 'Concept project' : 'Selected work'}</p>
       <h1 data-case-title>{project.title}</h1>
-      <div class="project-tags">{project.tags.map(label => <SkillTag label={label} variant="raised" />)}</div>
+      <ProjectTags tags={project.tags} />
     </div>
     <div class="case-study-summary"><p class="case-study-outcome">{project.outcome}</p><p class="text-body-l">{project.description}</p></div>
   </div>
-  {metrics && <section class="case-study-impact" aria-label="Project impact">{metrics.map(metric => <div><p class="case-study-metric">{metric.value}</p><h2 class="text-body-m-strong">{metric.label}</h2><p class="text-body-m">{metric.note}</p></div>)}</section>}
+  {metrics && <section class="case-study-impact" aria-label="Project impact">{metrics.map(metric => <div><MetricValue as="p" class="case-study-metric" value={metric.value} /><h2 class="text-body-m-strong">{metric.label}</h2><p class="text-body-m">{metric.note}</p></div>)}</section>}
   <div class="case-study-draft text-body-s">{project.placeholder ? 'Sample case study · fictional concept, copy and reference imagery' : 'Draft case study · sample narrative with existing project artwork'}</div>
   <section class="case-study-story"><p class="case-study-label">01 / Context</p><div><h2>The starting point</h2><p class="text-body-l">{sample.context}</p></div></section>
   <section class="case-study-story"><p class="case-study-label">02 / Direction</p><div><h2>{project.placeholder ? 'Exploring the idea' : 'Shaping the experience'}</h2><p class="text-body-l">{sample.direction}</p></div></section>

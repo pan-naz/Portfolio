@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { initializeCaseStudyVideos } from '../src/scripts/case-study-videos.ts';
+import { initializeCaseStudyVideos, setCaseVideoPlaying } from '../src/scripts/case-study-videos.ts';
 
 class Events {
   listeners = new Map();
@@ -120,3 +120,30 @@ observer.enter(hero);
 assert.equal(hero.source.src, undefined, 'A queued observer callback cannot restart a destroyed video');
 assert.notEqual(initializeCaseStudyVideos(root), controller, 'Reopening a case gets a fresh controller');
 console.log('PASS: videos request bytes only in view, reuse media, respect visibility and reduced motion, and cancel transfers on close.');
+
+const controlled = makeVideo();
+const controlsController = initializeCaseStudyVideos({ querySelectorAll: () => [controlled] });
+const controlsObserver = observers.at(-1);
+controlsObserver.enter(controlled);
+controlled.readyState = 4;
+controlled.currentTime = 24;
+setCaseVideoPlaying(controlled, false);
+const beforeReentry = controlled.plays;
+controlsObserver.enter(controlled, false);
+controlsObserver.enter(controlled);
+document.emit('visibilitychange');
+assert.equal(controlled.plays, beforeReentry, 'Manual pause survives scrolling away and back and tab visibility updates');
+assert.equal(controlled.currentTime, 24, 'Manual pause preserves the selected frame');
+setCaseVideoPlaying(controlled, true);
+assert.equal(controlled.plays, beforeReentry + 1, 'Play resumes through the shared controller');
+controlsObserver.enter(controlled, false);
+setCaseVideoPlaying(controlled, true);
+assert.equal(controlled.plays, beforeReentry + 1, 'Manual play intent never starts offscreen playback');
+reduced.matches = true;
+controlsObserver.enter(controlled);
+assert.equal(controlled.plays, beforeReentry + 2, 'An explicit play action can override reduced-motion autoplay restrictions');
+setCaseVideoPlaying(controlled, false);
+assert.equal(controlled.currentTime, 24, 'Explicit controls keep the selected frame in reduced-motion mode');
+reduced.matches = false;
+controlsController.destroy();
+console.log('PASS: explicit play/pause intent persists while visibility, reduced motion and cleanup remain coordinated.');

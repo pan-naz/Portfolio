@@ -2,4 +2,4 @@
 interface Props { title: string; logo?: string; }
 const { title, logo } = Astro.props;
 ---
-<span class="project-identity">{logo && <img src={logo} alt="" width="32" height="32" loading="lazy" decoding="async" />}<span>{title}</span></span>
+<span class="project-identity font-heading">{logo && <img src={logo} alt="" width="32" height="32" loading="lazy" decoding="async" />}<span>{title}</span></span>

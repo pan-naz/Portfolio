@@ -1,6 +1,7 @@
 ---
 import type { ImpactMetric } from '../data/portfolio';
+import MetricValue from './MetricValue.astro';
 interface Props extends ImpactMetric {}
 const { value, label, note } = Astro.props;
 ---
-<div class="stat"><dt><span class="stat-value">{value}</span><span class="stat-label">{label}</span></dt><dd>{note}</dd></div>
+<div class="stat"><dt><MetricValue value={value} class="stat-value" /><span class="stat-label">{label}</span></dt><dd>{note}</dd></div>

@@ -2,7 +2,7 @@
 import type { Project } from '../data/portfolio';
 import Arrow from './Arrow.astro';
 import ProjectIdentity from './ProjectIdentity.astro';
-import SkillTag from './SkillTag.astro';
+import ProjectTags from './ProjectTags.astro';
 interface Props { project: Project; lead?: boolean; compact?: boolean; }
 const { project, lead = false, compact = false } = Astro.props;
 const caseUrl = `/case-studies/${project.id}/`;
@@ -15,14 +15,20 @@ const mediaHeight = project.video?.height ?? project.imageHeight;
 <article id={`project-${project.id}`} class:list={['project', { 'project--lead': lead, 'project--compact': compact }]} data-project-category={project.category} data-project-reveal={!compact || undefined} data-section-item={!compact || undefined}>
   <a class="project-surface" href={caseUrl} data-case-link={project.id} aria-label={`View ${project.title} case study`}>
     <div class="project-caption">
-      <div class="project-details"><h3 class="project-heading"><ProjectIdentity title={project.title} logo={project.logo} />{project.href && <Arrow direction="up" />}</h3><div class="project-tags">{project.tags.map(label => <SkillTag label={label} variant="raised" />)}</div>{project.placeholder && <p class="project-concept-label text-body-s">Concept project</p>}</div>
+      <div class="project-details"><h3 class="project-heading"><ProjectIdentity title={project.title} logo={project.logo} />{project.href && <Arrow direction="up" />}</h3><ProjectTags tags={project.tags} />{project.placeholder && <p class="project-concept-label text-body-s">Concept project</p>}</div>
       <div class="project-copy"><p class="project-outcome text-body-l">{project.outcome}</p><p class="project-description text-body-m">{project.description}</p></div>
     </div>
     <div class="project-media" style={`--media-ratio:${mediaWidth} / ${mediaHeight}`}>
-      {project.video ? <video data-project-video muted loop playsinline preload="none" poster={project.image} width={mediaWidth} height={mediaHeight} aria-hidden="true">
+      {project.video ? <video data-project-video muted loop playsinline preload="none" poster={project.video.poster ?? project.image} width={mediaWidth} height={mediaHeight} aria-hidden="true">
         <source data-src={project.video.src} type="video/mp4" />
-        <img src={project.image} srcset={imageSrcSet} sizes={imageSizes} alt="" width={imageWidth} height={project.imageHeight} loading="lazy" decoding="async" />
+        <img src={project.video.poster ?? project.image} alt="" width={mediaWidth} height={mediaHeight} loading="lazy" decoding="async" />
       </video> : <img src={project.image} srcset={imageSrcSet} sizes={imageSizes} alt={project.imageAlt} width={imageWidth} height={project.imageHeight} loading="lazy" decoding="async" />}
     </div>
   </a>
 </article>
+
+<script>
+  // Media startup must not depend on the homepage's animation libraries.
+  import { initializeCaseStudyVideos } from '../scripts/case-study-videos';
+  initializeCaseStudyVideos();
+</script>

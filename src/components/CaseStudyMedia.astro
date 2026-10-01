@@ -1,4 +1,6 @@
 ---
+import IconButton from './IconButton.astro';
+import '../styles/case-video-player.css';
 interface Props {
   src: string;
   alt: string;
@@ -6,14 +8,37 @@ interface Props {
   height: number;
   poster?: string;
   kind?: 'image' | 'video';
-  presentation?: 'framed' | 'bare';
+  presentation?: 'framed' | 'bare' | 'shadow' | 'floating';
+  strokeWidth?: 4 | 8;
+  controls?: boolean;
+  preview?: { src: string; columns: number; rows: number; count: number; interval: number; width: number; height: number };
 }
 
-const { src, alt, width, height, poster, kind = 'video', presentation = 'framed' } = Astro.props;
+const { src, alt, width, height, poster, kind = 'video', presentation = 'framed', strokeWidth = 4, controls = false, preview } = Astro.props;
+const player = kind === 'video' && controls;
+const MediaRoot = player ? 'case-video-player' : 'figure';
 ---
-<figure class:list={['case-study-media', presentation === 'bare' && 'case-study-media--bare']}>
-  {kind === 'image' ? <img src={src} alt={alt} width={width} height={height} loading="lazy" decoding="async" /> : <video data-case-video muted loop playsinline preload="none" poster={poster} width={width} height={height} aria-label={alt}>
+<MediaRoot class:list={['case-study-media', presentation === 'bare' && 'case-study-media--bare', presentation === 'shadow' && 'case-study-media--shadow', (presentation === 'floating' || player) && 'case-study-media--floating', strokeWidth === 8 && 'case-study-media--wide-stroke', player && 'case-video-player']} data-preview={player && preview ? JSON.stringify(preview) : undefined}>
+  {kind === 'image' ? <img src={src} alt={alt} width={width} height={height} loading="lazy" decoding="async" /> : <video data-case-video muted loop playsinline preload="none" poster={poster} width={width} height={height} controls={player} aria-label={alt}>
     <source data-src={src} type="video/mp4" />
-    <img src={poster} alt={alt} width={width} height={height} loading="lazy" decoding="async" />
+    {poster && <img src={poster} alt={alt} width={width} height={height} loading="lazy" decoding="async" />}
   </video>}
-</figure>
+  {player && <div class="case-video-controls" data-theme="dark" data-video-controls role="group" aria-label="Video controls" hidden>
+    <IconButton label="Play video" data-video-toggle>
+      <span data-play-icon><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="m8 5 11 7-11 7Z" /></svg></span>
+      <span data-pause-icon hidden><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 5v14M16 5v14" /></svg></span>
+    </IconButton>
+    <div class="case-video-seek">
+      <input data-video-seek type="range" min="0" max="100" value="0" step="0.1" aria-label="Video position" disabled />
+      {preview && <div class="case-video-preview" data-video-preview aria-hidden="true" hidden>
+        <div class="case-video-preview-frame" style={`aspect-ratio: ${preview.width} / ${preview.height}`} />
+        <span data-preview-time>0:00</span>
+      </div>}
+    </div>
+    <span class="case-video-time" aria-hidden="true"><span data-video-time>0:00 / 0:00</span></span>
+  </div>}
+</MediaRoot>
+
+<script>
+  import '../scripts/case-video-player';
+</script>

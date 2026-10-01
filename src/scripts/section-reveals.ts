@@ -1,12 +1,22 @@
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createNativeMotion, readMotionToken, revealEffects, type MotionEffect } from './native-motion.ts';
 import { splitLetters } from './text-reveal.ts';
+import { shouldRevealWorkContent } from './work-stage-model.ts';
+
+/** One shared order: label, title, description, then section content. */
+export function sectionHeadingTiming(titleDuration: number, contentDuration: number, stageProgress: number, hasIndex = true, hasDescription = true) {
+  const titleStart = hasIndex ? titleDuration * stageProgress : 0;
+  const subtitleStart = titleStart + titleDuration * stageProgress;
+  const firstContentStart = subtitleStart + (hasDescription ? contentDuration * stageProgress : 0);
+  return { titleStart, subtitleStart, firstContentStart };
+}
 
 /** Work's heading recipe, shared by every homepage chapter. Keeps explicit line breaks. */
 export function headingRevealEffects(title: HTMLElement, index?: HTMLElement | null, description?: HTMLElement | null): MotionEffect[] {
   const tokens = getComputedStyle(title);
   const number = (name: string) => readMotionToken(tokens, name);
   const duration = number('--duration-title-reveal');
+  const timing = sectionHeadingTiming(duration, number('--duration-copy-reveal'), number('--intro-stage-progress'), Boolean(index), Boolean(description));
   const distance = number('--distance-text-reveal');
   const easing = tokens.getPropertyValue('--ease-entrance').trim();
   const lines = title.innerHTML.split(/<br\s*\/?\s*>/i);
@@ -30,9 +40,9 @@ export function headingRevealEffects(title: HTMLElement, index?: HTMLElement | n
   title.style.opacity = '1';
   return [
     ...revealEffects(index ? [index] : [], { duration, distance, easing }),
-    ...revealEffects(letters, { duration, stagger: number('--stagger-title-reveal'), distance, easing }),
+    ...revealEffects(letters, { duration, delay: timing.titleStart, stagger: number('--stagger-title-reveal'), distance: number('--distance-title-reveal'), easing }),
     ...revealEffects(description ? [description] : [], {
-      duration: number('--duration-copy-reveal'), delay: duration * number('--intro-stage-progress'), distance, easing,
+      duration: number('--duration-copy-reveal'), delay: timing.subtitleStart, distance, easing,
     }),
   ];
 }
@@ -44,9 +54,9 @@ export function sectionItemStart(
   stageProgress: number,
   hasDescription = true,
   itemInterval = contentDuration * stageProgress,
+  hasIndex = true,
 ) {
-  const subtitleStart = titleDuration * stageProgress;
-  const firstContentStart = subtitleStart + (hasDescription ? contentDuration * stageProgress : 0);
+  const { firstContentStart } = sectionHeadingTiming(titleDuration, contentDuration, stageProgress, hasIndex, hasDescription);
   return firstContentStart + itemIndex * itemInterval;
 }
 
@@ -80,6 +90,7 @@ export function sectionRevealEffects(
         progress,
         Boolean(description),
         itemInterval,
+        Boolean(index),
       ),
       distance,
       easing,
@@ -98,14 +109,23 @@ export function initializeSectionReveals() {
     let started = false;
     let resolved = false;
     let motion: ReturnType<typeof createNativeMotion> | undefined;
+    const isWork = element.id === 'work';
+    const revealRatio = parseFloat(getComputedStyle(element).getPropertyValue('--section-reveal-trigger-viewport-ratio'));
     parts.forEach(part => { part.style.opacity = '0'; });
     const finish = () => {
       resolved = true;
+      window.removeEventListener('scroll', play);
       motion?.finish();
       parts.forEach(part => { part.style.opacity = '1'; part.style.transform = 'none'; });
     };
     const play = () => {
       if (started || resolved) return;
+      if (isWork && !shouldRevealWorkContent(trigger.getBoundingClientRect().top, window.scrollY, window.innerHeight * revealRatio)) {
+        // ScrollTrigger may enter during initialization; retry on real scroll.
+        window.addEventListener('scroll', play, { passive: true });
+        return;
+      }
+      window.removeEventListener('scroll', play);
       started = true;
       void document.fonts.ready.then(() => {
         if (resolved) return;

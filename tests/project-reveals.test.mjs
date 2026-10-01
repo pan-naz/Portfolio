@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { sectionItemStart } from '../src/scripts/section-reveals.ts';
+import { sectionHeadingTiming, sectionItemStart } from '../src/scripts/section-reveals.ts';
 import { tooltipFollowStep } from '../src/scripts/tool-card-tooltips.ts';
 
 const read = path => readFileSync(new URL(path, import.meta.url), 'utf8');
@@ -18,10 +18,12 @@ const toolTooltips = read('../src/scripts/tool-card-tooltips.ts');
 const layout = read('../src/layouts/BaseLayout.astro');
 const css = read('../src/styles/global.css');
 
-assert.equal(sectionItemStart(0, 900, 900, .5), 900, 'First content starts halfway through the subtitle');
-assert.equal(sectionItemStart(1, 900, 900, .5), 1350, 'Second content starts halfway through the first item');
-assert.equal(sectionItemStart(2, 900, 900, .5), 1800, 'Third content continues the hero cadence');
-assert.equal(sectionItemStart(2, 900, 900, .5, true, 160), 1220, 'Experience rows can use a faster interval without changing the first row handoff');
+assert.deepEqual(sectionHeadingTiming(900, 900, .5), { titleStart: 450, subtitleStart: 900, firstContentStart: 1350 }, 'Label leads the title, description and content');
+assert.deepEqual(sectionHeadingTiming(900, 900, .5, false, false), { titleStart: 0, subtitleStart: 450, firstContentStart: 450 }, 'Missing label and description do not leave empty stages');
+assert.equal(sectionItemStart(0, 900, 900, .5), 1350, 'First content starts halfway through the subtitle');
+assert.equal(sectionItemStart(1, 900, 900, .5), 1800, 'Second content starts halfway through the first item');
+assert.equal(sectionItemStart(2, 900, 900, .5), 2250, 'Third content continues the hero cadence');
+assert.equal(sectionItemStart(2, 900, 900, .5, true, 160), 1670, 'Experience rows can use a faster interval without changing the first row handoff');
 assert.ok(card.includes('data-project-reveal={!compact || undefined} data-section-item={!compact || undefined}'), 'Selected cards reveal as complete section items; filtered cards use their independent shuffle');
 assert.ok(
   css.includes("[data-theme='dark'] .project { --ink: #FAF8F7; --muted: rgb(250 248 247 / .64); --canvas: #161715; --surface: #222320;"),
@@ -48,6 +50,7 @@ assert.ok(!impact.includes('<h3 data-section-item>') && !stat.includes('data-sec
 assert.ok(sectionReveals.includes("querySelectorAll<HTMLElement>('[data-section-item]')"));
 assert.ok(sectionReveals.includes('sectionRevealEffects(title, index, description, content)'), 'Touch and compact layouts use one section timeline');
 assert.ok(sectionReveals.includes("number('--section-item-reveal-duration') || duration") && sectionReveals.includes("number('--section-item-reveal-interval') || duration * progress") && css.includes('--section-item-reveal-duration: 620; --section-item-reveal-interval: 160;'), 'Experience rows use the faster 620ms/160ms reveal cadence');
+assert.ok(sectionReveals.includes('shouldRevealWorkContent(trigger.getBoundingClientRect().top, window.scrollY, window.innerHeight * revealRatio)') && sectionReveals.includes("window.removeEventListener('scroll', play)"), 'Touch Work defers initial viewport entry until scroll and cleans up the retry listener');
 assert.ok(workStage.includes('sectionRevealEffects(title, index, description, content)'), 'Desktop Work uses the same ordered timeline');
 assert.ok(!motion.includes("querySelectorAll<HTMLElement>('article[data-project-reveal]')") && !motion.includes('scrub: projectScrub'), 'Retired independent card triggers cannot reorder the section timeline');
 assert.ok(layout.includes("document.documentElement.dataset.sectionRevealMotion = 'true'"));

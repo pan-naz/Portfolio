@@ -2,20 +2,19 @@ const asset = (name: string) => `/projects/datagpt-case-study/${name}.webp`;
 const screenshot = (name: string, width: number, height: number, alt: string, presentation: 'framed' | 'bare' = 'framed') => ({ src: asset(name), width, height, alt, kind: 'image' as const, presentation });
 export const dataGPTMedia = {
   hero: screenshot('hero', 2000, 1107, 'DataGPT logo on a dark dotted background.'),
-  heroVideo: { src: '/projects/datagpt-case-study/hero-datagpt.mp4', width: 1728, height: 1116 },
-  research: screenshot('research', 1280, 1000, 'Stakeholder interview notes, research findings, and a detailed data analyst persona.', 'bare'),
-  competitors: screenshot('competitors', 1200, 510, 'Comparison of ThoughtSpot, Power BI and Copilot, ChatGPT plug-ins, and SQL wrappers across query comprehension, depth, data limits, and trust.', 'bare'),
-  prototypes: screenshot('prototypes', 1280, 825, 'DataGPT prototype flows, schema screens, and information architecture.', 'bare'),
-  chat: screenshot('chat', 2000, 2491, 'DataGPT chat with a written analysis, charts, source dates, and suggested follow-up questions.'),
-  navigator: screenshot('navigator', 2000, 1293, 'Chat and Data Navigator side by side with comparison periods and metric exploration.'),
-  setup: screenshot('data-setup', 1504, 918, 'Data connection and schema configuration for a Google Analytics dataset.'),
-  system: screenshot('design-system', 1280, 1000, 'DataGPT input states, buttons, callouts, icons, and analytical charts.', 'bare'),
-  pilot: screenshot('pilot', 1776, 924, 'Pilot version of DataGPT showing a gaming analytics conversation and metric cards.'),
-  instructions: screenshot('llm-instructions', 1436, 858, 'DataGPT schema management used to configure business logic and definitions.'),
-  after: screenshot('context-after', 2000, 1219, 'After: persistent date presets and filter chips above Chat and Data Navigator.'),
-  // Temporary Before screenshot, approved by the user; replace when the final image arrives.
-  before: screenshot('navigator', 2000, 1293, 'Before: earlier Data Navigator interface with date controls inside the navigator.'),
-  website: screenshot('website', 1768, 994, 'DataGPT marketing website with the headline Chat with your data and a conversational product demo.'),
+  heroVideo: { src: '/projects/datagpt-case-study/hero-datagpt.mp4', width: 1728, height: 1116, poster: '/projects/datagpt-case-study/hero-poster.jpg' },
+  research: { src: '/projects/datagpt-case-study/discovery-research.png', width: 2496, height: 1872, alt: 'Stakeholder interview notes, research findings, and a detailed data analyst persona.', kind: 'image' as const, presentation: 'bare' as const },
+  competitors: { src: '/projects/datagpt-case-study/competitor-mapping.png', width: 2354, height: 972, alt: 'Comparison of ThoughtSpot, Power BI and Copilot, ChatGPT plug-ins, and SQL wrappers across query comprehension, depth, data limits, and trust.', kind: 'image' as const, presentation: 'bare' as const },
+  prototypes: { src: '/projects/datagpt-case-study/prototypes.png', width: 2496, height: 1424, alt: 'DataGPT prototype flows, schema screens, and information architecture.', kind: 'image' as const, presentation: 'bare' as const },
+  chat: { src: '/projects/datagpt-case-study/pure-chat.png', width: 2400, height: 2990, alt: 'DataGPT chat with a written analysis, charts, source dates, and suggested follow-up questions.', kind: 'image' as const, presentation: 'bare' as const },
+  navigator: { src: '/projects/datagpt-case-study/chat-data-navigator.png', width: 2400, height: 1552, alt: 'Chat and Data Navigator side by side with comparison periods and metric exploration.', kind: 'image' as const, presentation: 'bare' as const },
+  setup: { src: '/projects/datagpt-case-study/data-setup.mp4', width: 1920, height: 1124, alt: 'DataGPT no-code setup flow for data connections and schema configuration.', kind: 'video' as const },
+  system: { src: '/projects/datagpt-case-study/design-system.png', width: 2496, height: 1920, alt: 'DataGPT input states, buttons, callouts, icons, and analytical charts.', kind: 'image' as const, presentation: 'bare' as const },
+  pilot: { src: '/projects/datagpt-case-study/pilot-video.mp4', width: 1720, height: 884, alt: 'Pilot version of DataGPT showing a gaming analytics conversation and metric cards.', kind: 'video' as const, controls: true, poster: '/projects/datagpt-case-study/pilot-poster.jpg', preview: { src: '/projects/datagpt-case-study/pilot-preview.jpg', columns: 8, rows: 15, count: 116, interval: 1, width: 240, height: 124 } },
+  instructions: { src: '/projects/datagpt-case-study/llm-instructions.mp4', width: 1348, height: 812, alt: 'DataGPT schema management used to configure business logic and definitions.', kind: 'video' as const, presentation: 'floating' as const, strokeWidth: 8 as const, poster: '/projects/datagpt-case-study/llm-instructions-poster.jpg' },
+  after: { src: '/projects/datagpt-case-study/after.png', width: 2400, height: 1464, alt: 'After: persistent date presets and filter chips above Chat and Data Navigator.' },
+  before: { src: '/projects/datagpt-case-study/before.png', width: 2400, height: 1464, alt: 'Before: date controls confined to the Data Navigator while chat lacks visible context.' },
+  website: { src: '/projects/datagpt-case-study/website.mp4', width: 3840, height: 2160, alt: 'DataGPT marketing website with a conversational product demo.', kind: 'video' as const, presentation: 'shadow' as const, poster: '/projects/datagpt-case-study/website-poster.jpg' },
 };
 export const dataGPTPersonas = [
   { title: 'Executive', group: 'Asks questions every day', description: 'VP or C-level. Owns revenue and growth targets. Lives in meetings and Slack.', question: 'Why did revenue drop last week?', need: 'The cause, not a chart, and before the next meeting.', frustration: "Dashboards show what happened. The why goes into the data team's queue." },

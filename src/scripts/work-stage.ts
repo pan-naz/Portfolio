@@ -1,6 +1,6 @@
 import { createNativeMotion, readMotionToken } from './native-motion.ts';
 import { sectionRevealEffects } from './section-reveals';
-import { canShiftWorkStage, nextWorkStageExpanded } from './work-stage-model.ts';
+import { canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent } from './work-stage-model.ts';
 
 interface IntroOptions { duration: number; delay: number; easing: string; }
 export interface WorkStageController {
@@ -116,8 +116,8 @@ export function initializeWorkStage(): WorkStageController | undefined {
     } });
   };
 
-  const revealHeading = () => {
-    if (headingRevealed) return;
+  const revealHeading = (stageTop = section.getBoundingClientRect().top) => {
+    if (headingRevealed || !shouldRevealWorkContent(stageTop, window.scrollY, window.innerHeight * sectionRevealRatio)) return;
     headingRevealed = true;
     if (reduced.matches || typeof title.animate !== 'function') {
       showHeadingImmediately();
@@ -199,7 +199,7 @@ export function initializeWorkStage(): WorkStageController | undefined {
   const updateFromScroll = () => {
     scrollFrame = 0;
     const stageTop = section.getBoundingClientRect().top;
-    if (!headingRevealed && stageTop <= window.innerHeight * sectionRevealRatio) revealHeading();
+    if (!headingRevealed) revealHeading(stageTop);
     const expandAt = window.innerHeight * expandViewportRatio;
     const next = nextWorkStageExpanded(
       stageTop,

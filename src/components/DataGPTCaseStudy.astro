@@ -2,7 +2,7 @@
 import type { Project } from '../data/portfolio';
 import { dataGPTMedia as media, dataGPTPersonas, researchOutcomes, competitors, competitorOutcomes, models, features, queryResults, contextResults, conclusions } from '../data/datagpt-case-study';
 import ProjectIdentity from './ProjectIdentity.astro';
-import SkillTag from './SkillTag.astro';
+import ProjectTags from './ProjectTags.astro';
 import Stat from './Stat.astro';
 import CaseStudyMedia from './CaseStudyMedia.astro';
 import CaseStudyComparison from './CaseStudyComparison.astro';
@@ -17,9 +17,9 @@ const researchMetrics = [
 ---
 <article class="case-study-content case-study-content--datagpt" data-case-content>
   <div class="case-study-artwork">
-    <video data-case-video muted loop playsinline preload="none" poster={media.hero.src} width={media.heroVideo.width} height={media.heroVideo.height} style={`aspect-ratio: ${media.heroVideo.width} / ${media.heroVideo.height}`} aria-label={media.hero.alt}>
+    <video data-case-video muted loop playsinline preload="none" poster={media.heroVideo.poster} width={media.heroVideo.width} height={media.heroVideo.height} style={`aspect-ratio: ${media.heroVideo.width} / ${media.heroVideo.height}`} aria-label={media.hero.alt}>
       <source data-src={media.heroVideo.src} type="video/mp4" />
-      <img src={media.hero.src} width={media.heroVideo.width} height={media.heroVideo.height} alt={media.hero.alt} decoding="async" />
+      <img src={media.heroVideo.poster} width={media.heroVideo.width} height={media.heroVideo.height} alt={media.hero.alt} decoding="async" />
     </video>
   </div>
   <div class="case-study-body dg-case">
@@ -27,7 +27,7 @@ const researchMetrics = [
       <div class="dg-identity">
         <ProjectIdentity title={project.title} logo={project.logo} />
         <h1 id="dg-title" class="sr-only" data-case-title>DataGPT</h1>
-        <div class="project-tags">{project.tags.map(label => <SkillTag label={label} variant="raised" />)}</div>
+        <ProjectTags tags={project.tags} />
       </div>
       <div class="dg-summary"><p>{project.outcome}</p><p>{project.description}</p></div>
     </section>
