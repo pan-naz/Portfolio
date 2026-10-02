@@ -28,8 +28,43 @@ export function scrollToSection(target: HTMLElement) {
   }
 }
 
-export function initializeMotion() {
+/** One wheel pace for the homepage, standalone cases and modal case scroller. */
+export function initializeSmoothScroll(wrapper: Window | HTMLElement = window, content: HTMLElement = document.documentElement) {
   const media = gsap.matchMedia();
+  const isDocument = wrapper === window;
+
+  // Light wheel smoothing: follow input closely without a long trailing glide.
+  // Touch, small screens and reduced motion stay native.
+  media.add('(min-width: 768px) and (pointer: fine) and (prefers-reduced-motion: no-preference)', () => {
+    const lenis = new Lenis({
+      wrapper, content, lerp: .18, smoothWheel: true, syncTouch: false, anchors: false,
+      prevent: node => isDocument && node.closest('#mobile-menu, [data-case-dialog]') !== null,
+    });
+    if (isDocument) {
+      smoothScroll = lenis;
+      lenis.on('scroll', ScrollTrigger.update);
+      if (document.querySelector('dialog[open]')) lenis.stop();
+    }
+    const tick = (time: number) => lenis.raf(time * 1000);
+    gsap.ticker.add(tick);
+    gsap.ticker.lagSmoothing(0);
+    const cancelTravel = (event: KeyboardEvent) => {
+      if (['Tab', 'ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '].includes(event.key)) {
+        lenis.scrollTo(lenis.actualScroll, { immediate: true });
+      }
+    };
+    wrapper.addEventListener('keydown', cancelTravel as EventListener);
+    return () => {
+      wrapper.removeEventListener('keydown', cancelTravel as EventListener);
+      gsap.ticker.remove(tick);
+      lenis.destroy();
+      if (smoothScroll === lenis) smoothScroll = undefined;
+    };
+  });
+  return { destroy: () => media.revert() };
+}
+
+export function initializeMotion() {
 
   // WebKit can still pull the page to refresh when the viewport is already at
   // the top. Only cancel that downward gesture; keep native touch scrolling.
@@ -52,30 +87,7 @@ export function initializeMotion() {
     if (deltaY > 0 && deltaY > Math.abs(deltaX)) event.preventDefault();
   }, { passive: false });
 
-  // Light wheel smoothing: follow input closely without a long trailing glide.
-  // Touch, small screens and reduced motion stay native.
-  media.add('(min-width: 768px) and (pointer: fine) and (prefers-reduced-motion: no-preference)', () => {
-    const lenis = new Lenis({ lerp: .18, smoothWheel: true, syncTouch: false, anchors: false, prevent: node => node.closest('#mobile-menu, [data-case-dialog]') !== null });
-    if (document.documentElement.dataset.reloadToTop === 'true') lenis.scrollTo(0, { immediate: true });
-    smoothScroll = lenis;
-    const tick = (time: number) => lenis.raf(time * 1000);
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add(tick);
-    gsap.ticker.lagSmoothing(0);
-    if (document.querySelector('dialog[open]')) lenis.stop();
-    const cancelTravel = (event: KeyboardEvent) => {
-      if (['Tab', 'ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '].includes(event.key)) {
-        lenis.scrollTo(window.scrollY, { immediate: true });
-      }
-    };
-    window.addEventListener('keydown', cancelTravel);
-    return () => {
-      window.removeEventListener('keydown', cancelTravel);
-      gsap.ticker.remove(tick);
-      lenis.destroy();
-      smoothScroll = undefined;
-    };
-  });
+  initializeSmoothScroll();
 
   // Font metrics affect the start/end positions of all scroll scenes.
   document.fonts.ready.then(() => ScrollTrigger.refresh());

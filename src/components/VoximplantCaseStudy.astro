@@ -6,8 +6,7 @@ import supervisorIcon from '../assets/personas/supervisor.svg?raw';
 import type { Project } from '../data/portfolio';
 import CaseStudyDecisionCard from './CaseStudyDecisionCard.astro';
 import CaseStudyMedia from './CaseStudyMedia.astro';
-import ProjectIdentity from './ProjectIdentity.astro';
-import ProjectTags from './ProjectTags.astro';
+import CaseStudyOverview from './CaseStudyOverview.astro';
 import Stat from './Stat.astro';
 import MetricValue from './MetricValue.astro';
 import TextLink from './TextLink.astro';
@@ -94,38 +93,20 @@ const impactMetrics = [
     </video>
   </div>
 
-  <div class="case-study-body vox-case">
-    <section class="vox-intro" aria-labelledby="vox-title">
-      <div class="vox-project">
-        <ProjectIdentity title={project.title} logo={project.logo} />
-        <ProjectTags tags={project.tags} />
-        <TextLink href={productUrl} accent compact>voximplant.com/kit</TextLink>
-      </div>
-      <div class="vox-summary">
-        <h1 id="vox-title" class="sr-only" data-case-title>{project.title}</h1>
-        <p class="vox-lede">Designed and launched from scratch as a no-code contact center builder. Scaled from MVP to a core SaaS product.</p>
-        <p class="text-body-m">Voximplant Kit is intelligent cloud contact center. Offering an easy to use drag &amp; drop interface and industry leading AI automation.</p>
-      </div>
-    </section>
-
-    <section class="vox-meta" aria-label="Project role and team">
-      <div>
-        <p class="vox-label">My role</p>
+  <div class="case-study-body case-study-narrative vox-case">
+    <CaseStudyOverview project={project} titleId="vox-title">
+      <TextLink slot="links" href={productUrl} accent compact>voximplant.com/kit</TextLink>
+      <Fragment slot="role">
         <p>Only designer for the first <span class="vox-accent">1.5 year</span>, then <span class="vox-accent">lead</span> when a second designer joined.</p>
         <p>I owned the product end to end:</p>
-        <ul>
-          <li>Discovery and interviews</li><li>UX Research</li><li>Competitive Analysis</li><li>Prototypes and usability testing</li><li>UI, design system, developer hand-off</li><li>Post-release testing</li><li>Led the promo/marketing materials</li>
-        </ul>
-      </div>
-      <div>
-        <p class="vox-label">Team</p>
-        <ul><li>Product designer</li><li>Product manager</li><li>Product analyst</li><li>Voximplant engineering</li></ul>
-      </div>
-    </section>
+        <ul><li>Discovery and interviews</li><li>UX Research</li><li>Competitive Analysis</li><li>Prototypes and usability testing</li><li>UI, design system, developer hand-off</li><li>Post-release testing</li><li>Led the promo/marketing materials</li></ul>
+      </Fragment>
+      <ul slot="secondary"><li>Product designer</li><li>Product manager</li><li>Product analyst</li><li>Voximplant engineering</li></ul>
+    </CaseStudyOverview>
 
     <section class="vox-section vox-problem" aria-labelledby="vox-problem-title">
-      <p class="vox-label">Problem</p>
-      <h2 id="vox-problem-title" class="vox-display">Powerful for developers, out of reach for the people who run contact centers.</h2>
+      <p class="case-study-eyebrow">Problem</p>
+      <h2 id="vox-problem-title" class="case-study-heading">Powerful for developers, out of reach for the people who run contact centers.</h2>
       <div class="vox-problem-grid">
         <div class="vox-copy-stack">
           <div><h3>Business context</h3><p>Voximplant is a cloud communications platform with voice, video and messaging embedded through APIs and SDKs. But its customers' contact-center teams <strong class="vox-accent">are not developers.</strong></p></div>
@@ -137,8 +118,8 @@ const impactMetrics = [
     </section>
 
     <section class="vox-section" aria-labelledby="vox-discovery-title">
-      <p class="vox-label">Process</p>
-      <h2 id="vox-discovery-title" class="vox-display">Discovery</h2>
+      <p class="case-study-eyebrow">Process</p>
+      <h2 id="vox-discovery-title" class="case-study-heading">Discovery</h2>
       <div class="vox-two-column vox-research">
         <div class="vox-copy-stack">
           <div><h3>Research</h3><p>With the product manager, I built user portraits from the interviews, then buyer personas. Later I ran usability tests on the MVP and interviewed call-center managers to validate the flows and the terminology.</p><p>I put every finding into a table, one per product area, and compared Kit with competitors.</p></div>
@@ -189,8 +170,8 @@ const impactMetrics = [
     </section>
 
     <section class="vox-section" aria-labelledby="vox-ideation-title">
-      <p class="vox-label">Process</p>
-      <h2 id="vox-ideation-title" class="vox-display">Ideation</h2>
+      <p class="case-study-eyebrow">Process</p>
+      <h2 id="vox-ideation-title" class="case-study-heading">Ideation</h2>
       <div class="vox-copy-narrow"><h3>Hypotheses that shaped release 1</h3><p>Every interview finding went into one table per product area.</p></div>
       <ol class="vox-hypotheses">{hypotheses.map(([hypothesis, responseStart, responseAccent, responseEnd], index) => <li><span>{String(index + 1).padStart(2, '0')}</span><div><strong>{hypothesis}</strong><p>{responseStart}<strong>{responseAccent}</strong>{responseEnd}</p></div></li>)}</ol>
       <div class="vox-copy-narrow"><h3>IA and structure</h3><p>I structured and validated the information architecture, confirmed the core functionality with the team, and mapped primary and secondary flows for every key interaction. A user-story map set the priorities for the first release.</p></div>
@@ -219,7 +200,7 @@ const impactMetrics = [
 
     <section class="vox-solution" aria-labelledby="vox-solution-title">
       <div class="vox-solution-inner">
-        <div class="vox-solution-head"><p class="vox-label">Solution</p><div class="vox-solution-stats"><div><MetricValue as="strong" value="10+" /><span>product sections fully designed and validated</span></div><div><MetricValue as="strong" value="∞" /><span>user flows created, tested and documented</span></div></div></div>
+        <div class="vox-solution-head"><p class="case-study-eyebrow">Solution</p><div class="vox-solution-stats"><div><MetricValue as="strong" value="10+" /><span>product sections fully designed and validated</span></div><div><MetricValue as="strong" value="∞" /><span>user flows created, tested and documented</span></div></div></div>
         <h2 id="vox-solution-title" class="sr-only">Solution</h2>
         <div class="vox-product-feature"><h3>Onboarding</h3><ul><li>The first screen after sign-up asks one question: what did you come here to do?</li><li>Three guided tours — AI-powered outbound calls, interactive voice recognition, and the contact center — take four steps each, and the tour a user picks becomes their first task.</li></ul><CaseStudyMedia src={asset('onboarding', 'mp4')} poster={asset('onboarding')} alt="Voximplant Kit onboarding flow showing navigation areas and guided product tours." width={1920} height={1036} /></div>
         <div class="vox-product-feature"><h3>Visual scenario editor</h3><ul><li>Users build a scenario, the call flow, on a canvas from blocks: speech-to-text, text-to-speech, interactive menu, data verification, call forwarding, HTTP request and more.</li><li>Blocks connect with lines, so a large inbound or outbound scenario stays readable. An onboarding tour shows how to make the first connection.</li></ul><CaseStudyMedia src={asset('scenario-editor', 'mp4')} poster={asset('scenario-editor')} alt="Voximplant visual scenario editor with connected call-flow blocks." width={1280} height={684} /></div>
@@ -231,7 +212,7 @@ const impactMetrics = [
     </section>
 
     <section class="vox-contact-center" aria-labelledby="vox-contact-title">
-      <div class="vox-chapter-head"><p class="vox-label">Solution</p><div><h2 id="vox-contact-title" class="vox-display">Contact center</h2><p>One cloud contact center for every channel. Calls and chats from WhatsApp, Telegram, Messenger, Viber, SMS and web chat come into one workspace, and routine work is automated.</p></div></div>
+      <div class="vox-chapter-head"><p class="case-study-eyebrow">Solution</p><div><h2 id="vox-contact-title" class="case-study-heading">Contact center</h2><p>One cloud contact center for every channel. Calls and chats from WhatsApp, Telegram, Messenger, Viber, SMS and web chat come into one workspace, and routine work is automated.</p></div></div>
       <img src={asset('contact-center', 'png')} alt="Voximplant Contact Center agent workspace with live call controls and customer details." width="2398" height="1430" loading="lazy" decoding="async" />
       <div class="vox-product-feature"><h3>Live dashboard</h3><ul><li>Real-time statistics on calls and agents: missed and handled calls, answer, hold and handle times, service level, and agents in the queue by status.</li><li>Supervisors use it to track team performance and automation results.</li></ul><img src={asset('dashboard', 'png')} alt="Live contact-center dashboard with service-level metrics and queue charts." width="2392" height="2013" loading="lazy" decoding="async" /></div>
       <div class="vox-product-feature"><h3>Live Conversations</h3><ul><li>Supervisors monitor agents in real time.</li><li>Every active call and chat is listed by queue with the agent's status and service time.</li><li>A supervisor can listen to a call, whisper to the agent, join the call or take it over, and follow chats on every channel.</li></ul><img src={asset('conversations', 'png')} alt="Live conversations list showing agents, queues, calls and chats." width="2392" height="1404" loading="lazy" decoding="async" /></div>
@@ -245,13 +226,13 @@ const impactMetrics = [
     </section>
 
     <section class="vox-impact" aria-labelledby="vox-impact-title">
-      <div class="vox-chapter-head"><p class="vox-label">Impact</p><div><h2 id="vox-impact-title" class="vox-display">Kit in numbers.</h2><p>Results from Voximplant Kit, a product I designed from scratch and took to launch.</p></div></div>
+      <div class="vox-chapter-head"><p class="case-study-eyebrow">Impact</p><div><h2 id="vox-impact-title" class="case-study-heading">Kit in numbers.</h2><p>Results from Voximplant Kit, a product I designed from scratch and took to launch.</p></div></div>
       <dl class="vox-stats vox-stats--impact">{impactMetrics.map(metric => <Stat {...metric} />)}</dl>
       <div class="vox-final-cards">
         <article><h3>For the business</h3><ul><li>Kit became one of Voximplant's two product lines.</li><li>Companies that needed months and a development team to set up a contact center now do it themselves in 30 minutes or less.</li></ul></article>
         <article><h3>For the team</h3><ul><li>As Kit grew, the design team grew with it.</li><li>I led a team of 10+ across product, brand and web, and started a research function.</li></ul></article>
       </div>
-      <div class="vox-end-link"><TextLink href={productUrl} accent compact>voximplant.com/kit</TextLink></div>
+      <div class="case-study-end-links"><TextLink href={productUrl} accent compact>voximplant.com/kit</TextLink></div>
     </section>
   </div>
 </article>

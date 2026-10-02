@@ -7,6 +7,7 @@ import ProjectTags from './ProjectTags.astro';
 import MetricValue from './MetricValue.astro';
 import VoximplantCaseStudy from './VoximplantCaseStudy.astro';
 import DataGPTCaseStudy from './DataGPTCaseStudy.astro';
+import HookoCaseStudy from './HookoCaseStudy.astro';
 interface Props { project: Project; }
 const { project } = Astro.props;
 const sample = caseStudySamples[project.id];
@@ -14,7 +15,7 @@ const allProjects = [...projects, ...conceptProjects];
 const related = sample.related?.map(id => allProjects.find(item => item.id === id)!).filter(Boolean);
 const metrics = impactGroups.find(group => group.projectId === project.id)?.metrics;
 ---
-{project.id === 'voximplant' ? <VoximplantCaseStudy project={project} /> : project.id === 'datagpt' ? <DataGPTCaseStudy project={project} /> : <article class="case-study-content" data-case-content>
+{project.id === 'voximplant' ? <VoximplantCaseStudy project={project} /> : project.id === 'datagpt' ? <DataGPTCaseStudy project={project} /> : project.id === 'hooko' ? <HookoCaseStudy project={project} /> : <article class="case-study-content" data-case-content>
   <div class="case-study-artwork"><img src={project.image} alt={project.imageAlt} width={project.imageWidth ?? 1200} height={project.imageHeight} decoding="async" /></div>
   <div class="case-study-body">
   <div class="case-study-intro">
@@ -23,7 +24,7 @@ const metrics = impactGroups.find(group => group.projectId === project.id)?.metr
       <h1 data-case-title>{project.title}</h1>
       <ProjectTags tags={project.tags} />
     </div>
-    <div class="case-study-summary"><p class="case-study-outcome">{project.outcome}</p><p class="text-body-l">{project.description}</p></div>
+    <div class="case-study-summary"><p class="case-study-outcome">{project.outcome ?? project.description}</p>{project.outcome && <p class="text-body-l">{project.description}</p>}</div>
   </div>
   {metrics && <section class="case-study-impact" aria-label="Project impact">{metrics.map(metric => <div><MetricValue as="p" class="case-study-metric" value={metric.value} /><h2 class="text-body-m-strong">{metric.label}</h2><p class="text-body-m">{metric.note}</p></div>)}</section>}
   <div class="case-study-draft text-body-s">{project.placeholder ? 'Sample case study · fictional concept, copy and reference imagery' : 'Draft case study · sample narrative with existing project artwork'}</div>

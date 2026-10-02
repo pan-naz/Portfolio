@@ -2,6 +2,7 @@
 :root { font-family: var(--font-body); letter-spacing: 0; font-synthesis: none; color: var(--text-primary); background: var(--canvas); }
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 112px; overflow-x: clip; overscroll-behavior-y: none; }
+html[data-scroll-restore-pending] body { visibility: hidden; }
 html.lenis { scroll-behavior: auto; }
 body { margin: 0; overflow-x: clip; overscroll-behavior-y: none; font-size: var(--text-body); line-height: 1.5; font-weight: 400; }
 body.menu-open { overflow: hidden; }
@@ -127,6 +128,7 @@ main, .footer { position: relative; }
 .accent-stat { color: var(--accent); font-weight: 600; white-space: nowrap; }
 .skill-tag { display: inline-flex; align-items: center; justify-content: center; width: max-content; max-width: 100%; min-height: 28px; padding: 5px 11px; border: 1px solid var(--divider); border-radius: var(--radius-pill); font-size: var(--text-label-s); line-height: 1.333333; font-weight: 500; white-space: normal; overflow-wrap: anywhere; text-align: center; background: var(--surface); }
 .skill-tag--plain { min-height: 0; padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--text-primary); font-weight: 500; text-align: left; }
+.skill-tag--accent { border-color: transparent; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface)); text-transform: uppercase; box-shadow: none; }
 .process-tags { position: absolute; left: var(--header-inset); top: 108px; display: grid; justify-items: start; gap: 8px; }
 .hero-cta-entrance:focus-within { opacity: 1 !important; transform: none !important; filter: none !important; }
 .enhanced .hero-cta-entrance.is-restored { opacity: 1; transform: none; }

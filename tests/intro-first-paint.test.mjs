@@ -24,6 +24,6 @@ assert.equal(ready.root.dataset.homeIntro, 'pending', 'Slow fonts must not expos
 assert.equal(boot({ reduced: true }).root.dataset.homeIntro, undefined);
 assert.equal(boot({ animate: false }).root.dataset.homeIntro, undefined);
 assert.ok(layout.indexOf(bootstrap) < layout.indexOf('<body>'));
-assert.match(readFileSync('src/pages/index.astro', 'utf8'), /<BaseLayout resetToTopOnReload homeIntro>/);
+assert.match(readFileSync('src/pages/index.astro', 'utf8'), /<BaseLayout homeIntro>/);
 assert.ok(!readFileSync('src/components/CaseStudyPage.astro', 'utf8').includes('homeIntro'));
 console.log('PASS: synchronous pre-paint gate, delayed-font ownership, module failure, reduced motion and unsupported-animation fallback.');

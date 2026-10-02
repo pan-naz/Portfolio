@@ -1,13 +1,19 @@
 ---
-interface Props { title: string; }
-const { title } = Astro.props;
+import SkillTag from './SkillTag.astro';
+import '../styles/case-study-decision-card.css';
+interface Props { title: string; label?: string; labelVariant?: 'text' | 'accent'; layout?: 'stack' | 'media'; }
+const { title, label, labelVariant = 'text', layout = 'stack' } = Astro.props;
 ---
 
-<article class="case-study-decision-card">
+<article class:list={['case-study-decision-card', layout === 'media' && 'case-study-decision-card--media']}>
+  <div class="case-study-decision-card__text">
+  {label && <p class:list={['case-study-decision-card__label', labelVariant === 'text' && 'eyebrow']}>{labelVariant === 'accent' ? <SkillTag label={label} variant="accent" /> : label}</p>}
   <h3>{title}</h3>
   <div class="case-study-decision-card__copy"><slot /></div>
-  <div class="case-study-decision-card__impact">
+  {Astro.slots.has('impact') && <div class="case-study-decision-card__impact">
     <h4>Impact:</h4>
     <slot name="impact" />
+  </div>}
   </div>
+  {Astro.slots.has('media') && <div class="case-study-decision-card__media"><slot name="media" /></div>}
 </article>
