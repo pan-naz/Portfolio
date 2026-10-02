@@ -2,8 +2,8 @@
 import '@fontsource-variable/urbanist';
 import '../styles/global.css';
 import { profile } from '../data/portfolio';
-interface Props { title?: string; resetToTopOnReload?: boolean; homeIntro?: boolean; }
-const { title = `${profile.name} — naz.wtf`, resetToTopOnReload = false, homeIntro = false } = Astro.props;
+interface Props { title?: string; homeIntro?: boolean; }
+const { title = `${profile.name} — naz.wtf`, homeIntro = false } = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
@@ -62,22 +62,55 @@ const { title = `${profile.name} — naz.wtf`, resetToTopOnReload = false, homeI
         }, { once: true });
       })();
     </script>}
-    {resetToTopOnReload && <script is:inline>
+    <script is:inline data-scroll-restoration>
       (() => {
+        const root = document.documentElement;
+        const path = `${location.pathname}${location.search}`;
+        let saved = history.state?.portfolioScroll;
+        // Reload can snapshot history before pagehide. Session storage carries
+        // the final visible position across that document boundary reliably.
+        try { saved = JSON.parse(sessionStorage.getItem('portfolio-reload-scroll')) ?? saved; } catch {}
         const navigation = performance.getEntriesByType('navigation')[0];
-        if (navigation?.type !== 'reload') return;
+        const restartHome = navigation?.type === 'reload' && location.pathname === '/';
+        let restoring = navigation?.type === 'reload' && (restartHome || (saved?.path === path
+          && Number.isFinite(saved.top) && saved.top >= 0));
+        const save = () => {
+          // A repeated reload during startup must keep the intended position.
+          if (restoring) return;
+          const scroller = document.querySelector('[data-case-dialog][open] [data-case-scroll]');
+          const top = scroller ? scroller.scrollTop : window.scrollY;
+          const position = { path: `${location.pathname}${location.search}`, top };
+          try { sessionStorage.setItem('portfolio-reload-scroll', JSON.stringify(position)); } catch {}
+          try {
+            history.replaceState({ ...history.state, portfolioScroll: position }, '');
+          } catch {}
+        };
+        addEventListener('pagehide', save);
+        document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
+        if (!restoring) return;
+
+        // Homepage reloads replay the intro from the top. An open case reloads
+        // as a standalone page using its own reading position.
         history.scrollRestoration = 'manual';
-        document.documentElement.dataset.reloadToTop = 'true';
-        const reset = () => window.scrollTo(0, 0);
-        history.replaceState(history.state, '', `${location.pathname}${location.search}#top`);
-        reset();
-        addEventListener('load', () => requestAnimationFrame(() => requestAnimationFrame(() => {
-          reset();
-          history.scrollRestoration = 'auto';
-          delete document.documentElement.dataset.reloadToTop;
-        })), { once: true });
+        root.dataset.scrollRestorePending = 'true';
+        if (restartHome) history.replaceState(history.state, '', `${path}#top`);
+        const top = restartHome ? 0 : saved.top;
+        const restore = () => window.scrollTo({ top, left: 0, behavior: 'instant' });
+        restore();
+        addEventListener('DOMContentLoaded', restore, { once: true });
+        addEventListener('load', () => {
+          document.fonts.ready.then(() => {
+            restore();
+            requestAnimationFrame(() => {
+              restore();
+              restoring = false;
+              delete root.dataset.scrollRestorePending;
+              history.scrollRestoration = 'auto';
+            });
+          });
+        }, { once: true });
       })();
-    </script>}
+    </script>
   </head>
   <body><a class="skip-link" href="#main">Skip to content</a><slot /><script>import '../scripts/theme';</script></body>
 </html>

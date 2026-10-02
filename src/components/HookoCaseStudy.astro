@@ -1,0 +1,276 @@
+---
+import type { Project } from '../data/portfolio';
+import { hookoTools } from '../data/hooko-case-study';
+import HookoHero from './HookoHero.astro';
+import CaseStudyOverview from './CaseStudyOverview.astro';
+import TextLink from './TextLink.astro';
+import SkillTag from './SkillTag.astro';
+import SectionHeading from './SectionHeading.astro';
+import CaseStudyMedia from './CaseStudyMedia.astro';
+import CaseStudyDecisionCard from './CaseStudyDecisionCard.astro';
+import ToolCard from './ToolCard.astro';
+import '../styles/hooko-case-study.css';
+interface Props { project: Project; }
+const { project } = Astro.props;
+const productLinks = [
+  { href: 'https://hooko.app/', label: 'Website' },
+  { href: 'https://apps.apple.com/us/app/go-viral-hooko/id6758728094', label: 'App Store' },
+];
+---
+<article class="case-study-content case-study-content--hooko" data-case-content>
+  <div class="case-study-artwork"><HookoHero /></div>
+<div class="case-study-body case-study-narrative hk-case">
+
+  <CaseStudyOverview project={project} titleId="hk-title" id="hk-overview" secondaryLabel="Why I built it">
+    <Fragment slot="links">
+      {productLinks.map(link => <TextLink href={link.href} accent compact>{link.label}</TextLink>)}
+    </Fragment>
+    <Fragment slot="role">
+      <p>Solo builder</p>
+      <ul><li>Product idea, scope and competitor review</li><li>UX, UI and the analysis result format</li><li>Flutter app, built with Claude Code</li><li>Backend, AI pipeline and payments</li><li>Website, App Store page, ASO</li><li>Apple Ads setup and launch</li></ul>
+    </Fragment>
+    <p slot="secondary">I wanted to build and ship a whole app on my own. I also noticed that most apps for creators just give a score and stop there. I wanted to make one that tells what to actually change in the creator's video.</p>
+  </CaseStudyOverview>
+
+  <section class="hk-wrap hk-section" id="hk-problem" aria-labelledby="hk-problem-h">
+    <SectionHeading id="hk-problem-h" label="Problem" layout="stacked" reveal={false}>Virality scores don't tell creators what to change</SectionHeading>
+    <div class="hk-col-2">
+        <div class="hk-cell">
+          <h3 class="text-body-m-strong">Creators</h3>
+          <p>On TikTok, Reels and Shorts, people decide in the first 3 seconds whether to keep watching. When a video gets few views, creators usually <strong>don't know why</strong>. Was it the first line, the first shot, the pacing or the caption?</p>
+        </div>
+        <div class="hk-cell">
+          <h3 class="text-body-m-strong">Existing tools</h3>
+          <p>Most virality apps I looked at give you a score or a percentage, like "62% viral". That doesn't tell you what to fix, so you're still guessing before the next video.</p>
+          <p>With Hooko, I wanted every score to come with a clear tip you can use when you film again.</p>
+        </div>
+    </div>
+  </section>
+
+  
+  <section class="hk-wrap hk-section" id="hk-flow" aria-labelledby="hk-flow-h">
+    <SectionHeading id="hk-flow-h" label="Product" layout="stacked" reveal={false}>How it works</SectionHeading>
+    <div class="hk-demo-layout">
+      <figure class="hk-demo-stage" aria-label="Demo video of the Hooko flow">
+        <div class="hk-phone hk-demo-phone">
+          
+          <CaseStudyMedia src="/projects/hooko-case-study/demo.mp4" poster="/projects/hooko-case-study/site-phone.jpg" alt="Demo of an analysis in Hooko" width={498} height={1080} presentation="bare" />
+        </div>
+      </figure>
+      <ol class="hk-srows" aria-label="The five steps shown in the demo">
+        <li class="hk-srow"><div class="hk-thumb"><img src="/projects/hooko-case-study/as-1.jpg" alt="Analysis in progress: uploading, niche detection, engagement, hook score and recommendations checked off one by one" width="1242" height="2688" loading="lazy"></div><div class="hk-stxt"><span class="hk-n">01</span><h3>Analyse</h3><p>Upload any short video. A live checklist shows each stage while the analysis runs for 30 to 60 seconds.</p></div></li>
+        <li class="hk-srow"><div class="hk-thumb"><img src="/projects/hooko-case-study/as-2.jpg" alt="Score of 55 out of 100, below the Fitness and Health benchmark of 70, with audio and visual sub-scores for the first 3 seconds" width="1242" height="2688" loading="lazy"></div><div class="hk-stxt"><span class="hk-n">02</span><h3>Score</h3><p>The hook is scored against the benchmark for the detected niche, with separate audio and visual scores for 0–3 seconds.</p></div></li>
+        <li class="hk-srow"><div class="hk-thumb"><img src="/projects/hooko-case-study/as-3.jpg" alt="Hook alternative 1 with an estimated score of 78, a Say this script and a Show this shot description" width="1242" height="2688" loading="lazy"></div><div class="hk-stxt"><span class="hk-n">03</span><h3>Rewrite</h3><p>Three alternative hooks, each with a script to say, a shot to film, technique tags and an estimated score.</p></div></li>
+        <li class="hk-srow"><div class="hk-thumb"><img src="/projects/hooko-case-study/as-4.jpg" alt="Suggested caption and hashtags, and a real YouTube Short using the same hook structure" width="1242" height="2688" loading="lazy"></div><div class="hk-stxt"><span class="hk-n">04</span><h3>Prove</h3><p>A ready caption and hashtags, plus a real Short from the same niche that uses the same hook structure.</p></div></li>
+        <li class="hk-srow"><div class="hk-thumb"><img src="/projects/hooko-case-study/as-5.jpg" alt="Analysis history with past scores of 62, 67 and 68" width="1242" height="2688" loading="lazy"></div><div class="hk-stxt"><span class="hk-n">05</span><h3>Track</h3><p>Every analysis is kept in a history, so creators can see whether their hooks are getting better.</p></div></li>
+      </ol>
+      </div>
+  </section>
+
+  
+  <section class="hk-band" data-theme="dark" id="hk-decisions" aria-labelledby="hk-decisions-h">
+    <div class="hk-wrap hk-band-inner">
+      <SectionHeading id="hk-decisions-h" label="Design" layout="stacked" reveal={false}>Key design decisions<p slot="description" class="text-body-m hk-heading-description">Each decision answers the same question a creator has after a flop: what exactly do I change?</p></SectionHeading>
+
+      <div class="hk-decisions floating-control-theme">
+        <CaseStudyDecisionCard title="Niche benchmark" label="Context" labelVariant="accent" layout="media">
+            <p>A score of 55 means nothing alone. Hooko first detects the niche, then compares the hook with that niche's benchmark: "Below benchmark, Fitness &amp; Health 70/100". A "How it's calculated?" control opens the method.</p>
+            <p class="hk-why">A fitness hook and a finance hook shouldn't be judged by the same bar.</p>
+          <Fragment slot="media"><img src="/projects/hooko-case-study/as-2.jpg" alt="" width="1242" height="2688" loading="lazy" style="object-position:50% 38%"></Fragment></CaseStudyDecisionCard>
+
+        <CaseStudyDecisionCard title="Audio and visual feedback" label="Clarity" labelVariant="accent" layout="media">
+            <p>A creator controls two things in the first 3 seconds: the words and the picture. The result is split the same way: an audio score and a visual score, and every rewrite gives a script to say and a shot to film.</p>
+            <p class="hk-why">It maps the feedback onto how a video is actually made.</p>
+          <Fragment slot="media"><img src="/projects/hooko-case-study/as-3.jpg" alt="" width="1242" height="2688" loading="lazy" style="object-position:50% 45%"></Fragment></CaseStudyDecisionCard>
+
+        <CaseStudyDecisionCard title="Explanations and real examples" label="Trust" labelVariant="accent" layout="media">
+            <p>Each rewrite ends with "Why this will work?". Under it sits a real YouTube Short from the same niche that uses the same structure, tagged by technique, with a link to watch it and an attribution note.</p>
+            <p class="hk-why">Advice is easier to trust when you can watch it working for someone else.</p>
+          <Fragment slot="media"><img src="/projects/hooko-case-study/as-4.jpg" alt="" width="1242" height="2688" loading="lazy" style="object-position:50% 72%"></Fragment></CaseStudyDecisionCard>
+
+        <CaseStudyDecisionCard title="Analysis progress" label="Waiting" labelVariant="accent" layout="media">
+            <p>Video analysis takes 30 to 60 seconds. A spinner over that long looks broken, so the screen lists the real stages and checks them off: Uploading, Niche detection, Analyzing engagement, Calculating hook score, Generating recommendations.</p>
+            <p class="hk-why">A plain note tells people not to close the app while it runs.</p>
+          <Fragment slot="media"><img src="/projects/hooko-case-study/as-1.jpg" alt="" width="1242" height="2688" loading="lazy" style="object-position:50% 78%"></Fragment></CaseStudyDecisionCard>
+
+        <CaseStudyDecisionCard title="No account, no stored videos" label="Privacy" labelVariant="accent" layout="media">
+            <p>There is no registration screen. An anonymous identity is created on first launch, and uploaded videos are deleted from the server once the analysis finishes. Subscriptions go through RevenueCat and are tied to the user's Apple ID, so they survive a reinstall without an account.</p>
+            <div class="hk-pillrow" aria-label="First-run path"><SkillTag label="Open app" /><SkillTag label="Try the demo analysis" /><SkillTag label="Upload a video" /><SkillTag label="Get the plan" /></div>
+          </CaseStudyDecisionCard>
+      </div>
+    </div>
+  </section>
+
+  
+  <section class="hk-wrap hk-section" id="hk-build" aria-labelledby="hk-build-h">
+    <SectionHeading id="hk-build-h" label="Build" layout="stacked" reveal={false}>Tech stack</SectionHeading>
+    <div class="hk-col-2">
+      <div class="hk-cell">
+        <h3 class="text-body-m-strong">How I worked</h3>
+        <p>I designed all the screens and decided how the app works, what it checks in a video and what the results look like. I wrote the code with Claude Code. That includes the Flutter app, the Supabase backend, the Gemini prompts and the RevenueCat and YouTube connections.</p>
+      </div>
+      <div class="hk-cell">
+        <h3 class="text-body-m-strong">Why Flutter</h3>
+        <p>I started with iOS, but I want to release Hooko on Android too. Flutter lets me use the same code for both, so I don't have to build the app twice.</p>
+      </div>
+    </div>
+
+    <div class="hk-block">
+      <h3 class="text-body-m-strong">Tools</h3>
+      <div class="hk-stack">{hookoTools.map(({label, description, iconColor, ...tool}) => <ToolCard tool={tool} variant="detail" label={label} description={description} iconColor={iconColor} />)}</div>
+    </div>
+
+    <div class="hk-block">
+      <h3 class="text-body-m-strong">Architecture</h3>
+      <div class="hk-diagram">
+        <div class="hk-diagram-scroll">
+          <svg viewBox="-4 -4 968 408" role="img" aria-labelledby="hk-arch-t">
+            <title id="hk-arch-t">Hooko architecture: the Flutter app talks to Supabase, which calls Gemini for analysis and the YouTube Data API for examples. RevenueCat connects the app to App Store subscriptions. The v0-built site is hosted on Vercel and links to the App Store.</title>
+            <defs><marker id="hk-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--ink)"/></marker></defs>
+            <g font-family="var(--font-body)" fill="var(--ink)">
+              
+              <text x="0" y="20" font-size="11" font-weight="600" letter-spacing="0" fill="var(--muted)">CLIENT</text>
+              <text x="300" y="20" font-size="11" font-weight="600" letter-spacing="0" fill="var(--muted)">BACKEND</text>
+              <text x="640" y="20" font-size="11" font-weight="600" letter-spacing="0" fill="var(--muted)">SERVICES</text>
+
+              
+              <rect x="0" y="40" width="220" height="200" rx="18" fill="#110a1d"/>
+              <clipPath id="hk-appicon-clip"><rect x="168" y="56" width="36" height="36" rx="9"/></clipPath>
+              <image href="/projects/hooko-logo.svg" x="168" y="56" width="36" height="36" clip-path="url(#hk-appicon-clip)" preserveAspectRatio="xMidYMid slice"/>
+              <text x="20" y="72" font-size="16" font-weight="600" fill="#fefefe">Hooko iOS app</text>
+              <text x="20" y="92" font-size="12" fill="rgba(254,254,254,.64)">Flutter</text>
+              <text x="20" y="130" font-size="12" fill="#fefefe">Upload · progress</text>
+              <text x="20" y="150" font-size="12" fill="#fefefe">Score · rewrites</text>
+              <text x="20" y="170" font-size="12" fill="#fefefe">Examples · history</text>
+              <text x="20" y="190" font-size="12" fill="#fefefe">Paywall</text>
+
+              
+              <rect x="300" y="40" width="260" height="140" rx="18" fill="var(--surface)" stroke="#3FCF8E" stroke-width="2"/>
+              <text x="320" y="72" font-size="16" font-weight="600">Supabase</text>
+              <text x="320" y="100" font-size="12" fill="var(--muted)">Anonymous user on first launch</text>
+              <text x="320" y="120" font-size="12" fill="var(--muted)">Video upload, deleted after analysis</text>
+              <text x="320" y="140" font-size="12" fill="var(--muted)">Analysis pipeline · daily limits</text>
+              <text x="320" y="160" font-size="12" fill="var(--muted)">Results and history</text>
+
+              
+              <rect x="640" y="40" width="320" height="64" rx="16" fill="var(--surface)" stroke="#8E75B2" stroke-width="2"/>
+              <text x="660" y="68" font-size="15" font-weight="600">Gemini API</text>
+              <text x="660" y="88" font-size="12" fill="var(--muted)">Niche, hook score, audio + visual, rewrites</text>
+              
+              <rect x="640" y="120" width="320" height="64" rx="16" fill="var(--surface)" stroke="#FF0000" stroke-width="2"/>
+              <text x="660" y="148" font-size="15" font-weight="600">YouTube Data API</text>
+              <text x="660" y="168" font-size="12" fill="var(--muted)">Real Shorts in the same niche</text>
+
+              
+              <rect x="300" y="210" width="260" height="64" rx="16" fill="var(--surface)" stroke="#F2545B" stroke-width="2"/>
+              <text x="320" y="238" font-size="15" font-weight="600">RevenueCat</text>
+              <text x="320" y="258" font-size="12" fill="var(--muted)">Paywall · subscriptions · purchases</text>
+              <rect x="640" y="210" width="320" height="64" rx="16" fill="var(--surface)" stroke="#0D96F6" stroke-width="2"/>
+              <text x="660" y="238" font-size="15" font-weight="600">App Store</text>
+              <text x="660" y="258" font-size="12" fill="var(--muted)">Subscriptions · Apple ID</text>
+
+              
+              <rect x="0" y="316" width="220" height="64" rx="16" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
+              <text x="20" y="344" font-size="15" font-weight="600">v0</text>
+              <text x="20" y="364" font-size="12" fill="var(--muted)">Site design and code</text>
+              <rect x="300" y="316" width="260" height="64" rx="16" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
+              <text x="320" y="344" font-size="15" font-weight="600">Vercel</text>
+              <text x="320" y="364" font-size="12" fill="var(--muted)">Landing, terms, privacy</text>
+
+              
+              <g stroke="var(--ink)" stroke-width="1.5" fill="none">
+                <path d="M222 110 H296" marker-end="url(#hk-ah)"/>
+                <path d="M562 72 H636" marker-end="url(#hk-ah)"/>
+                <path d="M562 140 C600 140 600 152 636 152" marker-end="url(#hk-ah)"/>
+                <path d="M222 220 C260 220 260 242 296 242" marker-start="url(#hk-ah)" marker-end="url(#hk-ah)"/>
+                <path d="M562 242 H636" marker-start="url(#hk-ah)" marker-end="url(#hk-ah)"/>
+                <path d="M222 348 H296" marker-end="url(#hk-ah)"/>
+                <path d="M562 348 C800 348 800 300 800 278" marker-end="url(#hk-ah)" stroke-dasharray="4 4"/>
+              </g>
+              <text x="236" y="100" font-size="11" fill="var(--muted)">video</text>
+              <text x="640" y="330" font-size="11" fill="var(--muted)">Download link</text>
+            </g>
+          </svg>
+        </div>
+        
+        <dl class="hk-architecture-mobile" aria-label="Hooko architecture">
+          <div><dt>Hooko iOS app · Flutter</dt><dd>Upload · progress<br />Score · rewrites<br />Examples · history<br />Paywall</dd></div>
+          <div><dt>Supabase</dt><dd>Anonymous user on first launch<br />Video upload, deleted after analysis<br />Analysis pipeline · daily limits<br />Results and history</dd></div>
+          <div><dt>Gemini API</dt><dd>Niche, hook score, audio + visual, rewrites</dd></div>
+          <div><dt>YouTube Data API</dt><dd>Real Shorts in the same niche</dd></div>
+          <div><dt>RevenueCat → App Store</dt><dd>Paywall · subscriptions · purchases<br />Subscriptions · Apple ID</dd></div>
+          <div><dt>v0 → Vercel</dt><dd>Site design and code<br />Landing, terms, privacy<br />Download link → App Store</dd></div>
+        </dl>
+        <ol class="hk-pipeline" aria-label="Analysis pipeline">
+          <li><div class="hk-pl-top"><b>1</b><span class="hk-svc"><svg viewBox="0 0 24 24" fill="#3FCF8E" aria-hidden="true"><path d="M11.9 1.036c-.015-.986-1.26-1.41-1.874-.637L.764 12.05C-.33 13.427.65 15.455 2.409 15.455h9.579l.113 7.51c.014.985 1.259 1.408 1.873.636l9.262-11.653c1.093-1.375.113-3.403-1.645-3.403h-9.642z"/></svg>Supabase</span></div><strong>Upload video</strong><p>The app uploads the video to Supabase storage under the anonymous user.</p></li>
+          <li><div class="hk-pl-top"><b>2</b><span class="hk-svc"><svg viewBox="0 0 24 24" fill="#8E75B2" aria-hidden="true"><path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81"/></svg>Gemini</span></div><strong>Detect niche</strong><p>Gemini watches the video and picks its niche. The niche sets the benchmark the hook is scored against.</p></li>
+          <li><div class="hk-pl-top"><b>3</b><span class="hk-svc"><svg viewBox="0 0 24 24" fill="#8E75B2" aria-hidden="true"><path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81"/></svg>Gemini</span></div><strong>Analyze engagement</strong><p>Gemini scores the first 3 seconds and the rest of the video: audio, visuals, pacing and on-screen text.</p></li>
+          <li><div class="hk-pl-top"><b>4</b><span class="hk-svc"><svg viewBox="0 0 24 24" fill="#FF0000" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>YouTube API</span></div><strong>Find viral examples</strong><p>The app searches YouTube Shorts in the same niche for real videos that use the suggested hook technique.</p></li>
+          <li><div class="hk-pl-top"><b>5</b><span class="hk-svc"><svg viewBox="0 0 24 24" fill="#8E75B2" aria-hidden="true"><path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81"/></svg>Gemini</span></div><strong>Write rewrites and captions</strong><p>Gemini writes 3 alternative hooks with what to say and show, plus a caption and hashtags.</p></li>
+          <li class="hk-end"><div class="hk-pl-top"><b>6</b><span class="hk-svc"><svg viewBox="0 0 24 24" fill="#3FCF8E" aria-hidden="true"><path d="M11.9 1.036c-.015-.986-1.26-1.41-1.874-.637L.764 12.05C-.33 13.427.65 15.455 2.409 15.455h9.579l.113 7.51c.014.985 1.259 1.408 1.873.636l9.262-11.653c1.093-1.375.113-3.403-1.645-3.403h-9.642z"/></svg>Supabase</span></div><strong>Delete the video</strong><p>The video is deleted from the database once the result is ready. User videos are never kept.</p></li>
+        </ol>
+      </div>
+    </div>
+
+  </section>
+
+  
+  <section class="hk-wrap hk-section" id="hk-growth" aria-labelledby="hk-growth-h">
+    <SectionHeading id="hk-growth-h" label="Launch" layout="stacked" reveal={false}>ASO and Apple Ads</SectionHeading>
+
+    <div class="hk-col-2">
+      <div class="hk-cell">
+        <h3 class="text-body-m-strong">App Store optimization</h3>
+        <p>On the App Store, the name, subtitle and hidden keyword field are what search indexes. I treated them as one 160-character budget and never repeated a word across them, because Apple counts each word once.</p>
+        <ul class="case-study-list">
+          <li><b>Name</b> leads with an intent phrase creators actually search, "Blow Up", with the brand after it.</li>
+          <li><b>Subtitle</b> covers the second intent, "go viral" and "short video", using all 30 characters.</li>
+          <li><b>Keyword field</b> holds the long tail: the feature words (hook, score, caption, hashtag, script) and creator vocabulary. Singular forms, commas, no spaces, no competitor brand names.</li>
+          <li><b>Categories:</b> Utilities as primary, a less crowded chart than Photo &amp; Video, which is the secondary.</li>
+          <li><b>Screenshots</b> show the real app, not just nice-looking images. Each one shows a core feature, like the hook score or the rewrites, so people see what the app does before they download it.</li>
+        </ul>
+      </div>
+      <div class="hk-card hk-store" aria-label="App Store metadata">
+        <div class="hk-meta-row"><span class="hk-k">App name</span><span class="hk-v"><span class="hk-hl">Blow Up</span> - Hooko</span><span class="hk-c">15/30</span></div>
+        <div class="hk-meta-row"><span class="hk-k">Subtitle</span><span class="hk-v"><span class="hk-hl">Go viral</span> with your <span class="hk-hl">short video</span></span><span class="hk-c hk-full">30/30</span></div>
+        <div class="hk-meta-row"><span class="hk-k">Keywords</span><span class="hk-v hk-code">hook,analyzer,score,creator,caption,hashtag,script,views,retention,content,coach,feedback,ugc,ai</span><span class="hk-c">96/100</span></div>
+        <div class="hk-meta-row"><span class="hk-k">Category</span><span class="hk-v">Utilities · Photo &amp; Video</span><span class="hk-c"></span></div>
+      </div>
+    </div>
+
+    <div class="hk-block">
+      <div class="hk-cell" style="max-width:760px">
+        <h3 class="text-body-m-strong">Apple Ads campaign structure</h3>
+        <p>I split my Apple Ads into four campaigns. Each one targets a different kind of search, so I could give each its own budget and see which searches actually bring installs.</p>
+      </div>
+      <div class="hk-campaigns">
+        <article class="hk-camp"><h4>Brand</h4><p class="hk-match">Exact match</p><p>Shows the ad when someone searches for Hooko by name. It's cheap and stops other apps from taking those searches.</p><div class="hk-kw"><SkillTag label="hooko" /><SkillTag label="hooko app" /></div></article>
+        <article class="hk-camp"><h4>Category</h4><p class="hk-match">Exact match</p><p>Searches for what Hooko does, like "hook analyzer". This campaign got most of the budget.</p><div class="hk-kw"><SkillTag label="hook analyzer" /><SkillTag label="go viral" /><SkillTag label="video score" /></div></article>
+        <article class="hk-camp"><h4>Competitor</h4><p class="hk-match">Exact match</p><p>Shows the ad when someone searches for a similar app by name. It has its own campaign so I could check if it was worth the cost.</p><div class="hk-kw"><SkillTag label="names of similar apps" /></div></article>
+        <article class="hk-camp"><h4>Discovery</h4><p class="hk-match">Broad match</p><p>Finds new search terms I hadn't thought of. Keywords I already target in other campaigns are blocked here, so I don't pay for them twice.</p><div class="hk-kw"><SkillTag label="search terms report" /></div></article>
+      </div>
+      <div class="hk-flowline" aria-label="How new keywords move between campaigns"><span>Discovery finds a new search term</span>→<span>It brings installs</span>→<span>Add it to Category</span>→<span>Block it in Discovery</span></div>
+    </div>
+  </section>
+
+
+  
+  <section class="hk-wrap hk-section" id="hk-reflection" aria-labelledby="hk-reflection-h">
+    <SectionHeading id="hk-reflection-h" label="Reflection" layout="stacked" reveal={false}>What it taught me</SectionHeading>
+    <div>
+      <div class="hk-col-3">
+        <div class="hk-cell"><h3 class="text-body-m-strong">Start with the result format</h3><p>The most important thing I designed wasn't a screen. It was the list of what every analysis should give back: a score, the niche benchmark, what to say, what to show, why it works and a real example. Once that list was clear, the AI prompt, the database and the screens were much easier to build.</p></div>
+        <div class="hk-cell"><h3 class="text-body-m-strong">Building with AI</h3><p>With AI I could take Hooko from an idea to a paid app in the App Store without an engineering team. My design decisions ended up in the product exactly as I made them.</p></div>
+        <div class="hk-cell"><h3 class="text-body-m-strong">Getting users takes as much work as building</h3><p>Building the app was faster than getting people to find it. ASO, store screenshots, Apple Ads and onboarding needed as much design attention as the analysis screens.</p></div>
+      </div>
+      <div class="case-study-end-links">
+        {productLinks.map(link => <TextLink href={link.href} accent compact>{link.label}</TextLink>)}
+      </div>
+    </div>
+  </section>
+</div>
+</article>
+<script>
+  import { initializeCaseStudyVideos } from '../scripts/case-study-videos';
+  initializeCaseStudyVideos();
+</script>

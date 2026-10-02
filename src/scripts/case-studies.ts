@@ -1,6 +1,6 @@
 import type { WorkFilter } from './work-filter';
 import type { initializeProjectCursor } from './project-cursor';
-import { pauseScroll, resumeScroll } from './motion';
+import { initializeSmoothScroll, pauseScroll, resumeScroll } from './motion';
 import { refreshViewportPointer } from './viewport-pointer';
 import { initializeCaseStudyVideos } from './case-study-videos';
 
@@ -27,6 +27,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
   let phase: 'closed' | 'opening' | 'open' | 'closing' = 'closed';
   let animations: Animation[] = [];
   let caseVideos: ReturnType<typeof initializeCaseStudyVideos> | undefined;
+  let caseScroll: ReturnType<typeof initializeSmoothScroll> | undefined;
   let revision = 0;
   let closeRequested = false;
   let oldTitle = document.title;
@@ -65,6 +66,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     const placeholder = document.createElement('div');
     placeholder.style.aspectRatio = `${video.width || video.videoWidth} / ${video.height || video.videoHeight}`;
     placeholder.setAttribute('aria-hidden', 'true');
+    placeholder.dataset.caseVideoSlot = '';
     video.replaceWith(placeholder);
   };
   const videoSource = (video: HTMLVideoElement) => {
@@ -79,12 +81,13 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     const video = source.querySelector('video');
     if (video) {
       reserveVideoSpace(video);
-      artwork.append(video);
+      // Preserve the full hero composition around the live recording.
+      source.childNodes.forEach(node => artwork!.append(node.cloneNode(true)));
+      artwork.querySelector('[data-case-video-slot]')!.replaceWith(video);
       caseVideos?.refresh();
     } else {
-      const image = source.querySelector('img')!.cloneNode(true) as HTMLImageElement;
-      image.loading = 'eager';
-      artwork.append(image);
+      source.childNodes.forEach(node => artwork!.append(node.cloneNode(true)));
+      artwork.querySelectorAll('img').forEach(image => image.loading = 'eager');
     }
   };
 
@@ -141,11 +144,11 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     const cardVideo = media.querySelector('video');
     const heroVideo = hero.querySelector('video');
     if (cardVideo && heroVideo && videoSource(cardVideo) === videoSource(heroVideo)) {
-      borrowedVideo = { video: cardVideo, home: media, hidden: cardVideo.getAttribute('aria-hidden'), label: cardVideo.getAttribute('aria-label') };
+      borrowedVideo = { video: cardVideo, home: cardVideo.parentElement!, hidden: cardVideo.getAttribute('aria-hidden'), label: cardVideo.getAttribute('aria-label') };
       reserveVideoSpace(cardVideo);
       cardVideo.removeAttribute('aria-hidden');
       cardVideo.setAttribute('aria-label', heroVideo.getAttribute('aria-label') || '');
-      hero.replaceChildren(cardVideo);
+      heroVideo.replaceWith(cardVideo);
     }
     createArtwork(hero);
     // Include the traveling video as well as the case's body videos. It keeps
@@ -179,14 +182,15 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     clone.style.opacity = '0';
     const travelingVideo = artwork?.querySelector('video');
     if (travelingVideo) {
-      hero.replaceChildren(travelingVideo);
+      hero.querySelector('[data-case-video-slot]')!.replaceWith(travelingVideo);
       caseVideos?.refresh();
     }
     hero.style.removeProperty('visibility');
     artwork?.remove(); artwork = null;
-    // Release the real hero to native scrolling at 700ms, while the decorative
+    // Release the real hero to scrolling at 700ms, while the decorative
     // corner finish continues independently.
     lockScroll(false);
+    caseScroll = initializeSmoothScroll(scroll, scroll.querySelector<HTMLElement>('[data-case-content]')!);
     await corners;
     if (ticket !== revision) return;
     panel.style.cssText = 'inset:0;width:100%;height:100%;border-radius:0';
@@ -196,6 +200,9 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
   const close = async () => {
     if (phase === 'closed' || phase === 'closing' || !active || !control) return;
     phase = 'closing';
+    // Freeze any remaining glide before measuring the return animation.
+    caseScroll?.destroy();
+    caseScroll = undefined;
     lockScroll(false);
     control.hidden = true;
     const ticket = ++revision;

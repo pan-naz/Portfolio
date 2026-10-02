@@ -80,7 +80,7 @@ function validate(entries) {
     ['src/styles/global.css', '.project-identity'],
     ['src/styles/global.css', '.stat-value'],
     ['src/styles/global.css', '.case-study-metric'],
-    ['src/styles/voximplant-case-study.css', '.vox-display'],
+    ['src/styles/case-study-narrative.css', '.case-study-heading'],
     ['src/styles/voximplant-case-study.css', '.vox-solution-stats strong'],
     ['src/styles/design-system.css', '.ds-type-heading'],
   ];

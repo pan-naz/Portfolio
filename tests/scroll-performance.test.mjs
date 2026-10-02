@@ -8,11 +8,23 @@ const frames = new Set(), listeners = new Map(), documentListeners = new Map();
 let setup, cleanup, created = [], lagSmoothing;
 const gsap = {
   registerPlugin() {},
-  matchMedia: () => ({ add(query, callback) { setup = callback; assert.match(query, /prefers-reduced-motion: no-preference/); } }),
+  matchMedia: () => {
+    let dispose;
+    return {
+      add(query, callback) {
+        setup = () => { dispose = callback(); return dispose; };
+        assert.match(query, /min-width: 768px/);
+        assert.match(query, /pointer: fine/);
+        assert.match(query, /prefers-reduced-motion: no-preference/);
+      },
+      revert() { dispose?.(); dispose = undefined; },
+    };
+  },
   ticker: { add: fn => frames.add(fn), remove: fn => frames.delete(fn), lagSmoothing: value => { lagSmoothing = value; } },
 };
 class Lenis {
   constructor(options) { this.options = options; created.push(this); }
+  get actualScroll() { return this.options.wrapper === window ? window.scrollY : this.options.wrapper.scrollTop; }
   on() {} raf(time) { this.time = time; } stop() { this.stopped = true; }
   start() { this.stopped = false; } destroy() { this.destroyed = true; }
   scrollTo(...args) { this.travel = args; }
@@ -35,7 +47,7 @@ globalThis.document = {
 let source = readFileSync('src/scripts/motion.ts', 'utf8').replace(/^import .*;\n/gm, '');
 source = 'const {gsap, Lenis, ScrollTrigger} = globalThis.scrollMocks;\n' + source;
 const js = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
-const { initializeMotion, scrollToSection, repositionWork, pauseScroll, resumeScroll } = await import(`data:text/javascript;base64,${Buffer.from(js).toString('base64')}`);
+const { initializeMotion, initializeSmoothScroll, scrollToSection, repositionWork, pauseScroll, resumeScroll } = await import(`data:text/javascript;base64,${Buffer.from(js).toString('base64')}`);
 Object.defineProperty(globalThis, 'navigator', { configurable: true, value: { userAgent: 'Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148 Safari/604.1' } });
 initializeMotion(); // The media query does not invoke setup on touch devices.
 assert.equal(created.length, 0);
@@ -88,6 +100,52 @@ for (const agent of [
   cleanup(); assert.equal(frames.size, 0); assert.equal(lenis.destroyed, true);
 }
 console.log('PASS: Safari/Chrome/Firefox wheel smoothing, native touch with top-edge guard, clock sync, anchor focus, filtering and cleanup.');
+
+// Modal scrolling shares the actual homepage controller. Reopening must not
+// accumulate tickers or cancel the homepage's independent scroll controller.
+const homeScroll = initializeSmoothScroll(); setup();
+const homeLenis = created.at(-1);
+pauseScroll();
+const caseListeners = new Map();
+const wrapper = new Element();
+wrapper.scrollTop = 180;
+wrapper.addEventListener = (name, callback) => caseListeners.set(name, callback);
+wrapper.removeEventListener = name => caseListeners.delete(name);
+const caseContent = new Element();
+document.querySelector = () => ({ open: true });
+for (let open = 0; open < 3; open++) {
+  const caseScroll = initializeSmoothScroll(wrapper, caseContent); setup();
+  const caseLenis = created.at(-1);
+  for (const setting of ['lerp', 'smoothWheel', 'syncTouch', 'anchors']) {
+    assert.equal(caseLenis.options[setting], homeLenis.options[setting], `Identical ${setting} for case and homepage`);
+  }
+  assert.equal(caseLenis.options.lerp, .18);
+  assert.equal(caseLenis.options.wrapper, wrapper);
+  assert.equal(caseLenis.options.content, caseContent);
+  assert.equal(homeLenis.stopped, true, 'The homepage remains stopped behind the modal');
+  assert.notEqual(caseLenis.stopped, true, 'An open dialog does not stop its own controller');
+  wrapper.closest = () => wrapper;
+  assert.equal(homeLenis.options.prevent(wrapper), true, 'The homepage ignores input within a case');
+  assert.equal(caseLenis.options.prevent(wrapper), false, 'The case receives its own input');
+  assert.equal(frames.size, 2);
+  for (const tick of frames) tick(2);
+  assert.equal(caseLenis.time, homeLenis.time, 'Both use the same frame clock');
+  caseListeners.get('keydown')({ key: 'PageDown' });
+  assert.deepEqual(caseLenis.travel, [180, { immediate: true }], 'Keyboard input cancels only the case glide');
+  caseScroll.destroy();
+  assert.equal(caseLenis.destroyed, true);
+  assert.equal(caseListeners.size, 0);
+  assert.equal(frames.size, 1, 'Closing removes only the case ticker');
+}
+resumeScroll(); assert.equal(homeLenis.stopped, false);
+homeScroll.destroy(); assert.equal(frames.size, 0);
+document.querySelector = () => null;
+const directScroll = initializeSmoothScroll(); setup();
+assert.equal(created.at(-1).options.lerp, .18, 'Standalone pages use the same pace');
+directScroll.destroy();
+assert.equal(frames.size, 0);
+assert.ok(readFileSync('src/components/CaseStudyPage.astro', 'utf8').includes('initializeMotion();'), 'Direct case-study pages load the shared controller');
+console.log('PASS: identical case/home pace, modal input isolation, keyboard cancellation, repeated open/close cleanup and standalone scroll setup.');
 
 // The real docking controller should sleep once settled, even during a stream
 // of scroll events; direction changes must still complete both transitions.
