@@ -10,15 +10,18 @@ interface Props {
   kind?: 'image' | 'video';
   presentation?: 'framed' | 'bare' | 'shadow' | 'floating';
   strokeWidth?: 4 | 8;
+  strokePlacement?: 'center' | 'outside';
+  radius?: 'medium' | 'small' | 'media';
   controls?: boolean;
-  preview?: { src: string; columns: number; rows: number; count: number; interval: number; width: number; height: number };
+  showTime?: boolean;
+  preview?: { src: string; columns: number; rows: number; count: number; interval: number; width: number; height: number; displayWidth?: number };
 }
 
-const { src, alt, width, height, poster, kind = 'video', presentation = 'framed', strokeWidth = 4, controls = false, preview } = Astro.props;
+const { src, alt, width, height, poster, kind = 'video', presentation = 'framed', strokeWidth = 4, strokePlacement = 'center', radius = 'medium', controls = false, showTime = true, preview } = Astro.props;
 const player = kind === 'video' && controls;
 const MediaRoot = player ? 'case-video-player' : 'figure';
 ---
-<MediaRoot class:list={['case-study-media', presentation === 'bare' && 'case-study-media--bare', presentation === 'shadow' && 'case-study-media--shadow', (presentation === 'floating' || player) && 'case-study-media--floating', strokeWidth === 8 && 'case-study-media--wide-stroke', player && 'case-video-player']} data-preview={player && preview ? JSON.stringify(preview) : undefined}>
+<MediaRoot class:list={['case-study-media', presentation === 'bare' && 'case-study-media--bare', presentation === 'shadow' && 'case-study-media--shadow', (presentation === 'floating' || player) && 'case-study-media--floating', strokeWidth === 8 && 'case-study-media--wide-stroke', strokePlacement === 'outside' && 'case-study-media--outside-stroke', player && 'case-video-player']} style={`--case-media-radius:var(--radius-${radius})`} data-preview={player && preview ? JSON.stringify(preview) : undefined}>
   {kind === 'image' ? <img src={src} alt={alt} width={width} height={height} loading="lazy" decoding="async" /> : <video data-case-video muted loop playsinline preload="none" poster={poster} width={width} height={height} controls={player} aria-label={alt}>
     <source data-src={src} type="video/mp4" />
     {poster && <img src={poster} alt={alt} width={width} height={height} loading="lazy" decoding="async" />}
@@ -30,12 +33,12 @@ const MediaRoot = player ? 'case-video-player' : 'figure';
     </IconButton>
     <div class="case-video-seek">
       <input data-video-seek type="range" min="0" max="100" value="0" step="0.1" aria-label="Video position" disabled />
-      {preview && <div class="case-video-preview" data-video-preview aria-hidden="true" hidden>
+      {preview && <div class="case-video-preview" style={preview.displayWidth ? `--video-preview-width:${preview.displayWidth}px` : undefined} data-video-preview aria-hidden="true" hidden>
         <div class="case-video-preview-frame" style={`aspect-ratio: ${preview.width} / ${preview.height}`} />
         <span data-preview-time>0:00</span>
       </div>}
     </div>
-    <span class="case-video-time" aria-hidden="true"><span data-video-time>0:00 / 0:00</span></span>
+    {showTime && <span class="case-video-time" aria-hidden="true"><span data-video-time>0:00 / 0:00</span></span>}
   </div>}
 </MediaRoot>
 

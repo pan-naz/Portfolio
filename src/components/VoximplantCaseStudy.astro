@@ -107,7 +107,7 @@ const impactMetrics = [
     <section class="vox-section vox-problem" aria-labelledby="vox-problem-title">
       <p class="case-study-eyebrow">Problem</p>
       <h2 id="vox-problem-title" class="case-study-heading">Powerful for developers, out of reach for the people who run contact centers.</h2>
-      <div class="vox-problem-grid">
+      <div class="vox-problem-grid case-study-columns">
         <div class="vox-copy-stack">
           <div><h3>Business context</h3><p>Voximplant is a cloud communications platform with voice, video and messaging embedded through APIs and SDKs. But its customers' contact-center teams <strong class="vox-accent">are not developers.</strong></p></div>
           <blockquote>“Setting up a contact center required complex code and dedicated developers, lengthy delays, and high development costs.”</blockquote>
@@ -120,7 +120,7 @@ const impactMetrics = [
     <section class="vox-section" aria-labelledby="vox-discovery-title">
       <p class="case-study-eyebrow">Process</p>
       <h2 id="vox-discovery-title" class="case-study-heading">Discovery</h2>
-      <div class="vox-two-column vox-research">
+      <div class="vox-two-column vox-research case-study-columns">
         <div class="vox-copy-stack">
           <div><h3>Research</h3><p>With the product manager, I built user portraits from the interviews, then buyer personas. Later I ran usability tests on the MVP and interviewed call-center managers to validate the flows and the terminology.</p><p>I put every finding into a table, one per product area, and compared Kit with competitors.</p></div>
           <div class="vox-copy-divider"><h3>What I did</h3><ul><li>Interviews with current and potential users, by product area</li><li>User portraits, then buyer personas</li><li>Usability tests on the MVP</li><li>Interviews with call-center managers on flows and terminology</li><li>Competitive analysis with PM</li></ul></div>
@@ -129,7 +129,7 @@ const impactMetrics = [
       </div>
     </section>
 
-    <section class="vox-section vox-audience" aria-labelledby="vox-audience-title">
+    <section class="vox-section vox-audience case-study-columns" aria-labelledby="vox-audience-title">
       <div class="vox-audience-intro">
         <h3 id="vox-audience-title">Who is user</h3>
         <p>The interviews split the audience in two:</p>
@@ -200,7 +200,7 @@ const impactMetrics = [
 
     <section class="vox-solution" aria-labelledby="vox-solution-title">
       <div class="vox-solution-inner">
-        <div class="vox-solution-head"><p class="case-study-eyebrow">Solution</p><div class="vox-solution-stats"><div><MetricValue as="strong" value="10+" /><span>product sections fully designed and validated</span></div><div><MetricValue as="strong" value="∞" /><span>user flows created, tested and documented</span></div></div></div>
+        <div class="vox-solution-head case-study-columns"><p class="case-study-eyebrow">Solution</p><div class="vox-solution-stats"><div><MetricValue as="strong" value="10+" /><span>product sections fully designed and validated</span></div><div><MetricValue as="strong" value="∞" /><span>user flows created, tested and documented</span></div></div></div>
         <h2 id="vox-solution-title" class="sr-only">Solution</h2>
         <div class="vox-product-feature"><h3>Onboarding</h3><ul><li>The first screen after sign-up asks one question: what did you come here to do?</li><li>Three guided tours — AI-powered outbound calls, interactive voice recognition, and the contact center — take four steps each, and the tour a user picks becomes their first task.</li></ul><CaseStudyMedia src={asset('onboarding', 'mp4')} poster={asset('onboarding')} alt="Voximplant Kit onboarding flow showing navigation areas and guided product tours." width={1920} height={1036} /></div>
         <div class="vox-product-feature"><h3>Visual scenario editor</h3><ul><li>Users build a scenario, the call flow, on a canvas from blocks: speech-to-text, text-to-speech, interactive menu, data verification, call forwarding, HTTP request and more.</li><li>Blocks connect with lines, so a large inbound or outbound scenario stays readable. An onboarding tour shows how to make the first connection.</li></ul><CaseStudyMedia src={asset('scenario-editor', 'mp4')} poster={asset('scenario-editor')} alt="Voximplant visual scenario editor with connected call-flow blocks." width={1280} height={684} /></div>
@@ -212,7 +212,7 @@ const impactMetrics = [
     </section>
 
     <section class="vox-contact-center" aria-labelledby="vox-contact-title">
-      <div class="vox-chapter-head"><p class="case-study-eyebrow">Solution</p><div><h2 id="vox-contact-title" class="case-study-heading">Contact center</h2><p>One cloud contact center for every channel. Calls and chats from WhatsApp, Telegram, Messenger, Viber, SMS and web chat come into one workspace, and routine work is automated.</p></div></div>
+      <div class="vox-chapter-head case-study-columns"><p class="case-study-eyebrow">Solution</p><div><h2 id="vox-contact-title" class="case-study-heading">Contact center</h2><p>One cloud contact center for every channel. Calls and chats from WhatsApp, Telegram, Messenger, Viber, SMS and web chat come into one workspace, and routine work is automated.</p></div></div>
       <img src={asset('contact-center', 'png')} alt="Voximplant Contact Center agent workspace with live call controls and customer details." width="2398" height="1430" loading="lazy" decoding="async" />
       <div class="vox-product-feature"><h3>Live dashboard</h3><ul><li>Real-time statistics on calls and agents: missed and handled calls, answer, hold and handle times, service level, and agents in the queue by status.</li><li>Supervisors use it to track team performance and automation results.</li></ul><img src={asset('dashboard', 'png')} alt="Live contact-center dashboard with service-level metrics and queue charts." width="2392" height="2013" loading="lazy" decoding="async" /></div>
       <div class="vox-product-feature"><h3>Live Conversations</h3><ul><li>Supervisors monitor agents in real time.</li><li>Every active call and chat is listed by queue with the agent's status and service time.</li><li>A supervisor can listen to a call, whisper to the agent, join the call or take it over, and follow chats on every channel.</li></ul><img src={asset('conversations', 'png')} alt="Live conversations list showing agents, queues, calls and chats." width="2392" height="1404" loading="lazy" decoding="async" /></div>
@@ -226,7 +226,7 @@ const impactMetrics = [
     </section>
 
     <section class="vox-impact" aria-labelledby="vox-impact-title">
-      <div class="vox-chapter-head"><p class="case-study-eyebrow">Impact</p><div><h2 id="vox-impact-title" class="case-study-heading">Kit in numbers.</h2><p>Results from Voximplant Kit, a product I designed from scratch and took to launch.</p></div></div>
+      <div class="vox-chapter-head case-study-columns"><p class="case-study-eyebrow">Impact</p><div><h2 id="vox-impact-title" class="case-study-heading">Kit in numbers.</h2><p>Results from Voximplant Kit, a product I designed from scratch and took to launch.</p></div></div>
       <dl class="vox-stats vox-stats--impact">{impactMetrics.map(metric => <Stat {...metric} />)}</dl>
       <div class="vox-final-cards">
         <article><h3>For the business</h3><ul><li>Kit became one of Voximplant's two product lines.</li><li>Companies that needed months and a development team to set up a contact center now do it themselves in 30 minutes or less.</li></ul></article>

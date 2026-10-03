@@ -6,8 +6,8 @@ export const workCategories = {
   },
   websites: {
     label: '01 / Websites',
-    title: 'Websites with character.',
-    description: 'Websites that bring a brand’s character into every page and interaction.',
+    title: 'Some of my work on the web.',
+    description: 'Websites, landing pages and the small details that make them feel complete.',
   },
   misc: {
     label: '01 / Misc',

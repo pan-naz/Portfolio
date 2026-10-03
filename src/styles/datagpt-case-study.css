@@ -46,7 +46,6 @@
 .dg-dark-inner { width: min(1200px, calc(100% - var(--gutter) * 2)); margin-inline: auto; }
 .dg-feature { margin-top: var(--case-section-space); }
 .dg-feature .case-study-media { margin-top: var(--space-6); }
-.dg-feature .dg-grid { gap: var(--space-12); }
 .dg-feature p { margin-top: var(--space-2); }
 .dg-results { margin: 0; }
 .dg-results .stat { padding: var(--space-6); border-radius: var(--radius-medium); background: var(--surface); box-shadow: var(--shadow-floating); }
@@ -61,7 +60,6 @@
 .dg-conclusion-lead { margin-top: var(--space-4); }
 @media (max-width: 1023px) {
   .dg-grid--four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .dg-feature .dg-grid { gap: var(--case-column-gap); }
   .dg-personas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .dg-persona--wide { grid-column: auto; }
   .dg-model .dg-card-heading { flex-direction: column; }
@@ -73,7 +71,7 @@
   .dg-card { padding: var(--space-4); }
   .dg-persona .dg-card-heading { flex-direction: column-reverse; }
   .dg-persona .dg-badge { align-self: flex-end; }
-  .dg-dark-inner { width: calc(100% - 48px); }
+  .dg-dark-inner { width: calc(100% - var(--gutter) * 2); }
   .dg-research-stats { grid-template-columns: 1fr; gap: var(--space-6); }
   .dg-voice { grid-template-columns: 32px minmax(0, 1fr); }
   .dg-avatar { width: 32px; height: 32px; }

@@ -38,9 +38,18 @@ export function watchViewportPointer(callback: (pointer: ViewportPointer) => voi
       frame = 0;
       notify(false);
     };
+    const over = (event: PointerEvent) => {
+      // Transforms and replaced SVGs can emit boundary events while the mouse
+      // stays still. Reproject once after paint; don't treat these as movement
+      // or synchronously feed another transform back into hit testing.
+      if (known && event.pointerType === 'mouse' && event.clientX === x && event.clientY === y) {
+        refreshViewportPointer();
+      } else move(event);
+    };
     const visibility = () => { if (document.hidden) leave(); else refreshViewportPointer(); };
     window.addEventListener('pointermove', move, { passive: true });
-    window.addEventListener('pointerover', move, { passive: true });
+    window.addEventListener('pointerover', over, { passive: true });
+    window.addEventListener('pointerout', refreshViewportPointer, { passive: true });
     window.addEventListener('scroll', refreshViewportPointer, { passive: true, capture: true });
     window.addEventListener('resize', refreshViewportPointer, { passive: true });
     window.addEventListener('blur', leave);
@@ -52,7 +61,8 @@ export function watchViewportPointer(callback: (pointer: ViewportPointer) => voi
     if (document.body) resize.observe(document.body);
     stop = () => {
       window.removeEventListener('pointermove', move);
-      window.removeEventListener('pointerover', move);
+      window.removeEventListener('pointerover', over);
+      window.removeEventListener('pointerout', refreshViewportPointer);
       window.removeEventListener('scroll', refreshViewportPointer, true);
       window.removeEventListener('resize', refreshViewportPointer);
       window.removeEventListener('blur', leave);

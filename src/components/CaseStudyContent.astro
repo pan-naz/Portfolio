@@ -4,6 +4,7 @@ import { caseStudySamples } from '../data/case-studies';
 import { projects, conceptProjects } from '../data/portfolio';
 import { impactGroups } from '../data/portfolio';
 import ProjectTags from './ProjectTags.astro';
+import '../styles/case-study-narrative.css';
 import MetricValue from './MetricValue.astro';
 import VoximplantCaseStudy from './VoximplantCaseStudy.astro';
 import DataGPTCaseStudy from './DataGPTCaseStudy.astro';
@@ -18,7 +19,7 @@ const metrics = impactGroups.find(group => group.projectId === project.id)?.metr
 {project.id === 'voximplant' ? <VoximplantCaseStudy project={project} /> : project.id === 'datagpt' ? <DataGPTCaseStudy project={project} /> : project.id === 'hooko' ? <HookoCaseStudy project={project} /> : <article class="case-study-content" data-case-content>
   <div class="case-study-artwork"><img src={project.image} alt={project.imageAlt} width={project.imageWidth ?? 1200} height={project.imageHeight} decoding="async" /></div>
   <div class="case-study-body">
-  <div class="case-study-intro">
+  <div class="case-study-intro case-study-columns">
     <div>
       <p class="case-study-label text-label">{project.placeholder ? 'Concept project' : 'Selected work'}</p>
       <h1 data-case-title>{project.title}</h1>
@@ -28,14 +29,14 @@ const metrics = impactGroups.find(group => group.projectId === project.id)?.metr
   </div>
   {metrics && <section class="case-study-impact" aria-label="Project impact">{metrics.map(metric => <div><MetricValue as="p" class="case-study-metric" value={metric.value} /><h2 class="text-body-m-strong">{metric.label}</h2><p class="text-body-m">{metric.note}</p></div>)}</section>}
   <div class="case-study-draft text-body-s">{project.placeholder ? 'Sample case study · fictional concept, copy and reference imagery' : 'Draft case study · sample narrative with existing project artwork'}</div>
-  <section class="case-study-story"><p class="case-study-label">01 / Context</p><div><h2>The starting point</h2><p class="text-body-l">{sample.context}</p></div></section>
-  <section class="case-study-story"><p class="case-study-label">02 / Direction</p><div><h2>{project.placeholder ? 'Exploring the idea' : 'Shaping the experience'}</h2><p class="text-body-l">{sample.direction}</p></div></section>
+  <section class="case-study-story case-study-columns"><p class="case-study-label">01 / Context</p><div><h2>The starting point</h2><p class="text-body-l">{sample.context}</p></div></section>
+  <section class="case-study-story case-study-columns"><p class="case-study-label">02 / Direction</p><div><h2>{project.placeholder ? 'Exploring the idea' : 'Shaping the experience'}</h2><p class="text-body-l">{sample.direction}</p></div></section>
   <div class="case-study-gallery">
     {(related ?? [project, project]).map((item, index) => <figure>
       <div class:list={['case-study-gallery-image', { 'case-study-gallery-image--detail': !related }]}><img src={item.image} alt={related ? item.imageAlt : `${project.title} artwork detail ${index + 1}`} width={item.imageWidth ?? 1200} height={item.imageHeight} loading="lazy" decoding="async" style={!related ? `object-position: ${index ? '85%' : '15%'} center` : undefined} /></div>
       <figcaption class="text-body-s">{related ? `${index + 1 < 2 ? 'Atmosphere' : 'Visual direction'} · sample reference image` : `${index ? 'Interface composition' : 'A closer look'} · detail from existing artwork`}</figcaption>
     </figure>)}
   </div>
-  <section class="case-study-story"><p class="case-study-label">03 / Details</p><div><h2>A closer look</h2><p class="text-body-l">{sample.detail}</p></div></section>
+  <section class="case-study-story case-study-columns"><p class="case-study-label">03 / Details</p><div><h2>A closer look</h2><p class="text-body-l">{sample.detail}</p></div></section>
   </div>
 </article>}

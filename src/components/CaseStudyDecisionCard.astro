@@ -7,8 +7,13 @@ const { title, label, labelVariant = 'text', layout = 'stack' } = Astro.props;
 
 <article class:list={['case-study-decision-card', layout === 'media' && 'case-study-decision-card--media']}>
   <div class="case-study-decision-card__text">
-  {label && <p class:list={['case-study-decision-card__label', labelVariant === 'text' && 'eyebrow']}>{labelVariant === 'accent' ? <SkillTag label={label} variant="accent" /> : label}</p>}
-  <h3>{title}</h3>
+  <div class="case-study-decision-card__header">
+    <div class="case-study-decision-card__heading">
+      {label && <p class:list={['case-study-decision-card__label', labelVariant === 'text' && 'eyebrow']}>{labelVariant === 'accent' ? <SkillTag label={label} variant="accent" /> : label}</p>}
+      <h3>{title}</h3>
+    </div>
+    {Astro.slots.has('icon') && <span class="case-study-decision-card__icon" aria-hidden="true"><slot name="icon" /></span>}
+  </div>
   <div class="case-study-decision-card__copy"><slot /></div>
   {Astro.slots.has('impact') && <div class="case-study-decision-card__impact">
     <h4>Impact:</h4>

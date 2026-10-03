@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { projects, conceptProjects } from '../src/data/portfolio.ts';
 import { caseStudySamples } from '../src/data/case-studies.ts';
+import { hookoHero } from '../src/data/hooko-case-study.ts';
 const all = [...projects, ...conceptProjects];
 assert.equal(all.length, 15);
 assert.deepEqual(Object.keys(caseStudySamples).sort(), all.map(project => project.id).sort(), 'Every card has its own sample narrative');
@@ -64,7 +65,12 @@ for (const project of all) {
     assert.ok(!html.includes('Draft case study'), 'Hooko is a complete case study');
     assert.ok(html.includes('/projects/hooko-logo.svg'), 'Hooko uses the supplied SVG logo');
     const videoSources = [...html.matchAll(/<source[^>]+data-src="([^"]+)"/g)].map(match => match[1]);
-    assert.equal(videoSources.length, 2, 'The hero and product flow both use the supplied demo');
+    assert.equal(videoSources.length, 2, 'Hooko includes the new hero recording and the original product-flow demo');
+    assert.equal(videoSources[0], hookoHero.video.src);
+    assert.equal(new URL(videoSources[1], 'https://portfolio.local').pathname, '/projects/hooko-case-study/demo.mp4', 'The product-flow demo uses the supplied recording');
+    for (const presentation of [card, template]) {
+      assert.equal(presentation.match(/<source[^>]+data-src="([^"]+)"/)?.[1], hookoHero.video.src, 'The card, open case and standalone case share the same live hero recording');
+    }
     for (const src of videoSources) assert.ok(existsSync(new URL(`../public${src}`, import.meta.url)), `Local video exists: ${src}`);
   } else {
     assert.equal(imageSources.length, 3, 'Sample cases have a hero and two gallery images');

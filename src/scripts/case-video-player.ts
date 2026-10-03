@@ -16,7 +16,7 @@ class CaseVideoPlayer extends HTMLElement {
     const controls = this.querySelector<HTMLElement>('[data-video-controls]')!;
     const toggle = this.querySelector<HTMLButtonElement>('[data-video-toggle]')!;
     const seek = this.querySelector<HTMLInputElement>('[data-video-seek]')!;
-    const time = this.querySelector<HTMLElement>('[data-video-time]')!;
+    const time = this.querySelector<HTMLElement>('[data-video-time]');
     const preview = this.querySelector<HTMLElement>('[data-video-preview]');
     const sheet = this.dataset.preview ? JSON.parse(this.dataset.preview) as {
       src: string; columns: number; rows: number; count: number; interval: number;
@@ -32,7 +32,7 @@ class CaseVideoPlayer extends HTMLElement {
       const value = Number(seek.value);
       seek.style.setProperty('--video-progress', `${duration ? value / duration * 100 : 0}%`);
       seek.setAttribute('aria-valuetext', `${timestamp(value)} of ${timestamp(duration)}`);
-      time.textContent = `${timestamp(value)} / ${timestamp(duration)}`;
+      if (time) time.textContent = `${timestamp(value)} / ${timestamp(duration)}`;
       toggle.setAttribute('aria-label', video.paused ? 'Play video' : 'Pause video');
       this.querySelector('[data-play-icon]')!.toggleAttribute('hidden', !video.paused);
       this.querySelector('[data-pause-icon]')!.toggleAttribute('hidden', video.paused);
@@ -48,10 +48,10 @@ class CaseVideoPlayer extends HTMLElement {
       frame.style.backgroundSize = `${sheet.columns * 100}% ${sheet.rows * 100}%`;
       frame.style.backgroundPosition = `${index % sheet.columns / Math.max(1, sheet.columns - 1) * 100}% ${Math.floor(index / sheet.columns) / Math.max(1, sheet.rows - 1) * 100}%`;
       preview.querySelector('[data-preview-time]')!.textContent = timestamp(progress * duration);
-      const width = seek.clientWidth;
-      const half = Math.min(200, width) / 2;
-      preview.style.left = `${Math.max(half, Math.min(width - half, progress * width))}px`;
       preview.hidden = false;
+      const width = seek.clientWidth;
+      const half = preview.getBoundingClientRect().width / 2;
+      preview.style.left = `${Math.max(half, Math.min(width - half, progress * width))}px`;
     };
     toggle.addEventListener('click', () => setCaseVideoPlaying(video, video.paused), { signal });
     seek.addEventListener('pointerdown', () => { dragging = true; this.setAttribute('data-seeking', ''); }, { signal });

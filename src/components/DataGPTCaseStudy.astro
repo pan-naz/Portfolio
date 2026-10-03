@@ -28,7 +28,7 @@ const researchMetrics = [
     </CaseStudyOverview>
     <section aria-labelledby="dg-problem">
       <p class="case-study-eyebrow">Problem</p><h2 class="case-study-heading" id="dg-problem">Dashboards showed what happened.<br />Nobody could simply ask why.</h2>
-      <div class="dg-grid dg-grid--two dg-block">
+      <div class="case-study-columns dg-block">
         <div class="dg-copy-stack"><div><h3>Business context</h3><p>Companies spend heavily on BI tools, but getting from data to a decision still went through a data team. Dashboards were static, and business users couldn't ask follow-up questions.</p></div><div><h3>User pains</h3><p>Executives waited for the next meeting to learn why revenue moved. Analysts were "drowning in ad hoc requests". Marketers pieced a story together from dozens of reports.</p></div><div class="dg-goal"><h3>Goal</h3><p>Let anyone ask a complex question in plain English and get an answer they can trust.</p></div></div>
         <div class="dg-card dg-voices">
           <div class="dg-voice"><span class="dg-avatar" aria-hidden="true">E</span><div><h3>Executive</h3><blockquote>Why did revenue drop? I don't want to <strong>wait for the next meeting for answers.</strong> Revenue opportunities are going missed.</blockquote></div></div>
@@ -63,7 +63,7 @@ const researchMetrics = [
     </section>
     <section class="dg-dark" aria-labelledby="dg-shipped" data-theme="dark">
       <div class="dg-dark-inner"><p class="case-study-eyebrow">What shipped?</p><h2 class="case-study-heading" id="dg-shipped">AI analyst to talk to</h2>
-        {features.map(feature => <div class="dg-feature"><div class="dg-grid dg-grid--two"><div><h3>{feature.title}</h3><p>{feature.body}</p></div><ul class="case-study-list dg-accent">{feature.points.map(point => <li>{point}</li>)}</ul></div><CaseStudyMedia {...feature.media} /></div>)}
+        {features.map(feature => <div class="dg-feature"><div class="case-study-columns"><div><h3>{feature.title}</h3><p>{feature.body}</p></div><ul class="case-study-list dg-accent">{feature.points.map(point => <li>{point}</li>)}</ul></div><CaseStudyMedia {...feature.media} /></div>)}
       </div>
     </section>
     <section aria-labelledby="dg-pilot">
