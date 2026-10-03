@@ -1,3 +1,38 @@
+export const hookoHero = {
+  width: 1200,
+  height: 520,
+  video: {
+    src: '/projects/hooko-case-study/hero.mp4',
+    poster: '/projects/hooko-case-study/hero-poster.jpg',
+    width: 1320,
+    height: 2700,
+  },
+  back: { src: '/projects/hooko-case-study/hero-back.jpg', width: 925, height: 2104 },
+} as const;
+
+export const hookoDemo = {
+  src: '/projects/hooko-case-study/demo.mp4?v=e342e9b914ee',
+  poster: '/projects/hooko-case-study/demo-poster.jpg?v=e342e9b914ee',
+  alt: 'Demo of an analysis in Hooko',
+  width: 1320,
+  height: 2700,
+  presentation: 'floating',
+  radius: 'media',
+  strokePlacement: 'outside',
+  controls: true,
+  showTime: false,
+  preview: {
+    src: '/projects/hooko-case-study/demo-preview.jpg?v=e342e9b914ee',
+    columns: 8,
+    rows: 11,
+    count: 85,
+    interval: 1,
+    width: 120,
+    height: 245,
+    displayWidth: 80,
+  },
+} as const;
+
 export const hookoTools = [
   {
     "name": "Claude Code",

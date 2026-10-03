@@ -10,7 +10,7 @@
 .case-video-seek input::-moz-range-thumb { width: 16px; height: 16px; border: 0; border-radius: 50%; background: var(--ink); }
 .case-video-seek input:disabled { opacity: var(--opacity-disabled); cursor: default; }
 .case-video-time { box-sizing: content-box; flex: 0 0 12ch; padding-inline: var(--space-2); text-align: center; font-size: var(--text-label-s); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.case-video-preview { position: absolute; bottom: calc(100% + var(--space-3)); width: 200px; max-width: 100%; padding: var(--space-1); border-radius: var(--space-2); background: var(--surface); box-shadow: var(--shadow-floating); transform: translateX(-50%); pointer-events: none; text-align: center; font-size: var(--text-label-s); font-variant-numeric: tabular-nums; }
+.case-video-preview { position: absolute; bottom: calc(100% + var(--space-3)); width: var(--video-preview-width, 200px); max-width: 100%; padding: var(--space-1); border-radius: var(--space-2); background: var(--surface); box-shadow: var(--shadow-floating); transform: translateX(-50%); pointer-events: none; text-align: center; font-size: var(--text-label-s); font-variant-numeric: tabular-nums; }
 .case-video-preview-frame { width: 100%; border-radius: var(--space-1); background-repeat: no-repeat; }
 .case-video-preview span { display: block; padding-top: var(--space-1); }
 @media (hover: none), (any-pointer: coarse) { .case-video-player .case-video-controls { opacity: 1; pointer-events: auto; } }

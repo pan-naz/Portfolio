@@ -35,7 +35,7 @@ const section = new FakeElement(), list = new FakeElement(), root = new FakeElem
 const heading = new FakeElement(), eyebrow = new FakeElement(), description = new FakeElement();
 const headingLayout = new FakeElement(), rail = new FakeElement(), surface = new FakeElement();
 Object.defineProperty(headingLayout, 'height', { get: () =>
-  heading.textContent === 'Websites with character.' ? 140 : heading.textContent === 'A little room to experiment.' ? 220 : 240,
+  heading.textContent === 'Some of my work on the web.' ? 140 : heading.textContent === 'A little room to experiment.' ? 220 : 240,
 });
 list.getBoundingClientRect = () => ({ top: 100 + headingLayout.offsetHeight + 88, height: list.offsetHeight, width: list.clientWidth });
 rail.getBoundingClientRect = () => ({ top: 100 + parseFloat(rail.animation?.sample.top ?? rail.style.top ?? '0'), height: rail.height });
@@ -75,9 +75,9 @@ await flush();
 controller.select('websites');
 assert.equal(list.dataset.activeFilter, 'websites');
 assert.equal(eyebrow.textContent, '01 / Websites');
-assert.equal(heading.textContent, 'Websites with character.');
+assert.equal(heading.textContent, 'Some of my work on the web.');
 assert.equal(heading.getAttribute('aria-label'), heading.textContent, 'Visible and accessible category titles agree');
-assert.equal(description.textContent, 'Websites that bring a brand’s character into every page and interaction.');
+assert.equal(description.textContent, 'Websites, landing pages and the small details that make them feel complete.');
 assert.equal(status.textContent, '5 projects shown');
 assert.equal(buttons[1].getAttribute('aria-pressed'), 'true');
 assert.equal(collections[0].inert, true, 'Outgoing results cannot receive keyboard focus');

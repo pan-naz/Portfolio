@@ -1,6 +1,6 @@
 ---
 import type { Project } from '../data/portfolio';
-import { hookoTools } from '../data/hooko-case-study';
+import { hookoTools, hookoDemo } from '../data/hooko-case-study';
 import HookoHero from './HookoHero.astro';
 import CaseStudyOverview from './CaseStudyOverview.astro';
 import TextLink from './TextLink.astro';
@@ -34,7 +34,7 @@ const productLinks = [
 
   <section class="hk-wrap hk-section" id="hk-problem" aria-labelledby="hk-problem-h">
     <SectionHeading id="hk-problem-h" label="Problem" layout="stacked" reveal={false}>Virality scores don't tell creators what to change</SectionHeading>
-    <div class="hk-col-2">
+    <div class="hk-col-2 case-study-columns">
         <div class="hk-cell">
           <h3 class="text-body-m-strong">Creators</h3>
           <p>On TikTok, Reels and Shorts, people decide in the first 3 seconds whether to keep watching. When a video gets few views, creators usually <strong>don't know why</strong>. Was it the first line, the first shot, the pacing or the caption?</p>
@@ -54,15 +54,15 @@ const productLinks = [
       <figure class="hk-demo-stage" aria-label="Demo video of the Hooko flow">
         <div class="hk-phone hk-demo-phone">
           
-          <CaseStudyMedia src="/projects/hooko-case-study/demo.mp4" poster="/projects/hooko-case-study/site-phone.jpg" alt="Demo of an analysis in Hooko" width={498} height={1080} presentation="bare" />
+          <CaseStudyMedia {...hookoDemo} />
         </div>
       </figure>
       <ol class="hk-srows" aria-label="The five steps shown in the demo">
-        <li class="hk-srow"><div class="hk-thumb"><img src="/projects/hooko-case-study/as-1.jpg" alt="Analysis in progress: uploading, niche detection, engagement, hook score and recommendations checked off one by one" width="1242" height="2688" loading="lazy"></div><div class="hk-stxt"><span class="hk-n">01</span><h3>Analyse</h3><p>Upload any short video. A live checklist shows each stage while the analysis runs for 30 to 60 seconds.</p></div></li>
-        <li class="hk-srow"><div class="hk-thumb"><img src="/projects/hooko-case-study/as-2.jpg" alt="Score of 55 out of 100, below the Fitness and Health benchmark of 70, with audio and visual sub-scores for the first 3 seconds" width="1242" height="2688" loading="lazy"></div><div class="hk-stxt"><span class="hk-n">02</span><h3>Score</h3><p>The hook is scored against the benchmark for the detected niche, with separate audio and visual scores for 0–3 seconds.</p></div></li>
-        <li class="hk-srow"><div class="hk-thumb"><img src="/projects/hooko-case-study/as-3.jpg" alt="Hook alternative 1 with an estimated score of 78, a Say this script and a Show this shot description" width="1242" height="2688" loading="lazy"></div><div class="hk-stxt"><span class="hk-n">03</span><h3>Rewrite</h3><p>Three alternative hooks, each with a script to say, a shot to film, technique tags and an estimated score.</p></div></li>
-        <li class="hk-srow"><div class="hk-thumb"><img src="/projects/hooko-case-study/as-4.jpg" alt="Suggested caption and hashtags, and a real YouTube Short using the same hook structure" width="1242" height="2688" loading="lazy"></div><div class="hk-stxt"><span class="hk-n">04</span><h3>Prove</h3><p>A ready caption and hashtags, plus a real Short from the same niche that uses the same hook structure.</p></div></li>
-        <li class="hk-srow"><div class="hk-thumb"><img src="/projects/hooko-case-study/as-5.jpg" alt="Analysis history with past scores of 62, 67 and 68" width="1242" height="2688" loading="lazy"></div><div class="hk-stxt"><span class="hk-n">05</span><h3>Track</h3><p>Every analysis is kept in a history, so creators can see whether their hooks are getting better.</p></div></li>
+        <li class="hk-srow"><div class="hk-thumb"><img src="/projects/hooko-case-study/step-01-analyse.jpg" alt="Analysis in progress: uploading, niche detection, engagement, hook score and recommendations checked off one by one" width="600" height="900" loading="lazy"></div><div class="hk-stxt"><span class="hk-n">01</span><h3>Analyse</h3><p>Upload any short video. A live checklist shows each stage while the analysis runs for 30 to 60 seconds.</p></div></li>
+        <li class="hk-srow"><div class="hk-thumb"><img src="/projects/hooko-case-study/step-02-score.jpg?v=8be0f7a86b43" alt="Score of 55 out of 100, below the Fitness and Health benchmark of 70, with audio and visual sub-scores for the first 3 seconds" width="600" height="900" loading="lazy"></div><div class="hk-stxt"><span class="hk-n">02</span><h3>Score</h3><p>The hook is scored against the benchmark for the detected niche, with separate audio and visual scores for 0–3 seconds.</p></div></li>
+        <li class="hk-srow"><div class="hk-thumb"><img src="/projects/hooko-case-study/step-03-rewrite.jpg" alt="Hook alternative 1 with an estimated score of 78, a Say this script and a Show this shot description" width="600" height="900" loading="lazy"></div><div class="hk-stxt"><span class="hk-n">03</span><h3>Rewrite</h3><p>Three alternative hooks, each with a script to say, a shot to film, technique tags and an estimated score.</p></div></li>
+        <li class="hk-srow"><div class="hk-thumb"><img src="/projects/hooko-case-study/step-04-prove.jpg" alt="Suggested caption and hashtags, and a real YouTube Short using the same hook structure" width="600" height="900" loading="lazy"></div><div class="hk-stxt"><span class="hk-n">04</span><h3>Prove</h3><p>A ready caption and hashtags, plus a real Short from the same niche that uses the same hook structure.</p></div></li>
+        <li class="hk-srow"><div class="hk-thumb"><img src="/projects/hooko-case-study/step-05-track.jpg?v=c3a65549e0f4" alt="Analysis history with past scores of 62, 67 and 68" width="600" height="900" loading="lazy"></div><div class="hk-stxt"><span class="hk-n">05</span><h3>Track</h3><p>Every analysis is kept in a history, so creators can see whether their hooks are getting better.</p></div></li>
       </ol>
       </div>
   </section>
@@ -75,25 +75,22 @@ const productLinks = [
       <div class="hk-decisions floating-control-theme">
         <CaseStudyDecisionCard title="Niche benchmark" label="Context" labelVariant="accent" layout="media">
             <p>A score of 55 means nothing alone. Hooko first detects the niche, then compares the hook with that niche's benchmark: "Below benchmark, Fitness &amp; Health 70/100". A "How it's calculated?" control opens the method.</p>
-            <p class="hk-why">A fitness hook and a finance hook shouldn't be judged by the same bar.</p>
           <Fragment slot="media"><img src="/projects/hooko-case-study/as-2.jpg" alt="" width="1242" height="2688" loading="lazy" style="object-position:50% 38%"></Fragment></CaseStudyDecisionCard>
 
         <CaseStudyDecisionCard title="Audio and visual feedback" label="Clarity" labelVariant="accent" layout="media">
             <p>A creator controls two things in the first 3 seconds: the words and the picture. The result is split the same way: an audio score and a visual score, and every rewrite gives a script to say and a shot to film.</p>
-            <p class="hk-why">It maps the feedback onto how a video is actually made.</p>
           <Fragment slot="media"><img src="/projects/hooko-case-study/as-3.jpg" alt="" width="1242" height="2688" loading="lazy" style="object-position:50% 45%"></Fragment></CaseStudyDecisionCard>
 
         <CaseStudyDecisionCard title="Explanations and real examples" label="Trust" labelVariant="accent" layout="media">
             <p>Each rewrite ends with "Why this will work?". Under it sits a real YouTube Short from the same niche that uses the same structure, tagged by technique, with a link to watch it and an attribution note.</p>
-            <p class="hk-why">Advice is easier to trust when you can watch it working for someone else.</p>
           <Fragment slot="media"><img src="/projects/hooko-case-study/as-4.jpg" alt="" width="1242" height="2688" loading="lazy" style="object-position:50% 72%"></Fragment></CaseStudyDecisionCard>
 
         <CaseStudyDecisionCard title="Analysis progress" label="Waiting" labelVariant="accent" layout="media">
             <p>Video analysis takes 30 to 60 seconds. A spinner over that long looks broken, so the screen lists the real stages and checks them off: Uploading, Niche detection, Analyzing engagement, Calculating hook score, Generating recommendations.</p>
-            <p class="hk-why">A plain note tells people not to close the app while it runs.</p>
           <Fragment slot="media"><img src="/projects/hooko-case-study/as-1.jpg" alt="" width="1242" height="2688" loading="lazy" style="object-position:50% 78%"></Fragment></CaseStudyDecisionCard>
 
         <CaseStudyDecisionCard title="No account, no stored videos" label="Privacy" labelVariant="accent" layout="media">
+            <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
             <p>There is no registration screen. An anonymous identity is created on first launch, and uploaded videos are deleted from the server once the analysis finishes. Subscriptions go through RevenueCat and are tied to the user's Apple ID, so they survive a reinstall without an account.</p>
             <div class="hk-pillrow" aria-label="First-run path"><SkillTag label="Open app" /><SkillTag label="Try the demo analysis" /><SkillTag label="Upload a video" /><SkillTag label="Get the plan" /></div>
           </CaseStudyDecisionCard>
@@ -104,7 +101,7 @@ const productLinks = [
   
   <section class="hk-wrap hk-section" id="hk-build" aria-labelledby="hk-build-h">
     <SectionHeading id="hk-build-h" label="Build" layout="stacked" reveal={false}>Tech stack</SectionHeading>
-    <div class="hk-col-2">
+    <div class="hk-col-2 case-study-columns">
       <div class="hk-cell">
         <h3 class="text-body-m-strong">How I worked</h3>
         <p>I designed all the screens and decided how the app works, what it checks in a video and what the results look like. I wrote the code with Claude Code. That includes the Flutter app, the Supabase backend, the Gemini prompts and the RevenueCat and YouTube connections.</p>
@@ -218,7 +215,7 @@ const productLinks = [
   <section class="hk-wrap hk-section" id="hk-growth" aria-labelledby="hk-growth-h">
     <SectionHeading id="hk-growth-h" label="Launch" layout="stacked" reveal={false}>ASO and Apple Ads</SectionHeading>
 
-    <div class="hk-col-2">
+    <div class="hk-col-2 case-study-columns">
       <div class="hk-cell">
         <h3 class="text-body-m-strong">App Store optimization</h3>
         <p>On the App Store, the name, subtitle and hidden keyword field are what search indexes. I treated them as one 160-character budget and never repeated a word across them, because Apple counts each word once.</p>

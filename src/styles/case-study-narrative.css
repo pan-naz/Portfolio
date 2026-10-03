@@ -1,7 +1,6 @@
 /* Shared editorial roles for all full case studies. Project styles own composition only. */
 .case-study-narrative {
   --case-section-space: var(--space-24);
-  --case-column-gap: var(--space-16);
   --case-content-gap: var(--space-12);
   font-size: var(--text-body-m);
   line-height: 1.5;
@@ -25,8 +24,11 @@
 .case-study-narrative .section-heading--stacked { gap: var(--space-6); margin-bottom: 0; }
 .case-study-narrative .section-heading--stacked h2 { max-width: 1100px; text-wrap: balance; }
 .case-study-narrative .section-heading--stacked h2 + p { margin-top: var(--space-6); }
-.case-study-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--case-column-gap); }
+/* Match the homepage’s equal halves: the right column starts at the midpoint.
+   Reserve breathing room within the left half so gaps never move that axis. */
+.case-study-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 0; row-gap: var(--space-8); }
 .case-study-columns > * { min-width: 0; }
+.case-study-columns > :first-child { margin-inline-end: var(--grid-gap); }
 .case-study-overview__intro, .case-study-overview__details { padding-block: var(--case-section-space); }
 .case-study-overview__intro { border-bottom: 1px solid var(--divider); }
 .case-study-overview__identity { display: grid; align-content: start; justify-items: start; gap: var(--project-identity-tags-gap); }
@@ -39,9 +41,10 @@
 .case-study-overview__detail { display: grid; align-content: start; gap: var(--space-3); }
 .case-study-prose > * + * { margin-top: var(--space-2); }
 @media (max-width: 1023px) {
-  .case-study-narrative { --case-section-space: var(--space-16); --case-column-gap: var(--space-8); }
+  .case-study-narrative { --case-section-space: var(--space-16); }
 }
 @media (max-width: 767px) {
   .case-study-narrative { --case-section-space: var(--space-12); --case-content-gap: var(--space-8); }
   .case-study-columns { grid-template-columns: minmax(0, 1fr); }
+  .case-study-columns > :first-child { margin-inline-end: 0; }
 }

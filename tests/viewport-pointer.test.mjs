@@ -13,6 +13,25 @@ const seen = [];
 const off = watchViewportPointer(p => seen.push({ ...p, localY: p.clientY - top }));
 window.listeners.get('pointermove')({ pointerType: 'mouse', clientX: 500, clientY: 400 });
 assert.equal(seen.at(-1).localY, 100);
+// Animated descendants can produce a burst of boundary events without real
+// input. Their hover state is re-hit-tested once, after the layout settles.
+const beforeBoundary = seen.length;
+for (let i = 0; i < 100; i++) {
+  window.listeners.get('pointerover')({ pointerType: 'mouse', clientX: 500, clientY: 400 });
+  window.listeners.get('pointerout')();
+}
+assert.equal(seen.length, beforeBoundary, 'Animated boundary events cannot synchronously restart hover effects');
+assert.equal(frames.size, 1, 'A boundary-event burst shares one pending hit test');
+target = { name: 'stable button' };
+flush();
+assert.equal(seen.length, beforeBoundary + 1);
+assert.equal(seen.at(-1).target.name, 'stable button');
+assert.equal(seen.at(-1).viewportChanged, true, 'A stationary boundary event is layout reprojection, not mouse movement');
+assert.equal(frames.size, 0, 'Boundary reprojection stops when nothing else changes');
+window.listeners.get('pointerout')();
+target = { name: 'first card' };
+flush();
+assert.equal(seen.at(-1).target.name, 'first card', 'Pointer exit also refreshes the newly uncovered target');
 // No mouse movement: page content moves beneath the same screen coordinates.
 top = 220;
 window.listeners.get('scroll')(); window.listeners.get('scroll')();

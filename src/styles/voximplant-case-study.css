@@ -14,18 +14,18 @@
 
 
 .vox-problem .case-study-heading { margin-bottom: var(--case-content-gap); }
-.vox-problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-16); align-items: stretch; }
+.vox-problem-grid { align-items: stretch; }
 .vox-problem blockquote { margin: 0; font-style: italic; font-weight: 600; }
 .vox-goal { display: grid; place-content: center; min-height: 360px; padding: var(--space-12); border: 1px solid var(--divider); border-radius: var(--radius-medium); text-align: center; }
 .vox-goal p:first-child { margin-bottom: var(--space-3); font-weight: 600; }
 .vox-goal p:last-child { max-width: 420px; font-size: var(--text-heading-m); line-height: 1.333333; font-weight: var(--font-weight-heading); }
 
-.vox-two-column { display: grid; grid-template-columns: 1fr 1fr; gap: var(--case-column-gap); align-items: center; margin-top: var(--case-content-gap); }
+.vox-two-column { align-items: center; margin-top: var(--case-content-gap); }
 .vox-case > section > img,
 .vox-two-column > img,
 .vox-product-feature > img { display: block; width: 100%; height: auto; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
 
-.vox-audience { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-16); align-items: start; }
+.vox-audience { align-items: start; }
 .vox-audience-intro { position: sticky; top: 96px; display: grid; gap: var(--space-2); max-width: 560px; }
 .vox-audience-intro p:last-child { margin-top: var(--space-3); }
 .vox-personas { display: grid; gap: var(--space-6); }
@@ -60,7 +60,6 @@
 [data-theme='dark'] .vox-solution { --solution-bg: #0F100E; }
 .vox-solution-inner { width: min(1200px, calc(100% - var(--gutter) * 2)); margin-inline: auto; }
 .vox-solution .case-study-eyebrow { color: #FAF8F7; }
-.vox-solution-head { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; }
 .vox-solution-stats { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); }
 .vox-solution-stats > div { display: grid; grid-template-columns: 1fr; gap: var(--space-2); align-items: start; }
 .vox-solution-stats strong { letter-spacing: var(--letter-spacing-display-l); color: #FF6B42; font-size: var(--text-heading); line-height: 1; font-weight: var(--font-weight-heading); }
@@ -73,7 +72,7 @@
 .vox-solution .vox-product-feature > :is(p, ul) { color: rgb(250 248 247 / .72); }
 .vox-solution li::marker { color: rgb(250 248 247 / .72); }
 
-.vox-chapter-head { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; align-items: start; }
+.vox-chapter-head { align-items: start; }
 .vox-chapter-head > div > p { max-width: 610px; margin-top: var(--space-4); color: var(--muted); }
 .vox-contact-center > img { margin-top: var(--space-6); }
 .vox-contact-center .vox-product-feature { margin-top: var(--case-section-space); }
@@ -87,17 +86,14 @@
 .vox-final-cards ul { margin-top: var(--space-2); }
 
 @media (max-width: 1023px) {
-  .vox-problem-grid, .vox-two-column, .vox-audience, .vox-chapter-head, .vox-solution-head { gap: var(--space-8); }
   .vox-outcomes, .vox-decisions { grid-template-columns: 1fr; }
   .vox-stats--four { grid-template-columns: repeat(2, 1fr); }
-  .vox-solution-head, .vox-chapter-head { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; }
   .vox-solution-stats { gap: var(--space-6); }
   .vox-solution-stats > div { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 767px) {
   .case-study-content--voximplant { padding-bottom: 0; }
-  .vox-problem-grid, .vox-two-column, .vox-audience, .vox-chapter-head, .vox-solution-head { grid-template-columns: 1fr; gap: var(--space-8); }
   .vox-goal { min-height: 260px; padding: var(--space-8); }
   .vox-goal p:last-child { font-size: 1.25rem; }
   .vox-audience-intro { position: static; }
@@ -111,7 +107,7 @@
   .vox-stats--four, .vox-stats--impact { grid-template-columns: 1fr; gap: var(--space-6); }
   .vox-stats .stat { border-top: 1px solid var(--divider); padding-top: var(--space-4); }
   .vox-decisions { gap: var(--space-4); }
-  .vox-solution-inner { width: calc(100% - 48px); }
+  .vox-solution-inner { width: calc(100% - var(--gutter) * 2); }
   .vox-solution-stats { grid-template-columns: 1fr; }
   .vox-solution-stats > div { grid-template-columns: 72px minmax(0, 1fr); }
   .vox-solution-stats strong { font-size: 2.5rem; }
