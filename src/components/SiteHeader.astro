@@ -10,10 +10,10 @@ import NavLinks from './NavLinks.astro';
   <div class="header-controls">
     <NavLinks showDS={false} />
     <ThemeToggle />
-    <IconButton class="menu-toggle" label="Open navigation" aria-controls="mobile-menu" aria-expanded="false"><span class="menu-label">Menu</span><span aria-hidden="true">☰</span></IconButton>
+    <IconButton class="menu-toggle" icon="menu" label="Open navigation" aria-controls="mobile-menu" aria-expanded="false" />
   </div>
 </header>
 <dialog id="mobile-menu" class="mobile-menu" aria-label="Navigation">
-  <div class="drawer-top"><Logo /><ThemeToggle /><IconButton class="menu-close" label="Close navigation">×</IconButton></div>
+  <div class="drawer-top"><Logo /><ThemeToggle /><IconButton class="menu-close" icon="close" label="Close navigation" /></div>
   <NavLinks layout="mobile" showDS={false} />
 </dialog>

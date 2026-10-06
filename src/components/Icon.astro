@@ -1,0 +1,13 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { getIcon, type IconName, type IconNode } from '../data/icons';
+type Props = HTMLAttributes<'svg'> & { size?: number; strokeWidth?: number } & (
+  { name: IconName; nodes?: never } | { name?: never; nodes: IconNode[] }
+);
+const { name, nodes, size, strokeWidth, class: className, style, ...attributes } = Astro.props;
+const definition = name ? getIcon(name) : { nodes: nodes!, weight: undefined };
+const iconStyle = [size !== undefined && `width:${size}px;height:${size}px`, strokeWidth !== undefined && `stroke-width:${strokeWidth}`, style].filter(Boolean).join(';');
+---
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" {...attributes} class:list={['icon', definition.weight === 'strong' && 'icon--strong', className]} style={iconStyle || undefined}>
+  <g>{definition.nodes.map(([tag, attrs]) => { const Shape = tag; return <Shape {...attrs} />; })}</g>
+</svg>

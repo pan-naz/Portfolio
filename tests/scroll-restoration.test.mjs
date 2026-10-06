@@ -7,11 +7,11 @@ import { runInNewContext } from 'node:vm';
 const layout = readFileSync('src/layouts/BaseLayout.astro', 'utf8');
 const source = layout.match(/<script is:inline data-scroll-restoration>([\s\S]*?)<\/script>/)?.[1];
 assert.ok(source);
-function boot({ path = '/case-studies/datagpt/', navigation = 'reload', state = {}, storage = new Map(), storageBlocked = false, top = 0, caseTop, max = Infinity } = {}) {
+function boot({ path = '/case-studies/datagpt/', hash = '', search = '', navigation = 'reload', state = {}, storage = new Map(), storageBlocked = false, top = 0, caseTop, max = Infinity } = {}) {
   const events = new Map(), documentEvents = new Map(), frames = [];
   const root = { dataset: {} };
   const history = { state, scrollRestoration: 'auto', url: path, replaceState(next, _title, url) { this.state = next; if (url) this.url = url; } };
-  const location = { pathname: path, search: '' };
+  const location = { pathname: path, search, hash };
   const window = { scrollY: top, scrollTo(options) { this.scrollY = Math.min(max, options.top); assert.equal(options.behavior, 'instant'); } };
   const document = {
     documentElement: root, hidden: false, fonts: { ready: Promise.resolve() },
@@ -69,14 +69,22 @@ assert.equal(repeat.window.scrollY, 1800, 'Repeated standalone reloads stay at t
 const home = boot({ path: '/', navigation: 'navigate', top: 5830 });
 home.events.get('pagehide')();
 const homeReload = boot({ path: '/', storage: home.storage });
+assert.equal(homeReload.root.dataset.scrollRestorePending, undefined, 'Homepage reload keeps the static Work background visible before fonts and intro scripts finish');
 await homeReload.finish();
 assert.equal(homeReload.window.scrollY, 0, 'Homepage reloads restart from the top for the intro');
-assert.equal(homeReload.history.url, '/#top', 'An old section fragment cannot bypass the intro');
+assert.equal(homeReload.history.url, '/', 'The default category has no hash');
 assert.equal(homeReload.root.dataset.scrollRestorePending, undefined);
 const firstHomeReload = boot({ path: '/', top: 5830 });
 assert.equal(firstHomeReload.window.scrollY, 0, 'Homepage reloads reset immediately even without a stored position');
+assert.equal(firstHomeReload.root.dataset.scrollRestorePending, undefined, 'A homepage reload without storage also avoids hiding the background');
 await firstHomeReload.finish();
 assert.equal(firstHomeReload.window.scrollY, 0);
+for (const hash of ['#websites', '#misc', '#about', '#unknown', '']) {
+  const categoryReload = boot({ path: '/', hash, search: '?campaign=sample', top: 5830 });
+  await categoryReload.finish();
+  assert.equal(categoryReload.window.scrollY, 0, 'Hash persistence preserves the existing homepage intro reset');
+  assert.equal(categoryReload.history.url, `/?campaign=sample${['#websites', '#misc'].includes(hash) ? hash : ''}`, 'Reload preserves category hashes and unrelated query parameters');
+}
 const freshHome = boot({ path: '/', navigation: 'navigate', top: 5830, storage: home.storage });
 assert.equal(freshHome.window.scrollY, 5830, 'A fresh homepage navigation retains native behavior');
 assert.equal(freshHome.events.has('load'), false);

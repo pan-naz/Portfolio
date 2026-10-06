@@ -101,7 +101,7 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
       roleMotion?.setPaused(paused);
       startWork();
       releaseGate();
-      if (cta.matches(':focus-within')) intro?.finish();
+      if (cta.matches(':has(:focus-visible)')) intro?.finish();
     };
     if (header) {
       finishHeader = () => {
@@ -193,7 +193,7 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
     });
   };
   // Focus finishes the same native group; no separate class or timing workaround.
-  cta.addEventListener('focusin', () => intro?.finish());
+  cta.addEventListener('focusin', () => { if (cta.matches(':has(:focus-visible)')) intro?.finish(); });
   header?.addEventListener('focusin', () => finishHeader());
   let paragraphWidth = paragraph.clientWidth;
   window.addEventListener('resize', () => {

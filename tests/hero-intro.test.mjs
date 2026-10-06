@@ -77,7 +77,9 @@ assert.ok(source.includes("['System thinker', 'AI builder', 'Web designer', 'App
 assert.ok(source.includes('document.fonts.ready') && textReveal.includes('getBoundingClientRect().top'));
 assert.ok(source.includes('if (width === paragraphWidth) return;'));
 assert.ok(source.includes('restoreParagraph();'));
-assert.ok(source.includes("cta.addEventListener('focusin', () => intro?.finish())"));
+assert.ok(source.includes("cta.addEventListener('focusin', () => { if (cta.matches(':has(:focus-visible)')) intro?.finish(); })"), 'Only keyboard focus may skip the CTA intro; pointer focus cannot expose it early');
+assert.ok(css.includes("html[data-home-intro='pending'] :is(.site-header, .hero-content, .hero-cta-entrance,"), 'The CTA has its own pre-paint gate while native intro effects are being prepared');
+assert.ok(css.includes('.hero-cta-entrance:has(:focus-visible)') && !css.includes('.hero-cta-entrance:focus-within'), 'The CTA visibility override is limited to keyboard focus');
 assert.ok(source.includes("reduced.addEventListener('change', reset)"));
 assert.ok(source.includes("reduced.matches || typeof permanent.animate !== 'function'"));
 assert.ok(source.includes('intro?.cancel()') && source.includes('roleMotion?.destroy()'));

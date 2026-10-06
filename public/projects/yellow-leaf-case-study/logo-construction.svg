@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg"  viewBox="-100 -80 200 160" role="img" aria-label="Logo construction: two equal overlapping circles form the leaf, and two angled bands cut the y out of it">
+          <mask id="cons-cut" maskUnits="userSpaceOnUse" x="-100" y="-80" width="200" height="160"><rect x="-100" y="-80" width="200" height="160" fill="#fff"></rect><path d="M-25.52-56 4.51 23.44M35.1-56-8.79 58" fill="none" stroke="#000" stroke-width="8.64"></path></mask>
+          <path fill="#F7BC11" d="M0-50A59.72 59.72 0 0 1 0 50A59.72 59.72 0 0 1 0-50Z" mask="url(#cons-cut)"></path>
+          <circle fill="none" stroke="currentColor" stroke-width=".6" opacity=".3" cx="-32.65" cy="0" r="59.72"></circle>
+          <circle fill="none" stroke="currentColor" stroke-width=".6" opacity=".3" cx="32.65" cy="0" r="59.72"></circle>
+          <circle fill="currentColor" opacity=".3" cx="-32.65" cy="0" r="1.4"></circle>
+          <circle fill="currentColor" opacity=".3" cx="32.65" cy="0" r="1.4"></circle>
+          <path fill="none" stroke="currentColor" stroke-width=".6" opacity=".3" d="M-36.19-72 18.25 72M-26.95-72 27.49 72M36.63-72-18.81 72M45.89-72-9.55 72"></path>
+        </svg>

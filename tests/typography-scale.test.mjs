@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 const read = file => readFileSync(new URL(file, import.meta.url), 'utf8');
 const css = read('../src/styles/tokens.css');
-const values = ['text-display', 'text-heading'].map(token => {
+const values = ['text-heading-xl', 'text-heading-l'].map(token => {
   const declarations = [...css.matchAll(new RegExp(`--${token}:\\s*([^;]+);`, 'g'))];
   assert.equal(declarations.length, 1, `${token} must not drift through breakpoint overrides`);
   const match = declarations[0][1].match(/^clamp\(([\d.]+)rem, calc\(([\d.]+)rem \+ ([\d.]+)vw\), ([\d.]+)rem\)$/);
@@ -15,7 +15,7 @@ assert.deepEqual(sizesAt(1728), [88, 56]);
 for (const root of [16, 20, 24, 32]) {
   for (let width = 320; width <= 2560; width += 8) {
     const [display, h2] = sizesAt(width, root);
-    assert.ok(display / h2 >= 1.2, `Display/heading separation at ${width}px, root ${root}px`);
+    assert.ok(display / h2 >= 1.2, `Heading/XL and Heading/L separation at ${width}px, root ${root}px`);
   }
 }
 const global = read('../src/styles/global.css');
@@ -23,10 +23,10 @@ assert.ok(/\.desktop-nav\s*\{[^}]*gap: var\(--space-3\)/.test(global) && /\.navi
 assert.ok(/\.header-controls\s*\{[^}]*gap: var\(--space-3\)/.test(global), 'Horizontal header components use space/12');
 assert.ok(/\.mobile-menu nav\s*\{[^}]*gap: 0/.test(global), 'Vertical navigation keeps zero inter-item gap');
 assert.ok(/body\s*\{[^}]*font-size: var\(--text-body\)[^}]*line-height: 1\.5[^}]*font-weight: 400/.test(global), 'Body/L is the shared 20/30 Regular default');
-assert.ok(/\.text-body-l\s*\{[^}]*font-size: var\(--text-body\)[^}]*line-height: 1\.5[^}]*letter-spacing: 0[^}]*font-weight: 400/.test(global), 'Body/L is one shared 20/30 Regular role');
-assert.ok(/\.text-body-m\s*\{[^}]*font-size: var\(--text-body-m\)[^}]*line-height: 1\.5[^}]*letter-spacing: 0[^}]*font-weight: 400/.test(global), 'Body/M is one shared 16/24 Regular role');
-assert.ok(/\.text-body-m-strong\s*\{[^}]*font-size: var\(--text-body-m\)[^}]*line-height: 1\.5[^}]*letter-spacing: 0[^}]*font-weight: 600/.test(global), 'Body/M Strong is one shared 16/24 Semibold role');
-assert.ok(/\.text-body-s\s*\{[^}]*font-size: var\(--text-small\)[^}]*line-height: 1\.428571[^}]*letter-spacing: 0[^}]*font-weight: 400/.test(global), 'Body/S is one shared 14/20 Regular role');
+assert.ok(/\.text-body-l\s*\{[^}]*font-size: var\(--text-body\)[^}]*line-height: 1\.5[^}]*letter-spacing: var\(--letter-spacing-body-l\)[^}]*font-weight: 400/.test(global), 'Body/L is one shared 20/30 Regular role');
+assert.ok(/\.text-body-m\s*\{[^}]*font-size: var\(--text-body-m\)[^}]*line-height: 1\.5[^}]*letter-spacing: var\(--letter-spacing-body-m\)[^}]*font-weight: 400/.test(global), 'Body/M is one shared 16/24 Regular role');
+assert.ok(/\.text-body-m-strong\s*\{[^}]*font-size: var\(--text-body-m\)[^}]*line-height: 1\.5[^}]*letter-spacing: var\(--letter-spacing-body-m-strong\)[^}]*font-weight: var\(--font-weight-body-m-strong\)/.test(global), 'Body/M Strong is one shared 16/24 Medium role');
+assert.ok(/\.text-body-s\s*\{[^}]*font-size: var\(--text-small\)[^}]*line-height: 1\.428571[^}]*letter-spacing: var\(--letter-spacing-body-s\)[^}]*font-weight: 400/.test(global), 'Body/S is one shared 14/20 Regular role');
 const button = read('../src/components/Button.astro');
 assert.ok(button.includes("size === 'small' ? 'text-body-s' : 'text-body-m-strong'"), 'Buttons consume Body/M Strong at default size and Body/S at small size');
 assert.ok(read('../src/components/NavLinks.astro').includes("import NavigationItem from './NavigationItem.astro'"), 'Desktop and floating-pill navigation consume the shared item');
@@ -42,15 +42,15 @@ for (const metadataClass of ['experience-period text-body-s', 'experience-compan
 }
 assert.ok(read('../src/components/Hero.astro').includes('hero-description text-body-l'), 'Homepage hero copy consumes Body/L');
 assert.ok(read('../src/components/ProjectCard.astro').includes('project-outcome text-body-l') && read('../src/components/ProjectCard.astro').includes('project-description text-body-m'), 'Homepage project copy consumes shared Body/L and Body/M roles');
-assert.ok(!/\.hero-title\s*\{[^}]*font-size/.test(global), 'Hero uses the shared Display class');
+assert.ok(!/\.hero-title\s*\{[^}]*font-size/.test(global), 'Hero uses the shared Heading/XL class');
 assert.ok(/\.hero-title\s*\{[^}]*text-wrap: wrap/.test(global));
 assert.ok(/grid-template-columns: minmax\(0, 1fr\)/.test(global));
-assert.ok(read('../src/components/TypewriterHeading.astro').includes('hero-title text-display'));
+assert.ok(read('../src/components/TypewriterHeading.astro').includes('hero-title text-heading-xl'));
 assert.ok(read('../src/components/TypewriterHeading.astro').includes('type-line type-line--display'), 'Permanent display line uses the shared optical-alignment hook');
 assert.ok(/\.type-line--display,\s*\.role-cycle\s*\{[^}]*translateX\(-\.06em\)/.test(global), 'Display and cycling lines share the same responsive optical edge');
-assert.ok(read('../src/components/TypewriterHeading.astro').includes('type-line text-h2 role-cycle'), 'Cycling text uses the shared heading size and accent role');
+assert.ok(read('../src/components/TypewriterHeading.astro').includes('type-line text-heading-l role-cycle'), 'Cycling text uses the shared heading size and accent role');
 const ds = read('../src/components/DSCatalog.astro');
-for (const role of ['text-display', 'text-h2', 'text-body-l', 'text-body-m', 'text-body-m-strong', 'text-body-s']) assert.ok(ds.includes(`'${role}'`), 'Catalog typography data uses shared type classes');
+for (const role of ['text-heading-xl', 'text-heading-l', 'text-body-l', 'text-body-m', 'text-body-m-strong', 'text-body-s']) assert.ok(ds.includes(`'${role}'`), 'Catalog typography data uses shared type classes');
 assert.ok(!ds.includes('Body/S Strong') && !global.includes('text-body-s-strong'), 'Retired Body/S Strong naming cannot drift back into the shared system');
 assert.ok(ds.includes('class={style}'), 'Catalog renders the shared type class from its specimen data');
 console.log('PASS: shared 40/26 → 88/56 Figma scale, minimum 20% steps, 320–2560px and 100–200% font preferences.');

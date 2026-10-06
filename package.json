@@ -5,14 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
-    "build": "pnpm validate:ds && pnpm validate:contrast && astro build && node scripts/validate-static-catalog.mjs",
+    "build": "pnpm validate:ds && pnpm validate:contrast && pnpm validate:svg && astro build && node scripts/validate-static-catalog.mjs",
     "preview": "astro preview --host 127.0.0.1",
     "preview:lan": "astro preview --host 0.0.0.0 --port 4322",
-    "check": "pnpm validate:ds && pnpm validate:contrast && astro check",
+    "check": "pnpm validate:ds && pnpm validate:contrast && pnpm validate:svg && astro check",
     "validate:ds": "node scripts/validate-design-system.mjs",
-    "validate:contrast": "node tests/text-contrast.test.mjs"
+    "validate:contrast": "node tests/text-contrast.test.mjs",
+    "validate:svg": "node --experimental-strip-types scripts/validate-svg-assets.mjs"
   },
   "dependencies": {
+    "@fontsource-variable/funnel-display": "^5.3.0",
     "@fontsource-variable/urbanist": "^5.3.0",
     "@lucide/icons": "^1.45.0",
     "astro": "^7.3.2",

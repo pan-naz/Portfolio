@@ -3,6 +3,7 @@ import type { Project } from '../data/portfolio';
 import { dataGPTMedia as media, dataGPTPersonas, researchOutcomes, competitors, competitorOutcomes, models, features, queryResults, contextResults, conclusions } from '../data/datagpt-case-study';
 import CaseStudyOverview from './CaseStudyOverview.astro';
 import Stat from './Stat.astro';
+import SvgAsset from './SvgAsset.astro';
 import CaseStudyMedia from './CaseStudyMedia.astro';
 import CaseStudyComparison from './CaseStudyComparison.astro';
 import '../styles/datagpt-case-study.css';
@@ -52,7 +53,7 @@ const researchMetrics = [
     </section>
     <section aria-labelledby="dg-competitors">
       <p class="case-study-eyebrow">Competitor mapping</p><h2 class="case-study-heading" id="dg-competitors">Many "AI analytics" tools, few that explain why</h2><p class="dg-lede">We mapped the landscape of “conversational analytics” tools – from established BI giants to emerging AI solutions:</p>
-      <div class="dg-grid dg-grid--three dg-block">{competitors.map(([title, body, logo]) => <article class="dg-card"><div class="dg-competitor-heading"><img src={logo} alt="" width="40" height="40" /><h3>{title}</h3></div><p>{body}</p></article>)}</div>
+      <div class="dg-grid dg-grid--three dg-block">{competitors.map(([title, body, logo]) => <article class="dg-card"><div class="dg-competitor-heading"><SvgAsset src={logo} width="40" height="40" /><h3>{title}</h3></div><p>{body}</p></article>)}</div>
       <div class="dg-block"><CaseStudyMedia {...media.competitors} /></div>
       <h3 class="dg-outcome-label">Outcome</h3><div class="dg-grid dg-grid--three">{competitorOutcomes.map(([title, body]) => <article class="dg-card"><h3>{title}</h3><p>{body}</p></article>)}</div>
     </section>

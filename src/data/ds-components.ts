@@ -2,6 +2,12 @@
 // Website components are added here only during an explicitly requested DS update.
 export const dsComponents = [
   {
+    "name": "Icon",
+    "section": "icons",
+    "preview": "direct",
+    "description": "Token-sized SVG geometry with shared stroke weights and rounded caps and joins"
+  },
+  {
     "name": "Logo",
     "section": "project-identity",
     "preview": "direct",
@@ -59,7 +65,7 @@ export const dsComponents = [
     "name": "NavigationItem",
     "section": "navigation",
     "preview": "direct",
-    "description": "Shared link and filter-item treatment with fixed Light floating states"
+    "description": "Shared link and filter-item treatment with theme-aware floating states"
   },
   {
     "name": "SectionHeading",
@@ -89,7 +95,7 @@ export const dsComponents = [
     "name": "SectionNavigation",
     "section": "navigation",
     "preview": "direct",
-    "description": "Project-category filter with a theme-invariant Light surface"
+    "description": "Project-category filter with a theme-aware floating surface"
   },
   {
     "name": "Stat",

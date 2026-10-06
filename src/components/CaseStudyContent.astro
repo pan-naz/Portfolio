@@ -1,7 +1,7 @@
 ---
 import type { Project } from '../data/portfolio';
 import { caseStudySamples } from '../data/case-studies';
-import { projects, conceptProjects } from '../data/portfolio';
+import { projects, collectionProjects } from '../data/portfolio';
 import { impactGroups } from '../data/portfolio';
 import ProjectTags from './ProjectTags.astro';
 import '../styles/case-study-narrative.css';
@@ -9,14 +9,20 @@ import MetricValue from './MetricValue.astro';
 import VoximplantCaseStudy from './VoximplantCaseStudy.astro';
 import DataGPTCaseStudy from './DataGPTCaseStudy.astro';
 import HookoCaseStudy from './HookoCaseStudy.astro';
+import PeakHotelCaseStudy from './PeakHotelCaseStudy.astro';
+import YellowLeafCaseStudy from './YellowLeafCaseStudy.astro';
+import IndexLawFirmCaseStudy from './IndexLawFirmCaseStudy.astro';
+import BlaustromCaseStudy from './BlaustromCaseStudy.astro';
+import CravusCaseStudy from './CravusCaseStudy.astro';
+import PromShynaCaseStudy from './PromShynaCaseStudy.astro';
 interface Props { project: Project; }
 const { project } = Astro.props;
 const sample = caseStudySamples[project.id];
-const allProjects = [...projects, ...conceptProjects];
-const related = sample.related?.map(id => allProjects.find(item => item.id === id)!).filter(Boolean);
+const allProjects = [...projects, ...collectionProjects];
+const related = sample?.related?.map(id => allProjects.find(item => item.id === id)!).filter(Boolean);
 const metrics = impactGroups.find(group => group.projectId === project.id)?.metrics;
 ---
-{project.id === 'voximplant' ? <VoximplantCaseStudy project={project} /> : project.id === 'datagpt' ? <DataGPTCaseStudy project={project} /> : project.id === 'hooko' ? <HookoCaseStudy project={project} /> : <article class="case-study-content" data-case-content>
+{project.id === 'voximplant' ? <VoximplantCaseStudy project={project} /> : project.id === 'datagpt' ? <DataGPTCaseStudy project={project} /> : project.id === 'hooko' ? <HookoCaseStudy project={project} /> : project.id === 'peak-hotel' ? <PeakHotelCaseStudy project={project} /> : project.id === 'yellow-leaf' ? <YellowLeafCaseStudy project={project} /> : project.id === 'index-law-firm' ? <IndexLawFirmCaseStudy project={project} /> : project.id === 'blaustrom' ? <BlaustromCaseStudy project={project} /> : project.id === 'cravus' ? <CravusCaseStudy project={project} /> : project.id === 'promshyna' ? <PromShynaCaseStudy project={project} /> : <article class="case-study-content" data-case-content>
   <div class="case-study-artwork"><img src={project.image} alt={project.imageAlt} width={project.imageWidth ?? 1200} height={project.imageHeight} decoding="async" /></div>
   <div class="case-study-body">
   <div class="case-study-intro case-study-columns">

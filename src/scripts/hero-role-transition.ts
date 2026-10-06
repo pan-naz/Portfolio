@@ -1,4 +1,4 @@
-import { createNativeMotion, type MotionEffect } from './native-motion.ts';
+import { createNativeMotion, revealEffects, type MotionEffect } from './native-motion.ts';
 
 interface RoleLayer {
   phrase: HTMLElement;
@@ -14,20 +14,22 @@ interface RoleMotionOptions {
   ease: string;
 }
 
-/** Preserve the approved role reveal: one rising baseline, staggered letter opacity. */
+/** Use the same per-letter fade-and-rise recipe as every other title. */
 export function roleRevealEffects(role: RoleLayer, options: RoleMotionOptions, delay = 0): MotionEffect[] {
   return [{
     element: role.phrase,
+    // Expose the incoming phrase without moving its wrapper. Each glyph owns
+    // its rise, including on later cycles after the phrase has faded out.
     keyframes: [
-      { opacity: 1, transform: `translate3d(0px, ${options.distance}px, 0px)` },
-      { opacity: 1, transform: 'translate3d(0px, 0px, 0px)' },
+      { opacity: 1, transform: 'none' },
+      { opacity: 1, transform: 'none' },
     ],
     duration: options.enter + Math.max(0, role.letters.length - 1) * options.stagger,
     delay, easing: options.ease,
-  }, ...role.letters.map((element, index) => ({
-    element, keyframes: [{ opacity: 0 }, { opacity: 1 }],
-    duration: options.enter, delay: delay + index * options.stagger, easing: options.ease,
-  }))];
+  }, ...revealEffects(role.letters, {
+    duration: options.enter, delay, stagger: options.stagger,
+    distance: options.distance, easing: options.ease,
+  })];
 }
 
 /** The initial reveal belongs to the intro; this controller only advances settled roles. */

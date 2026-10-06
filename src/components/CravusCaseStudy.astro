@@ -1,0 +1,83 @@
+---
+import type { Project } from '../data/portfolio';
+import { cravusMedia as media, cravusRole, cravusTeam, cravusConcepts, cravusHomeSections, cravusPages, cravusPalette } from '../data/cravus-case-study';
+import CaseStudyOverview from './CaseStudyOverview.astro';
+import CaseStudyMedia from './CaseStudyMedia.astro';
+import CaseStudySteps from './CaseStudySteps.astro';
+import SvgAsset from './SvgAsset.astro';
+import '../styles/cravus-case-study.css';
+interface Props { project: Project; }
+const { project } = Astro.props;
+---
+<article class="case-study-content case-study-content--cravus" data-case-content>
+  <CaseStudyMedia {...media.hero} radius="media" artwork />
+  <div class="case-study-body case-study-narrative cravus-case">
+    <CaseStudyOverview project={project} titleId="cv-title">
+      <Fragment slot="role"><p>Designer</p><ul>{cravusRole.map(item => <li>{item}</li>)}</ul></Fragment>
+      <p slot="secondary">{cravusTeam}</p>
+    </CaseStudyOverview>
+
+    <section aria-labelledby="cv-concept">
+      <p class="case-study-eyebrow">Concept</p><h2 class="case-study-heading" id="cv-concept">How Cravus works</h2>
+      <div class="case-study-media-grid cravus-block">{cravusConcepts.map(([title, description]) => <div><h3>{title}</h3><p>{description}</p></div>)}</div>
+      <div class="cravus-block"><CaseStudyMedia {...media.laptop} /></div>
+    </section>
+
+    <section aria-labelledby="cv-home">
+      <div class="case-study-columns">
+        <case-study-sticky class="case-study-sticky">
+          <p class="case-study-eyebrow"><span class="cravus-number">01</span> / 09</p><h2 class="case-study-heading" id="cv-home">Main page</h2>
+          <CaseStudySteps items={cravusHomeSections} class="cravus-home-steps" />
+        </case-study-sticky>
+        <CaseStudyMedia {...media.home} />
+      </div>
+    </section>
+
+    <section aria-labelledby="cv-pages">
+      <div class="case-study-columns cravus-chapter-heading">
+        <div><p class="case-study-eyebrow">02–09</p><h2 class="case-study-heading" id="cv-pages">Inner pages</h2></div>
+        <p class="text-body-m cravus-muted">Besides the main page, the app has eight pages. Every page uses the same header, cards and footer.</p>
+      </div>
+      <div class="cravus-pages cravus-block">{cravusPages.map(page => <div class="case-study-columns">
+        <case-study-sticky class="case-study-sticky cravus-page-copy">
+          <p class="case-study-eyebrow"><span class="cravus-number">{page.number}</span> / 09</p>
+          <h3 class="cravus-page-title">{page.title}</h3><p class="cravus-muted">{page.description}</p>
+        </case-study-sticky>
+        <div class="cravus-stack">{page.media.map(shot => <CaseStudyMedia {...shot} />)}</div>
+      </div>)}</div>
+    </section>
+
+    <section class="cravus-band cravus-mobile" aria-labelledby="cv-mobile">
+      <div class="case-study-chapter__inner">
+        <div class="case-study-columns cravus-chapter-heading">
+          <div><p class="case-study-eyebrow">Mobile</p><h2 class="case-study-heading" id="cv-mobile">Phone layouts</h2><p class="cravus-breakpoint text-body-s">320px +</p></div>
+          <p class="text-body-m cravus-muted">Every page has a phone layout. The menu folds into a button in the top-left corner, and cards and tables stack in one column.</p>
+        </div>
+        <div class="cravus-block"><CaseStudyMedia {...media.phones} /></div>
+      </div>
+    </section>
+
+    <section class="case-study-chapter--inverse cravus-style" aria-labelledby="cv-style">
+      <div class="case-study-chapter__inner">
+        <p class="case-study-eyebrow">Style guide</p><h2 class="case-study-heading" id="cv-style">Colour, type and UI elements</h2>
+        <div class="cravus-block"><h3>Colour</h3><ul class="cravus-palette" aria-label="Colour palette">{cravusPalette.map(([label, value]) => <li><div class="cravus-swatch" style={'--cravus-swatch:' + value} aria-hidden="true" /><div><strong>{label}</strong><code>{value}</code></div></li>)}</ul></div>
+        <div class="cravus-block"><h3>Typography</h3>
+          <div class="cravus-specimens">
+            <div class="cravus-brand-card"><p class="case-study-eyebrow">Titillium Web · 40px</p><p class="cravus-titillium cravus-s40">What Are You <span>Craving?</span></p></div>
+            <div class="cravus-brand-card"><p class="case-study-eyebrow">Titillium Web · 26px</p><p class="cravus-titillium cravus-s26">Today’s Cultural Adventure</p></div>
+            <div class="cravus-brand-card"><p class="case-study-eyebrow">Titillium Web · 18px</p><p class="cravus-titillium cravus-s18">Delicious pork chops in secret Chinese sauce</p></div>
+            <div class="cravus-brand-card"><p class="case-study-eyebrow">Titillium Web · 14px</p><p class="cravus-titillium cravus-s14">Cravus is your way of experiencing home-style cuisines from all over the world without the plane ticket.</p></div>
+          </div>
+        </div>
+        <div class="cravus-assets cravus-block">
+          <div><h3>Icons</h3><div class="cravus-assets-card"><SvgAsset src="/projects/cravus-case-study/icons.svg" aria-hidden="false" role="img" aria-label="Cravus icon set in orange and brown: heart with a fork, logo, dishes, cart, star, menu, mail, history, chef, calendar and a delivery car" /></div></div>
+          <div><h3>Grid</h3><div class="cravus-assets-card cravus-grid-card"><CaseStudyMedia {...media.grid} radius="small" /><dl><div><dt>Container</dt><dd>1170px</dd></div><div><dt>Columns</dt><dd>12</dd></div><div><dt>Framework</dt><dd>Bootstrap</dd></div></dl></div></div>
+        </div>
+        <div class="cravus-block"><h3>UI elements</h3><div class="cravus-stack"><CaseStudyMedia {...media.ui} /></div></div>
+      </div>
+    </section>
+  </div>
+</article>
+<script>
+  import '../scripts/case-study-sticky';
+</script>

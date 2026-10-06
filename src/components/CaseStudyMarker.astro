@@ -1,0 +1,6 @@
+---
+import '../styles/case-study-guides.css';
+interface Props { label: string; }
+const { label } = Astro.props;
+---
+<div class="case-study-marker" aria-hidden="true"><span>{label}</span><i></i></div>

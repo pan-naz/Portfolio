@@ -1,0 +1,11 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { prepareSvgAsset } from '../scripts/svg-asset';
+interface Props extends HTMLAttributes<'svg'> { src: string; }
+const { src, class: className, 'aria-hidden': ariaHidden = 'true', ...attributes } = Astro.props;
+const sources = import.meta.glob<string>(['../../public/**/*.svg', '../assets/personas/*.svg'], { query: '?raw', import: 'default', eager: true });
+const source = sources[`../../public${src}`] ?? sources[`../assets${src}`];
+if (!source) throw new Error(`Unknown shared SVG asset: ${src}`);
+const svg = prepareSvgAsset(source, `svg-${crypto.randomUUID()}`);
+---
+<svg {...svg.attributes} {...attributes} aria-hidden={ariaHidden} class:list={['svg-asset', className]} data-svg-src={src} set:html={svg.body} />

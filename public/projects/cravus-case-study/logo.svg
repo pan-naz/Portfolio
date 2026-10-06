@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <rect width="48" height="48" rx="12" fill="#f9e8bf"/>
+  <!-- Cravus mark on a 100-unit grid centred at 50,50: a ring open on the right and a fork lying across it -->
+  <g transform="translate(5.25 5.25) scale(0.375)" fill="#36210d">
+    <!-- ring: centre radius 35.25, 9.5 thick, open between -37deg and +37deg -->
+    <path d="M78.152 28.786A35.25 35.25 0 1 0 78.152 71.214" fill="none" stroke="#36210d" stroke-width="9.5" stroke-linecap="round"/>
+    <!-- fork head: 22.4 tall, flat on the left, a half circle on the right -->
+    <path d="M66 38.8H77a11.2 11.2 0 0 1 0 22.4H66z"/>
+    <!-- four tines, 3.2 thick with 3.2 gaps, filling the height of the head -->
+    <rect x="34.3" y="38.8" width="33" height="3.2" rx="1.6"/>
+    <rect x="34.3" y="45.2" width="33" height="3.2" rx="1.6"/>
+    <rect x="34.3" y="51.6" width="33" height="3.2" rx="1.6"/>
+    <rect x="34.3" y="58" width="33" height="3.2" rx="1.6"/>
+  </g>
+</svg>

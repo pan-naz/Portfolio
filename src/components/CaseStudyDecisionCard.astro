@@ -1,11 +1,12 @@
 ---
 import SkillTag from './SkillTag.astro';
 import '../styles/case-study-decision-card.css';
-interface Props { title: string; label?: string; labelVariant?: 'text' | 'accent'; layout?: 'stack' | 'media'; }
+interface Props { title: string; label?: string; labelVariant?: 'text' | 'accent'; layout?: 'stack' | 'media' | 'figure'; }
 const { title, label, labelVariant = 'text', layout = 'stack' } = Astro.props;
 ---
 
-<article class:list={['case-study-decision-card', layout === 'media' && 'case-study-decision-card--media']}>
+<article class:list={['case-study-decision-card', layout === 'media' && 'case-study-decision-card--media', layout === 'figure' && 'case-study-decision-card--figure']}>
+  {layout === 'figure' && Astro.slots.has('media') && <div class="case-study-decision-card__media"><slot name="media" /></div>}
   <div class="case-study-decision-card__text">
   <div class="case-study-decision-card__header">
     <div class="case-study-decision-card__heading">
@@ -20,5 +21,5 @@ const { title, label, labelVariant = 'text', layout = 'stack' } = Astro.props;
     <slot name="impact" />
   </div>}
   </div>
-  {Astro.slots.has('media') && <div class="case-study-decision-card__media"><slot name="media" /></div>}
+  {layout !== 'figure' && Astro.slots.has('media') && <div class="case-study-decision-card__media"><slot name="media" /></div>}
 </article>

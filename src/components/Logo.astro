@@ -1,5 +1,10 @@
 ---
+import { wordmarks } from '../data/wordmark';
 interface Props { compact?: boolean; }
 const { compact = false } = Astro.props;
+const mark = wordmarks[compact ? 'compact' : 'full'];
 ---
-<span class="wordmark" aria-label="naz.wtf">naz{!compact && <span class="wordmark-dot" aria-hidden="true">·</span>}{!compact && 'wtf'}</span>
+<svg class="wordmark" width={mark.width} height={mark.height} viewBox={`0 ${mark.viewBoxY} ${mark.width} ${mark.height}`} style={`width:${mark.width / mark.height}em;height:1em`} fill="currentColor" role="img" aria-label={compact ? 'naz' : 'naz.wtf'}>
+  <path d={mark.ink} />
+  {mark.accent && <path class="wordmark-dot" d={mark.accent} />}
+</svg>

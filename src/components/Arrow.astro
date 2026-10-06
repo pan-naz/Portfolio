@@ -1,7 +1,6 @@
 ---
-interface Props { direction?: 'up' | 'down' | 'right'; }
-const { direction = 'right' } = Astro.props;
+import Icon from './Icon.astro';
+interface Props { direction?: 'up' | 'down' | 'right'; inline?: boolean; }
+const { direction = 'right', inline = false } = Astro.props;
 ---
-<svg class:list={['arrow', `arrow--${direction}`]} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-  <path d="M4 12h15M13 5l7 7-7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-</svg>
+<Icon name="arrow" class:list={['arrow', `arrow--${direction}`, inline && 'arrow--inline']} />

@@ -1,9 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CaseStudyPage from '../../components/CaseStudyPage.astro';
-import { projects, conceptProjects } from '../../data/portfolio';
+import { projects, collectionProjects } from '../../data/portfolio';
 export function getStaticPaths() {
-  return [...projects, ...conceptProjects].map(project => ({ params: { id: project.id }, props: { project } }));
+  return [...projects, ...collectionProjects].map(project => ({ params: { id: project.id }, props: { project } }));
 }
 const { project } = Astro.props;
 ---

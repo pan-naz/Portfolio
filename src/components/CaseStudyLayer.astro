@@ -1,8 +1,8 @@
 ---
-import { projects, conceptProjects } from '../data/portfolio';
+import { projects, collectionProjects } from '../data/portfolio';
 import CaseStudyContent from './CaseStudyContent.astro';
 ---
 <dialog class="case-study-dialog" data-case-dialog aria-label="Project case study" data-lenis-prevent>
-  <div class="case-study-panel" data-case-panel><div class="case-study-scroll" data-case-scroll tabindex="0" role="region" aria-label="Case study content"></div></div>
+  <div class="case-study-panel" data-case-panel><div class="case-study-scroll" data-case-scroll tabindex="-1" role="region" aria-label="Case study content"></div></div>
 </dialog>
-{[...projects, ...conceptProjects].map(project => <template data-case-template={project.id}><CaseStudyContent project={project} /></template>)}
+{[...projects, ...collectionProjects].map(project => <template data-case-template={project.id}><CaseStudyContent project={project} /></template>)}

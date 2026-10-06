@@ -5,6 +5,11 @@ import { readMotionToken } from './native-motion.ts';
 export type WorkFilter = 'selected' | 'websites' | 'misc';
 export const matchesWorkFilter = (filter: WorkFilter, category: string) => filter === category;
 
+export function initialWorkFilter(hash: string): WorkFilter {
+  return hash === '#websites' ? 'websites' : hash === '#misc' ? 'misc' : 'selected';
+}
+export const workFilterHash = (filter: WorkFilter) => filter === 'selected' ? '' : `#${filter}`;
+
 export function initializeWorkFilter(onChange?: () => void, onReposition?: (top: number) => void) {
   const section = document.querySelector<HTMLElement>('#work');
   const list = section?.querySelector<HTMLElement>('#project-list');
@@ -33,6 +38,16 @@ export function initializeWorkFilter(onChange?: () => void, onReposition?: (top:
   let motions: Animation[] = [];
   let resizeFrame = 0;
   let destroyed = false;
+
+  const saveFilter = (updateHash = true) => {
+    // Forward can reveal a hidden collection while the URL belongs to a case.
+    if (location.pathname !== '/') return;
+    try {
+      const url = new URL(location.href);
+      if (updateHash) url.hash = workFilterHash(active);
+      history.replaceState({ ...history.state, workFilter: active }, '', `${url.pathname}${url.search}${url.hash}`);
+    } catch {}
+  };
 
   const layout = (collection: HTMLElement) => {
     if (!collection.classList.contains('project-collection--bento')) return;
@@ -84,14 +99,15 @@ export function initializeWorkFilter(onChange?: () => void, onReposition?: (top:
     onChange?.();
   };
 
-  const select = (filter: WorkFilter) => {
+  const select = (filter: WorkFilter, animate = true, updateHash = true) => {
     const target = collections.find(collection => collection.dataset.projectCollection === filter);
-    if (!target || filter === active) return;
+    if (!target) return;
+    if (filter === active) { if (updateHash) saveFilter(); return; }
     // Finish the one-time Work entrance before the independent filter transition.
     section.dispatchEvent(new Event('workfilterchange'));
     const listTop = list.getBoundingClientRect().top;
     // Deep in a long collection, bring the replacement into view without losing focus.
-    if (listTop < -window.innerHeight * .5) onReposition?.(window.scrollY + listTop - 112);
+    if (animate && listTop < -window.innerHeight * .5) onReposition?.(window.scrollY + listTop - 112);
     // Capture the rendered layout before changing copy, including an interrupted switch.
     const headingBounds = heading?.getBoundingClientRect();
     const descriptionTop = description && headingBounds
@@ -119,6 +135,7 @@ export function initializeWorkFilter(onChange?: () => void, onReposition?: (top:
     if (description) description.textContent = copy.description;
     active = filter;
     list.dataset.activeFilter = active;
+    if (updateHash) saveFilter();
     buttons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.workFilter === active)));
     const count = cardsIn(target).length;
     statuses.forEach(status => { status.textContent = `${count} ${count === 1 ? 'project' : 'projects'} shown`; });
@@ -135,7 +152,7 @@ export function initializeWorkFilter(onChange?: () => void, onReposition?: (top:
       }
     });
     layout(target);
-    if (reduced.matches || typeof list.animate !== 'function') { settle(); return; }
+    if (!animate || reduced.matches || typeof list.animate !== 'function') { settle(); return; }
     list.setAttribute('aria-busy', 'true');
     const layoutTiming: KeyframeAnimationOptions = {
       duration: number('--duration-filter-layout'), easing: ease, fill: 'both',
@@ -228,6 +245,9 @@ export function initializeWorkFilter(onChange?: () => void, onReposition?: (top:
   small.addEventListener('change', refreshLayout);
   reduced.addEventListener('change', refreshLayout);
   void document.fonts.ready.then(refreshLayout);
+  select(initialWorkFilter(location.hash), false, false);
+  // Preserve ordinary section anchors on startup; tab clicks own hash changes.
+  saveFilter(false);
   alignRail();
   const destroy = () => {
     destroyed = true;

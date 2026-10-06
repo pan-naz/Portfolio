@@ -26,8 +26,10 @@ assert.equal(sectionItemStart(2, 900, 900, .5), 2250, 'Third content continues t
 assert.equal(sectionItemStart(2, 900, 900, .5, true, 160), 1670, 'Experience rows can use a faster interval without changing the first row handoff');
 assert.ok(card.includes('data-project-reveal={!compact || undefined} data-section-item={!compact || undefined}'), 'Selected cards reveal as complete section items; filtered cards use their independent shuffle');
 assert.ok(
-  css.includes("[data-theme='dark'] .project { --ink: #FAF8F7; --muted: rgb(250 248 247 / .64); --canvas: #161715; --surface: #222320;"),
-  'Project-card chrome follows Dark mode with the approved surface hierarchy'
+  css.includes('.project { --surface: var(--project-surface);') &&
+    read('../src/styles/tokens.css').includes('--project-surface: var(--inverse-raised-surface);') &&
+    read('../src/styles/tokens.css').includes('--inverse-raised-surface: #222320;'),
+  'Project-card chrome follows the shared theme palette with the approved raised surface'
 );
 assert.ok(
   card.includes('<img src={project.image}') &&
@@ -60,7 +62,7 @@ assert.ok(!footer.includes('data-reveal'), 'Footer metadata and the design-syste
 assert.ok(about.includes('<ToolsSection />') && tools.includes('class="tools-section" aria-labelledby="tools-title" data-section-item'), 'The complete tools section follows the experience rows as one timeline item');
 assert.ok(!toolCard.includes('data-section-item'), 'Tool cards stay together rather than animating separately');
 assert.ok(toolCard.includes('role="group" tabindex="0"') && toolCard.includes('role="tooltip"'), 'Every tool card exposes its name on hover and keyboard focus without pretending to be a link or button');
-assert.ok(css.includes('.tool-card.is-pointer-hovered img { transform: scale(1.08); }') && css.includes('.tool-card:focus-visible .tool-card-tooltip'), 'Tool hover and focus enlarge the mark and reveal the tooltip');
+assert.ok(css.includes('.tool-card.is-pointer-hovered .svg-asset { transform: scale(1.08); }') && css.includes('.tool-card:focus-visible .tool-card-tooltip'), 'Tool hover and focus enlarge the mark and reveal the tooltip');
 assert.ok(toolCard.includes('tool-card-tooltip text-body-m'), 'Tool names use the Body/M type style');
 const simulateTooltipFollow = fps => Array.from({ length: fps / 2 }).reduce(position => tooltipFollowStep(position, 100, 1000 / fps), 0);
 assert.ok(Math.abs(simulateTooltipFollow(60) - simulateTooltipFollow(120)) < .001 && simulateTooltipFollow(60) > 99, 'Tooltip follow is smooth and frame-rate independent at 60/120Hz');

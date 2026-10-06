@@ -1,0 +1,98 @@
+---
+import type { Project } from '../data/portfolio';
+import { indexLawFirmMedia as media, indexLawFirmHomeSections, indexLawFirmServices, indexLawFirmTileOrder, indexLawFirmPalette } from '../data/index-law-firm-case-study';
+import CaseStudyOverview from './CaseStudyOverview.astro';
+import CaseStudyMedia from './CaseStudyMedia.astro';
+import CaseStudySteps from './CaseStudySteps.astro';
+import CaseStudyGuides from './CaseStudyGuides.astro';
+import CaseStudyMarker from './CaseStudyMarker.astro';
+import CaseStudyServiceTiles from './CaseStudyServiceTiles.astro';
+import SvgAsset from './SvgAsset.astro';
+import '../styles/index-law-firm-case-study.css';
+interface Props { project: Project; }
+const { project } = Astro.props;
+---
+<article class="case-study-content case-study-content--index-law-firm" data-case-content>
+  <CaseStudyGuides>
+    <CaseStudyMedia {...media.heroVideo} radius="media" artwork />
+    <div class="case-study-body case-study-narrative index-case">
+      <CaseStudyOverview project={project} titleId="index-title" presentation="compact">
+        <Fragment slot="role"><p>Freelance designer</p><ul><li>Several design options for the client</li><li>Site structure and the main page layout</li><li>UI design and the style guide</li><li>Intro animation</li><li>Phone layouts</li></ul></Fragment>
+        <p slot="secondary">I worked directly with the law firm. Yellow Leaf, a web studio from Ivano-Frankivsk, built the site from my designs.</p>
+      </CaseStudyOverview>
+
+      <CaseStudyMarker label="Task" />
+      <section class="index-section" aria-labelledby="index-task">
+        <h2 class="case-study-heading" id="index-task">A simple site for a law firm</h2>
+        <div class="case-study-columns">
+          <div><h3>The brief</h3><p>The firm asked for a simple, lively website. The client didn't know exactly what they needed, so I designed a few options from scratch. They picked one, and it became the site.</p></div>
+          <div><h3>The approach</h3><p>The site is one page built from square tiles. Services, photos, quotes and numbers each take a tile, so a long list of legal services is easy to scan. The palette is dark grey and white, and orange marks the numbers, quotes, links and hover states.</p></div>
+        </div>
+        <CaseStudyMedia {...media.scroll} />
+      </section>
+
+      <CaseStudyMarker label="Design" />
+      <section aria-labelledby="index-home">
+        <div class="case-study-columns">
+          <case-study-sticky class="case-study-sticky index-home-copy">
+            <h2 class="case-study-heading" id="index-home">Main page</h2>
+            <p class="index-muted">The menu scrolls to each section. The site has English and Ukrainian versions.</p>
+            <CaseStudySteps items={indexLawFirmHomeSections} />
+          </case-study-sticky>
+          <CaseStudyMedia {...media.home} />
+        </div>
+      </section>
+
+      <section class="case-study-chapter--inverse" aria-labelledby="index-services">
+        <div class="case-study-chapter__inner index-section">
+          <div class="case-study-columns index-chapter-heading">
+            <div><p class="case-study-eyebrow">Interaction</p><h2 class="case-study-heading" id="index-services">Service tiles</h2></div>
+            <p class="text-body-m index-muted">Each tile shows a service and a short line about it. On hover the line under the title turns orange and a plus appears. A popover shows what the firm does in that area. Hover a tile below to see its details.</p>
+          </div>
+          <CaseStudyServiceTiles id="index-service-demo" services={indexLawFirmServices} order={indexLawFirmTileOrder} class="index-service-demo">
+            <div slot="clients" data-service-decoration="clients" class="case-study-service-tile case-study-service-stat" style="--tile-row:1;--tile-column:2"><small>Trusted by</small><strong>2600</strong><small>clients</small></div>
+            <div slot="tie" data-service-decoration="tie" class="case-study-service-tile case-study-service-photo case-study-service-photo--top" style="--tile-row:1/3;--tile-column:3/5"><CaseStudyMedia src="/projects/index-law-firm-case-study/tile-tie.jpg" kind="image" width={448} height={448} alt="" presentation="bare" /></div>
+            <div slot="scales" data-service-decoration="scales" class="case-study-service-tile case-study-service-photo case-study-service-photo--bottom" style="--tile-row:2/4;--tile-column:1/3"><CaseStudyMedia src="/projects/index-law-firm-case-study/tile-scales.jpg" kind="image" width={448} height={448} alt="" presentation="bare" /></div>
+            <div slot="staff" data-service-decoration="staff" class="case-study-service-tile case-study-service-stat" style="--tile-row:3;--tile-column:3"><small>Staff members</small><strong>97</strong><small>in our journey</small></div>
+            <div slot="arguments" data-service-decoration="arguments" class="case-study-service-tile case-study-service-quote" style="--tile-row:4;--tile-column:1"><blockquote>The strength of arguments is not in their number but in their importance.</blockquote></div>
+            <div slot="skovoroda" data-service-decoration="skovoroda" class="case-study-service-tile case-study-service-quote" style="--tile-row:4;--tile-column:4"><blockquote>Falseness oppresses and depresses, but the desire to fight it grows.<cite>Hryhorii Skovoroda</cite></blockquote></div>
+            <div slot="kant" data-service-decoration="kant" class="case-study-service-tile case-study-service-quote" style="--tile-row:5;--tile-column:3"><blockquote>When justice disappears, nothing is left that could give value to human life.<cite>Immanuel Kant</cite></blockquote></div>
+            <div slot="blank" data-service-decoration="blank" class="case-study-service-tile case-study-service-blank" style="--tile-row:5;--tile-column:4" aria-hidden="true"></div>
+          </CaseStudyServiceTiles>
+        </div>
+      </section>
+
+      <CaseStudyMarker label="Responsive" />
+      <section class="index-section" aria-labelledby="index-responsive">
+        <div class="case-study-columns index-chapter-heading">
+          <div><h2 class="case-study-heading" id="index-responsive">Laptop and phone</h2><p class="index-breakpoint text-body-s">320px +</p></div>
+          <p class="index-muted">The layout works from 320px wide. On phones the tiles stack in one column, the header turns dark and the menu folds into a button next to the logo.</p>
+        </div>
+        <div class="index-devices"><CaseStudyMedia {...media.laptop} /><CaseStudyMedia {...media.phones} /></div>
+        <CaseStudyMedia {...media.phoneClose} />
+      </section>
+
+      <section class="case-study-chapter--inverse" aria-labelledby="index-style">
+        <div class="case-study-chapter__inner index-section">
+          <div><p class="case-study-eyebrow">Style guide</p><h2 class="case-study-heading" id="index-style">Colour, type and grid</h2></div>
+          <div class="index-block"><h3>Colour</h3><ul class="index-palette" aria-label="Colour palette">{indexLawFirmPalette.map(([label, value]) => <li><div class="index-swatch" style={'--index-swatch:' + value} aria-hidden="true" /><div><strong>{label}</strong><code>{value}</code></div></li>)}</ul></div>
+          <div class="index-block"><h3>Typography</h3><div class="index-specimens">
+            <div class="index-specimen"><p class="case-study-eyebrow">Lato Regular · display</p><p class="index-specimen-size text-body-s">26px</p><p class="index-lato index-display-sample">Representation in court</p></div>
+            <div class="index-specimen"><p class="case-study-eyebrow">Lato Regular · UI and copy</p><p class="index-specimen-size text-body-s">14px</p><p class="index-lato index-body-sample">Consultation and clarification of legal issues, with written notes on the current law.</p></div>
+            <div class="index-specimen"><p class="case-study-eyebrow">Section titles</p><p class="index-specimen-size text-body-s">Uppercase, wide spacing</p><p class="index-lato index-caps-sample" aria-label="Law firm Index">Law<br />firm<br />Index</p></div>
+          </div></div>
+          <div class="index-brand-row">
+            <h3>Logo</h3><div class="index-logo-card"><SvgAsset src="/projects/index-law-firm-case-study/logo-mark.svg" aria-hidden="false" role="img" aria-label="Index logo: three rising building shapes over the name in Cyrillic" /></div>
+            <h3>Grid</h3><div class="index-grid-card"><CaseStudyMedia {...media.grid} presentation="framed" radius="small" /><dl><div><dt>Container</dt><dd>1170px</dd></div><div><dt>Columns</dt><dd>12</dd></div><div><dt>Framework</dt><dd>Bootstrap</dd></div></dl></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </CaseStudyGuides>
+</article>
+
+<script>
+  import { initializeCaseStudyVideos } from '../scripts/case-study-videos';
+  import '../scripts/case-study-sticky';
+  initializeCaseStudyVideos();
+</script>

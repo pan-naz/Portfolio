@@ -1,5 +1,4 @@
 ---
-import '@fontsource-variable/urbanist';
 import '../styles/global.css';
 import { profile } from '../data/portfolio';
 interface Props { title?: string; homeIntro?: boolean; }
@@ -92,8 +91,13 @@ const { title = `${profile.name} — naz.wtf`, homeIntro = false } = Astro.props
         // Homepage reloads replay the intro from the top. An open case reloads
         // as a standalone page using its own reading position.
         history.scrollRestoration = 'manual';
-        root.dataset.scrollRestorePending = 'true';
-        if (restartHome) history.replaceState(history.state, '', `${path}#top`);
+        // Home is reset before body parsing; its static Work preview must stay
+        // visible. Only case reading positions need the layout/paint guard.
+        if (!restartHome) root.dataset.scrollRestorePending = 'true';
+        if (restartHome) {
+          const hash = location.hash === '#websites' || location.hash === '#misc' ? location.hash : '';
+          history.replaceState(history.state, '', `${path}${hash}`);
+        }
         const top = restartHome ? 0 : saved.top;
         const restore = () => window.scrollTo({ top, left: 0, behavior: 'instant' });
         restore();
@@ -112,5 +116,5 @@ const { title = `${profile.name} — naz.wtf`, homeIntro = false } = Astro.props
       })();
     </script>
   </head>
-  <body><a class="skip-link" href="#main">Skip to content</a><slot /><script>import '../scripts/theme';</script></body>
+  <body><slot /><script>import '../scripts/theme';</script></body>
 </html>

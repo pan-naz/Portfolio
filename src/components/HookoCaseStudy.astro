@@ -4,6 +4,9 @@ import { hookoTools, hookoDemo } from '../data/hooko-case-study';
 import HookoHero from './HookoHero.astro';
 import CaseStudyOverview from './CaseStudyOverview.astro';
 import TextLink from './TextLink.astro';
+import Arrow from './Arrow.astro';
+import Icon from './Icon.astro';
+import SvgAsset from './SvgAsset.astro';
 import SkillTag from './SkillTag.astro';
 import SectionHeading from './SectionHeading.astro';
 import CaseStudyMedia from './CaseStudyMedia.astro';
@@ -12,6 +15,11 @@ import ToolCard from './ToolCard.astro';
 import '../styles/hooko-case-study.css';
 interface Props { project: Project; }
 const { project } = Astro.props;
+const serviceLogo = (name: string) => {
+  const tool = hookoTools.find(tool => tool.name === name);
+  if (!tool) throw new Error(`Missing Hooko service mark: ${name}`);
+  return tool.logo;
+};
 const productLinks = [
   { href: 'https://hooko.app/', label: 'Website' },
   { href: 'https://apps.apple.com/us/app/go-viral-hooko/id6758728094', label: 'App Store' },
@@ -90,7 +98,7 @@ const productLinks = [
           <Fragment slot="media"><img src="/projects/hooko-case-study/as-1.jpg" alt="" width="1242" height="2688" loading="lazy" style="object-position:50% 78%"></Fragment></CaseStudyDecisionCard>
 
         <CaseStudyDecisionCard title="No account, no stored videos" label="Privacy" labelVariant="accent" layout="media">
-            <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+            <Icon slot="icon" name="shield-check" />
             <p>There is no registration screen. An anonymous identity is created on first launch, and uploaded videos are deleted from the server once the analysis finishes. Subscriptions go through RevenueCat and are tied to the user's Apple ID, so they survive a reinstall without an account.</p>
             <div class="hk-pillrow" aria-label="First-run path"><SkillTag label="Open app" /><SkillTag label="Try the demo analysis" /><SkillTag label="Upload a video" /><SkillTag label="Get the plan" /></div>
           </CaseStudyDecisionCard>
@@ -133,7 +141,7 @@ const productLinks = [
               
               <rect x="0" y="40" width="220" height="200" rx="18" fill="#110a1d"/>
               <clipPath id="hk-appicon-clip"><rect x="168" y="56" width="36" height="36" rx="9"/></clipPath>
-              <image href="/projects/hooko-logo.svg" x="168" y="56" width="36" height="36" clip-path="url(#hk-appicon-clip)" preserveAspectRatio="xMidYMid slice"/>
+              <SvgAsset src="/projects/hooko-logo.svg" x="168" y="56" width="36" height="36" clip-path="url(#hk-appicon-clip)" preserveAspectRatio="xMidYMid slice"/>
               <text x="20" y="72" font-size="16" font-weight="600" fill="#fefefe">Hooko iOS app</text>
               <text x="20" y="92" font-size="12" fill="rgba(254,254,254,.64)">Flutter</text>
               <text x="20" y="130" font-size="12" fill="#fefefe">Upload · progress</text>
@@ -199,12 +207,12 @@ const productLinks = [
           <div><dt>v0 → Vercel</dt><dd>Site design and code<br />Landing, terms, privacy<br />Download link → App Store</dd></div>
         </dl>
         <ol class="hk-pipeline" aria-label="Analysis pipeline">
-          <li><div class="hk-pl-top"><b>1</b><span class="hk-svc"><svg viewBox="0 0 24 24" fill="#3FCF8E" aria-hidden="true"><path d="M11.9 1.036c-.015-.986-1.26-1.41-1.874-.637L.764 12.05C-.33 13.427.65 15.455 2.409 15.455h9.579l.113 7.51c.014.985 1.259 1.408 1.873.636l9.262-11.653c1.093-1.375.113-3.403-1.645-3.403h-9.642z"/></svg>Supabase</span></div><strong>Upload video</strong><p>The app uploads the video to Supabase storage under the anonymous user.</p></li>
-          <li><div class="hk-pl-top"><b>2</b><span class="hk-svc"><svg viewBox="0 0 24 24" fill="#8E75B2" aria-hidden="true"><path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81"/></svg>Gemini</span></div><strong>Detect niche</strong><p>Gemini watches the video and picks its niche. The niche sets the benchmark the hook is scored against.</p></li>
-          <li><div class="hk-pl-top"><b>3</b><span class="hk-svc"><svg viewBox="0 0 24 24" fill="#8E75B2" aria-hidden="true"><path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81"/></svg>Gemini</span></div><strong>Analyze engagement</strong><p>Gemini scores the first 3 seconds and the rest of the video: audio, visuals, pacing and on-screen text.</p></li>
-          <li><div class="hk-pl-top"><b>4</b><span class="hk-svc"><svg viewBox="0 0 24 24" fill="#FF0000" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>YouTube API</span></div><strong>Find viral examples</strong><p>The app searches YouTube Shorts in the same niche for real videos that use the suggested hook technique.</p></li>
-          <li><div class="hk-pl-top"><b>5</b><span class="hk-svc"><svg viewBox="0 0 24 24" fill="#8E75B2" aria-hidden="true"><path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81"/></svg>Gemini</span></div><strong>Write rewrites and captions</strong><p>Gemini writes 3 alternative hooks with what to say and show, plus a caption and hashtags.</p></li>
-          <li class="hk-end"><div class="hk-pl-top"><b>6</b><span class="hk-svc"><svg viewBox="0 0 24 24" fill="#3FCF8E" aria-hidden="true"><path d="M11.9 1.036c-.015-.986-1.26-1.41-1.874-.637L.764 12.05C-.33 13.427.65 15.455 2.409 15.455h9.579l.113 7.51c.014.985 1.259 1.408 1.873.636l9.262-11.653c1.093-1.375.113-3.403-1.645-3.403h-9.642z"/></svg>Supabase</span></div><strong>Delete the video</strong><p>The video is deleted from the database once the result is ready. User videos are never kept.</p></li>
+          <li><div class="hk-pl-top"><b>1</b><span class="hk-svc"><SvgAsset src={serviceLogo('Supabase')} width="12" height="12" />Supabase</span></div><strong>Upload video</strong><p>The app uploads the video to Supabase storage under the anonymous user.</p></li>
+          <li><div class="hk-pl-top"><b>2</b><span class="hk-svc"><SvgAsset src={serviceLogo('Gemini API')} width="12" height="12" />Gemini</span></div><strong>Detect niche</strong><p>Gemini watches the video and picks its niche. The niche sets the benchmark the hook is scored against.</p></li>
+          <li><div class="hk-pl-top"><b>3</b><span class="hk-svc"><SvgAsset src={serviceLogo('Gemini API')} width="12" height="12" />Gemini</span></div><strong>Analyze engagement</strong><p>Gemini scores the first 3 seconds and the rest of the video: audio, visuals, pacing and on-screen text.</p></li>
+          <li><div class="hk-pl-top"><b>4</b><span class="hk-svc"><SvgAsset src={serviceLogo('YouTube Data API')} width="12" height="12" />YouTube API</span></div><strong>Find viral examples</strong><p>The app searches YouTube Shorts in the same niche for real videos that use the suggested hook technique.</p></li>
+          <li><div class="hk-pl-top"><b>5</b><span class="hk-svc"><SvgAsset src={serviceLogo('Gemini API')} width="12" height="12" />Gemini</span></div><strong>Write rewrites and captions</strong><p>Gemini writes 3 alternative hooks with what to say and show, plus a caption and hashtags.</p></li>
+          <li class="hk-end"><div class="hk-pl-top"><b>6</b><span class="hk-svc"><SvgAsset src={serviceLogo('Supabase')} width="12" height="12" />Supabase</span></div><strong>Delete the video</strong><p>The video is deleted from the database once the result is ready. User videos are never kept.</p></li>
         </ol>
       </div>
     </div>
@@ -246,7 +254,7 @@ const productLinks = [
         <article class="hk-camp"><h4>Competitor</h4><p class="hk-match">Exact match</p><p>Shows the ad when someone searches for a similar app by name. It has its own campaign so I could check if it was worth the cost.</p><div class="hk-kw"><SkillTag label="names of similar apps" /></div></article>
         <article class="hk-camp"><h4>Discovery</h4><p class="hk-match">Broad match</p><p>Finds new search terms I hadn't thought of. Keywords I already target in other campaigns are blocked here, so I don't pay for them twice.</p><div class="hk-kw"><SkillTag label="search terms report" /></div></article>
       </div>
-      <div class="hk-flowline" aria-label="How new keywords move between campaigns"><span>Discovery finds a new search term</span>→<span>It brings installs</span>→<span>Add it to Category</span>→<span>Block it in Discovery</span></div>
+      <div class="hk-flowline" aria-label="How new keywords move between campaigns"><span>Discovery finds a new search term</span><Arrow /><span>It brings installs</span><Arrow /><span>Add it to Category</span><Arrow /><span>Block it in Discovery</span></div>
     </div>
   </section>
 

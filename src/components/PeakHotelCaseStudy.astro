@@ -1,0 +1,92 @@
+---
+import type { Project } from '../data/portfolio';
+import { peakHotelMedia as media, peakHotelLinks, peakHotelHomeSections, peakHotelInnerPages, peakHotelServices, peakHotelColors } from '../data/peak-hotel-case-study';
+import CaseStudyOverview from './CaseStudyOverview.astro';
+import CaseStudyMedia from './CaseStudyMedia.astro';
+import CaseStudySteps from './CaseStudySteps.astro';
+import TextLink from './TextLink.astro';
+import '../styles/peak-hotel-case-study.css';
+interface Props { project: Project; }
+const { project } = Astro.props;
+---
+<article class="case-study-content case-study-content--peak-hotel" data-case-content>
+  <CaseStudyMedia {...media.heroVideo} alt={media.hero.alt} radius="media" artwork />
+  <div class="case-study-body case-study-narrative peak-case">
+    <CaseStudyOverview project={project} titleId="peak-title">
+      <TextLink slot="links" href={peakHotelLinks.website} accent compact>Website</TextLink>
+      <Fragment slot="role"><p>Freelance designer.</p><ul><li>Site structure and page layouts</li><li>UI design and the style guide</li><li>Interactions: preloader, sliders, menu and hover states</li><li>Tablet and phone layouts</li></ul></Fragment>
+      <p slot="secondary">I worked directly with the hotel. The hotel's engineering team built the site.</p>
+    </CaseStudyOverview>
+
+    <section aria-labelledby="peak-idea">
+      <p class="case-study-eyebrow">Idea</p><h2 class="case-study-heading" id="peak-idea">The views come first</h2>
+      <div class="case-study-columns peak-block">
+        <div><h3>The hotel</h3><p>Peak Hotel stands in the highest part of Dragobrat, and the Carpathian peaks are right outside the windows. That's why the look of the site mattered so much on this project.</p></div>
+        <div><h3>The approach</h3><p>Every page opens with a full-screen photo. Text sits on dark panels over the photos, and copper is kept for buttons, icons and other UI elements.</p></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="peak-home">
+      <div class="case-study-columns">
+        <case-study-sticky class="case-study-sticky">
+          <p class="case-study-eyebrow">Pages</p><h2 class="case-study-heading" id="peak-home">Main page</h2>
+          <p class="peak-lede">The main page works like a short tour of the hotel. Every block leads to its own page.</p>
+          <CaseStudySteps items={peakHotelHomeSections} class="peak-block" />
+        </case-study-sticky>
+        <CaseStudyMedia {...media.home} />
+      </div>
+    </section>
+
+    <section aria-labelledby="peak-pages">
+      <p class="case-study-eyebrow">Pages</p><h2 class="case-study-heading" id="peak-pages">Inner pages</h2>
+      <div class="case-study-media-grid peak-block">
+        {peakHotelInnerPages.map(page => <figure class="peak-page"><CaseStudyMedia {...page.media} /><figcaption><h3>{page.title}</h3><p>{page.description}</p></figcaption></figure>)}
+      </div>
+      <div class="peak-services peak-block">
+        <h3 id="peak-services">Services</h3>
+        <div class="case-study-media-grid">
+          {peakHotelServices.map(service => <figure class="peak-page"><CaseStudyMedia {...service.media} /><figcaption>{service.title}</figcaption></figure>)}
+        </div>
+      </div>
+    </section>
+
+    <section class="case-study-chapter--inverse" aria-labelledby="peak-navigation">
+      <div class="case-study-chapter__inner">
+      <p class="case-study-eyebrow">Interaction</p><h2 class="case-study-heading" id="peak-navigation">Navigation</h2>
+      <p class="peak-lede">The menu opens on top of the page. Each section shows a photo and its sub-pages. The language switch for English, Ukrainian and Russian is right next to it.</p>
+      <div class="peak-block"><CaseStudyMedia {...media.navigation} /></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="peak-responsive">
+      <p class="case-study-eyebrow">Responsive</p><h2 class="case-study-heading" id="peak-responsive">Tablet and phone</h2>
+      <p class="peak-lede">On smaller screens the menu turns into a full-screen list. The booking bar is still at the top, right under the logo.</p>
+      <div class="peak-block"><CaseStudyMedia {...media.responsive} /></div>
+    </section>
+
+    <section aria-labelledby="peak-ui">
+      <p class="case-study-eyebrow">Components</p><h2 class="case-study-heading" id="peak-ui">UI elements</h2>
+      <p class="peak-lede">In the booking bar, arrival date opens a calendar and nights opens a short list. A booking card shows the room, the number of guests and the price.</p>
+      <div class="peak-block"><CaseStudyMedia {...media.ui} /></div>
+      <figure class="peak-button peak-block"><CaseStudyMedia {...media.button} /><figcaption class="text-body-s">Button hover state</figcaption></figure>
+    </section>
+
+    <section aria-labelledby="peak-style">
+      <p class="case-study-eyebrow">Style guide</p><h2 class="case-study-heading" id="peak-style">Warm dark tones and an italic serif</h2>
+      <div class="peak-block"><h3>Colour</h3><ul class="peak-palette" aria-label="Colour palette">{peakHotelColors.map(color => <li><div class="peak-swatch" style={'--peak-swatch:' + color.value} aria-hidden="true" /><div class="peak-color-label"><span>{color.label}</span><code>{color.value}</code></div></li>)}</ul></div>
+      <div class="peak-subsection"><h3>Typography</h3><div class="case-study-columns peak-type-grid">
+        <div class="peak-type-specimen"><p class="peak-type-display peak-playfair-italic" aria-hidden="true">Aa</p><p class="case-study-eyebrow">Playfair Display · headings</p><div class="peak-type-example"><p class="text-body-s">Italic</p><p class="peak-type-sample peak-playfair-italic">In the highest part of Dragobrat</p></div><div class="peak-type-example"><p class="text-body-s">Bold</p><p class="peak-type-sample peak-playfair-bold">European service</p></div></div>
+        <div class="peak-type-specimen"><p class="peak-type-display peak-lato-regular" aria-hidden="true">Aa</p><p class="case-study-eyebrow">Lato · body and buttons</p><div class="peak-type-example"><p class="text-body-s">Regular</p><p class="peak-type-sample peak-lato-regular">The spacious rooms are equipped with comfortable furnishings.</p></div><div class="peak-type-example"><p class="text-body-s">Black</p><p class="peak-type-sample peak-lato-black">Book your stay</p></div></div>
+      </div></div>
+      <div class="peak-subsection case-study-columns"><div><h3>Icons</h3><p>One icon above each section title. The last one is the mountain from the logo.</p></div><CaseStudyMedia {...media.icons} /></div>
+      <div class="peak-subsection"><h3>Grid</h3><div class="peak-media-gap"><CaseStudyMedia {...media.grid} /></div></div>
+      <div class="case-study-end-links"><TextLink href={peakHotelLinks.website} accent compact>Website</TextLink></div>
+    </section>
+  </div>
+</article>
+
+<script>
+  import { initializeCaseStudyVideos } from '../scripts/case-study-videos';
+  import '../scripts/case-study-sticky';
+  initializeCaseStudyVideos();
+</script>

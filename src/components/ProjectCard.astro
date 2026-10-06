@@ -21,7 +21,7 @@ const mediaHeight = project.id === 'hooko' ? hookoHero.height : project.video?.h
       <div class="project-copy"><p class="project-outcome text-body-l">{project.outcome ?? project.description}</p>{project.outcome && <p class="project-description text-body-m">{project.description}</p>}</div>
     </div>
     <div class="project-media" style={`--media-ratio:${mediaWidth} / ${mediaHeight}`}>
-      {project.id === 'hooko' ? <HookoHero preview /> : project.video ? <video data-project-video muted loop playsinline preload="none" poster={project.video.poster ?? project.image} width={mediaWidth} height={mediaHeight} aria-hidden="true">
+      {project.id === 'hooko' ? <HookoHero preview /> : project.video ? <video data-project-video muted loop playsinline preload="none" poster={project.video.poster ?? project.image} width={mediaWidth} height={mediaHeight} style={project.video.canvasColor ? `background:${project.video.canvasColor}` : undefined} aria-hidden="true">
         <source data-src={project.video.src} type="video/mp4" />
         <img src={project.video.poster ?? project.image} alt="" width={mediaWidth} height={mediaHeight} loading="lazy" decoding="async" />
       </video> : <img src={project.image} srcset={imageSrcSet} sizes={imageSizes} alt={project.imageAlt} width={imageWidth} height={project.imageHeight} loading="lazy" decoding="async" />}

@@ -1,14 +1,15 @@
 ---
 import type { Tool } from '../data/portfolio';
+import SvgAsset from './SvgAsset.astro';
 import '../styles/tool-card.css';
 interface Props { tool: Tool; variant?: 'logo' | 'detail'; label?: string; description?: string; iconColor?: string; }
 const { tool, variant = 'logo', label, description, iconColor } = Astro.props;
 const tooltipId = `tool-${tool.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-tooltip`;
 ---
 {variant === 'detail' ? <article class="tool-detail-card">
-  <span class="tool-detail-card__icon" style={iconColor ? `--tool-icon-color:${iconColor}` : undefined}><img src={tool.logo} alt="" width={tool.width} height={tool.height} loading="lazy" decoding="async" /></span>
+  <span class="tool-detail-card__icon" style={iconColor ? `--tool-icon-color:${iconColor}` : undefined}><SvgAsset src={tool.logo} width={tool.width} height={tool.height} /></span>
   <div>{label && <p class="eyebrow tool-detail-card__label">{label}</p>}<h3 class="text-body-m-strong">{tool.name}</h3><p class="text-body-m">{description}</p></div>
 </article> : <div class="tool-card" role="group" tabindex="0" aria-labelledby={tooltipId}>
-  <img src={tool.logo} alt="" width={tool.width} height={tool.height} loading="lazy" decoding="async" />
+  <SvgAsset src={tool.logo} width={tool.width} height={tool.height} />
   <span id={tooltipId} class="tool-card-tooltip text-body-m" role="tooltip">{tool.name}</span>
 </div>}

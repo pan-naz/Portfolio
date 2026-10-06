@@ -1,5 +1,5 @@
 .tool-detail-card { display: grid; grid-template-columns: var(--space-12) minmax(0, 1fr); gap: var(--space-4); align-items: start; padding: var(--space-4); border-radius: var(--radius-medium); background: var(--surface); box-shadow: var(--shadow-floating); }
 .tool-detail-card__icon { display: grid; place-items: center; width: var(--space-12); height: var(--space-12); border-radius: var(--radius-small); background: color-mix(in srgb, var(--tool-icon-color, var(--floating-surface)) 12%, var(--floating-surface)); }
-.tool-detail-card__icon img { width: var(--icon-size); height: var(--icon-size); object-fit: contain; }
+.tool-detail-card__icon .svg-asset { width: var(--icon-size); height: var(--icon-size); object-fit: contain; }
 .tool-detail-card__label { color: var(--muted); }
 .tool-detail-card h3 + p { margin-top: var(--space-2); }
