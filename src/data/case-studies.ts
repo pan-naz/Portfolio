@@ -17,31 +17,6 @@ export const caseStudySamples: Record<string, CaseStudySample> = {
     direction: 'The sample narrative moves from a video to an analysis, then to a next step. A score is most useful when its explanation helps a creator decide what to improve.',
     detail: 'Use the existing mobile screens to explain how feedback is grouped, how priorities are communicated and how the experience fits a small screen. Add the actual iterations and launch learnings to complete the story.',
   },
-  fieldwork: {
-    context: 'Fieldwork is a fictional collection of cabins and outdoor escapes. The concept begins with a simple tension: planning a quiet weekend should not feel like another busy task.',
-    direction: 'Let landscape photography establish the mood, then bring practical details into focus. A visitor can move from inspiration to a stay that fits their time, group and preferred pace.',
-    detail: 'The sample booking journey separates browsing from commitment. Cabin essentials, nearby trails and availability would sit together so the next step feels clear.', related: ['offgrid', 'open-water'],
-  },
-  'common-ground': {
-    context: 'Common Ground imagines an independent coffee shop with a familiar, local character. Its website should help regulars get what they need and give first-time visitors a sense of the place.',
-    direction: 'Bring the menu, opening information and coffee selection close to the surface. Warm imagery supports the identity, while the structure stays useful on a phone outside the shop.',
-    detail: 'This sample explores two short paths: planning a visit and choosing beans for home. Seasonal items can change without making the core navigation harder to find.', related: ['paper-route', 'desk-notes'],
-  },
-  forma: {
-    context: 'Forma Studio is an architecture portfolio concept built around material, light and proportion. The work needs space to speak, with enough context to make each project understandable.',
-    direction: 'Pair large images with short, precise descriptions. A project page can move from the overall setting to the smaller details that give a space its character.',
-    detail: 'The sample layout uses a steady reading rhythm and generous image sizes. Project facts and an enquiry path would remain easy to find without competing with the photography.', related: ['fieldwork', 'open-water'],
-  },
-  offgrid: {
-    context: 'Offgrid Journal is a fictional independent travel publication. The concept gives long-form stories, field notes and destination guides a shared home.',
-    direction: 'Use photography to invite exploration, then give the writing a comfortable reading width. Clear story categories help readers choose between a quick note and a longer journey.',
-    detail: 'This sample article structure alternates narrative passages with images and practical context. Related stories would offer a natural continuation at the end.', related: ['fieldwork', 'open-water'],
-  },
-  'paper-route': {
-    context: 'Steep & Co. is an online-shop concept for loose-leaf tea, ceramics and brewing rituals. It aims to make discovery approachable for someone choosing their first tea as well as a returning customer.',
-    direction: 'Organize products around flavor, preparation and everyday use. Photographs provide texture while the copy answers practical questions about what to choose and how to brew it.',
-    detail: 'The sample product story brings tasting notes, brewing instructions and companion ceramics into one sequence. The path to a basket stays short and predictable.', related: ['common-ground', 'still-life'],
-  },
   afterlight: {
     context: 'Afterlight is a photography-led identity study about noticing ordinary light. It explores how a small visual system can support images without overshadowing them.',
     direction: 'Build the mood through framing, contrast and a restrained typographic voice. Let image sequences carry the story instead of adding more decorative elements.',
@@ -50,7 +25,7 @@ export const caseStudySamples: Record<string, CaseStudySample> = {
   'still-life': {
     context: 'Still Life Club is a visual scrapbook concept for everyday objects. It collects small compositions and observations rather than presenting a conventional product catalog.',
     direction: 'Use color, cropping and repeated shapes to connect otherwise different subjects. Short captions give each image a point of view without turning the collection into a long essay.',
-    detail: 'The sample sequence explores a lead composition followed by quieter details. A flexible grid would allow new observations to join the collection over time.', related: ['soft-focus', 'paper-route'],
+    detail: 'The sample sequence explores a lead composition followed by quieter details. A flexible grid would allow new observations to join the collection over time.', related: ['soft-focus', 'slow-sunday'],
   },
   'soft-focus': {
     context: 'Soft Focus explores photographic moods for a fictional creative studio. The concept centers on a gentle visual voice that still gives the work a clear identity.',
@@ -60,7 +35,7 @@ export const caseStudySamples: Record<string, CaseStudySample> = {
   'slow-sunday': {
     context: 'Slow Sunday is an identity and packaging concept for everyday rituals. It asks how a small collection of objects might encourage a more considered pace.',
     direction: 'Focus on tactile qualities, clear labels and calm compositions. The concept uses ordinary moments as its subject rather than relying on a complicated brand story.',
-    detail: 'These sample references establish a mood for packaging and printed pieces. Final applications would need product-specific dimensions, materials and production details.', related: ['paper-route', 'common-ground'],
+    detail: 'These sample references establish a mood for packaging and printed pieces. Final applications would need product-specific dimensions, materials and production details.', related: ['still-life', 'open-water'],
   },
   'desk-notes': {
     context: 'Desk Notes imagines a lightweight workspace for notes, references and unfinished ideas. The concept gives early thinking a place before it needs to become a polished document.',
@@ -75,6 +50,6 @@ export const caseStudySamples: Record<string, CaseStudySample> = {
   'open-water': {
     context: 'Open Water is a poster-series concept about the meeting of land and sea. The study looks at rhythm, distance and the space around a subject.',
     direction: 'Use the coastline as a starting point for composition. Shifts in scale and cropping create related pieces without making every poster identical.',
-    detail: 'The sample sequence places a broad view alongside supporting landscape imagery. Final posters could explore how typography sits within those different amounts of open space.', related: ['offgrid', 'fieldwork'],
+    detail: 'The sample sequence places a broad view alongside supporting landscape imagery. Final posters could explore how typography sits within those different amounts of open space.', related: ['afterlight', 'soft-focus'],
   },
 };

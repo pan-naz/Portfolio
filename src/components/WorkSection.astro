@@ -1,13 +1,13 @@
 ---
 import { workCategories } from '../data/work-categories';
 import ProjectCard from './ProjectCard.astro';
-import { projects, conceptProjects } from '../data/portfolio';
+import { projects, collectionProjects } from '../data/portfolio';
 import SectionHeading from './SectionHeading.astro';
 import SectionNavigation from './SectionNavigation.astro';
 import IconButton from './IconButton.astro';
 import CaseStudyLayer from './CaseStudyLayer.astro';
 ---
-<section id="work" class="work chapter" aria-labelledby="work-title" tabindex="-1" data-work-stage>
+<section id="work" class="work chapter" aria-labelledby="work-title" data-work-stage>
   <div class="work-stage-surface" data-work-stage-surface>
     <div class="work-panel" aria-hidden="true"></div>
     <div class="work-rail" data-work-rail><SectionNavigation /></div>
@@ -17,16 +17,14 @@ import CaseStudyLayer from './CaseStudyLayer.astro';
       <div id="project-list" class="projects" data-active-filter="selected">
         <div class="project-collection" data-project-collection="selected">{projects.map((project, index) => <ProjectCard project={project} lead={index === 0} />)}</div>
         {(['websites', 'misc'] as const).map(category => <div class="project-collection project-collection--bento" data-project-collection={category} hidden>
-          {conceptProjects.filter(project => project.category === category).map(project => <ProjectCard project={project} compact />)}
+          {collectionProjects.filter(project => project.category === category).map(project => <ProjectCard project={project} compact />)}
         </div>)}
       </div>
     </div>
   </div>
 </section>
 <div class="project-cursor" data-project-cursor aria-hidden="true">
-  <IconButton label="Project cursor" tabindex="-1" class="floating-control-theme floating-control-surface">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><g><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></g></svg>
-  </IconButton>
+  <IconButton label="Project cursor" tabindex="-1" class="floating-control-theme floating-control-surface" icon="plus" />
 </div>
 
 <CaseStudyLayer />

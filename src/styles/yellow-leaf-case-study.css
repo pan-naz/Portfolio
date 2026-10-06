@@ -1,0 +1,51 @@
+/* Reference composition; all portfolio UI roles come from the shared narrative and tokens. */
+.case-study-content--yellow-leaf { padding-bottom: 0; }
+.yellow-block { margin-top: var(--space-16); }
+.yellow-lede { margin-top: var(--space-6); color: var(--muted); }
+.yellow-stack { display: grid; gap: var(--space-6); }
+.yellow-chapter-heading { align-items: end; }
+.yellow-chapter-heading > p { color: var(--muted); }
+.yellow-duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--grid-gap); align-items: start; }
+.yellow-duo > * { min-width: 0; }
+.yellow-brand-card { display: grid; align-content: space-between; gap: var(--space-6); height: 100%; margin: 0; padding: var(--space-8); background: var(--surface); border-radius: var(--radius-medium); box-shadow: var(--shadow-floating); }
+.yellow-brand-card figcaption { color: var(--muted); font-size: var(--text-small); line-height: 1.428571; }
+.yellow-equation { display: grid; grid-template-columns: minmax(0, 1fr) var(--space-6) minmax(0, 1fr) var(--space-6) minmax(0, 1fr); gap: var(--space-2); align-items: center; text-align: center; }
+.yellow-equation > div { display: grid; justify-items: center; gap: var(--space-3); }
+.yellow-equation .svg-asset { width: 100%; max-width: var(--space-24); height: auto; }
+.yellow-equation span { font-size: var(--text-small); line-height: 1.428571; }
+.yellow-equation > svg { margin-bottom: var(--space-8); }
+.yellow-construction { display: block; width: 100%; max-width: 300px; height: auto; margin-inline: auto; }
+.yellow-palette { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--grid-gap); margin: var(--space-6) 0 0; padding: 0; list-style: none; }
+.yellow-palette > li { overflow: hidden; border: 1px solid var(--inverse-divider); border-radius: var(--radius-small); }
+.yellow-swatch { aspect-ratio: 4 / 3; background: var(--yellow-swatch); }
+.yellow-colour-label { display: grid; gap: var(--space-1); padding: var(--space-4); font-size: var(--text-small); line-height: 1.428571; }
+.yellow-colour-label code { color: var(--muted); font-family: var(--font-body); }
+.yellow-type-grid { margin-top: var(--space-6); }
+.yellow-type-card { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-6); padding: var(--space-8); border: 1px solid var(--inverse-divider); border-radius: var(--radius-medium); height: 100%; }
+.yellow-type-display { font-size: var(--text-heading-l); line-height: 1.142857; }
+.yellow-type-card > div > .case-study-eyebrow { margin-top: 0; }
+.yellow-type-example { margin-top: var(--space-6); }
+.yellow-type-example > :first-child { color: var(--muted); }
+.yellow-case .yellow-type-sample { margin-top: var(--space-2); font-size: var(--text-body); line-height: 1.5; }
+/* Original brand specimens alone retain Yellow Leaf's fonts and weights. */
+@font-face { font-family: 'Yellow Leaf Oswald'; font-style: normal; font-weight: 400 700; font-display: swap; src: url('/projects/yellow-leaf-case-study/oswald.woff2') format('woff2'); }
+@font-face { font-family: 'Yellow Leaf Raleway'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('/projects/yellow-leaf-case-study/raleway.woff2') format('woff2'); }
+.yellow-oswald { font-family: 'Yellow Leaf Oswald', sans-serif; font-weight: 400; }
+.yellow-raleway { font-family: 'Yellow Leaf Raleway', sans-serif; font-weight: 400; }
+.yellow-type-bold { font-weight: 700; }
+.yellow-type-medium { font-weight: 500; }
+.yellow-capitals { text-transform: uppercase; }
+@media (max-width: 1023px) {
+  .yellow-palette { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .yellow-type-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 767px) {
+  .yellow-block { margin-top: var(--case-content-gap); }
+  .yellow-brand-figures { grid-template-columns: minmax(0, 1fr); }
+  .yellow-brand-card, .yellow-type-card { padding: var(--space-6); }
+  .yellow-phone-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 479px) {
+  .yellow-type-card { grid-template-columns: minmax(0, 1fr); }
+  .yellow-phone-grid { gap: var(--space-3); }
+}

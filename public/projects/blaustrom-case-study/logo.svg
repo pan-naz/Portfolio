@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <rect width="48" height="48" rx="12" fill="#282828"/>
+  <!-- Blaustrom "b" on its 400-unit grid: stem from 120,73 to 120,240 and a ring centred at 200,240 with radius 80, 26 thick -->
+  <g transform="translate(2 2.4) scale(0.11)" fill="none" stroke="#0497c3" stroke-width="26" stroke-linecap="round">
+    <path d="M120 73V240"/>
+    <circle cx="200" cy="240" r="80"/>
+  </g>
+</svg>

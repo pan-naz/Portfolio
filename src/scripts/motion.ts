@@ -17,7 +17,6 @@ export const repositionWork = (top: number) => {
 
 export function scrollToSection(target: HTMLElement) {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  target.focus({ preventScroll: true });
   if (smoothScroll) {
     // Lenis already reads CSS scroll-padding and scroll-margin for element targets.
     smoothScroll.scrollTo(target.id === 'top' ? 0 : target, { duration: .65, lerp: 0 });

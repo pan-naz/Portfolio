@@ -7,6 +7,7 @@
   --surface: #ffffff; --surface-subtle: #f0edeb; --on-primary: #ffffff;
   /* Overlay controls keep a high-contrast white surface; floating navigation follows the page theme. */
   --floating-ink: #161715; --floating-ink-hover: #343432; --floating-surface: #ffffff; --floating-surface-subtle: #f0edeb;
+  --floating-muted: rgb(22 23 21 / .64); --floating-divider: rgb(22 23 21 / .16);
   --floating-accent: #F25A30; --floating-on-primary: #ffffff; --floating-focus-ring: #161715;
   --shadow-floating-light: 0 8px 24px rgb(22 23 21 / .10);
   --floating-navigation-ink: var(--floating-ink); --floating-navigation-ink-hover: var(--floating-ink-hover);
@@ -15,7 +16,12 @@
   --floating-navigation-on-primary: var(--floating-on-primary); --floating-navigation-focus-ring: var(--floating-focus-ring);
   --shadow-floating-navigation: var(--shadow-floating-light);
   --divider: rgb(22 23 21 / .16); --control-border: var(--ink);
+  --backdrop-menu: rgb(0 0 0 / .4); --backdrop-case: rgb(0 0 0 / .18);
   --inverse: #161715; --sheet: var(--inverse); --inverse-muted: #aaa; --waterfall-ink: #111111;
+  --inverse-ink: #FAF8F7; --inverse-text-secondary: rgb(250 248 247 / .64); --inverse-copy: rgb(250 248 247 / .72);
+  --inverse-accent: #FF6B42; --inverse-divider: rgb(250 248 247 / .10);
+  --inverse-surface: var(--inverse); --inverse-raised-surface: #222320;
+  --project-surface: var(--surface);
   --footer-icon-ink: #b8b8b8;
   --gutter: max(64px, calc((100vw - 1200px) / 2)); --hero-gutter: max(64px, calc((100vw - 1328px) / 2)); --hero-visual-gutter: calc(var(--hero-gutter) - 4px); --header-inset: 32px;
   --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
@@ -26,18 +32,25 @@
   --radius-pill: 999px; --radius-medium: 24px; --radius-media: 40px; --radius-chapter: clamp(40px, 5.8vw, 100px);
   /* Figma desktop ramp; mobile sizes are a responsive adaptation. */
   --font-body: 'Urbanist Variable', Urbanist, Arial, sans-serif;
-  --font-heading: var(--font-body);
-  --letter-spacing-display-xl: -2.64px;
-  --letter-spacing-display-l: -2px;
+  --font-heading: 'Funnel Display Variable', 'Funnel Display', Arial, sans-serif;
+  --letter-spacing-heading-xl: -3.64px;
+  --letter-spacing-heading-l: -2.64px;
   --letter-spacing-heading-m: -1px;
+  --letter-spacing-body-l: 0px;
+  --letter-spacing-body-m: 0px;
+  --letter-spacing-body-m-strong: 0px;
+  --letter-spacing-body-s: 0px;
   --letter-spacing-label-m: -0.5px;
+  --letter-spacing-label-s: 0px;
   --project-identity-tags-gap: var(--space-6);
-  --text-display: clamp(2.5rem, calc(1rem + 4.167vw), 5.5rem);
-  --text-heading: clamp(1.625rem, calc(.5rem + 3.333vw), 3.5rem);
-  --text-h2: var(--text-heading);
+  --text-heading-xl: clamp(2.5rem, calc(1rem + 4.167vw), 5.5rem);
+  --text-heading-l: clamp(1.625rem, calc(.5rem + 3.333vw), 3.5rem);
   --text-body: 1.25rem; --text-small: .875rem;
   --text-body-m: 1rem; --text-label-s: .75rem; --text-heading-m: 1.5rem;
-  --font-weight-heading: 600;
+  --font-weight-heading: 500;
+  --font-weight-heading-large: 400;
+  --font-weight-body-m-strong: 500;
+  --font-weight-label-m: 500;
   --shadow-media: none;
   --shadow-floating: 0 8px 24px rgb(22 23 21 / .10);
   --ease-out: cubic-bezier(.16, 1, .3, 1);
@@ -73,6 +86,7 @@
   --text-tertiary: #9e9996;
   --sheet: var(--surface); --accent: #FF6B42; --canvas: #161715; --surface: #0F100E;
   --surface-subtle: #2b2a29; --on-primary: #161715;
+  --inverse-surface: var(--surface); --project-surface: var(--inverse-raised-surface);
   --divider: rgb(250 248 247 / .10); --control-border: var(--ink);
   --waterfall-ink: #ddd8d4;
   --footer-icon-ink: #747474;
@@ -80,7 +94,7 @@
   --floating-navigation-text-secondary: rgb(250 248 247 / .64); --floating-navigation-surface: #242522;
   --floating-navigation-surface-subtle: #343532; --floating-navigation-accent: #FF6B42;
   --floating-navigation-on-primary: #161715; --floating-navigation-focus-ring: #FAF8F7;
-  --shadow-floating-navigation: 0 0 0 1px rgb(250 248 247 / .10), 0 8px 24px rgb(0 0 0 / .38), 0 24px 64px rgb(0 0 0 / .52);
+  --shadow-floating-navigation: 0 8px 24px rgb(0 0 0 / .38), 0 24px 64px rgb(0 0 0 / .52);
   --shadow-floating: 0 2px 8px rgb(0 0 0 / .16), 0 12px 32px rgb(0 0 0 / .28);
 }
 @media (max-width: 767px) {
@@ -90,6 +104,9 @@
 /* Shared control geometry and interaction states. */
 :root {
   --control-height: 48px; --control-icon: 44px; --icon-size: 24px;
+  --icon-size-compact: 20px;
+  --icon-stroke-regular: 1.5; --icon-stroke-strong: 2; --icon-stroke-emphasis: 2.5;
+  --icon-linecap: round; --icon-linejoin: round;
   --text-control: 1rem; --radius-small: 12px;
   --focus-ring: var(--ink); --opacity-disabled: .4;
 }

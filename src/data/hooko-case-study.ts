@@ -1,3 +1,5 @@
+import type { Tool } from './portfolio';
+
 export const hookoHero = {
   width: 1200,
   height: 520,
@@ -33,7 +35,7 @@ export const hookoDemo = {
   },
 } as const;
 
-export const hookoTools = [
+export const hookoTools: (Tool & { label: string; description: string; iconColor: string })[] = [
   {
     "name": "Claude Code",
     "iconColor": "#D97757",

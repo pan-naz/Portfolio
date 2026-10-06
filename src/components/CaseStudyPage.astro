@@ -2,15 +2,25 @@
 import type { Project } from '../data/portfolio';
 import CaseStudyContent from './CaseStudyContent.astro';
 import IconButton from './IconButton.astro';
+import Icon from './Icon.astro';
+import { workFilterHash } from '../scripts/work-filter';
 interface Props { project: Project; }
 const { project } = Astro.props;
+const returnUrl = project.category === 'selected' ? '/#work' : `/${workFilterHash(project.category)}`;
 ---
 <main id="main" class="case-study-page">
-  <div class="case-study-direct-close"><IconButton label="Close case study" href="/#work" class="floating-control-theme floating-control-surface" data-case-home><svg style="transform:rotate(45deg)" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><g><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></g></svg></IconButton></div>
+  <div class="case-study-direct-close"><IconButton label="Close case study" href={returnUrl} class="floating-control-theme floating-control-surface" data-case-home><Icon name="plus" style="transform:rotate(45deg)" /></IconButton></div>
   <CaseStudyContent project={project} />
 </main>
 
 <script>
   import { initializeMotion } from '../scripts/motion';
+  import { initializeCaseStudyNavigation } from '../scripts/case-study-navigation';
+  import { initializeControlMagnet } from '../scripts/control-magnet';
+  import { initializeCaseStudyVideos } from '../scripts/case-study-videos';
   initializeMotion();
+  const videos = initializeCaseStudyVideos();
+  window.addEventListener('pagehide', event => { if (!event.persisted) videos.destroy(); });
+  initializeCaseStudyNavigation();
+  initializeControlMagnet(document.querySelector<HTMLElement>('[data-case-home]')!);
 </script>

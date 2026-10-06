@@ -1,0 +1,81 @@
+---
+import type { Project } from '../data/portfolio';
+import { promshynaHero, promshynaRole, promshynaTeam, promshynaPages, promshynaPhones, promshynaPhoneCopy, promshynaOtherPages, promshynaBranding, promshynaBrandCopy, promshynaPalette } from '../data/promshyna-case-study';
+import CaseStudyOverview from './CaseStudyOverview.astro';
+import CaseStudyMedia from './CaseStudyMedia.astro';
+import CaseStudyDecisionCard from './CaseStudyDecisionCard.astro';
+import '../styles/promshyna-case-study.css';
+interface Props { project: Project; }
+const { project } = Astro.props;
+---
+<article class="case-study-content case-study-content--promshyna" data-case-content>
+  <CaseStudyMedia {...promshynaHero} artwork />
+  <div class="case-study-body case-study-narrative promshyna-case">
+    <CaseStudyOverview project={project} titleId="ps-title">
+      <Fragment slot="role"><p>Designer</p><ul>{promshynaRole.map(item => <li>{item}</li>)}</ul></Fragment>
+      <p slot="secondary">{promshynaTeam}</p>
+    </CaseStudyOverview>
+
+    <section class="promshyna-path" aria-labelledby="ps-path">
+      <div class="promshyna-path-intro">
+        <p class="case-study-eyebrow">Store pages</p><h2 class="case-study-heading" id="ps-path">From search to delivery</h2>
+        <p class="promshyna-muted">The six pages a buyer goes through to order a tire, in the order they see them.</p>
+      </div>
+      <div class="promshyna-route">
+        {promshynaPages.map(page => {
+          const Copy = page.sticky ? 'case-study-sticky' : 'div';
+          const delivery = page.number === '06';
+          return <article class:list={['promshyna-step', { 'case-study-chapter--inverse promshyna-delivery': delivery }]} aria-labelledby={`ps-page-${page.number}`}>
+            <div class:list={['promshyna-step-inner', { 'case-study-chapter__inner': delivery }]}>
+              <div class="promshyna-rail" aria-hidden="true"><span class="promshyna-badge text-body-s">{page.number}</span></div>
+              <div class="case-study-columns">
+                <Copy class:list={['promshyna-copy', { 'case-study-sticky': page.sticky }]}>
+                  <h3 class="case-study-heading" id={`ps-page-${page.number}`}>{page.title}</h3>
+                  <p class="promshyna-muted">{page.description}</p>
+                  {page.specs.length > 0 && <dl class="promshyna-specs text-body-s">{page.specs.map(([label, value]) => <div><dt>{label}</dt><dd>{value}</dd></div>)}</dl>}
+                </Copy>
+                <CaseStudyMedia {...page.media[0]} segments={page.media.length > 1 ? page.media : undefined} />
+              </div>
+            </div>
+          </article>;
+        })}
+      </div>
+    </section>
+
+    <section class="promshyna-phones" aria-labelledby="ps-responsive">
+      <div class="case-study-chapter__inner">
+        <div class="case-study-columns promshyna-chapter-heading">
+          <div><p class="case-study-eyebrow">Responsive</p><h2 class="case-study-heading" id="ps-responsive">Phone layouts</h2></div>
+          <p class="promshyna-muted text-body-m">{promshynaPhoneCopy}</p>
+        </div>
+        <div class="promshyna-phone-row promshyna-block">{promshynaPhones.map((phone, index) => <div class:list={['promshyna-phone', { 'promshyna-phone--wide': index === 1 }]}><CaseStudyMedia {...phone} presentation="bare" /></div>)}</div>
+      </div>
+    </section>
+
+    <section aria-labelledby="ps-other">
+      <p class="case-study-eyebrow">Inner pages</p><h2 class="case-study-heading" id="ps-other">Other pages</h2>
+      <div class="case-study-media-grid promshyna-other promshyna-block">{promshynaOtherPages.map(page => <CaseStudyDecisionCard title={page.title} layout="figure">
+        <CaseStudyMedia slot="media" {...page.media} presentation="bare" radius="small" />
+        <p>{page.description}</p>
+      </CaseStudyDecisionCard>)}</div>
+    </section>
+
+    <section aria-labelledby="ps-branding">
+      <div class="case-study-columns promshyna-chapter-heading">
+        <div><p class="case-study-eyebrow">Branding</p><h2 class="case-study-heading" id="ps-branding">Logo and colours</h2></div>
+        <p class="promshyna-muted text-body-m">{promshynaBrandCopy}</p>
+      </div>
+      <div class="case-study-media-grid promshyna-block">{promshynaBranding.map(brand => <CaseStudyDecisionCard title={brand.title} layout="figure">
+        <div slot="media" class="promshyna-brand-plate" style={`--promshyna-specimen-width:${brand.width}px`}><CaseStudyMedia {...brand} kind="image" presentation="bare" /></div>
+        <p>{brand.description}</p>
+      </CaseStudyDecisionCard>)}</div>
+      <div class="promshyna-block"><h3>Colours</h3><ul class="promshyna-palette" aria-label="Colour palette">{promshynaPalette.map(color => <li>
+        <div class="promshyna-swatch" style={`--promshyna-swatch:${color.value}`} aria-hidden="true" />
+        <div><strong>{color.label}</strong><code>{color.value}</code><p>{color.description}</p></div>
+      </li>)}</ul></div>
+    </section>
+  </div>
+</article>
+<script>
+  import '../scripts/case-study-sticky';
+</script>

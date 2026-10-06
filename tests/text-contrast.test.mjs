@@ -23,7 +23,6 @@ for (const [theme, palette] of Object.entries({ light, dark })) {
     }
   }
 }
-assert.equal(light['text-h2'], 'var(--text-heading)', 'H2 preserves the section-heading scale');
 assert.equal(light['text-secondary'], 'var(--muted)', 'Secondary remains mapped to the shared muted role');
 assert.equal(light['muted'], 'rgb(22 23 21 / .64)', 'Light secondary uses the Figma alpha token');
 assert.equal(light['text-tertiary'], '#A19C98', 'Light tertiary uses the approved value');

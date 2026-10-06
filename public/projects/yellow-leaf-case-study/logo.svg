@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="16" fill="#191919"/>
+  <g transform="translate(32 32)">
+    <mask id="y-cut" maskUnits="userSpaceOnUse" x="-32" y="-32" width="64" height="64">
+      <rect x="-32" y="-32" width="64" height="64" fill="#fff"/>
+      <path d="M-12.25-26.88 2.16 11.25M16.85-26.88-4.22 27.84" fill="none" stroke="#000" stroke-width="4.15"/>
+    </mask>
+    <path d="M0-24A28.67 28.67 0 0 1 0 24A28.67 28.67 0 0 1 0-24Z" fill="#f7bc11" mask="url(#y-cut)"/>
+  </g>
+</svg>

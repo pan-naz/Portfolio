@@ -60,6 +60,19 @@ globalThis.requestAnimationFrame = callback => { frames.set(++frameId, callback)
 globalThis.cancelAnimationFrame = id => frames.delete(id);
 globalThis.matchMedia = query => query.includes('reduced-motion') ? reduced : small;
 globalThis.window = new EventTarget(); window.innerHeight = 900; window.scrollY = 0;
+const setNavigation = (state = {}, url = 'https://portfolio.local/#work', type = 'navigate') => {
+  globalThis.location = new URL(url);
+  globalThis.history = {
+    state,
+    replaceState(next, _title, href) {
+      this.state = next;
+      if (href) globalThis.location = new URL(href, location.href);
+    },
+    pushState() { assert.fail('Category switching must not add history entries'); },
+  };
+  globalThis.performance = { getEntriesByType: () => [{ type }] };
+};
+setNavigation({ other: 'retained' });
 globalThis.document = { querySelector: selector => selector === '#work' ? section : null, fonts: { ready: Promise.resolve() } };
 globalThis.ResizeObserver = class { observe() {} disconnect() {} };
 const tokens = { '--ease-entrance': 'ease-out', '--ease-filter-enter': 'cubic-bezier(.25, .46, .45, 1)', '--scale-filter': '.9', '--scale-filter-exit': '.97', '--distance-filter-enter': '24px', '--duration-filter-layout': '.42s', '--duration-filter-exit': '140ms', '--duration-filter-enter': '.2s', '--delay-filter-enter': '.14s' };
@@ -74,6 +87,9 @@ const flush = async () => { await Promise.resolve(); for (const [id, fn] of fram
 await flush();
 controller.select('websites');
 assert.equal(list.dataset.activeFilter, 'websites');
+assert.equal(location.hash, '#websites');
+assert.equal(history.state.workFilter, 'websites', 'The selected collection is saved in the homepage history entry');
+assert.equal(history.state.other, 'retained', 'Saving the collection preserves other history state');
 assert.equal(eyebrow.textContent, '01 / Websites');
 assert.equal(heading.textContent, 'Some of my work on the web.');
 assert.equal(heading.getAttribute('aria-label'), heading.textContent, 'Visible and accessible category titles agree');
@@ -101,12 +117,14 @@ headingLayout.animation.sample = { height: '185px' };
 rail.animation.sample = { top: '273px' };
 description.animation.sample = { transform: 'translateY(45px)' };
 controller.select('misc');
+assert.equal(location.hash, '#misc');
 assert.deepEqual(headingLayout.animation.frames, [{ height: '185px' }, { height: '220px' }], 'A longer title resumes from the interrupted rendered height');
 assert.deepEqual(rail.animation.frames, [{ top: '273px' }, { top: '308px' }], 'Interrupted rail travel stays synchronized');
 assert.equal(description.animation.frames[0].transform, 'translateY(-35px)');
 assert.deepEqual(collections[2].children.map(card => card.animation.timing.delay), [140, 240, 340, 440, 540, 640, 740], 'The seventh card retains its own halfway handoff');
 assert.deepEqual(first.animation.frames[0], { opacity: '.43', transform: 'matrix(0.985, 0, 0, 0.985, 0, 0)' }, 'Interrupted cards continue from the actual current visual state');
 controller.select('selected');
+assert.equal(location.hash, '', 'Selected work clears the hash');
 assert.equal(eyebrow.textContent, '01 / Selected work');
 assert.equal(heading.textContent, 'Projects worth a closer look.');
 controller.select('websites');
@@ -139,4 +157,47 @@ controller.select('misc');
 assert.equal(refreshes, refreshBeforeRepeat, 'Clicking the current filter is a no-op');
 controller.destroy();
 assert.equal(frames.size, 0);
+// Exercise startup against a fresh server-rendered Selected work collection.
+const restore = async (state, url, type) => {
+  list.dataset.activeFilter = 'selected';
+  collections.forEach((collection, index) => { collection.hidden = index !== 0; });
+  setNavigation(state, url, type);
+  const animationCount = created.length;
+  const restored = initializeWorkFilter();
+  await flush();
+  assert.equal(created.length, animationCount, 'Restoring a collection does not animate from the wrong default');
+  return restored;
+};
+reduced.matches = false;
+const returning = await restore({ other: 'retained', workFilter: 'misc' }, 'https://portfolio.local/?campaign=sample#websites', 'navigate');
+assert.equal(list.dataset.activeFilter, 'websites');
+assert.deepEqual(collections.map(c => c.hidden), [true, false, true]);
+assert.equal(buttons[1].getAttribute('aria-pressed'), 'true');
+assert.equal(heading.textContent, 'Some of my work on the web.');
+assert.equal(location.href, 'https://portfolio.local/?campaign=sample#websites', 'Loading from the hash preserves the rest of the URL');
+assert.deepEqual(history.state, { other: 'retained', workFilter: 'websites' });
+returning.destroy();
+const back = await restore({ workFilter: 'websites' }, 'https://portfolio.local/#misc', 'back_forward');
+assert.equal(list.dataset.activeFilter, 'misc', 'The hash takes priority over older history state');
+assert.deepEqual(collections.map(c => c.hidden), [true, true, false]);
+back.destroy();
+const reloaded = await restore({ workFilter: 'selected' }, 'https://portfolio.local/#websites', 'reload');
+assert.equal(list.dataset.activeFilter, 'websites', 'Reloading keeps the category from the hash');
+assert.equal(history.state.workFilter, 'websites');
+assert.equal(location.href, 'https://portfolio.local/#websites');
+reloaded.destroy();
+for (const hash of ['', '#unknown']) {
+  const fallback = await restore({ workFilter: 'websites' }, `https://portfolio.local/?campaign=sample${hash}`, 'navigate');
+  assert.deepEqual(collections.map(c => c.hidden), [false, true, true]);
+  assert.equal(history.state.workFilter, 'selected', 'An unknown or empty hash ignores a previously saved category');
+  fallback.select('selected');
+  assert.equal(location.href, 'https://portfolio.local/?campaign=sample', 'Clicking the already-selected default clears the hash without dropping query parameters');
+  fallback.destroy();
+}
+const forwarding = await restore({}, 'https://portfolio.local/#misc', 'navigate');
+setNavigation({ caseStudy: 'promshyna' }, 'https://portfolio.local/case-studies/promshyna/');
+forwarding.select('websites', false);
+assert.equal(location.href, 'https://portfolio.local/case-studies/promshyna/', 'Revealing a case collection does not add a category hash to the case URL');
+forwarding.destroy();
 console.log('PASS: real filter controller, interruptible scale/opacity, last-click wins, accessible outgoing state, mobile reflow, reduced motion and cleanup.');
+console.log('PASS: category hashes restore on load/reload, unknown hashes fall back, tab clicks replace history and preserve unrelated URL state.');

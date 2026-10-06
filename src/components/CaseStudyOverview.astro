@@ -9,10 +9,11 @@ interface Props {
   titleId: string;
   id?: string;
   secondaryLabel?: string;
+  presentation?: 'default' | 'compact';
 }
-const { project, titleId, id, secondaryLabel = 'Team' } = Astro.props;
+const { project, titleId, id, secondaryLabel = 'Team', presentation = 'default' } = Astro.props;
 ---
-<section class="case-study-overview" id={id} aria-labelledby={titleId}>
+<section class:list={['case-study-overview', presentation === 'compact' && 'case-study-overview--compact']} id={id} aria-labelledby={titleId}>
   <div class="case-study-overview__intro case-study-columns">
     <div class="case-study-overview__identity">
       <ProjectIdentity title={project.title} logo={project.logo} />

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { matchesWorkFilter } from '../src/scripts/work-filter.ts';
+import { initialWorkFilter, matchesWorkFilter, workFilterHash } from '../src/scripts/work-filter.ts';
 
 const read = path => readFileSync(new URL(path, import.meta.url), 'utf8');
 assert.equal(matchesWorkFilter('selected', 'selected'), true);
@@ -9,6 +9,14 @@ assert.equal(matchesWorkFilter('selected', 'misc'), false);
 assert.equal(matchesWorkFilter('websites', 'websites'), true);
 assert.equal(matchesWorkFilter('websites', 'misc'), false);
 assert.equal(matchesWorkFilter('misc', 'misc'), true);
+for (const filter of ['selected', 'websites', 'misc']) {
+  const hash = workFilterHash(filter);
+  assert.equal(hash, filter === 'selected' ? '' : `#${filter}`);
+  assert.equal(initialWorkFilter(hash), filter, 'The URL hash determines the initial category');
+}
+for (const hash of ['#other', '#__proto__', '#constructor', '#work', '#about', '#selected', '#Websites', '', null, 12]) {
+  assert.equal(initialWorkFilter(hash), 'selected', 'Unknown or empty hashes use Selected work');
+}
 const filter = read('../src/components/SectionNavigation.astro');
 const links = read('../src/components/NavLinks.astro');
 const item = read('../src/components/NavigationItem.astro');
@@ -32,15 +40,16 @@ assert.ok(!/\[aria-current\][^{]*\{[^}]*background:/.test(css));
 console.log('PASS: real project filters, pressed semantics, live status and one shared push-dot navigation item.');
 
 const { arrangeProjectCards } = await import('../src/scripts/work-filter-model.ts');
-const { projects, conceptProjects } = await import('../src/data/portfolio.ts');
-const allProjects = [...projects, ...conceptProjects];
+const { projects, collectionProjects } = await import('../src/data/portfolio.ts');
+const allProjects = [...projects, ...collectionProjects];
 assert.equal(projects.length, 3);
-assert.equal(conceptProjects.filter(p => p.category === 'websites').length, 5);
-assert.equal(conceptProjects.filter(p => p.category === 'misc').length, 7);
-assert.equal(new Set(allProjects.map(p => p.id)).size, 15, 'All three collections have distinct project identities');
-assert.ok(conceptProjects.every(p => p.placeholder && !p.href), 'Fictional samples do not pretend to be delivered case studies');
-assert.equal(new Set(conceptProjects.map(p => p.image)).size, 12, 'Each concept has its own photo');
-for (const project of conceptProjects) {
+assert.deepEqual(collectionProjects.filter(p => p.category === 'websites').map(p => p.id), ['peak-hotel', 'yellow-leaf', 'index-law-firm', 'blaustrom', 'cravus', 'promshyna'], 'Websites contains the six real case studies in order, with no sample');
+assert.equal(collectionProjects.filter(p => p.category === 'misc').length, 7);
+assert.equal(new Set(allProjects.map(p => p.id)).size, 16, 'All three collections have distinct project identities');
+const concepts = collectionProjects.filter(p => p.placeholder);
+assert.ok(concepts.every(p => !p.href), 'Fictional samples do not pretend to be delivered case studies');
+assert.equal(new Set(concepts.map(p => p.image)).size, 7, 'Each remaining Misc concept has its own photo');
+for (const project of concepts) {
   const image = readFileSync(new URL(`../public${project.image}`, import.meta.url));
   assert.equal(image.toString('ascii', 0, 4), 'RIFF');
   assert.equal(image.toString('ascii', 8, 12), 'WEBP', 'Every sample photo is a local WebP');
@@ -58,4 +67,4 @@ for (const columns of [1, 2]) {
   assert.equal(packed.height, Math.max(...bottoms) - 24, 'Collection ends exactly at the lowest card');
 }
 assert.deepEqual(arrangeProjectCards([], 2, 24), { positions: [], height: 0 });
-console.log('PASS: three distinct collections, all 12 local assets, natural-height masonry, responsive source order and precise last-card bounds.');
+console.log('PASS: three distinct collections, all 7 local Misc sample assets, natural-height masonry, responsive source order and precise last-card bounds.');

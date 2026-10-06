@@ -1,0 +1,97 @@
+---
+import type { Project } from '../data/portfolio';
+import { blaustromMedia as media, blaustromHomeSections, blaustromConfiguratorSteps, blaustromPalette } from '../data/blaustrom-case-study';
+import CaseStudyOverview from './CaseStudyOverview.astro';
+import CaseStudyMedia from './CaseStudyMedia.astro';
+import CaseStudySteps from './CaseStudySteps.astro';
+import CaseStudyDecisionCard from './CaseStudyDecisionCard.astro';
+import SvgAsset from './SvgAsset.astro';
+import '../styles/blaustrom-case-study.css';
+interface Props { project: Project; }
+const { project } = Astro.props;
+---
+<article class="case-study-content case-study-content--blaustrom" data-case-content>
+  <CaseStudyMedia {...media.heroVideo} radius="media" artwork />
+  <div class="case-study-body case-study-narrative blaustrom-case">
+    <CaseStudyOverview project={project} titleId="bs-title">
+      <Fragment slot="role"><p>Designer</p><ul><li>Site structure and page layouts</li><li>The four-step configurator</li><li>Logo and logo animation</li><li>Desktop, tablet and phone layouts</li><li>Icons, sliders and the style guide</li></ul></Fragment>
+      <p slot="secondary">I was the only designer and worked with Blaustrom’s founder. Their developers built the site.</p>
+    </CaseStudyOverview>
+
+    <section aria-labelledby="bs-home">
+      <div class="case-study-columns">
+        <case-study-sticky class="case-study-sticky">
+          <p class="case-study-eyebrow"><span class="blaustrom-number">01</span> / 05</p><h2 class="case-study-heading" id="bs-home">Main page</h2>
+          <p class="blaustrom-lede text-body-m">The site is one long page with five sections, one for each menu item. The first section opens on a dark screen with the logo, followed by a slider with three slides on the blue gradient.</p>
+          <CaseStudySteps items={blaustromHomeSections} class="blaustrom-block" />
+        </case-study-sticky>
+        <div class="blaustrom-stack"><CaseStudyMedia {...media.firstScreen} /><CaseStudyMedia {...media.blue} /><CaseStudyMedia {...media.energy} /><CaseStudyMedia {...media.steps} /></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="bs-about">
+      <div class="case-study-columns">
+        <div><p class="case-study-eyebrow"><span class="blaustrom-number">02</span> / 05</p><h2 class="case-study-heading" id="bs-about">About us</h2><p class="blaustrom-lede text-body-m">The text explains how Blaustrom differs from a usual energy supplier. Customers produce most of their electricity with their own solar system, and Blaustrom delivers only small amounts of Bavarian electricity from the grid. Next to the text is the founder, Fabian Eckl, with a short bio and links to his profiles.</p></div>
+        <CaseStudyMedia {...media.about} />
+      </div>
+    </section>
+
+    <section aria-labelledby="bs-products">
+      <div class="case-study-columns">
+        <div><p class="case-study-eyebrow"><span class="blaustrom-number">03</span> / 05</p><h2 class="case-study-heading" id="bs-products">Product partners</h2><p class="blaustrom-lede text-body-m">A slider with the four brands Blaustrom installs: BYD batteries, SolaX inverters, LG solar modules and ABL charging stations. Each slide has three key points with icons, a short text, the brand logo, a link to the brand’s website, a datasheet download and a video.</p></div>
+        <CaseStudyMedia {...media.products} />
+      </div>
+    </section>
+
+    <section class="blaustrom-band blaustrom-configurator" aria-labelledby="bs-configurator">
+      <div class="case-study-chapter__inner">
+        <div class="case-study-columns">
+          <div><p class="case-study-eyebrow"><span class="blaustrom-number">04</span> / 05</p><h2 class="case-study-heading" id="bs-configurator">Configurator</h2><p class="blaustrom-lede text-body-m">The configurator plans a system in four steps. Each step is its own screen, and the bar at the top shows which steps are done. The first screen asks for the address and whether the customer already has a solar system.</p></div>
+          <CaseStudyMedia {...media.configurator} />
+        </div>
+        <div class="blaustrom-config-grid blaustrom-block">{blaustromConfiguratorSteps.map(step => <CaseStudyDecisionCard title={step.title} label={step.label} layout="figure"><CaseStudyMedia slot="media" {...step.media} /><p>{step.description}</p></CaseStudyDecisionCard>)}</div>
+      </div>
+    </section>
+
+    <section aria-labelledby="bs-contact">
+      <div class="case-study-columns">
+        <case-study-sticky class="case-study-sticky"><p class="case-study-eyebrow"><span class="blaustrom-number">05</span> / 05</p><h2 class="case-study-heading" id="bs-contact">Contact</h2><p class="blaustrom-lede text-body-m">A form with name, email, phone and message, and a Google map where the office is marked with the b from the logo. The dark footer has the address, social links and the line from the first screen, so the page ends the way it starts.</p></case-study-sticky>
+        <CaseStudyMedia {...media.contact} />
+      </div>
+    </section>
+
+    <section class="blaustrom-band blaustrom-responsive" aria-labelledby="bs-responsive">
+      <div class="case-study-chapter__inner">
+        <div class="case-study-columns">
+          <div><p class="case-study-eyebrow">Responsive</p><h2 class="case-study-heading" id="bs-responsive">Tablet and phone layouts</h2><p class="blaustrom-breakpoint text-body-s">320px +</p><p class="blaustrom-lede text-body-m">On smaller screens the menu folds into a round button in the top-left corner and opens over the page. Slides and text stack in one column. The configurator needs a screen at least 720px wide, so phones show a short message about that in its place.</p></div>
+          <CaseStudyMedia {...media.menu} />
+        </div>
+        <div class="blaustrom-block"><CaseStudyMedia {...media.responsive} /></div>
+      </div>
+    </section>
+
+    <section class="case-study-chapter--inverse blaustrom-style" aria-labelledby="bs-style">
+      <div class="case-study-chapter__inner">
+        <p class="case-study-eyebrow">Style guide</p><h2 class="case-study-heading" id="bs-style">Colour, type and controls</h2>
+        <div class="blaustrom-block"><h3>Colour</h3><ul class="blaustrom-palette" aria-label="Colour palette">{blaustromPalette.map(([label, value]) => <li><div class:list={['blaustrom-swatch', value.includes('→') && 'blaustrom-swatch--gradient']} style={!value.includes('→') ? '--blaustrom-swatch:' + value : undefined} aria-hidden="true" /><div><strong>{label}</strong><code>{value}</code></div></li>)}</ul></div>
+        <div class="blaustrom-block"><h3>Typography</h3>
+          <div class="case-study-media-grid blaustrom-type-grid">
+            <div class="blaustrom-brand-card"><p class="case-study-eyebrow">Headings · Open Sans Light 50px</p><p class="blaustrom-open-sans blaustrom-light blaustrom-type-heading">It’s all about energy</p></div>
+            <div class="blaustrom-brand-card"><p class="case-study-eyebrow">Subheadings · Open Sans Bold 16px</p><p class="blaustrom-open-sans blaustrom-bold">BYD – Market leader in rechargeable batteries</p></div>
+            <div class="blaustrom-brand-card"><p class="case-study-eyebrow">Body text · Open Sans Regular</p><p class="blaustrom-open-sans">What does your energy supplier do today? It delivers your electricity from large power plants over long distances to your house.</p></div>
+          </div>
+        </div>
+        <div class="blaustrom-block"><h3>Sliders and icons</h3><div class="blaustrom-controls blaustrom-brand-card">
+          <div class="blaustrom-control-row"><div><h4>Roof angle</h4><p class="text-body-s">Step 1, from 0° to 50°</p></div><CaseStudyMedia {...media.angle} presentation="bare" /></div>
+          <div class="blaustrom-control-row"><div><h4>Household size</h4><p class="text-body-s">Step 2, from 1 to 6 people</p></div><CaseStudyMedia {...media.people} presentation="bare" /></div>
+          <div class="blaustrom-control-row"><div><h4>Icons</h4><p class="text-body-s">Drawn for the site</p></div><SvgAsset src="/projects/blaustrom-case-study/icons.svg" aria-hidden="false" role="img" aria-label="Seven blue icons: ruler and pencil, plug, speech bubbles, wrench, clipboard, gears, and a hat" /></div>
+        </div></div>
+      </div>
+    </section>
+  </div>
+</article>
+<script>
+  import { initializeCaseStudyVideos } from '../scripts/case-study-videos';
+  import '../scripts/case-study-sticky';
+  initializeCaseStudyVideos();
+</script>

@@ -1,0 +1,5 @@
+---
+interface Props { items: readonly (readonly [string, string])[]; class?: string; }
+const { items, class: className } = Astro.props;
+---
+<ol class:list={['case-study-steps', className]}>{items.map(([title, description], index) => <li><span class="case-study-step-number text-body-m" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><div><h3>{title}</h3><p>{description}</p></div></li>)}</ol>

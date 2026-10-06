@@ -1,6 +1,6 @@
 import { refreshViewportPointer, watchViewportPointer } from './viewport-pointer.ts';
 
-type Spring = { value: number; velocity: number; target: number };
+export type Spring = { value: number; velocity: number; target: number };
 type BoundaryState = { top: boolean; bottom: boolean };
 
 const captureDistance = 80;
@@ -46,7 +46,7 @@ export function calculateWorkFilterMagnet(
   };
 }
 
-function stepSpring(spring: Spring, seconds: number, speed: number) {
+export function stepSpring(spring: Spring, seconds: number, speed: number) {
   const delta = spring.value - spring.target;
   const impulse = spring.velocity + speed * delta;
   const decay = Math.exp(-speed * seconds);

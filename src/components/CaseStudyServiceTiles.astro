@@ -1,0 +1,32 @@
+---
+import Icon from './Icon.astro';
+import '../styles/case-study-service-tiles.css';
+export interface ServiceTile {
+  id: string;
+  title: string;
+  summary: string;
+  description: string;
+  items: readonly string[];
+  row: string;
+  column: string;
+}
+interface Props { id: string; services: readonly ServiceTile[]; order: readonly string[]; class?: string; }
+const { id, services, order, class: className } = Astro.props;
+---
+<case-study-service-tiles id={id} class:list={['case-study-service-demo', className]}>
+  <div class="case-study-service-grid">
+    {order.map(key => {
+      const service = services.find(service => service.id === key);
+      return service ? <div class="case-study-service-tile" role="group" tabindex="0" data-service-tile={service.id} aria-labelledby={`${id}-${service.id}-title`} aria-describedby={`${id}-${service.id}-popover`} style={`--tile-row:${service.row};--tile-column:${service.column}`}>
+        <h4 id={`${id}-${service.id}-title`}>{service.title}</h4><p>{service.summary}</p><Icon name="plus" class="case-study-service-plus" />
+      </div> : <slot name={key} />;
+    })}
+  </div>
+  {services.map(service => <div id={`${id}-${service.id}-popover`} class="case-study-service-popover" role="tooltip" data-service-popover={service.id} hidden>
+    <div class="case-study-service-popover__content"><h4>{service.title}</h4><p>{service.description}</p>{service.items.length > 0 && <ul>{service.items.map(item => <li>{item}</li>)}</ul>}</div>
+  </div>)}
+</case-study-service-tiles>
+
+<script>
+  import '../scripts/case-study-service-tiles';
+</script>

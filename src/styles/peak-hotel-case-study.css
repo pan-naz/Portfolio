@@ -1,0 +1,35 @@
+/* Folio's shared editorial roles own type and section spacing. */
+.case-study-content--peak-hotel { padding-bottom: 0; }
+.peak-block { margin-top: var(--case-content-gap); }
+.peak-lede { max-width: 720px; margin-top: var(--space-6); }
+.peak-subsection { margin-top: var(--case-content-gap); }
+.peak-media-gap { margin-top: var(--space-6); }
+.peak-page { margin: 0; }
+.peak-page figcaption { margin-top: var(--space-4); }
+.peak-services { display: grid; gap: var(--space-6); }
+.peak-button { max-width: 618px; margin-inline: auto; }
+.peak-button img { display: block; width: 100%; height: auto; }
+.peak-button figcaption { margin-top: var(--space-4); text-align: center; color: var(--muted); }
+.peak-palette { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6) var(--grid-gap); margin: var(--space-6) 0 0; padding: 0; list-style: none; }
+.peak-swatch { height: var(--space-24); border: 1px solid var(--divider); border-radius: var(--radius-small); background: var(--peak-swatch); }
+.peak-color-label { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-2); margin-top: var(--space-3); font-size: var(--text-small); }
+.peak-color-label code { font-family: var(--font-body); color: var(--muted); }
+.peak-type-grid { margin-top: var(--space-6); }
+.peak-type-specimen { padding-top: var(--space-6); border-top: 1px solid var(--divider); }
+.peak-type-display { font-size: var(--text-heading-l); line-height: 1.142857; }
+.peak-type-display + .case-study-eyebrow { margin-top: var(--space-4); }
+.peak-type-example { margin-top: var(--space-6); }
+.peak-type-example > :first-child { color: var(--muted); }
+.peak-case .peak-type-sample { margin-top: var(--space-2); font-size: var(--text-body); line-height: 1.5; }
+/* These are original brand specimens; portfolio UI keeps the shared heading and body tokens. */
+@font-face { font-family: 'Peak Playfair'; font-style: italic; font-weight: 400; font-display: swap; src: url('/projects/peak-hotel-case-study/playfair-italic.ttf') format('truetype'); }
+@font-face { font-family: 'Peak Playfair'; font-style: normal; font-weight: 700; font-display: swap; src: url('/projects/peak-hotel-case-study/playfair-bold.ttf') format('truetype'); }
+@font-face { font-family: 'Peak Lato'; font-style: normal; font-weight: 400; font-display: swap; src: url('/projects/peak-hotel-case-study/lato-regular.ttf') format('truetype'); }
+@font-face { font-family: 'Peak Lato'; font-style: normal; font-weight: 900; font-display: swap; src: url('/projects/peak-hotel-case-study/lato-black.ttf') format('truetype'); }
+.peak-playfair-italic { font-family: 'Peak Playfair', serif; font-style: italic; font-weight: 400; }
+.peak-playfair-bold { font-family: 'Peak Playfair', serif; font-style: normal; font-weight: 700; }
+.peak-lato-regular { font-family: 'Peak Lato', sans-serif; font-weight: 400; }
+.peak-lato-black { font-family: 'Peak Lato', sans-serif; font-weight: 900; }
+@media (max-width: 767px) {
+  .peak-color-label { flex-direction: column; }
+}

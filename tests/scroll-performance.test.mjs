@@ -72,7 +72,7 @@ assert.equal(touchMove(100, 130), false, 'a multi-touch gesture never inherits a
 let focused, travelled;
 const target = { id: 'work', focus: value => { focused = value; }, scrollIntoView: value => { travelled = value; } };
 scrollToSection(target);
-assert.deepEqual(focused, { preventScroll: true });
+assert.equal(focused, undefined, 'Section navigation scrolls without moving focus onto the section');
 assert.deepEqual(travelled, { behavior: 'smooth', block: 'start' });
 reduced = true; scrollToSection(target);
 assert.equal(travelled.behavior, 'instant'); reduced = false;
@@ -99,7 +99,7 @@ for (const agent of [
   assert.deepEqual(lenis.travel, [400, { immediate: true }]);
   cleanup(); assert.equal(frames.size, 0); assert.equal(lenis.destroyed, true);
 }
-console.log('PASS: Safari/Chrome/Firefox wheel smoothing, native touch with top-edge guard, clock sync, anchor focus, filtering and cleanup.');
+console.log('PASS: Safari/Chrome/Firefox wheel smoothing, native touch with top-edge guard, clock sync, section navigation without focus theft, filtering and cleanup.');
 
 // Modal scrolling shares the actual homepage controller. Reopening must not
 // accumulate tickers or cancel the homepage's independent scroll controller.

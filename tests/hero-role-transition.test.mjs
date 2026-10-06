@@ -37,8 +37,12 @@ const makeRoles = () => ['System thinker', 'AI builder', 'Web designer', 'App de
   phrase: element(), letters: [...text.replaceAll(' ', '')].map(element),
 }));
 const live = () => allocated.filter(animation => !animation.cancelled);
-const options = { hold: 1000, exit: 450, enter: 900, stagger: 35, distance: 8, ease: 'cubic-bezier(.22, .61, .36, 1)' };
+const options = { hold: 1000, exit: 450, enter: 900, stagger: 35, distance: 16, ease: 'cubic-bezier(.22, .61, .36, 1)' };
 const roles = makeRoles();
+const initialEffects = roleRevealEffects(roles[0], options, 1350);
+assert.deepEqual(initialEffects.slice(1), revealEffects(roles[0].letters, {
+  duration: 900, delay: 1350, stagger: 35, distance: 16, easing: options.ease,
+}), 'The initial role uses exactly the same glyph reveal recipe as other titles');
 const motion = createRoleAnimator(roles, options);
 assert.ok(roles.every(role => role.phrase.style.opacity === '0'));
 motion.setPaused(true);
@@ -55,16 +59,19 @@ for (let cycle = 0; cycle < 12; cycle++) {
   const index = cycle % roles.length;
   const role = roles[index];
   const group = live();
-  const rise = group[0];
+  const phrase = group[0];
   const duration = options.enter + (role.letters.length - 1) * options.stagger;
   assert.equal(group.length, role.letters.length + 1, 'Only the active role owns effects');
-  assert.equal(rise.timing.duration, duration);
-  assert.deepEqual(rise.frames, [
-    { opacity: 1, transform: 'translate3d(0px, 8px, 0px)' },
-    { opacity: 1, transform: 'translate3d(0px, 0px, 0px)' },
-  ]);
+  assert.equal(phrase.timing.duration, duration);
+  assert.deepEqual(phrase.frames, [
+    { opacity: 1, transform: 'none' },
+    { opacity: 1, transform: 'none' },
+  ], 'The phrase wrapper stays still so it cannot add a second rise');
   group.slice(1).forEach((animation, index) => {
-    assert.deepEqual(animation.frames, [{ opacity: 0 }, { opacity: 1 }], 'Glyphs fade, without separate vertical movement');
+    assert.deepEqual(animation.frames, [
+      { opacity: 0, transform: 'translateY(16px)' },
+      { opacity: 1, transform: 'translateY(0px)' },
+    ], 'Every role change fades and raises each glyph with the shared title treatment');
     assert.equal(animation.timing.duration, 900);
     assert.equal(animation.timing.delay, index * 35);
     assert.equal(animation.timing.fill, 'both', 'Pending stagger glyphs remain hidden');
@@ -77,10 +84,10 @@ for (let cycle = 0; cycle < 12; cycle++) {
   timeline.currentTime += 5000;
   (cycle === 0 ? initial : motion).setPaused(false);
   assert.ok(group.every(animation => animation.startTime === timeline.currentTime - 200));
-  rise.finish();
+  phrase.finish();
   assert.equal(role.phrase.style.opacity, '1');
-  assert.equal(role.phrase.style.transform, 'translate3d(0px, 0px, 0px)');
-  assert.ok(role.letters.every(letter => letter.style.opacity === '1'));
+  assert.equal(role.phrase.style.transform, 'none');
+  assert.ok(role.letters.every(letter => letter.style.opacity === '1' && letter.style.transform === 'translateY(0px)'));
   assert.ok(group.every(animation => animation.cancelled), 'Finished effects are released after endpoints are persisted');
 
   if (cycle === 0) {
@@ -137,4 +144,4 @@ for (const file of ['hero-role-transition', 'native-motion']) {
   const source = readFileSync(new URL(`../src/scripts/${file}.ts`, import.meta.url), 'utf8');
   assert.ok(!/import .*gsap|requestAnimationFrame|setTimeout|setInterval/.test(source));
 }
-console.log('PASS: 12 role cycles and the shared native group: synchronized playback, exact delays, stable baseline, pause/resume, endpoint commits, focus finish, bounded effects and cancellation.');
+console.log('PASS: initial and 12 cycling roles share the title glyph fade/rise, synchronized playback, exact delays, pause/resume, endpoint commits, focus finish, bounded effects and cancellation.');

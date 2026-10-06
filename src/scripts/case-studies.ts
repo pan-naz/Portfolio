@@ -3,6 +3,8 @@ import type { initializeProjectCursor } from './project-cursor';
 import { initializeSmoothScroll, pauseScroll, resumeScroll } from './motion';
 import { refreshViewportPointer } from './viewport-pointer';
 import { initializeCaseStudyVideos } from './case-study-videos';
+import { rescopeSvgAssets } from './svg-asset';
+import { initializeControlMagnet } from './control-magnet';
 
 type Cursor = NonNullable<ReturnType<typeof initializeProjectCursor>>;
 const duration = 700;
@@ -28,11 +30,12 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
   let animations: Animation[] = [];
   let caseVideos: ReturnType<typeof initializeCaseStudyVideos> | undefined;
   let caseScroll: ReturnType<typeof initializeSmoothScroll> | undefined;
+  let closeMagnet: ReturnType<typeof initializeControlMagnet> | undefined;
   let revision = 0;
   let closeRequested = false;
+  let restoreKeyboardFocus = false;
   let oldTitle = document.title;
   let origin = { x: 0, y: 0 };
-  let restoreFocus: HTMLElement | null = null;
   let returnUrl = `${location.pathname}${location.search}${location.hash}`;
   const play = async (element: Element, frames: Keyframe[], options: KeyframeAnimationOptions = {}) => {
     const animation = element.animate(frames, { duration, easing: ease, fill: 'both', ...options, ...(reduced.matches ? { duration: 0, delay: 0 } : {}) });
@@ -104,7 +107,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     }
     const ticket = ++revision;
     active = link;
-    restoreFocus = document.activeElement instanceof HTMLElement ? document.activeElement : link;
+    restoreKeyboardFocus = !point && link.matches(':focus-visible');
     oldTitle = document.title;
     const rect = link.closest('.project')!.getBoundingClientRect();
     const media = link.querySelector<HTMLElement>('.project-media')!;
@@ -125,17 +128,25 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     clone.inert = true;
     clone.style.width = `${rect.width}px`;
     clone.append(link.querySelector('.project-caption')!.cloneNode(true));
-    clone.querySelectorAll('[id]').forEach(element => element.removeAttribute('id'));
+    // The source caption becomes hidden during travel. Its masks, gradients and
+    // clips cannot supply the copy's artwork; keep those definitions local.
+    rescopeSvgAssets(clone);
+    clone.querySelectorAll('[id]').forEach(element => {
+      if (!element.closest('svg')) element.removeAttribute('id');
+    });
     if (link.closest('.project--compact')) clone.classList.add('project--compact');
     panel.append(clone);
     control = cursor.claim();
     control.style.transform = buttonAt(origin.x, origin.y);
     dialog.append(control);
-    control.querySelector('button')!.addEventListener('click', requestClose);
+    const closeButton = control.querySelector<HTMLButtonElement>('button')!;
+    closeButton.addEventListener('click', requestClose);
+    closeButton.autofocus = true;
     onChange(true);
     pauseScroll();
     document.documentElement.classList.add('case-study-open');
     dialog.showModal();
+    closeButton.autofocus = false;
     scroll.scrollTop = 0;
     // Measure the destination at its final layout, before applying travel frames.
     Object.assign(panel.style, fullFrame());
@@ -173,7 +184,6 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     play(body, [{ opacity: 0, transform: contentOffset() }, { opacity: 1, transform: 'none' }], { delay: 350, duration: 350 });
     play(control, [{ transform: buttonAt(origin.x, origin.y) }, { transform: topCenter() }]);
     play(control.querySelector('svg')!, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(225deg)' }]);
-    control.querySelector('button')!.focus({ preventScroll: true });
     await Promise.all([travel, imageTravel]);
     if (ticket !== revision) return;
     phase = 'open';
@@ -195,11 +205,13 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     if (ticket !== revision) return;
     panel.style.cssText = 'inset:0;width:100%;height:100%;border-radius:0';
     cancelAnimations();
+    closeMagnet = initializeControlMagnet(control.querySelector<HTMLButtonElement>('button')!);
   };
 
   const close = async () => {
     if (phase === 'closed' || phase === 'closing' || !active || !control) return;
     phase = 'closing';
+    closeMagnet?.destroy(); closeMagnet = undefined;
     // Freeze any remaining glide before measuring the return animation.
     caseScroll?.destroy();
     caseScroll = undefined;
@@ -221,6 +233,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     // pointer-transparent visual layer while the artwork returns to the page.
     dialog.classList.add('is-closing');
     dialog.close();
+    if (!restoreKeyboardFocus && document.activeElement instanceof HTMLElement) document.activeElement.blur();
     document.documentElement.classList.remove('case-study-open');
     resumeScroll();
     const destination = cardFrame();
@@ -281,7 +294,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     document.title = oldTitle;
     cursor.release();
     control = null;
-    (restoreFocus?.isConnected && restoreFocus !== document.body ? restoreFocus : active).focus({ preventScroll: true });
+    if (restoreKeyboardFocus && document.activeElement === document.body) active.focus({ preventScroll: true });
     active = null;
     phase = 'closed';
     closeRequested = false;
@@ -293,8 +306,10 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     // A Forward action can arrive while the reverse transition is still running.
     reconcileLocation();
   };
-  function requestClose() {
+  function requestClose(event?: MouseEvent) {
     if (phase === 'closed' || phase === 'closing' || closeRequested) return;
+    closeMagnet?.destroy(); closeMagnet = undefined;
+    restoreKeyboardFocus = event ? event.detail === 0 : true;
     closeRequested = true;
     if (control) control.hidden = true;
     if (history.state?.caseStudy) history.back();
@@ -312,13 +327,12 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
       if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'PageDown', 'PageUp', 'Home', 'End', ' ', 'Tab'].includes(event.key)) event.preventDefault();
       return;
     }
-    if (event.key !== 'Tab' || !control) return;
-    const button = control.querySelector('button')!;
-    if (!event.shiftKey && document.activeElement === button) {
-      event.preventDefault(); scroll.focus({ preventScroll: true });
-    } else if (event.shiftKey && document.activeElement === scroll) {
-      event.preventDefault(); button.focus({ preventScroll: true });
-    }
+    if (event.key !== 'Tab') return;
+    const targets = [...dialog.querySelectorAll<HTMLElement>('button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])')]
+      .filter(target => target.getClientRects().length && !target.closest('[hidden], [inert]'));
+    const first = targets[0], last = targets.at(-1);
+    if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    else if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
   });
   const preventLockedScroll = (event: Event) => { if (scroll.hasAttribute('data-scroll-locked')) event.preventDefault(); };
   dialog.addEventListener('wheel', preventLockedScroll, { passive: false });

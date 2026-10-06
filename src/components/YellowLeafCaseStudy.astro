@@ -1,0 +1,134 @@
+---
+import type { Project } from '../data/portfolio';
+import { yellowLeafMedia as media, yellowLeafLinkedIn, yellowLeafHomeSections, yellowLeafEstimateSteps, yellowLeafPalette } from '../data/yellow-leaf-case-study';
+import CaseStudyOverview from './CaseStudyOverview.astro';
+import CaseStudyMedia from './CaseStudyMedia.astro';
+import CaseStudySteps from './CaseStudySteps.astro';
+import TextLink from './TextLink.astro';
+import SvgAsset from './SvgAsset.astro';
+import Icon from './Icon.astro';
+import '../styles/yellow-leaf-case-study.css';
+interface Props { project: Project; }
+const { project } = Astro.props;
+const innerPages = [
+  { title: 'Our works', description: 'All projects in two columns. Each card shows the project name, the services and a cover.', media: media.works },
+  { title: 'Careers', description: 'Open roles with short descriptions, and a photo of the office.', media: media.careers },
+  { title: 'Services', description: 'Five services, from commercial platforms to mobile apps, each with an icon and links to related projects.', media: media.services },
+];
+const vector = (name: string) => '/projects/yellow-leaf-case-study/' + name + '.svg';
+---
+<article class="case-study-content case-study-content--yellow-leaf" data-case-content>
+  <CaseStudyMedia {...media.heroVideo} radius="media" artwork />
+  <div class="case-study-body case-study-narrative yellow-case">
+    <CaseStudyOverview project={project} titleId="yl-title" secondaryLabel="Tools">
+      <TextLink slot="links" href={yellowLeafLinkedIn} accent compact>LinkedIn</TextLink>
+      <Fragment slot="role"><p>Designer</p><ul><li>Logo and brand elements</li><li>Site structure and page layouts</li><li>UI design and the style guide</li><li>Motion: preloader, page transitions and the menu</li><li>The project estimate form</li><li>Tablet and phone layouts</li></ul></Fragment>
+      <p slot="secondary">Adobe XD, Photoshop and After Effects.</p>
+    </CaseStudyOverview>
+
+    <section aria-labelledby="yl-idea">
+      <p class="case-study-eyebrow">Idea</p><h2 class="case-study-heading" id="yl-idea">Keep the site simple</h2>
+      <div class="case-study-columns yellow-block">
+        <div><h3>The agency</h3><p>The team builds web and mobile apps, CRM and CAD systems, online stores and data tools.</p></div>
+        <div><h3>The approach</h3><p>The agency builds complex systems, so the site had to feel simple and friendly. Pages are light, headings are bold condensed capitals, and yellow is kept for buttons and accents. Scrolling is smooth, and blocks fade in as you reach them.</p></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="yl-home">
+      <div class="case-study-columns">
+        <case-study-sticky class="case-study-sticky">
+          <p class="case-study-eyebrow">Pages</p><h2 class="case-study-heading" id="yl-home">Main page</h2>
+          <p class="yellow-lede">The header stays the same on every page: the logo, an Estimate project button and the menu.</p>
+          <CaseStudySteps items={yellowLeafHomeSections} class="yellow-block" />
+        </case-study-sticky>
+        <div class="yellow-stack"><CaseStudyMedia {...media.homeScroll} /><CaseStudyMedia {...media.homeHero} /><CaseStudyMedia {...media.homeEnd} /></div>
+      </div>
+    </section>
+
+    <section class="case-study-chapter--inverse" aria-labelledby="yl-estimate">
+      <div class="case-study-chapter__inner">
+        <div class="case-study-columns yellow-chapter-heading">
+          <div><p class="case-study-eyebrow">Feature</p><h2 class="case-study-heading" id="yl-estimate">Project estimate</h2></div>
+          <p class="text-body-m">The team decided to add an estimate form. A client picks the kind of project and its scope, leaves their contacts and gets an approximate budget. The form opens from the Estimate project button in the header and the footer.</p>
+        </div>
+        <div class="yellow-block"><CaseStudyMedia {...media.estimate} /></div>
+        <div class="case-study-columns case-study-columns--thirds yellow-block">
+          <CaseStudySteps items={yellowLeafEstimateSteps} />
+          <div class="yellow-duo"><CaseStudyMedia {...media.estimateMobile} /><CaseStudyMedia {...media.estimateDone} /></div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="yl-navigation">
+      <div class="case-study-columns yellow-chapter-heading">
+        <div><p class="case-study-eyebrow">Interaction</p><h2 class="case-study-heading" id="yl-navigation">Navigation</h2></div>
+        <p class="text-body-m">The menu opens over the page. The five sections are in the middle, social links on the left, and the language switch, address and contacts on the right. On hover, a yellow line crosses out the item.</p>
+      </div>
+      <div class="yellow-block"><CaseStudyMedia {...media.navigation} /></div>
+    </section>
+
+    <section aria-labelledby="yl-responsive">
+      <div class="case-study-columns yellow-chapter-heading">
+        <div><p class="case-study-eyebrow">Responsive</p><h2 class="case-study-heading" id="yl-responsive">Tablet and phone</h2></div>
+        <p class="text-body-m">Every page was also designed for small screens. On a phone the hero keeps its background video, and the menu becomes a single column with the language switch under it.</p>
+      </div>
+      <div class="case-study-media-grid yellow-phone-grid yellow-block"><CaseStudyMedia {...media.phoneHero} /><CaseStudyMedia {...media.phoneHome} /><CaseStudyMedia {...media.phoneWorks} /></div>
+      <div class="case-study-media-pair yellow-block">
+        <div style={'--case-media-ratio:' + media.menuTablet.width / media.menuTablet.height}><CaseStudyMedia {...media.menuTablet} /></div>
+        <div style={'--case-media-ratio:' + media.menuPhone.width / media.menuPhone.height}><CaseStudyMedia {...media.menuPhone} /></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="yl-pages">
+      <p class="case-study-eyebrow">Pages</p><h2 class="case-study-heading" id="yl-pages">Inner pages</h2>
+      <div class="case-study-media-grid yellow-block">{innerPages.map(page => <figure><CaseStudyMedia {...page.media} /><figcaption><h3>{page.title}</h3><p>{page.description}</p></figcaption></figure>)}</div>
+      <div class="case-study-columns yellow-block">
+        <case-study-sticky class="case-study-sticky"><h3>About us</h3><p>The agency's story, three values and the team. Each person in the team row is shown with their role. The page ends with a photo of the office and a Let's talk link.</p></case-study-sticky>
+        <CaseStudyMedia {...media.about} />
+      </div>
+    </section>
+
+    <section aria-labelledby="yl-branding">
+      <div class="case-study-columns yellow-chapter-heading">
+        <div><p class="case-study-eyebrow">Branding</p><h2 class="case-study-heading" id="yl-branding">A leaf with a y in it</h2></div>
+        <p class="text-body-m">The brand was made together with the agency's first website. The logo is a leaf for Leaf, cut by the letter y for Yellow. It was made in colour first, and the site's colours came from it.</p>
+      </div>
+      <div class="yellow-duo yellow-brand-figures yellow-block">
+        <figure class="yellow-brand-card">
+          <div class="yellow-equation" role="img" aria-label="A yellow leaf, plus the letter y, makes the Yellow Leaf logo">
+            <div><SvgAsset src={vector('leaf')} /><span>Leaf</span></div><Icon name="plus" />
+            <div><SvgAsset src={vector('letter-y')} /><span>Yellow</span></div><Icon name="equals" />
+            <div><SvgAsset src={vector('leaf-y')} /><span>Yellow Leaf</span></div>
+          </div>
+          <figcaption>The idea: a leaf plus a y makes the logo.</figcaption>
+        </figure>
+        <figure class="yellow-brand-card">
+          <SvgAsset src={vector('logo-construction')} class="yellow-construction" aria-hidden="false" />
+          <figcaption>Two equal circles form the leaf. Two angled bands cut out the y.</figcaption>
+        </figure>
+      </div>
+      <div class="yellow-block"><CaseStudyMedia {...media.brandIntro} /></div>
+      <div class="case-study-media-pair yellow-block">
+        <div style={'--case-media-ratio:' + media.notebooks.width / media.notebooks.height}><CaseStudyMedia {...media.notebooks} /></div>
+        <div style={'--case-media-ratio:' + media.shirt.width / media.shirt.height}><CaseStudyMedia {...media.shirt} /></div>
+      </div>
+    </section>
+
+    <section class="case-study-chapter--inverse" aria-labelledby="yl-style">
+      <div class="case-study-chapter__inner">
+        <p class="case-study-eyebrow">Style guide</p><h2 class="case-study-heading" id="yl-style">Yellow, black and bold capitals</h2>
+        <div class="yellow-block"><h3>Colour</h3><ul class="yellow-palette" aria-label="Colour palette">{yellowLeafPalette.map(([label, value]) => <li><div class="yellow-swatch" style={'--yellow-swatch:' + value} aria-hidden="true" /><div class="yellow-colour-label"><strong>{label}</strong><code>{value}</code></div></li>)}</ul></div>
+        <div class="yellow-block"><h3>Typography</h3><div class="yellow-duo yellow-type-grid">
+          <div class="yellow-type-card"><p class="yellow-type-display yellow-oswald yellow-type-bold" aria-hidden="true">Aa</p><div><p class="case-study-eyebrow">Oswald · headings and menu</p><div class="yellow-type-example"><p class="text-body-s">Bold, capitals</p><p class="yellow-type-sample yellow-oswald yellow-type-bold yellow-capitals">Developing complex solutions</p></div><div class="yellow-type-example"><p class="text-body-s">Medium</p><p class="yellow-type-sample yellow-oswald yellow-type-medium">What type of your project?</p></div></div></div>
+          <div class="yellow-type-card"><p class="yellow-type-display yellow-raleway" aria-hidden="true">Aa</p><div><p class="case-study-eyebrow">Raleway · body and buttons</p><div class="yellow-type-example"><p class="text-body-s">Regular</p><p class="yellow-type-sample yellow-raleway">Yellow leaf is a full-service digital agency, busy designing and building digital products.</p></div><div class="yellow-type-example"><p class="text-body-s">Bold, capitals</p><p class="yellow-type-sample yellow-raleway yellow-type-bold yellow-capitals">Estimate project</p></div></div></div>
+        </div></div>
+      </div>
+    </section>
+  </div>
+</article>
+
+<script>
+  import { initializeCaseStudyVideos } from '../scripts/case-study-videos';
+  import '../scripts/case-study-sticky';
+  initializeCaseStudyVideos();
+</script>

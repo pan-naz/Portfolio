@@ -1,7 +1,11 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
-interface Props extends HTMLAttributes<'button'> { label: string; href?: string; }
-const { label, href, class: className, ...attributes } = Astro.props;
+import type { IconName } from '../data/icons';
+import Icon from './Icon.astro';
+interface Props extends HTMLAttributes<'button'> { label: string; href?: string; icon?: IconName; }
+const { label, href, icon, class: className, ...attributes } = Astro.props;
 const Tag = href ? 'a' : 'button';
 ---
-<Tag type={href ? undefined : "button"} href={href} {...attributes} class:list={['icon-button', className]} aria-label={label}><slot /></Tag>
+<Tag type={href ? undefined : "button"} href={href} {...attributes} class:list={['icon-button', className]} aria-label={label}>
+  {icon ? <Icon name={icon} /> : <slot />}
+</Tag>
