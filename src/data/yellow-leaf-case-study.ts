@@ -1,6 +1,5 @@
-const asset = (name: string) => '/projects/yellow-leaf-case-study/' + name;
-const image = (name: string, width: number, height: number, alt: string) => ({ src: asset(name + '.webp'), width, height, alt, kind: 'image' as const, presentation: 'floating' as const, radius: 'medium' as const });
-const video = (name: string, width: number, height: number, alt: string) => ({ src: asset(name + '.mp4'), poster: asset(name + '.webp'), width, height, alt, presentation: 'floating' as const, radius: 'medium' as const });
+import { createCaseMedia } from './case-media.ts';
+const { asset, image, video } = createCaseMedia('/projects/yellow-leaf-case-study/', { imageExtension: '.webp', posterExtension: '.webp' });
 
 export const yellowLeafLinkedIn = 'https://www.linkedin.com/company/yellow-leaf-technologies/';
 export const yellowLeafDescription = 'Yellow Leaf is a software agency from Ivano-Frankivsk, Ukraine. They build web and mobile products for businesses in Europe and the US.';

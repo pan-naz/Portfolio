@@ -1,5 +1,5 @@
-const asset = (name: string) => '/projects/cravus-case-study/' + name;
-const image = (name: string, width: number, height: number, alt: string) => ({ src: asset(name), width, height, alt, kind: 'image' as const, presentation: 'floating' as const, radius: 'medium' as const });
+import { createCaseMedia } from './case-media.ts';
+const { image } = createCaseMedia('/projects/cravus-case-study/');
 
 export const cravusDescription = "A web app for Cravus, a food delivery startup for busy professionals and students.";
 export const cravusRole = ["App structure and user flows", "Layouts for nine pages", "Cart, payment and order history", "Phone layouts", "Icons, UI elements and the style guide"] as const;

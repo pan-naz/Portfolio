@@ -1,6 +1,5 @@
-const asset = (name: string) => "/projects/index-law-firm-case-study/" + name;
-const image = (name: string, width: number, height: number, alt: string) => ({ src: asset(name), width, height, alt, kind: 'image' as const, presentation: 'floating' as const, radius: 'medium' as const });
-const video = (name: string, width: number, height: number, alt: string) => ({ src: asset(name + '.mp4'), poster: asset(name + '.jpg'), width, height, alt, presentation: 'floating' as const, radius: 'medium' as const });
+import { createCaseMedia } from './case-media.ts';
+const { asset, image, video } = createCaseMedia('/projects/index-law-firm-case-study/');
 
 export const indexLawFirmTileOrder = ['consult', 'clients', 'tie', 'draft', 'court', 'scales', 'staff', 'aid', 'arguments', 'state', 'business', 'skovoroda', 'money', 'copyright', 'kant', 'blank'] as const;
 
