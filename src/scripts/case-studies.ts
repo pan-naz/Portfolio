@@ -36,7 +36,6 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
   let closeMagnet: ReturnType<typeof initializeControlMagnet> | undefined;
   let revision = 0;
   let closeRequested = false;
-  let restoreKeyboardFocus = false;
   let oldTitle = document.title;
   let origin = { x: 0, y: 0 };
   let returnUrl = `${location.pathname}${location.search}${location.hash}`;
@@ -118,7 +117,6 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     active = link;
     originScrollTop = window.scrollY;
     restoreHistoryScroll = suspendCaseStudyScrollRestoration();
-    restoreKeyboardFocus = !point && link.matches(':focus-visible');
     oldTitle = document.title;
     const rect = link.closest('.project')!.getBoundingClientRect();
     const media = link.querySelector<HTMLElement>('.project-media')!;
@@ -134,7 +132,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     }
     scroll.replaceChildren(template.content.cloneNode(true));
     const title = scroll.querySelector<HTMLElement>('[data-case-title]')!;
-    title.id = 'active-case-title';
+    if (!title.id) title.id = 'active-case-title';
     dialog.setAttribute('aria-labelledby', title.id);
     document.title = `${title.textContent} — naz.wtf`;
     clone = document.createElement('div');
@@ -254,7 +252,6 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     // pointer-transparent visual layer while the artwork returns to the page.
     dialog.classList.add('is-closing');
     dialog.close();
-    if (!restoreKeyboardFocus && document.activeElement instanceof HTMLElement) document.activeElement.blur();
     document.documentElement.classList.remove('case-study-open');
     resumeScroll();
     repositionWork(originScrollTop);
@@ -323,7 +320,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     document.title = oldTitle;
     cursor.release();
     control = null;
-    if (restoreKeyboardFocus && document.activeElement === document.body) active.focus({ preventScroll: true });
+    active.focus({ preventScroll: true });
     active = null;
     phase = 'closed';
     closeRequested = false;
@@ -337,10 +334,9 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     // A Forward action can arrive while the reverse transition is still running.
     reconcileLocation();
   };
-  function requestClose(event?: MouseEvent) {
+  function requestClose() {
     if (phase === 'closed' || phase === 'closing' || closeRequested) return;
     closeMagnet?.destroy(); closeMagnet = undefined;
-    restoreKeyboardFocus = event ? event.detail === 0 : true;
     closeRequested = true;
     if (control) control.hidden = true;
     if (history.state?.caseStudy) history.back();
