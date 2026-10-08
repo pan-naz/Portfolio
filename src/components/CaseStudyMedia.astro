@@ -1,6 +1,8 @@
 ---
 import IconButton from './IconButton.astro';
 import Icon from './Icon.astro';
+import { mediaCanvasStyle, mediaCrop } from './media-canvas';
+import { getCaseVideoPreview, type CaseVideoPreview } from '../data/case-video-previews';
 import '../styles/case-video-player.css';
 interface Props {
   src: string;
@@ -10,32 +12,44 @@ interface Props {
   poster?: string;
   kind?: 'image' | 'video';
   reducedMotionSrc?: string;
+  animationSrc?: string;
   artwork?: boolean;
   presentation?: 'framed' | 'bare' | 'shadow' | 'floating';
   strokeWidth?: 4 | 8;
   strokePlacement?: 'center' | 'outside';
   radius?: 'medium' | 'small' | 'media';
   controls?: boolean;
+  audioControls?: boolean;
   canvasColor?: string;
+  canvasInset?: number;
+  canvasFade?: boolean;
+  canvasSourceRatio?: number;
+  cropPixels?: number;
   showTime?: boolean;
-  preview?: { src: string; columns: number; rows: number; count: number; interval: number; width: number; height: number; displayWidth?: number };
+  preview?: CaseVideoPreview;
   segments?: readonly { src: string; alt: string; width: number; height: number; poster?: string; kind?: 'image' | 'video' }[];
 }
 
-const { src, alt, width, height, poster, kind = 'video', reducedMotionSrc, artwork = false, presentation: requestedPresentation = 'framed', strokeWidth = 4, strokePlacement = 'center', radius = 'medium', controls = false, canvasColor, showTime = true, preview, segments } = Astro.props;
+const { src, alt, width, height, poster, kind = 'video', reducedMotionSrc, animationSrc, artwork = false, presentation: requestedPresentation = 'framed', strokeWidth = 4, strokePlacement = 'center', radius = 'medium', controls = false, audioControls = false, canvasColor, canvasInset, canvasFade = false, canvasSourceRatio, cropPixels = 0, showTime = true, preview: requestedPreview, segments } = Astro.props;
 const player = !segments?.length && kind === 'video' && controls;
+const preview = player ? requestedPreview ?? getCaseVideoPreview(src) : undefined;
+if (player && !preview) throw new Error(`Missing timeline preview for controlled recording: ${src}`);
 const MediaRoot = player ? 'case-video-player' : 'figure';
 // Heroes share the card/transition frame. Content-media presets must not add
 // another stroke, shadow or margin when their asset is reused as a hero.
 const presentation = artwork ? 'framed' : requestedPresentation;
 const floating = !artwork && (presentation === 'floating' || player);
 const mediaRadius = artwork ? 'media' : radius;
+// Insets use the same proportion on both axes and travel with the media node.
+const mediaStyle = mediaCanvasStyle({ width, height, canvasColor, canvasInset, canvasFade, canvasSourceRatio });
+const crop = mediaCrop({ width, height, cropPixels });
+const videoStyle = [mediaStyle, crop.style].filter(Boolean).join(';') || undefined;
 ---
-<MediaRoot class:list={['case-study-media', artwork && 'case-study-artwork', canvasColor && 'case-study-media--canvas', presentation === 'bare' && 'case-study-media--bare', presentation === 'shadow' && 'case-study-media--shadow', floating && 'case-study-media--floating', floating && strokeWidth === 8 && 'case-study-media--wide-stroke', floating && strokePlacement === 'outside' && 'case-study-media--outside-stroke', player && 'case-video-player']} style={`--case-media-radius:var(--radius-${mediaRadius})${canvasColor ? `;--media-ratio:${width} / ${height};--media-canvas:${canvasColor}` : ''}`} data-preview={player && preview ? JSON.stringify(preview) : undefined}>
-  {segments?.length ? <div class="case-study-media__sequence">{segments.map(segment => <Astro.self {...segment} presentation="bare" />)}</div> : kind === 'image' ? reducedMotionSrc ? <picture><source media="(prefers-reduced-motion: reduce)" srcset={reducedMotionSrc} /><img src={src} alt={alt} width={width} height={height} loading="lazy" decoding="async" /></picture> : <img src={src} alt={alt} width={width} height={height} loading="lazy" decoding="async" /> : <video data-case-video muted loop playsinline preload="none" poster={poster} width={width} height={height} controls={player} aria-label={alt}>
+<MediaRoot class:list={['case-study-media', artwork && 'case-study-artwork', canvasColor && 'case-study-media--canvas', presentation === 'bare' && 'case-study-media--bare', presentation === 'shadow' && 'case-study-media--shadow', floating && 'case-study-media--floating', floating && strokeWidth === 8 && 'case-study-media--wide-stroke', floating && strokePlacement === 'outside' && 'case-study-media--outside-stroke', player && 'case-video-player']} style={`--case-media-radius:var(--radius-${mediaRadius})${canvasColor ? `;--media-ratio:${width} / ${height};--media-canvas:${canvasColor};background:${canvasColor}` : ''}`} data-preview={player && preview ? JSON.stringify(preview) : undefined} data-audio-controls={player && audioControls ? true : undefined}>
+  {segments?.length ? <div class="case-study-media__sequence">{segments.map(segment => <Astro.self {...segment} presentation="bare" />)}</div> : kind === 'image' ? reducedMotionSrc ? <picture><source media="(prefers-reduced-motion: reduce)" srcset={reducedMotionSrc} /><img class:list={[canvasFade && 'media-canvas-fade']} src={src} data-case-animated-image={animationSrc} alt={alt} width={width} height={height} loading="lazy" decoding="async" style={mediaStyle} /></picture> : <img class:list={[canvasFade && 'media-canvas-fade']} src={src} data-case-animated-image={animationSrc} alt={alt} width={width} height={height} loading="lazy" decoding="async" style={mediaStyle} /> : <div class:list={['case-media-frame', cropPixels && 'media-crop']} style={cropPixels ? `--media-ratio:${crop.width} / ${crop.height}` : undefined}><video class:list={[canvasFade && 'media-canvas-fade', cropPixels && 'media-crop-content']} data-case-video muted loop playsinline preload="none" poster={poster} width={width} height={height} controls={player} aria-label={alt} style={videoStyle}>
     <source data-src={src} type="video/mp4" />
-    {poster && <img src={poster} alt={alt} width={width} height={height} loading="lazy" decoding="async" />}
-  </video>}
+    {poster && <img src={poster} alt={alt} width={width} height={height} loading="lazy" decoding="async" style={mediaStyle} />}
+  </video></div>}
   {player && <div class="case-video-controls" data-theme="dark" data-video-controls role="group" aria-label="Video controls" hidden>
     <IconButton label="Play video" data-video-toggle>
       <span data-play-icon><Icon name="play" /></span>
@@ -43,15 +57,25 @@ const mediaRadius = artwork ? 'media' : radius;
     </IconButton>
     <div class="case-video-seek">
       <input data-video-seek type="range" min="0" max="100" value="0" step="0.1" aria-label="Video position" disabled />
-      {preview && <div class="case-video-preview" style={preview.displayWidth ? `--video-preview-width:${preview.displayWidth}px` : undefined} data-video-preview aria-hidden="true" hidden>
-        <div class="case-video-preview-frame" style={`aspect-ratio: ${preview.width} / ${preview.height}`} />
-        <span data-preview-time>0:00</span>
-      </div>}
     </div>
-    {showTime && <span class="case-video-time" aria-hidden="true"><span data-video-time>0:00 / 0:00</span></span>}
+    {preview && <div class="case-video-preview" style={preview.displayWidth ? `--video-preview-width:${preview.displayWidth}px` : undefined} data-video-preview aria-hidden="true" hidden>
+      <div class="case-video-preview-frame" style={`aspect-ratio: ${preview.width} / ${preview.height}`} />
+      <span data-preview-time>0:00</span>
+    </div>}
+    {showTime && <span class="case-video-time" aria-hidden="true">
+      <span class="case-video-time__part"><span class="case-video-time__reserve">00:00</span><span data-video-time>0:00</span></span>
+      <span>/</span>
+      <span class="case-video-time__part case-video-time__part--duration"><span class="case-video-time__reserve">10:00</span><span data-video-duration>0:00</span></span>
+    </span>}
+    {audioControls && <IconButton label="Sound off. Turn sound on" data-video-mute aria-pressed="false">
+      <span data-muted-icon><Icon name="volume-muted" /></span>
+      <span data-sound-icon hidden><Icon name="volume" /></span>
+    </IconButton>}
   </div>}
 </MediaRoot>
 
 <script>
   import '../scripts/case-video-player';
+  import { initializeCaseStudyImages } from '../scripts/case-study-images';
+  initializeCaseStudyImages();
 </script>

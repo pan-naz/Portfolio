@@ -16,7 +16,7 @@ const { project, titleId, id, secondaryLabel = 'Team', presentation = 'default' 
 <section class:list={['case-study-overview', presentation === 'compact' && 'case-study-overview--compact']} id={id} aria-labelledby={titleId}>
   <div class="case-study-overview__intro case-study-columns">
     <div class="case-study-overview__identity">
-      <ProjectIdentity title={project.title} logo={project.logo} />
+      <ProjectIdentity title={project.title} logo={project.logo} logoBackground={project.logoBackground} />
       <h1 id={titleId} class="sr-only" data-case-title>{project.title}</h1>
       <ProjectTags tags={project.tags} />
       {Astro.slots.has('links') && <div class="case-study-overview__links"><slot name="links" /></div>}
@@ -24,16 +24,17 @@ const { project, titleId, id, secondaryLabel = 'Team', presentation = 'default' 
     <div class="case-study-overview__summary">
       <p class="text-body-l">{project.outcome ?? project.description}</p>
       {project.outcome && <p class="text-body-m">{project.description}</p>}
+      <slot name="summary" />
     </div>
   </div>
-  <div class="case-study-overview__details case-study-columns">
-    <div class="case-study-overview__detail">
+  {(Astro.slots.has('role') || Astro.slots.has('secondary')) && <div class="case-study-overview__details case-study-columns">
+    {Astro.slots.has('role') && <div class="case-study-overview__detail">
       <h2 class="case-study-eyebrow">My role</h2>
       <div class="case-study-prose"><slot name="role" /></div>
-    </div>
-    <div class="case-study-overview__detail">
+    </div>}
+    {Astro.slots.has('secondary') && <div class="case-study-overview__detail">
       <h2 class="case-study-eyebrow">{secondaryLabel}</h2>
       <div class="case-study-prose"><slot name="secondary" /></div>
-    </div>
-  </div>
+    </div>}
+  </div>}
 </section>

@@ -32,6 +32,8 @@ class FakeElement extends EventTarget {
 }
 const created = [];
 const section = new FakeElement(), list = new FakeElement(), root = new FakeElement(), status = new FakeElement();
+let entranceResolutions = 0;
+section.addEventListener('workfilterchange', () => entranceResolutions++);
 const heading = new FakeElement(), eyebrow = new FakeElement(), description = new FakeElement();
 const headingLayout = new FakeElement(), rail = new FakeElement(), surface = new FakeElement();
 Object.defineProperty(headingLayout, 'height', { get: () =>
@@ -86,6 +88,7 @@ const controller = initializeWorkFilter(() => refreshes++);
 const flush = async () => { await Promise.resolve(); for (const [id, fn] of frames) { frames.delete(id); fn(); } await new Promise(resolve => setImmediate(resolve)); };
 await flush();
 controller.select('websites');
+assert.equal(entranceResolutions, 1, 'A category change resolves the scroll entrance before replacing its title');
 assert.equal(list.dataset.activeFilter, 'websites');
 assert.equal(location.hash, '#websites');
 assert.equal(history.state.workFilter, 'websites', 'The selected collection is saved in the homepage history entry');
@@ -163,9 +166,11 @@ const restore = async (state, url, type) => {
   collections.forEach((collection, index) => { collection.hidden = index !== 0; });
   setNavigation(state, url, type);
   const animationCount = created.length;
+  const entranceCount = entranceResolutions;
   const restored = initializeWorkFilter();
   await flush();
   assert.equal(created.length, animationCount, 'Restoring a collection does not animate from the wrong default');
+  assert.equal(entranceResolutions, entranceCount, 'Restoring a category must not open the Work stage or reveal its heading at page top');
   return restored;
 };
 reduced.matches = false;

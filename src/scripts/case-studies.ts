@@ -1,23 +1,23 @@
 import type { WorkFilter } from './work-filter';
 import type { initializeProjectCursor } from './project-cursor';
-import { initializeSmoothScroll, pauseScroll, resumeScroll } from './motion';
+import { initializeSmoothScroll, pauseScroll, resumeScroll, repositionWork } from './motion';
 import { refreshViewportPointer } from './viewport-pointer';
 import { initializeCaseStudyVideos } from './case-study-videos';
+import { initializeCaseStudyImages } from './case-study-images';
+import { borrowHeroImage, reserveHeroImage, restoreHeroImage, type HeroImageTransfer } from './case-study-artwork';
+import { readCaseStudyMotion } from './case-study-motion';
+import { suspendCaseStudyScrollRestoration } from './case-study-navigation';
 import { rescopeSvgAssets } from './svg-asset';
 import { initializeControlMagnet } from './control-magnet';
 
 type Cursor = NonNullable<ReturnType<typeof initializeProjectCursor>>;
-const duration = 700;
-const closeDuration = 400;
-const closeCaptionDuration = 600;
-const closeCaptionDelay = 100;
-const ease = 'cubic-bezier(.22,.75,.25,1)';
 
 export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (open: boolean) => void, selectFilter?: (filter: WorkFilter) => void) {
   const dialog = document.querySelector<HTMLDialogElement>('[data-case-dialog]');
   const panel = dialog?.querySelector<HTMLElement>('[data-case-panel]');
   const scroll = dialog?.querySelector<HTMLElement>('[data-case-scroll]');
   if (!dialog || !panel || !scroll || !cursor) return;
+  const motion = readCaseStudyMotion(getComputedStyle(document.documentElement));
   // A modal top layer keeps the page inert, including the floating site controls.
   document.body.append(dialog);
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -26,9 +26,12 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
   let clone: HTMLElement | null = null;
   let artwork: HTMLElement | null = null;
   let borrowedVideo: { video: HTMLVideoElement; home: HTMLElement; hidden: string | null; label: string | null } | null = null;
+  let borrowedImage: HeroImageTransfer | undefined;
+  let travelingImage: HeroImageTransfer | undefined;
   let phase: 'closed' | 'opening' | 'open' | 'closing' = 'closed';
   let animations: Animation[] = [];
   let caseVideos: ReturnType<typeof initializeCaseStudyVideos> | undefined;
+  let caseImages: ReturnType<typeof initializeCaseStudyImages> | undefined;
   let caseScroll: ReturnType<typeof initializeSmoothScroll> | undefined;
   let closeMagnet: ReturnType<typeof initializeControlMagnet> | undefined;
   let revision = 0;
@@ -37,8 +40,10 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
   let oldTitle = document.title;
   let origin = { x: 0, y: 0 };
   let returnUrl = `${location.pathname}${location.search}${location.hash}`;
+  let originScrollTop = 0;
+  let restoreHistoryScroll: (() => void) | undefined;
   const play = async (element: Element, frames: Keyframe[], options: KeyframeAnimationOptions = {}) => {
-    const animation = element.animate(frames, { duration, easing: ease, fill: 'both', ...options, ...(reduced.matches ? { duration: 0, delay: 0 } : {}) });
+    const animation = element.animate(frames, { duration: motion.openDuration, easing: motion.travelEasing, fill: 'both', ...options, ...(reduced.matches ? { duration: 0, delay: 0 } : {}) });
     animations.push(animation);
     await animation.finished.catch(() => {});
   };
@@ -50,12 +55,12 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
   };
   const fullFrame = () => ({ left: '0px', top: '0px', width: `${innerWidth}px`, height: `${innerHeight}px`, borderRadius: '0px' });
   const buttonAt = (x: number, y: number) => `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
-  const topCenter = () => buttonAt(innerWidth / 2, 16 + 44 / 2);
+  const topCenter = () => buttonAt(innerWidth / 2, motion.controlInset + motion.controlSize / 2);
   const lockScroll = (locked: boolean) => scroll.toggleAttribute('data-scroll-locked', locked);
   const viewportPosition = (frame: { left: string; top: string }) => ({
     left: `${-parseFloat(frame.left)}px`, top: `${-parseFloat(frame.top)}px`,
   });
-  const contentOffset = () => reduced.matches ? 'none' : 'translateY(16px)';
+  const contentOffset = () => reduced.matches ? 'none' : `translateY(${motion.copyDistance}px)`;
   // Both the panel and artwork animate with the same easing. Local coordinates
   // compose into a single viewport path from the actual source to destination.
   const artworkFrame = (element: HTMLElement, container: { left: number; top: number }) => {
@@ -79,6 +84,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
   const createArtwork = (source: HTMLElement) => {
     artwork = document.createElement('div');
     artwork.className = 'case-study-transition-artwork';
+    artwork.style.background = source.style.background;
     artwork.setAttribute('aria-hidden', 'true');
     panel.append(artwork);
     const video = source.querySelector('video');
@@ -89,7 +95,10 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
       artwork.querySelector('[data-case-video-slot]')!.replaceWith(video);
       caseVideos?.refresh();
     } else {
+      const image = source.querySelector('img');
+      travelingImage = image ? reserveHeroImage(image) : undefined;
       source.childNodes.forEach(node => artwork!.append(node.cloneNode(true)));
+      if (travelingImage) artwork.querySelector('[data-case-image-slot]')!.replaceWith(travelingImage.node);
       artwork.querySelectorAll('img').forEach(image => image.loading = 'eager');
     }
   };
@@ -107,15 +116,21 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     }
     const ticket = ++revision;
     active = link;
+    originScrollTop = window.scrollY;
+    restoreHistoryScroll = suspendCaseStudyScrollRestoration();
     restoreKeyboardFocus = !point && link.matches(':focus-visible');
     oldTitle = document.title;
     const rect = link.closest('.project')!.getBoundingClientRect();
     const media = link.querySelector<HTMLElement>('.project-media')!;
     const sourceArtwork = artworkFrame(media, rect);
-    origin = point ?? { x: Math.max(22, Math.min(innerWidth - 22, rect.left + rect.width / 2)), y: Math.max(22, Math.min(innerHeight - 22, rect.top + 54)) };
+    const halfControl = motion.controlSize / 2;
+    origin = point ?? { x: Math.max(halfControl, Math.min(innerWidth - halfControl, rect.left + rect.width / 2)), y: Math.max(halfControl, Math.min(innerHeight - halfControl, rect.top + motion.controlSize + motion.controlInset / 2)) };
     if (push) {
       returnUrl = `${location.pathname}${location.search}${location.hash}`;
-      history.pushState({ ...history.state, caseStudy: id }, '', link.href);
+      history.pushState({
+        ...history.state, caseStudy: id,
+        portfolioCaseOrigin: { url: returnUrl, top: window.scrollY },
+      }, '', link.href);
     }
     scroll.replaceChildren(template.content.cloneNode(true));
     const title = scroll.querySelector<HTMLElement>('[data-case-title]')!;
@@ -161,10 +176,12 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
       cardVideo.setAttribute('aria-label', heroVideo.getAttribute('aria-label') || '');
       heroVideo.replaceWith(cardVideo);
     }
+    borrowedImage = borrowHeroImage(media, hero);
     createArtwork(hero);
     // Include the traveling video as well as the case's body videos. It keeps
     // the same owner when it moves into the hero after the flight.
     caseVideos = initializeCaseStudyVideos(panel);
+    caseImages = initializeCaseStudyImages(panel);
     caseVideos.refresh();
     hero.style.visibility = 'hidden';
     active.closest<HTMLElement>('.project')!.style.visibility = 'hidden';
@@ -177,27 +194,31 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     play(scroll, [viewportPosition(source), { left: '0px', top: '0px' }]);
     play(clone, [{ left: '0px', top: '0px' }, { left: source.left, top: source.top }]);
     const corners = play(panel, [{ borderRadius: source.borderRadius }, { borderRadius: '0px' }], {
-      delay: duration, duration: 260, easing: 'ease-in-out',
+      delay: motion.openDuration, duration: motion.cornersDuration, easing: motion.cornersEasing,
     });
-    play(clone, [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: contentOffset() }], { duration: 200 });
+    play(clone, [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: contentOffset() }], { duration: motion.captionExitDuration });
     const body = scroll.querySelector<HTMLElement>('.case-study-body')!;
-    play(body, [{ opacity: 0, transform: contentOffset() }, { opacity: 1, transform: 'none' }], { delay: 350, duration: 350 });
+    play(body, [{ opacity: 0, transform: contentOffset() }, { opacity: 1, transform: 'none' }], { delay: motion.bodyEnterDelay, duration: motion.bodyEnterDuration });
     play(control, [{ transform: buttonAt(origin.x, origin.y) }, { transform: topCenter() }]);
-    play(control.querySelector('svg')!, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(225deg)' }]);
+    play(control.querySelector('svg')!, [{ transform: 'rotate(0deg)' }, { transform: `rotate(${motion.controlRotation}deg)` }]);
     await Promise.all([travel, imageTravel]);
     if (ticket !== revision) return;
     phase = 'open';
     control.style.transform = topCenter();
-    control.querySelector('svg')!.style.transform = 'rotate(225deg)';
+    control.querySelector('svg')!.style.transform = `rotate(${motion.controlRotation}deg)`;
     clone.style.opacity = '0';
     const travelingVideo = artwork?.querySelector('video');
     if (travelingVideo) {
       hero.querySelector('[data-case-video-slot]')!.replaceWith(travelingVideo);
       caseVideos?.refresh();
     }
+    if (travelingImage) {
+      restoreHeroImage(travelingImage);
+      travelingImage = undefined;
+    }
     hero.style.removeProperty('visibility');
     artwork?.remove(); artwork = null;
-    // Release the real hero to scrolling at 700ms, while the decorative
+    // Release the real hero at the shared travel endpoint, while the decorative
     // corner finish continues independently.
     lockScroll(false);
     caseScroll = initializeSmoothScroll(scroll, scroll.querySelector<HTMLElement>('[data-case-content]')!);
@@ -236,6 +257,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     if (!restoreKeyboardFocus && document.activeElement instanceof HTMLElement) document.activeElement.blur();
     document.documentElement.classList.remove('case-study-open');
     resumeScroll();
+    repositionWork(originScrollTop);
     const destination = cardFrame();
     const card = active.closest<HTMLElement>('.project')!;
     const cardMedia = active.querySelector<HTMLElement>('.project-media')!;
@@ -255,17 +277,17 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
       void play(clone, [
         { left: `${parseFloat(destination.left) - parseFloat(start.left)}px`, top: `${parseFloat(destination.top) - parseFloat(start.top)}px` },
         { left: '0px', top: '0px' },
-      ], { duration: closeDuration });
+      ], { duration: motion.closeDuration });
       captionFade = play(clone, [
         { opacity: 0, transform: contentOffset() },
         { opacity: 1, transform: 'none' },
-      ], { delay: closeCaptionDelay, duration: closeCaptionDuration });
+      ], { delay: motion.captionEnterDelay, duration: motion.captionEnterDuration });
     }
     const returnScrollY = window.scrollY;
     const followPageScroll = () => { panel.style.transform = `translateY(${returnScrollY - window.scrollY}px)`; };
     window.addEventListener('scroll', followPageScroll, { passive: true });
-    const travel = play(panel, [{ ...start, borderRadius: destination.borderRadius }, destination], { duration: closeDuration });
-    const imageTravel = play(artwork!, [imageStart, imageDestination], { duration: closeDuration });
+    const travel = play(panel, [{ ...start, borderRadius: destination.borderRadius }, destination], { duration: motion.closeDuration });
+    const imageTravel = play(artwork!, [imageStart, imageDestination], { duration: motion.closeDuration });
     await Promise.all([travel, imageTravel, captionFade]);
     window.removeEventListener('scroll', followPageScroll);
     if (ticket !== revision) return;
@@ -278,8 +300,15 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
       }
       borrowedVideo = null;
     }
+    if (borrowedImage) {
+      restoreHeroImage(borrowedImage);
+      borrowedImage = undefined;
+    }
+    travelingImage = undefined;
     caseVideos?.destroy();
+    caseImages?.destroy();
     caseVideos = undefined;
+    caseImages = undefined;
     cardMedia.style.removeProperty('visibility');
     cardCaption.style.removeProperty('visibility');
     control.hidden = true;
@@ -298,6 +327,8 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     active = null;
     phase = 'closed';
     closeRequested = false;
+    restoreHistoryScroll?.();
+    restoreHistoryScroll = undefined;
     // Keep card tilt paused until the real card has replaced the return layer.
     // Releasing it here lets the spring ease from neutral toward a stationary
     // pointer instead of completing behind the closing panel and appearing to snap.

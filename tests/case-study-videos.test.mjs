@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { initializeCaseStudyVideos, setCaseVideoPlaying } from '../src/scripts/case-study-videos.ts';
+import { initializeCaseStudyVideos, setCaseVideoPlaying, setCaseVideoMuted } from '../src/scripts/case-study-videos.ts';
 
 class Events {
   listeners = new Map();
@@ -147,3 +147,33 @@ assert.equal(controlled.currentTime, 24, 'Explicit controls keep the selected fr
 reduced.matches = false;
 controlsController.destroy();
 console.log('PASS: explicit play/pause intent persists while visibility, reduced motion and cleanup remain coordinated.');
+
+const audible = makeVideo();
+const audioController = initializeCaseStudyVideos({ querySelectorAll: () => [audible] });
+const audioObserver = observers.at(-1);
+audioObserver.enter(audible);
+assert.equal(audible.muted, true, 'An entry with sound still starts muted');
+setCaseVideoMuted(audible, false);
+audioObserver.enter(audible, false);
+const offscreenPlays = audible.plays;
+audioController.refresh();
+assert.equal(audible.plays, offscreenPlays, 'Enabling sound never bypasses offscreen suspension');
+audioObserver.enter(audible);
+assert.equal(audible.muted, false, 'The explicit sound choice survives scrolling away and back');
+document.hidden = true;
+document.emit('visibilitychange');
+const hiddenPlays = audible.plays;
+audioController.refresh();
+assert.equal(audible.plays, hiddenPlays, 'Sound-enabled videos still pause in a hidden page');
+document.hidden = false;
+document.emit('visibilitychange');
+assert.equal(audible.muted, false, 'Tab visibility updates preserve the sound choice');
+setCaseVideoPlaying(audible, false);
+setCaseVideoMuted(audible, true);
+audioObserver.enter(audible, false);
+audioObserver.enter(audible);
+assert.equal(audible.plays, hiddenPlays + 1, 'Remuting does not undo an explicit pause');
+setCaseVideoPlaying(audible, true);
+assert.equal(audible.muted, true, 'A later play action keeps an explicitly muted entry silent');
+audioController.destroy();
+console.log('PASS: opt-in sound survives reentry without bypassing offscreen, hidden-page or manual-pause controls.');

@@ -1,7 +1,7 @@
 ---
 import type { ImpactMetric } from '../data/portfolio';
 import MetricValue from './MetricValue.astro';
-interface Props extends ImpactMetric {}
-const { value, label, note } = Astro.props;
+interface Props extends ImpactMetric { revealValue?: boolean; }
+const { value, label, note, revealValue = false } = Astro.props;
 ---
-<div class="stat"><dt><MetricValue value={value} class="stat-value" /><span class="stat-label">{label}</span></dt><dd>{note}</dd></div>
+<div class="stat"><dt><MetricValue value={value} class="stat-value" reveal={revealValue} /><span class="stat-label" data-reveal-copy={revealValue ? '' : undefined}>{label}</span></dt><dd data-reveal-copy={revealValue ? '' : undefined}>{note}</dd></div>

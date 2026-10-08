@@ -1,0 +1,5 @@
+.case-study-content--recording { padding-bottom: 0; }
+.recording-case > .case-study-overview { padding-top: var(--case-section-space); }
+.recording-heading { align-items: end; margin-bottom: var(--case-content-gap); }
+.recording-heading > p { margin-top: 0; }
+.recording-muted { color: var(--muted); }

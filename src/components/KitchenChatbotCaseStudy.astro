@@ -1,0 +1,37 @@
+---
+import type { Project } from '../data/portfolio';
+import { kitchenChatbotHero, kitchenChatbotCredit, kitchenChatbotConversation } from '../data/kitchen-chatbot-case-study';
+import CaseStudyOverview from './CaseStudyOverview.astro';
+import CaseStudyMedia from './CaseStudyMedia.astro';
+import CaseStudyDecisionCard from './CaseStudyDecisionCard.astro';
+import TextLink from './TextLink.astro';
+import '../styles/kitchen-chatbot-case-study.css';
+
+interface Props { project: Project; }
+const { project } = Astro.props;
+const conversation = kitchenChatbotConversation;
+const mascotName = 'Vic Bell’s Blink Bot';
+const [creditBefore, creditAfter] = kitchenChatbotCredit.split(mascotName);
+---
+<article class="case-study-content case-study-content--kitchen-chatbot" data-case-content>
+  <CaseStudyMedia {...kitchenChatbotHero} artwork />
+  <div class="case-study-body case-study-narrative kitchen-case">
+    <CaseStudyOverview project={project} titleId="kc-title" presentation="compact">
+      <p slot="summary" class="text-body-m" data-case-credit>{creditBefore}<TextLink href="https://dribbble.com/shots/2937858-Blink-Bot" inline>{mascotName}</TextLink>{creditAfter}</p>
+    </CaseStudyOverview>
+
+    <section id="kc-conversation" aria-labelledby="kc-conversation-title">
+      <div class="case-study-columns kc-conversation">
+        <div class="kc-copy">
+          <div><p class="case-study-eyebrow">{conversation.eyebrow}</p><h2 class="case-study-heading" id="kc-conversation-title">{conversation.title}</h2></div>
+          {conversation.description.map(text => <p class="kc-muted">{text}</p>)}
+        </div>
+        <CaseStudyDecisionCard title={conversation.transcriptLabel} titleHidden layout="figure">
+          <div class="kc-chat" role="group" aria-label={conversation.transcriptLabel}>
+            {conversation.messages.map(message => message.kind === 'dishes' ? <div class="kc-dishes">{message.items.map(dish => <p class:list={['kc-dish', dish.state === 'rejected' && 'kc-dish--rejected', dish.state === 'selected' && 'kc-dish--selected']}><span>{dish.title}</span>{'duration' in dish && <span class="kc-duration text-body-s">{dish.duration}</span>}</p>)}</div> : message.kind === 'note' ? <p class="kc-note">{message.text}</p> : <p class:list={['kc-message', message.kind === 'user' ? 'kc-message--user' : 'kc-message--bot']}>{message.text}{'detail' in message && <small class="text-body-s">{message.detail}</small>}</p>)}
+          </div>
+        </CaseStudyDecisionCard>
+      </div>
+    </section>
+  </div>
+</article>

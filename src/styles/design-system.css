@@ -35,6 +35,10 @@
 .ds-type-heading { letter-spacing: var(--letter-spacing-heading-m); font-size: var(--text-heading-m); line-height: 1.333333; font-weight: var(--font-weight-heading); }
 .ds-type-label { font-size: var(--text-label-s); line-height: 1.333333; letter-spacing: var(--letter-spacing-label-s); font-weight: 500; }
 .ds-foundation-block { margin-top: 64px; }
+.ds-motion-table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: var(--text-small); line-height: 1.5; text-align: left; }
+.ds-motion-table :is(th, td) { padding: var(--space-4) var(--space-3); border-bottom: 1px solid var(--divider); vertical-align: top; overflow-wrap: anywhere; }
+.ds-motion-table th { font-weight: var(--font-weight-body-m-strong); }
+.ds-motion-table code { font: inherit; color: var(--text-secondary); overflow-wrap: anywhere; }
 .ds-foundation-block > h3 { letter-spacing: var(--letter-spacing-body-m-strong); font-size: var(--text-body-m); line-height: 24px; font-weight: var(--font-weight-heading); }
 .ds-foundation-block > p { color: var(--text-secondary); font-size: var(--text-label-s); font-weight: 500; max-width: 780px; margin-top: 8px; }
 .ds-spacing-list { display: grid; gap: 8px; margin-top: 24px; }

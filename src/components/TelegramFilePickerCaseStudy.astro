@@ -1,0 +1,56 @@
+---
+import type { Project } from '../data/portfolio';
+import { telegramHero, telegramCompetition, telegramEntry, telegramResult } from '../data/telegram-file-picker-case-study';
+import CaseStudyOverview from './CaseStudyOverview.astro';
+import CaseStudyMedia from './CaseStudyMedia.astro';
+import CaseStudyDecisionCard from './CaseStudyDecisionCard.astro';
+import MetricValue from './MetricValue.astro';
+import '../styles/telegram-file-picker-case-study.css';
+
+interface Props { project: Project; }
+const { project } = Astro.props;
+---
+<article class="case-study-content case-study-content--telegram" data-case-content>
+  <CaseStudyMedia {...telegramHero} artwork />
+  <div class="case-study-body case-study-narrative telegram-case">
+    <CaseStudyOverview project={project} titleId="tg-title" presentation="compact" />
+
+    <section id="tg-competition" aria-labelledby="tg-competition-title">
+      <div class="tg-head case-study-columns">
+        <p class="case-study-eyebrow">{telegramCompetition.eyebrow}</p>
+        <h2 class="case-study-heading" id="tg-competition-title">{telegramCompetition.title}</h2>
+        <div class="tg-copy">
+          {telegramCompetition.description.map((text, i) => <p class:list={[i > 0 && 'tg-muted']}>{text}</p>)}
+        </div>
+      </div>
+      <ul class="tg-stats" aria-label={telegramCompetition.statsLabel}>
+        {telegramCompetition.stats.map(stat => <li>
+          <CaseStudyDecisionCard title={stat.title} layout="figure">
+            <MetricValue value={stat.value} as="p" class="tg-value text-heading-l" />
+            <p class="tg-stat-note text-body-s">{stat.description}</p>
+          </CaseStudyDecisionCard>
+        </li>)}
+      </ul>
+    </section>
+
+    <section id="tg-video" aria-labelledby="tg-video-title">
+      <div class="tg-head case-study-columns">
+        <p class="case-study-eyebrow">{telegramEntry.eyebrow}</p>
+        <h2 class="case-study-heading" id="tg-video-title">{telegramEntry.title}</h2>
+        <p class="tg-copy tg-muted">{telegramEntry.description}</p>
+      </div>
+      <CaseStudyMedia {...telegramEntry.media} />
+    </section>
+
+    <section class="case-study-chapter--inverse tg-result" id="tg-result" aria-labelledby="tg-result-title">
+      <div class="case-study-chapter__inner">
+        <div class="tg-head case-study-columns">
+          <p class="case-study-eyebrow">{telegramResult.eyebrow}</p>
+          <h2 class="case-study-heading" id="tg-result-title">{telegramResult.title}</h2>
+          <p class="tg-copy">{telegramResult.description}</p>
+        </div>
+        <div class="tg-window"><CaseStudyMedia {...telegramResult.media} presentation="bare" /></div>
+      </div>
+    </section>
+  </div>
+</article>

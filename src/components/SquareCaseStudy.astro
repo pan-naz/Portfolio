@@ -1,0 +1,47 @@
+---
+import type { Project } from '../data/portfolio';
+import { squareHero, squareRole, squareChallenge, squareLookbook, squareLibido } from '../data/square-case-study';
+import CaseStudyOverview from './CaseStudyOverview.astro';
+import CaseStudyMedia from './CaseStudyMedia.astro';
+import Button from './Button.astro';
+import '../styles/square-case-study.css';
+
+interface Props { project: Project; }
+const { project } = Astro.props;
+---
+<article class="case-study-content case-study-content--square" data-case-content>
+  <CaseStudyMedia {...squareHero} artwork />
+  <div class="case-study-body case-study-narrative square-case">
+    <CaseStudyOverview project={project} titleId="sq-title">
+      <Fragment slot="role"><p>Designer</p><ul>{squareRole.map(item => <li>{item}</li>)}</ul></Fragment>
+    </CaseStudyOverview>
+
+    <section class="square-challenge case-study-chapter--inverse" style={`--square-cover:url('${squareChallenge.cover}')`} aria-labelledby="sq-challenge">
+      <div class="case-study-chapter__inner">
+        <div class="square-challenge-copy">
+          <div><p class="case-study-eyebrow">{squareChallenge.eyebrow}</p><h2 class="case-study-heading" id="sq-challenge">{squareChallenge.title}</h2></div>
+          <p class="square-muted">{squareChallenge.description}</p>
+          <Button href={squareChallenge.href} variant="secondary" arrow="up" target="_blank" rel="noopener noreferrer">{squareChallenge.linkLabel}</Button>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="sq-lookbook">
+      <div class="case-study-columns square-section-heading">
+        <div><p class="case-study-eyebrow">{squareLookbook.eyebrow}</p><h2 class="square-entry-title text-heading-xl" id="sq-lookbook">{squareLookbook.title}</h2></div>
+        <p class="square-muted">{squareLookbook.description}</p>
+      </div>
+      <div class="square-looks">{squareLookbook.media.map(media => <CaseStudyMedia {...media} presentation="shadow" />)}</div>
+    </section>
+
+    <section class="square-libido case-study-chapter--inverse" aria-labelledby="sq-libido">
+      <div class="case-study-chapter__inner">
+        <div class="case-study-columns square-section-heading">
+          <div><p class="case-study-eyebrow">{squareLibido.eyebrow}</p><h2 class="square-entry-title text-heading-xl" id="sq-libido">{squareLibido.title}</h2></div>
+          <p class="square-muted">{squareLibido.description}</p>
+        </div>
+        <CaseStudyMedia {...squareLibido.media} presentation="shadow" radius="media" />
+      </div>
+    </section>
+  </div>
+</article>

@@ -42,3 +42,18 @@ The existing short dark text-emphasis scene remains the sole pinned narrative. T
 Implementation: `src/scripts/motion.ts` owns intro, entrances, panel movement and Lenis lifecycle; `interactions.ts` connects menu/anchor interactions and maintains the existing narrative and navigation behavior. GSAP media contexts remove active effects when reduced-motion preferences change. Lenis ticker callbacks are removed when its media condition stops matching.
 
 The Refero motion guidance informed hierarchy, interruptibility and reduced-motion fallbacks. Sites informed the local preview/build verification; nothing was published.
+
+## Shared case-study transition — 8 October 2026
+
+All project collections use `case-studies.ts`, `case-study-motion.ts` and `case-study-artwork.ts`. Timings, delays, easing, copy distance, control rotation and hero fit come from the shared `tokens.css` contract; the static Motion catalog reads the same token names and values. Opening and hero travel share 700ms and the travel easing; closing and hero return share 400ms. Caption/body entrances and the corner finish use their named tokens. Reduced motion resolves durations and delays to zero, including interruptions.
+
+The traveling picture fills its canvas and uses the same contained fit as the card and final hero. Matching assets keep the actual live image/picture or video through opening, settling and return, preserving animation phase and source selection. Source layout remains reserved while the live image travels. Closing restores the card's original accessible label. No case supplies its own animation timings or local motion override.
+# Floating Work menu scroll follow — 8 October 2026
+
+The shared Work-filter motion follows the CSS sticky position with a bounded, critically damped lag only when scrolling outward at a rail edge: upward at the first card or downward at the last card. Scrolling back into the collection uses native sticky positioning without adding lag or a reverse impulse. Boundary-crossing frames retain only their outward travel. `--work-filter-scroll-lag` limits the displacement to 32px and `--work-filter-scroll-spring-speed` sets the catch-up speed to 10. Slow outward inputs therefore create small movements at either boundary, and the zero-offset resting state preserves exact first-card top and collection-bottom alignment.
+
+Pointer magnetism retains its own springs and composes with the scroll offset. Resize, pause, reduced motion and loss of the desktop capability clear the follower and reseed its measurement; resuming a case does not replay old scroll movement. Scroll bursts share one deferred position measurement per paint. This supersedes the former fixed boundary overshoot.
+
+The follower retains speed 10 while scrolling outward at an edge. After `--delay-work-filter-scroll-return: 80ms` without outward edge movement, it switches to `--work-filter-scroll-return-speed: 20` for a quicker landing. Reversing direction does not prolong an existing return. Existing position and velocity carry through the switch, keeping both endpoint returns continuous.
+
+Original-recording edge crops are shared media geometry, separate from motion timing. The crop stays on the live video and its cloned clip wrapper through the existing case-study handoff, using source-pixel proportions at every frame. Professions and Quit University consume a three-pixel crop; untrimmed media retain their existing dimensions and all case animations keep the shared token schedule.

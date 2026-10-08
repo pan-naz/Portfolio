@@ -217,12 +217,13 @@ html[data-work-stage-layout='true']:not([data-work-stage-motion='true']) .work-p
 .project-heading .arrow { margin-left: auto; margin-right: 24px; }
 .project-identity { letter-spacing: var(--letter-spacing-heading-m); display: inline-flex; align-items: center; gap: 8px; font-size: var(--text-heading-m); line-height: 32px; font-weight: var(--font-weight-heading); }
 .project-identity .svg-asset { width: 32px; height: 32px; flex: 0 0 32px; object-fit: contain; }
+.project-identity__logo--white { border-radius: var(--radius-project-logo); box-shadow: var(--shadow-floating); }
 .project-tags { display: flex; flex-wrap: wrap; gap: var(--space-2); padding-right: var(--space-6); margin-top: var(--project-identity-tags-gap); }
 .project-outcome { font-size: var(--text-body); line-height: 1.5; }
 .project-description { margin-top: 8px; color: var(--muted); font-size: var(--text-body-m); line-height: 1.5; }
 .project-media { position: relative; }
-.project-media :is(img, video) { display: block; width: 100%; height: auto; aspect-ratio: var(--media-ratio); }
-.project-media video { object-fit: contain; }
+.project-media picture { display: block; }
+.project-media :is(img, video) { display: block; width: 100%; height: auto; aspect-ratio: var(--media-ratio); object-fit: var(--case-hero-fit); }
 
 .skill-tag--raised { background: var(--surface); border-color: transparent; box-shadow: var(--shadow-floating); }
 .project--compact .project-caption { padding: var(--space-8); gap: var(--space-6); min-height: 0; }
@@ -230,7 +231,6 @@ html[data-work-stage-layout='true']:not([data-work-stage-motion='true']) .work-p
 .project--compact .project-tags { padding-right: 0; }
 .project--compact .project-outcome { font-size: var(--text-body-m); line-height: 1.5; }
 .project--compact .project-description { font-size: var(--text-small); line-height: 1.5; }
-.project-concept-label { margin-top: var(--space-3); color: var(--muted); }
 @media (min-width: 768px) and (max-width: 1100px) {
   .project--compact .project-caption { padding: var(--space-6); gap: var(--space-4); grid-template-columns: 1fr; }
 }
@@ -279,6 +279,7 @@ html[data-work-stage-layout='true']:not([data-work-stage-motion='true']) .work-p
 .contact-links { display: grid; align-self: end; justify-self: end; gap: 4px; min-width: 178px; font-size: var(--text-body-m); line-height: 24px; }
 .text-link { display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); min-height: 44px; }
 .text-link--compact { justify-content: flex-start; gap: var(--space-2); }
+.text-link--inline { display: inline; min-height: 0; text-decoration: underline; text-decoration-thickness: from-font; text-underline-offset: .15em; }
 .text-link--accent { color: var(--accent); }
 .text-link .arrow { width: var(--icon-size-compact); height: var(--icon-size-compact); }
 .text-link .arrow path { stroke-width: var(--icon-stroke-emphasis); }
@@ -431,6 +432,8 @@ html.case-study-open { overflow: hidden; scrollbar-gutter: stable; }
 .case-study-media--bare :is(img, video) { border-radius: 0; }
 .case-study-media__sequence { overflow: hidden; border-radius: var(--case-media-radius, var(--radius-medium)); }
 .case-study-media--canvas :is(img, video) { aspect-ratio: var(--media-ratio); background: var(--media-canvas); }
+/* Fade the painted recording, excluding canvas padding and contain letterboxing. */
+.media-canvas-fade { -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent), linear-gradient(180deg, transparent, #000 8%, #000 92%, transparent); -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent), linear-gradient(180deg, transparent, #000 8%, #000 92%, transparent); mask-composite: intersect; mask-size: var(--media-fade-size, 100% 100%); mask-position: center; mask-repeat: no-repeat; }
 .case-study-media--shadow { border-radius: var(--case-media-radius, var(--radius-medium)); box-shadow: var(--shadow-floating); }
 .case-study-media--floating { --media-stroke: 4px; --media-stroke-half: 2px; display: block; position: relative; border-radius: var(--case-media-radius, var(--radius-medium)); box-shadow: var(--shadow-floating); }
 .case-study-media--wide-stroke { --media-stroke: 8px; --media-stroke-half: 4px; }
@@ -440,11 +443,12 @@ html.case-study-open { overflow: hidden; scrollbar-gutter: stable; }
 .case-study-origin { position: absolute; left: 0; top: 0; pointer-events: none; background: transparent; }
 .case-study-origin .project-surface { transform: none !important; }
 .case-study-transition-artwork { position: absolute; z-index: 2; pointer-events: none; }
-.case-study-transition-artwork img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.case-study-transition-artwork video { display: block; width: 100%; height: 100%; object-fit: contain; }
+.case-study-transition-artwork picture { display: block; width: 100%; height: 100%; }
+.case-study-transition-artwork :is(img, video) { display: block; width: 100%; height: 100%; object-fit: var(--case-hero-fit); }
 .case-study-content { --case-content-top-inset: calc(var(--space-24) + var(--space-4)); max-width: 1328px; padding: var(--case-content-top-inset) 64px 96px; margin: 0 auto; }
 .case-study-artwork { position: relative; }
-.case-study-artwork :is(img, video) { display: block; width: 100%; height: auto; object-fit: contain; }
+.case-study-artwork :is(img, video) { display: block; width: 100%; height: auto; object-fit: var(--case-hero-fit); }
+.case-study-artwork.case-study-media :is(img, video) { object-fit: var(--case-hero-fit); }
 :is(.project-media, .case-study-transition-artwork, .case-study-artwork) {
   /* The stroke follows radius-media at its center; overflow clips media at
      the inner border curve, keeping dark pixels away from the outer edge. */
@@ -453,6 +457,10 @@ html.case-study-open { overflow: hidden; scrollbar-gutter: stable; }
   overflow: hidden;
 }
 .case-study-artwork.case-study-media :is(img, video) { border-radius: 0; }
+.case-media-frame { display: contents; }
+.case-media-frame.media-crop { display: block; overflow: hidden; aspect-ratio: var(--media-ratio); border-radius: var(--case-media-radius, 0px); }
+.case-study-artwork .media-crop { border-radius: 0; }
+:is(.project-media, .case-study-media, .case-study-transition-artwork) :is(img, video).media-crop-content { width: var(--media-crop-width); height: auto; max-width: none; aspect-ratio: var(--media-source-ratio); margin: var(--media-crop-offset) 0 0 var(--media-crop-offset); border-radius: 0; }
 .case-study-intro { margin-top: var(--space-16); }
 .case-study-label { letter-spacing: var(--letter-spacing-label-m); color: var(--muted); font-size: var(--text-small); text-transform: uppercase; font-weight: var(--font-weight-label-m); margin-bottom: var(--space-4); }
 .case-study-intro h1 { letter-spacing: var(--letter-spacing-heading-l); font-size: var(--text-heading-l); font-weight: var(--font-weight-heading-large); line-height: 1.15; }
@@ -470,21 +478,7 @@ html.case-study-open { overflow: hidden; scrollbar-gutter: stable; }
   .case-study-intro { margin-top: var(--space-8); }
   .case-study-impact { grid-template-columns: 1fr; margin-top: 64px; }
 }
-.case-study-draft { display: inline-block; color: var(--muted); border: 1px solid var(--divider); border-radius: var(--radius-pill); padding: 8px 16px; margin-top: var(--space-24); }
-.case-study-story { margin-top: var(--space-16); }
-.case-study-story h2 { letter-spacing: var(--letter-spacing-heading-m); font-size: var(--text-heading-m); line-height: 1.3; font-weight: var(--font-weight-heading); margin-bottom: var(--space-6); }
-.case-study-story div > p { color: var(--muted); max-width: 720px; text-wrap: pretty; }
-.case-study-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: var(--grid-gap); margin-top: var(--space-16); }
-.case-study-gallery figure { margin: 0; min-width: 0; }
-.case-study-gallery-image { overflow: hidden; aspect-ratio: 4 / 3; border-radius: var(--radius-media); background: var(--surface); }
-.case-study-gallery img { width: 100%; height: 100%; object-fit: cover; }
-.case-study-gallery-image--detail { aspect-ratio: 1; }
-.case-study-gallery figcaption { margin-top: 12px; color: var(--muted); }
-@media (max-width: 767px) {
-  .case-study-story { row-gap: var(--space-2); margin-top: var(--space-12); }
-  .case-study-gallery { grid-template-columns: 1fr; margin-top: 48px; }
-  .case-study-draft { margin-top: 64px; border-radius: var(--radius-medium); }
-}
+
 
 /* Match the theme glyph: turn on hover and smoothly return when hover ends. */
 :is(.project-cursor.is-case-control, .case-study-direct-close) .icon-button:not(:disabled):hover { background: var(--floating-surface); }

@@ -2,10 +2,10 @@
 import type { HTMLAttributes } from 'astro/types';
 import Arrow from './Arrow.astro';
 
-interface Props extends HTMLAttributes<'a'> { href: string; accent?: boolean; compact?: boolean; }
-const { href, accent = false, compact = false, class: className, target, rel, ...attributes } = Astro.props;
+interface Props extends HTMLAttributes<'a'> { href: string; accent?: boolean; compact?: boolean; inline?: boolean; }
+const { href, accent = false, compact = false, inline = false, class: className, target, rel, ...attributes } = Astro.props;
 const opensNewTab = target === '_blank' || (!target && /^https?:\/\//i.test(href));
 const linkTarget = target ?? (opensNewTab ? '_blank' : undefined);
 const linkRel = opensNewTab ? [rel, 'noopener', 'noreferrer'].filter(Boolean).join(' ') : rel;
 ---
-<a {...attributes} href={href} target={linkTarget} rel={linkRel} class:list={['text-link', 'text-body-m-strong', accent && 'text-link--accent', compact && 'text-link--compact', className]}><span><slot /></span><Arrow direction="up" /></a>
+<a {...attributes} href={href} target={linkTarget} rel={linkRel} class:list={['text-link', !inline && 'text-body-m-strong', inline && 'text-link--inline', accent && 'text-link--accent', compact && 'text-link--compact', className]}>{inline ? <slot /> : <><span><slot /></span><Arrow direction="up" /></>}</a>

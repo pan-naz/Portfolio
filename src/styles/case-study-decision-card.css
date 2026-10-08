@@ -4,6 +4,7 @@
 .case-study-decision-card__icon { display: grid; place-items: center; flex-shrink: 0; width: var(--space-12); height: var(--space-12); border-radius: var(--radius-small); color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--floating-surface)); }
 .case-study-decision-card__icon svg { width: var(--icon-size); height: var(--icon-size); }
 .case-study-decision-card__copy { margin-top: var(--space-2); }
+.case-study-decision-card__copy--without-heading { margin-top: 0; }
 .case-study-decision-card__impact { margin-top: var(--space-2); padding: var(--space-4); border-radius: var(--radius-small); color: var(--inverse-ink); background: var(--inverse-surface); }
 .case-study-decision-card__impact h4 { margin-bottom: var(--space-2); }
 .case-study-decision-card__impact p + p { margin-top: var(--space-2); }

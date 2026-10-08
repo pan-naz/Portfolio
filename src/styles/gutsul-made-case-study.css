@@ -1,0 +1,82 @@
+/* Original store identity and embroidery specimens stay scoped to this project. */
+@font-face { font-family: 'Gutsul Open Sans'; src: url('/projects/blaustrom-case-study/open-sans-400.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Gutsul Open Sans'; src: url('/projects/blaustrom-case-study/open-sans-700.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+.case-study-content--gutsul-made { --gutsul-red: #EB3148; --gutsul-dark: #333333; --gutsul-grey: #A6A6A6; }
+/* The final chapter already owns the shared responsive bottom inset. */
+.case-study-content.case-study-content--gutsul-made { padding-bottom: 0; }
+.gutsul-muted { color: var(--muted); }
+.gutsul-block { margin-top: var(--space-16); }
+.gutsul-heading { align-items: end; }
+.gutsul-copy { display: grid; gap: var(--space-6); }
+.gutsul-copy > p { margin-top: 0; }
+.gutsul-band { position: relative; color: var(--ink); }
+.gutsul-charcoal { background: var(--gutsul-dark); }
+.gutsul-red { --ink: var(--floating-on-primary); --muted: var(--ink); background: var(--gutsul-red); }
+/* Brand artwork lives on the background, outside the shared content rhythm. */
+.gutsul-ornament { position: absolute; inset-inline: 0; display: flex; justify-content: center; height: 24px; overflow: hidden; pointer-events: none; }
+.gutsul-ornament:first-child { top: 32px; }
+.gutsul-ornament:last-child { bottom: 32px; }
+.gutsul-ornament .svg-asset { flex: 0 0 8192px; width: 8192px; max-width: none; height: 24px; }
+.gutsul-band-inner { position: relative; display: grid; gap: var(--space-16); }
+.gutsul-diamonds { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+.gutsul-diamonds li { position: relative; padding-left: var(--space-6); }
+.gutsul-diamonds li::before { content: ''; position: absolute; top: .55em; left: 3px; width: 7px; height: 7px; transform: rotate(45deg); background: var(--gutsul-red); }
+.gutsul-story { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.5fr; column-gap: var(--grid-gap); }
+.gutsul-story-step { display: contents; margin: 0; }
+.gutsul-brand-tile { position: relative; aspect-ratio: 1; overflow: hidden; border-radius: var(--radius-medium); background: #2A2A2A; }
+.gutsul-brand-tile--paper { background: #F3EFE6; }
+.gutsul-brand-tile > :is(.case-study-media, .svg-asset) { width: 100%; height: 100%; }
+.gutsul-brand-tile .case-study-media img { height: 100%; object-fit: cover; }
+.gutsul-story figcaption { padding-top: var(--space-3); }
+.gutsul-story figcaption p { margin-top: var(--space-1); }
+.gutsul-story-step:nth-child(1) .gutsul-brand-tile { grid-column: 1; grid-row: 1 / 4; aspect-ratio: auto; }
+.gutsul-story-step:nth-child(1) figcaption { grid-column: 1; grid-row: 4; }
+.gutsul-story-step:nth-child(2) .gutsul-brand-tile { grid-column: 2; grid-row: 1; }
+.gutsul-story-step:nth-child(2) figcaption { grid-column: 2; grid-row: 2; padding-bottom: var(--space-6); }
+.gutsul-story-step:nth-child(3) .gutsul-brand-tile { grid-column: 3; grid-row: 1; }
+.gutsul-story-step:nth-child(3) figcaption { grid-column: 3; grid-row: 2; padding-bottom: var(--space-6); }
+.gutsul-story-step:nth-child(4) .gutsul-brand-tile { grid-column: 2; grid-row: 3; }
+.gutsul-story-step:nth-child(4) figcaption { grid-column: 2; grid-row: 4; }
+.gutsul-story-step:nth-child(5) .gutsul-brand-tile { grid-column: 3; grid-row: 3; }
+.gutsul-story-step:nth-child(5) figcaption { grid-column: 3; grid-row: 4; }
+.gutsul-story-step:nth-child(6) .gutsul-brand-tile { grid-column: 4; grid-row: 1 / 4; aspect-ratio: auto; }
+.gutsul-story-step:nth-child(6) figcaption { grid-column: 4; grid-row: 4; }
+.gutsul-story-step:is(:first-child, :last-child) .gutsul-brand-tile > * { position: absolute; inset: 0; }
+.gutsul-cutouts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: center; justify-items: center; gap: var(--grid-gap); }
+.gutsul-cutouts > div { width: var(--gutsul-cutout-width); max-width: 100%; }
+.gutsul-pages .case-study-media { aspect-ratio: 1; overflow: hidden; border-radius: var(--radius-small); }
+.gutsul-pages .case-study-decision-card .case-study-media img { height: 100%; object-fit: cover; object-position: top; }
+.gutsul-phones { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start; justify-items: center; gap: var(--grid-gap); }
+.gutsul-phones > * { width: min(100%, 207px); --surface: var(--floating-surface); }
+.gutsul-guide { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--grid-gap); align-items: stretch; }
+.gutsul-guide > :first-child { grid-column: 1 / -1; }
+.gutsul-plate { display: grid; place-items: center; min-height: 220px; padding: var(--space-8) var(--space-4); border-radius: var(--radius-small); background: #FAF8F7; }
+.gutsul-icons .case-study-media { width: min(100%, 753px); }
+.gutsul-icons img { mix-blend-mode: multiply; }
+.gutsul-type { font-family: 'Gutsul Open Sans', sans-serif; font-size: 40px; line-height: 1.2; text-align: center; color: var(--gutsul-dark); }
+.gutsul-type span { color: var(--gutsul-grey); }
+.gutsul-case .gutsul-type b { font-weight: 700; }
+.gutsul-palette { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); width: 100%; list-style: none; padding: 0; margin: 0; }
+.gutsul-palette > li { display: grid; justify-items: center; gap: var(--space-1); text-align: center; }
+.gutsul-palette span { width: 56px; height: 56px; margin: 10px 10px var(--space-6); border: 14px solid var(--gutsul-swatch); transform: rotate(45deg); }
+.gutsul-palette code { color: var(--floating-muted); font: inherit; font-size: var(--text-small); }
+@media (max-width: 1023px) {
+  .gutsul-story { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--grid-gap); }
+  .gutsul-story-step { display: grid; gap: var(--space-3); align-content: start; }
+  .gutsul-story-step :is(.gutsul-brand-tile, figcaption) { grid-column: auto !important; grid-row: auto !important; padding: 0; }
+  .gutsul-story-step:is(:first-child, :last-child) { grid-column: 1 / -1; }
+  .gutsul-story-step:first-child .gutsul-brand-tile { aspect-ratio: 2 / 3; }
+  .gutsul-story-step:last-child .gutsul-brand-tile { aspect-ratio: 1; }
+}
+@media (max-width: 767px) {
+  .gutsul-ornament:first-child { top: 16px; }
+  .gutsul-ornament:last-child { bottom: 16px; }
+  .gutsul-block { margin-top: var(--space-8); }
+  .gutsul-band-inner { gap: var(--space-8); }
+  .gutsul-phones, .gutsul-guide { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .gutsul-guide { grid-template-columns: minmax(0, 1fr); }
+  .gutsul-pages .case-study-media { aspect-ratio: auto; }
+  .gutsul-pages .case-study-decision-card .case-study-media img { height: auto; object-fit: contain; }
+  .gutsul-palette { gap: var(--space-2); }
+  .gutsul-palette span { width: 40px; height: 40px; border-width: 10px; }
+}

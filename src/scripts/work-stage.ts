@@ -60,6 +60,17 @@ export function initializeWorkStage(): WorkStageController | undefined {
     element.style.transform = 'translateY(0px)';
   });
   const hideHeading = () => headingParts.forEach(element => { element.style.opacity = '0'; });
+  const settleHeadingAtTop = () => {
+    // Only a fresh page has an empty preview. Once visited, retain the completed
+    // reveal even when the background returns to its inset position.
+    if (!headingRevealed) {
+      hideHeading();
+      return;
+    }
+    headingResolved = true;
+    headingMotion?.finish();
+    showHeadingImmediately();
+  };
 
   const showRailImmediately = () => {
     rail.style.opacity = '1';
@@ -117,7 +128,11 @@ export function initializeWorkStage(): WorkStageController | undefined {
   };
 
   const revealHeading = (stageTop = section.getBoundingClientRect().top) => {
-    if (headingRevealed || !shouldRevealWorkContent(stageTop, window.scrollY, window.innerHeight * sectionRevealRatio)) return;
+    if (!shouldRevealWorkContent(stageTop, window.scrollY, window.innerHeight * sectionRevealRatio)) return;
+    if (headingRevealed) {
+      if (headingResolved) showHeadingImmediately();
+      return;
+    }
     headingRevealed = true;
     if (reduced.matches || typeof title.animate !== 'function') {
       showHeadingImmediately();
@@ -198,8 +213,10 @@ export function initializeWorkStage(): WorkStageController | undefined {
   };
   const updateFromScroll = () => {
     scrollFrame = 0;
+    if (reduced.matches) return;
     const stageTop = section.getBoundingClientRect().top;
-    if (!headingRevealed) revealHeading(stageTop);
+    if (window.scrollY <= collapseAtScrollY) settleHeadingAtTop();
+    else revealHeading(stageTop);
     const expandAt = window.innerHeight * expandViewportRatio;
     const next = nextWorkStageExpanded(
       stageTop,
@@ -243,7 +260,10 @@ export function initializeWorkStage(): WorkStageController | undefined {
     move(true, reduced.matches);
   };
   section.addEventListener('focusin', finishHeading);
-  section.addEventListener('workfilterchange', finishHeading);
+  section.addEventListener('workfilterchange', () => {
+    if (window.scrollY <= collapseAtScrollY) return;
+    finishHeading();
+  });
   reduced.addEventListener('change', () => {
     shiftMotion?.cancel();
     railMotion?.cancel();
@@ -258,6 +278,15 @@ export function initializeWorkStage(): WorkStageController | undefined {
       showHeadingImmediately();
     }
   });
+
+  // Returning from a reloaded case resumes an already visited collection.
+  // Resolve its entrance before the scroll-restoration paint guard releases.
+  if (document.documentElement.dataset.caseReturn === 'true') {
+    headingResolved = headingRevealed = true;
+    showHeadingImmediately();
+    move(true, true);
+    railMotion?.finish();
+  }
 
   return {
     startIntro() { section.classList.add('is-work-intro-complete'); },

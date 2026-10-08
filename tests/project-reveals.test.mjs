@@ -47,8 +47,9 @@ assert.ok(
     read('../src/scripts/theme.ts').includes("syncTheme(saved === 'dark')"),
   'Only a saved manual choice can restore Dark mode'
 );
-assert.ok(impact.includes('class="impact-group" aria-label={`${project.title} results`} data-section-item'), 'Each complete Impact project row is one ordered section item');
-assert.ok(!impact.includes('<h3 data-section-item>') && !stat.includes('data-section-item'), 'Impact identities and metrics do not animate separately from their project row');
+assert.ok(impact.includes('class="impact-group" aria-label={`${project.title} results`} data-section-item data-title-reveal-row'), 'Each Impact project row stays on the shared section timeline');
+assert.ok(impact.includes('<Stat {...metric} revealValue />') && stat.includes('reveal={revealValue}'), 'Impact numbers opt into the shared title glyph reveal');
+assert.ok(!impact.includes('<h3 data-section-item>') && !stat.includes('data-section-item'), 'Identity and metric copy remain grouped by project row');
 assert.ok(sectionReveals.includes("querySelectorAll<HTMLElement>('[data-section-item]')"));
 assert.ok(sectionReveals.includes('sectionRevealEffects(title, index, description, content)'), 'Touch and compact layouts use one section timeline');
 assert.ok(sectionReveals.includes("number('--section-item-reveal-duration') || duration") && sectionReveals.includes("number('--section-item-reveal-interval') || duration * progress") && css.includes('--section-item-reveal-duration: 620; --section-item-reveal-interval: 160;'), 'Experience rows use the faster 620ms/160ms reveal cadence');

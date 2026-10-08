@@ -1,0 +1,29 @@
+/* Purple and teal belong to the supplied conversation specimen. */
+.case-study-content--kitchen-chatbot { --kc-purple: #6954ae; --kc-teal: #40d4b1; padding-bottom: 0; }
+.kitchen-case > .case-study-overview { padding-top: var(--case-section-space); }
+.kc-conversation { align-items: center; }
+.kc-copy { display: grid; gap: var(--space-6); }
+.kc-copy > p { margin: 0; }
+.kc-muted { color: var(--muted); }
+.kc-chat { --divider: var(--floating-divider); display: grid; gap: var(--space-3); padding: var(--space-2); }
+.kc-chat :is(p, small) { margin: 0; text-wrap: wrap; }
+.kc-message { min-width: 0; max-width: 80%; padding: var(--space-3) var(--space-4); border-radius: var(--radius-medium); }
+.kc-message--bot { justify-self: start; background: var(--inverse-ink); border-bottom-left-radius: var(--radius-small); }
+.kc-message--user { justify-self: end; color: var(--floating-surface); background: var(--kc-purple); border-bottom-right-radius: var(--radius-small); }
+.kc-message small { display: block; color: var(--muted); }
+.kc-dishes { justify-self: start; width: 80%; display: grid; gap: var(--space-2); }
+.kc-dish { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); border: 1px solid var(--divider); border-radius: var(--radius-small); font-weight: var(--font-weight-body-m-strong); }
+.kc-dish > :first-child { min-width: 0; }
+.kc-duration { flex-shrink: 0; color: var(--muted); white-space: nowrap; }
+.kc-dish--rejected { color: var(--muted); text-decoration: line-through; }
+.kc-dish--selected { border-color: var(--kc-teal); box-shadow: inset 0 0 0 1px var(--kc-teal); }
+.kc-note { justify-self: center; padding-block: var(--space-1); color: var(--muted); font-size: var(--text-label-s); line-height: 1.333333; letter-spacing: var(--letter-spacing-label-s); font-weight: var(--font-weight-label-m); text-transform: uppercase; }
+@media (max-width: 1023px) {
+  .kc-conversation { grid-template-columns: minmax(0, 1fr); }
+  .kc-conversation > :first-child { margin-inline-end: 0; }
+}
+@media (max-width: 767px) {
+  .kc-chat { padding: 0; }
+  .kc-message { max-width: 88%; }
+  .kc-dishes { width: 100%; }
+}

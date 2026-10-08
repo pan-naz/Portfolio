@@ -103,7 +103,15 @@ document.querySelectorAll<HTMLAnchorElement>('a[href]').forEach(link => {
     if (!target) return;
     event.preventDefault();
     const navigate = () => {
-      if (location.hash !== link.hash) history.pushState(null, '', link.hash);
+      // At the top, the wordmark starts a fresh homepage session.
+      if (link.hasAttribute('data-home-top') && window.scrollY <= 1) {
+        try { sessionStorage.removeItem('portfolio-case-return'); } catch {}
+        history.replaceState({ ...history.state, workFilter: 'selected' }, '', `${location.pathname}${location.search}`);
+        location.reload();
+        return;
+      }
+      // Scrolling up preserves the selected category and URL.
+      if (location.hash !== link.hash && !link.hasAttribute('data-home-top')) history.pushState(null, '', link.hash);
       scrollToSection(target);
     };
     if (menu.contains(link)) closeMenu(navigate); else navigate();

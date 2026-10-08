@@ -12,7 +12,7 @@ const { title = `${profile.name} — naz.wtf`, homeIntro = false } = Astro.props
     <meta name="description" content={profile.description} />
     <meta name="robots" content="noindex, nofollow" />
     <meta name="theme-color" content="#FAF8F7" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=funnel-display" />
     <title>{title}</title>
     <script is:inline>
       (() => {
@@ -70,8 +70,17 @@ const { title = `${profile.name} — naz.wtf`, homeIntro = false } = Astro.props
         // the final visible position across that document boundary reliably.
         try { saved = JSON.parse(sessionStorage.getItem('portfolio-reload-scroll')) ?? saved; } catch {}
         const navigation = performance.getEntriesByType('navigation')[0];
-        const restartHome = navigation?.type === 'reload' && location.pathname === '/';
-        let restoring = navigation?.type === 'reload' && (restartHome || (saved?.path === path
+        let caseReturn;
+        if (location.pathname === '/') {
+          try {
+            const pending = JSON.parse(sessionStorage.getItem('portfolio-case-return'));
+            sessionStorage.removeItem('portfolio-case-return');
+            if ((navigation?.type !== 'reload' || pending?.reload === true) && pending?.url === `${path}${location.hash}`
+              && Number.isFinite(pending.top) && pending.top >= 0) caseReturn = pending;
+          } catch {}
+        }
+        const restartHome = navigation?.type === 'reload' && location.pathname === '/' && !caseReturn;
+        let restoring = Boolean(caseReturn) || navigation?.type === 'reload' && (restartHome || (saved?.path === path
           && Number.isFinite(saved.top) && saved.top >= 0));
         const save = () => {
           // A repeated reload during startup must keep the intended position.
@@ -88,17 +97,21 @@ const { title = `${profile.name} — naz.wtf`, homeIntro = false } = Astro.props
         document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
         if (!restoring) return;
 
-        // Homepage reloads replay the intro from the top. An open case reloads
-        // as a standalone page using its own reading position.
+        // Homepage refreshes replay the intro; a case return resumes its origin.
+        // An open case reloads as a standalone page at its reading position.
         history.scrollRestoration = 'manual';
         // Home is reset before body parsing; its static Work preview must stay
-        // visible. Only case reading positions need the layout/paint guard.
+        // visible. Case reloads and origin returns need the layout/paint guard.
         if (!restartHome) root.dataset.scrollRestorePending = 'true';
+        if (caseReturn) {
+          root.dataset.caseReturn = 'true';
+          delete root.dataset.homeIntro;
+        }
         if (restartHome) {
           const hash = location.hash === '#websites' || location.hash === '#misc' ? location.hash : '';
           history.replaceState(history.state, '', `${path}${hash}`);
         }
-        const top = restartHome ? 0 : saved.top;
+        const top = caseReturn ? caseReturn.top : restartHome ? 0 : saved.top;
         const restore = () => window.scrollTo({ top, left: 0, behavior: 'instant' });
         restore();
         addEventListener('DOMContentLoaded', restore, { once: true });

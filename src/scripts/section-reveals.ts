@@ -1,5 +1,5 @@
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { createNativeMotion, readMotionToken, revealEffects, type MotionEffect } from './native-motion.ts';
+import { createNativeMotion, readMotionToken, revealEffects, parallelRevealEffects, motionEndTime, type MotionEffect } from './native-motion.ts';
 import { splitLetters } from './text-reveal.ts';
 import { shouldRevealWorkContent } from './work-stage-model.ts';
 
@@ -79,23 +79,38 @@ export function sectionRevealEffects(
   const itemInterval = number('--section-item-reveal-interval') || duration * progress;
   const distance = number('--distance-text-reveal');
   const easing = tokens.getPropertyValue('--ease-entrance').trim();
-  return [
-    ...headingRevealEffects(title, index, description),
-    ...content.flatMap((element, itemIndex) => revealEffects([element], {
+  const heading = headingRevealEffects(title, index, description);
+  let nextStart = sectionItemStart(0, number('--duration-title-reveal'), duration, progress, Boolean(description), itemInterval, Boolean(index));
+  const items = content.flatMap(element => {
+    const delay = nextStart;
+    if (element.hasAttribute('data-title-reveal-row')) {
+      const values = [...element.querySelectorAll<HTMLElement>('[data-title-reveal-value]')];
+      const letters = values.map(value => splitLetters(value, value.textContent ?? ''));
+      // Values own the title rise; keep the row wrapper still, with copy on its
+      // existing separate recipe. Native backwards fill hides all waiting parts.
+      element.style.opacity = '1';
+      element.style.transform = 'none';
+      const effects = [
+        ...parallelRevealEffects(letters, {
+          duration: number('--duration-title-reveal'), delay, stagger: number('--stagger-title-reveal'),
+          distance: number('--distance-title-reveal'), easing,
+        }),
+        ...revealEffects([...element.querySelectorAll<HTMLElement>('[data-reveal-copy]')], {
+          duration: itemDuration, delay, distance, easing,
+        }),
+      ];
+      nextStart = motionEndTime(effects);
+      return effects;
+    }
+    nextStart += itemInterval;
+    return revealEffects([element], {
       duration: itemDuration,
-      delay: sectionItemStart(
-        itemIndex,
-        number('--duration-title-reveal'),
-        duration,
-        progress,
-        Boolean(description),
-        itemInterval,
-        Boolean(index),
-      ),
+      delay,
       distance,
       easing,
-    })),
-  ];
+    });
+  });
+  return [...heading, ...items];
 }
 
 /** One-time entrances; scroll starts each item, then the native clock completes it. */
@@ -134,6 +149,10 @@ export function initializeSectionReveals() {
       });
     };
     const scene = ScrollTrigger.create({ trigger, start, once: true, onEnter: play });
+    if (document.documentElement.dataset.caseReturn === 'true' && trigger.getBoundingClientRect().top < window.innerHeight) {
+      finish();
+      scene.kill();
+    }
     if (element.id === 'work') element.addEventListener('workfilterchange', finish);
     records.push({ element, finish: () => { finish(); scene.kill(); } });
   };

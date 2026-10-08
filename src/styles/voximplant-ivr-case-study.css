@@ -1,0 +1,20 @@
+.case-study-content--voximplant-ivr { padding-bottom: 0; }
+.voximplant-ivr-case > .case-study-overview { padding-top: var(--case-section-space); }
+.ivr-row { align-items: center; }
+.ivr-copy { display: grid; align-content: start; gap: var(--space-6); }
+.ivr-copy > p { margin-top: 0; }
+.ivr-muted { color: var(--muted); }
+/* Original artwork: continue the purple/white page canvas and soften only the clip's side edges. */
+@media (min-width: 768px) {
+  img[src="/projects/voximplant-ivr-case-study/hero.webp"] {
+    mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+    mask-size: 66.666667% 100%;
+    mask-position: center;
+    mask-repeat: no-repeat;
+  }
+}
+@media (max-width: 767px) {
+  #project-voximplant-ivr .project-media,
+  #project-voximplant-ivr .project-media img,
+  .case-study-content--voximplant-ivr > .case-study-artwork img { aspect-ratio: 800 / 501; }
+}

@@ -36,6 +36,16 @@ export function revealEffects(elements: HTMLElement[], options: RevealOptions): 
   }));
 }
 
+/** Restart glyph staggering for each value so columns begin together. */
+export function parallelRevealEffects(groups: HTMLElement[][], options: RevealOptions): MotionEffect[] {
+  return groups.flatMap(elements => revealEffects(elements, options));
+}
+
+/** Include the last glyph's stagger when handing off to the next row. */
+export function motionEndTime(effects: MotionEffect[]): number {
+  return effects.reduce((end, effect) => Math.max(end, (effect.delay ?? 0) + effect.duration), 0);
+}
+
 /** One browser clock and lifecycle. JavaScript writes styles only at endpoints. */
 export function createNativeMotion(effects: MotionEffect[], options: { paused?: boolean; onComplete?: () => void } = {}) {
   let ended = false;

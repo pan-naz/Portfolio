@@ -27,6 +27,7 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
   if (!hero || !heading) return;
   const header = document.querySelector<HTMLElement>('.site-header');
   const root = document.documentElement;
+  const returningFromCase = root.dataset.caseReturn === 'true';
   const releaseGate = () => { delete root.dataset.homeIntro; };
   const permanent = heading.querySelector<HTMLElement>('[data-permanent]')!;
   const cycling = heading.querySelector<HTMLElement>('[data-cycling]')!;
@@ -101,6 +102,7 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
       roleMotion?.setPaused(paused);
       startWork();
       releaseGate();
+      if (returningFromCase) { tagIntro?.finish(); intro?.finish(); }
       if (cta.matches(':has(:focus-visible)')) intro?.finish();
     };
     if (header) {
@@ -125,7 +127,7 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
           headerDone = true;
           startContent();
         } });
-        if (header.matches(':focus-within')) finishHeader();
+        if (returningFromCase || header.matches(':focus-within')) finishHeader();
       });
     }
     void document.fonts.ready.then(() => {

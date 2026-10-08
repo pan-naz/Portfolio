@@ -99,12 +99,12 @@ export function initializeWorkFilter(onChange?: () => void, onReposition?: (top:
     onChange?.();
   };
 
-  const select = (filter: WorkFilter, animate = true, updateHash = true) => {
+  const select = (filter: WorkFilter, animate = true, updateHash = true, resolveEntrance = true) => {
     const target = collections.find(collection => collection.dataset.projectCollection === filter);
     if (!target) return;
     if (filter === active) { if (updateHash) saveFilter(); return; }
     // Finish the one-time Work entrance before the independent filter transition.
-    section.dispatchEvent(new Event('workfilterchange'));
+    if (resolveEntrance) section.dispatchEvent(new Event('workfilterchange'));
     const listTop = list.getBoundingClientRect().top;
     // Deep in a long collection, bring the replacement into view without losing focus.
     if (animate && listTop < -window.innerHeight * .5) onReposition?.(window.scrollY + listTop - 112);
@@ -245,7 +245,9 @@ export function initializeWorkFilter(onChange?: () => void, onReposition?: (top:
   small.addEventListener('change', refreshLayout);
   reduced.addEventListener('change', refreshLayout);
   void document.fonts.ready.then(refreshLayout);
-  select(initialWorkFilter(location.hash), false, false);
+  // Restoring the category is prepaint setup, not a request to open the Work
+  // stage or finish its scroll entrance while the page is still at the top.
+  select(initialWorkFilter(location.hash), false, false, false);
   // Preserve ordinary section anchors on startup; tab clicks own hash changes.
   saveFilter(false);
   alignRail();

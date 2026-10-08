@@ -1,3 +1,12 @@
+import { petCareDescription, petCareTags, petCareHero } from './pet-care-case-study.ts';
+import { squareDescription, squareTags, squareHero } from './square-case-study.ts';
+import { kitchenChatbotDescription, kitchenChatbotTags, kitchenChatbotHero } from './kitchen-chatbot-case-study.ts';
+import { telegramDescription, telegramTags, telegramHero } from './telegram-file-picker-case-study.ts';
+import { designCupDescription, designCupTags, designCupHero } from './design-cup-case-study.ts';
+import { voximplantIvrDescription, voximplantIvrTags, voximplantIvrHero } from './voximplant-ivr-case-study.ts';
+import { offfDescription, offfTags, offfHero } from './offf-conference-case-study.ts';
+import { professionsInDigitalDescription, professionsInDigitalTags, professionsInDigitalHero } from './professions-in-digital-case-study.ts';
+import { quitUniversityTitle, quitUniversityDescription, quitUniversityTags, quitUniversityHero } from './quit-university-case-study.ts';
 import { dataGPTMedia } from './datagpt-case-study.ts';
 import { peakHotelMedia } from './peak-hotel-case-study.ts';
 import { yellowLeafMedia, yellowLeafDescription } from './yellow-leaf-case-study.ts';
@@ -5,6 +14,8 @@ import { indexLawFirmMedia, indexLawFirmDescription } from './index-law-firm-cas
 import { blaustromMedia, blaustromDescription } from './blaustrom-case-study.ts';
 import { cravusMedia, cravusDescription } from './cravus-case-study.ts';
 import { promshynaHero, promshynaDescription } from './promshyna-case-study.ts';
+import { gutsulHero, gutsulDescription, gutsulTags } from './gutsul-made-case-study.ts';
+import { sternfitHero, sternfitDescription, sternfitTags } from './team-sternfit-case-study.ts';
 
 // Profile contact details retained from the supplied resume; homepage copy from Figma.
 // See COPY.md for sources, editorial decisions and deliberately omitted claims.
@@ -28,13 +39,18 @@ export interface Project {
   outcome?: string;
   tags: string[];
   logo?: `/${string}.svg`;
+  logoBackground?: 'white';
   image: string;
   imageAlt: string;
   imageWidth?: number;
   imageHeight: number;
   imageSrcSet?: string;
-  video?: { src: string; width: number; height: number; poster?: string; canvasColor?: string };
-  placeholder?: boolean;
+  imageCanvasColor?: string;
+  imageCanvasInset?: number;
+  imageCanvasFade?: boolean;
+  imageCanvasSourceRatio?: number;
+  imageReducedMotionSrc?: string;
+  video?: { src: string; width: number; height: number; poster?: string; canvasColor?: string; canvasInset?: number; canvasFade?: boolean; canvasSourceRatio?: number; cropPixels?: number };
   href?: string;
 }
 
@@ -48,21 +64,25 @@ export const projects: Project[] = [
 
 // Website and Misc collections use the shared compact two-column cards.
 // Websites contains the complete reference case studies, without samples.
-// Misc retains its existing fictional concepts and local reference photos.
+// Misc contains real supplied concept studies, without samples.
 export const collectionProjects: Project[] = [
+  { id: 'gutsul-made', category: 'websites', title: 'Gutsul Made', description: gutsulDescription, tags: [...gutsulTags], logo: '/projects/gutsul-made-case-study/logo.svg', logoBackground: 'white', image: gutsulHero.src, imageWidth: gutsulHero.width, imageHeight: gutsulHero.height, imageSrcSet: `${gutsulHero.src} ${gutsulHero.width}w`, imageAlt: gutsulHero.alt, imageCanvasColor: gutsulHero.canvasColor, imageCanvasInset: gutsulHero.canvasInset },
   { id: 'peak-hotel', category: 'websites', title: 'Peak Hotel', description: 'Website for Peak Hotel, one of the highest hotels in Dragobrat, a ski resort in the Ukrainian Carpathians.', tags: ['Web design', 'UI/UX', 'Interaction design', 'Responsive'], logo: '/projects/peak-hotel-case-study/logo.svg', image: peakHotelMedia.hero.src, imageWidth: peakHotelMedia.hero.width, imageHeight: peakHotelMedia.hero.height, imageSrcSet: peakHotelMedia.hero.src + ' 960w', imageAlt: peakHotelMedia.hero.alt, video: peakHotelMedia.heroVideo },
   { id: 'yellow-leaf', category: 'websites', title: 'Yellow Leaf', description: yellowLeafDescription, tags: ['Branding', 'Web design', 'UI/UX', 'Motion design', 'Responsive'], logo: '/projects/yellow-leaf-case-study/logo.svg', image: yellowLeafMedia.hero.src, imageWidth: yellowLeafMedia.hero.width, imageHeight: yellowLeafMedia.hero.height, imageSrcSet: yellowLeafMedia.hero.src + ' 1216w', imageAlt: yellowLeafMedia.hero.alt, video: yellowLeafMedia.heroVideo },
-  { id: 'index-law-firm', category: 'websites', title: 'Index Law Firm', description: indexLawFirmDescription, tags: ['Web design', 'UI/UX', 'Interaction design', 'Animation'], logo: '/projects/index-law-firm-case-study/logo.svg', image: indexLawFirmMedia.hero.src, imageWidth: indexLawFirmMedia.hero.width, imageHeight: indexLawFirmMedia.hero.height, imageSrcSet: indexLawFirmMedia.hero.src + ' 1000w', imageAlt: indexLawFirmMedia.hero.alt, video: indexLawFirmMedia.heroVideo },
+  { id: 'index-law-firm', category: 'websites', title: 'Index Law Firm', description: indexLawFirmDescription, tags: ['Web design', 'UI/UX', 'Interaction design', 'Animation'], logo: '/projects/index-law-firm-case-study/logo.svg', logoBackground: 'white', image: indexLawFirmMedia.hero.src, imageWidth: indexLawFirmMedia.hero.width, imageHeight: indexLawFirmMedia.hero.height, imageSrcSet: indexLawFirmMedia.hero.src + ' 1000w', imageAlt: indexLawFirmMedia.hero.alt, video: indexLawFirmMedia.heroVideo },
   { id: 'blaustrom', category: 'websites', title: 'Blaustrom', description: blaustromDescription, tags: ['Website', 'UI/UX', 'Configurator', 'Responsive design'], logo: '/projects/blaustrom-case-study/logo.svg', image: blaustromMedia.hero.src, imageWidth: blaustromMedia.hero.width, imageHeight: blaustromMedia.hero.height, imageSrcSet: blaustromMedia.hero.src + ' 1200w', imageAlt: blaustromMedia.hero.alt, video: blaustromMedia.heroVideo },
+  { id: 'promshyna', category: 'websites', title: 'PromShyna', description: promshynaDescription, tags: ['E-commerce', 'Redesign', 'UI/UX', 'Logo', 'Responsive design'], logo: '/projects/promshyna-case-study/logo.svg', logoBackground: 'white', image: promshynaHero.src, imageWidth: promshynaHero.width, imageHeight: promshynaHero.height, imageSrcSet: promshynaHero.src + ' 1400w', imageAlt: promshynaHero.alt },
   { id: 'cravus', category: 'websites', title: 'Cravus', description: cravusDescription, tags: ['Web app', 'UI/UX', 'E-commerce', 'Responsive design'], logo: '/projects/cravus-case-study/logo.svg', image: cravusMedia.hero.src, imageWidth: cravusMedia.hero.width, imageHeight: cravusMedia.hero.height, imageSrcSet: cravusMedia.hero.src + ' 1400w', imageAlt: cravusMedia.hero.alt },
-  { id: 'promshyna', category: 'websites', title: 'PromShyna', description: promshynaDescription, tags: ['E-commerce', 'Redesign', 'UI/UX', 'Logo', 'Responsive design'], logo: '/projects/promshyna-case-study/logo.svg', image: promshynaHero.src, imageWidth: promshynaHero.width, imageHeight: promshynaHero.height, imageSrcSet: promshynaHero.src + ' 1400w', imageAlt: promshynaHero.alt },
-  { id: 'afterlight', category: 'misc', title: 'Afterlight', description: 'A photography-led visual identity study.', tags: ['Photography', 'Art direction'], image: '/projects/concepts/afterlight.webp', imageHeight: 720, imageAlt: 'Vintage film camera in warm light, a stock photo for the Afterlight study.', placeholder: true },
-  { id: 'still-life', category: 'misc', title: 'Still Life Club', description: 'A personal concept exploring objects, composition and colour. A visual scrapbook designed to make everyday details feel a little more intentional.', tags: ['Visual design', 'Editorial', 'Photography'], image: '/projects/concepts/still-life.webp', imageHeight: 720, imageAlt: 'Raspberries on a sunlit wooden surface, a stock photo for Still Life Club.', placeholder: true },
-  { id: 'soft-focus', category: 'misc', title: 'Soft Focus', description: 'A collection of photographic moods for a fictional creative studio.', tags: ['Art direction', 'Branding'], image: '/projects/concepts/soft-focus.webp', imageHeight: 720, imageAlt: 'Pink flowers against a clear blue sky, a stock photo for Soft Focus.', placeholder: true },
-  { id: 'slow-sunday', category: 'misc', title: 'Slow Sunday', description: 'An identity and packaging concept for a collection of everyday rituals, with an emphasis on tactile materials and small moments of calm.', tags: ['Branding', 'Packaging', 'Visual design', 'Art direction'], image: '/projects/concepts/slow-sunday.webp', imageHeight: 720, imageAlt: 'A close-up black-and-white clock face, a stock photo for Slow Sunday.', placeholder: true },
-  { id: 'desk-notes', category: 'misc', title: 'Desk Notes', description: 'A lightweight workspace concept for notes, references and the next small experiment.', tags: ['Product design', 'Prototyping'], image: '/projects/concepts/desk-notes.webp', imageHeight: 720, imageAlt: 'An overhead view of a laptop, notebook and pencil, a stock photo for Desk Notes.', placeholder: true },
-  { id: 'drift', category: 'misc', title: 'Drift Radio', description: 'A music discovery concept built around moods instead of genres. Cover studies and a simple listening flow explore how a quiet interface can let the music lead.', tags: ['App design', 'Interaction', 'Visual design'], image: '/projects/concepts/open-water.webp', imageHeight: 720, imageAlt: 'Laptop on a café table, a stock photograph for the Drift Radio concept.', placeholder: true },
-  { id: 'open-water', category: 'misc', title: 'Open Water', description: 'A poster series exploring rhythm, open space and the meeting of land and water.', tags: ['Graphic design', 'Photography'], image: '/projects/concepts/drift.webp', imageHeight: 720, imageAlt: 'Turquoise water between coastal cliffs, a stock photograph for the Open Water concept.', placeholder: true },
+  { id: 'team-sternfit', category: 'websites', title: 'Team Sternfit', description: sternfitDescription, tags: [...sternfitTags], logo: '/projects/team-sternfit-case-study/logo.svg', logoBackground: 'white', image: sternfitHero.src, imageWidth: sternfitHero.width, imageHeight: sternfitHero.height, imageSrcSet: `${sternfitHero.src} ${sternfitHero.width}w`, imageAlt: sternfitHero.alt },
+  { id: 'pet-care', category: 'misc', title: 'Pet Care', description: petCareDescription, tags: [...petCareTags], logo: '/projects/pet-care-case-study/logo.svg', logoBackground: 'white', image: petCareHero.src, imageWidth: petCareHero.width, imageHeight: petCareHero.height, imageSrcSet: `${petCareHero.src} ${petCareHero.width}w`, imageAlt: petCareHero.alt },
+  { id: 'telegram-file-picker', category: 'misc', title: 'Picker Concept', description: telegramDescription, tags: [...telegramTags], logo: '/projects/telegram-file-picker-case-study/logo.svg', logoBackground: 'white', image: telegramHero.poster, imageWidth: telegramHero.width, imageHeight: telegramHero.height, imageSrcSet: `${telegramHero.poster} ${telegramHero.width}w`, imageAlt: telegramHero.alt, video: { src: telegramHero.src, width: telegramHero.width, height: telegramHero.height, poster: telegramHero.poster } },
+  { id: 'square', category: 'misc', title: 'SQUARE', description: squareDescription, tags: [...squareTags], logo: '/projects/square-case-study/logo.svg', logoBackground: 'white', image: squareHero.poster, imageWidth: squareHero.width, imageHeight: squareHero.height, imageSrcSet: `${squareHero.poster} ${squareHero.width}w`, imageAlt: squareHero.alt, video: { src: squareHero.src, width: squareHero.width, height: squareHero.height, poster: squareHero.poster } },
+  { id: 'kitchen-chatbot', category: 'misc', title: 'Kitchen Chatbot', description: kitchenChatbotDescription, tags: [...kitchenChatbotTags], logo: '/projects/kitchen-chatbot-case-study/logo.svg', logoBackground: 'white', image: kitchenChatbotHero.src, imageWidth: kitchenChatbotHero.width, imageHeight: kitchenChatbotHero.height, imageSrcSet: `${kitchenChatbotHero.src} 800w`, imageAlt: kitchenChatbotHero.alt, imageCanvasColor: kitchenChatbotHero.canvasColor, imageCanvasInset: kitchenChatbotHero.canvasInset, imageCanvasFade: kitchenChatbotHero.canvasFade, imageCanvasSourceRatio: kitchenChatbotHero.canvasSourceRatio, imageReducedMotionSrc: kitchenChatbotHero.reducedMotionSrc },
+  { id: 'design-cup', category: 'misc', title: 'Design Cup', description: designCupDescription, tags: [...designCupTags], logo: '/projects/design-cup-case-study/logo.svg', logoBackground: 'white', image: designCupHero.src, imageWidth: designCupHero.width, imageHeight: designCupHero.height, imageSrcSet: `${designCupHero.src} 800w`, imageAlt: designCupHero.alt, imageCanvasColor: designCupHero.canvasColor, imageCanvasSourceRatio: designCupHero.canvasSourceRatio, imageReducedMotionSrc: designCupHero.reducedMotionSrc },
+  { id: 'voximplant-ivr', category: 'misc', title: 'Voximplant IVR', description: voximplantIvrDescription, tags: [...voximplantIvrTags], logo: '/projects/voximplant-ivr-case-study/logo.svg', image: voximplantIvrHero.src, imageWidth: voximplantIvrHero.width, imageHeight: voximplantIvrHero.height, imageSrcSet: `${voximplantIvrHero.src} 800w`, imageAlt: voximplantIvrHero.alt, imageCanvasColor: voximplantIvrHero.canvasColor, imageCanvasSourceRatio: voximplantIvrHero.canvasSourceRatio, imageReducedMotionSrc: voximplantIvrHero.reducedMotionSrc },
+  { id: 'offf-conference', category: 'misc', title: 'OFFF Conference', description: offfDescription, tags: [...offfTags], logo: '/projects/offf-conference-case-study/logo.svg', logoBackground: 'white', image: offfHero.poster, imageWidth: offfHero.width, imageHeight: offfHero.height, imageSrcSet: `${offfHero.poster} ${offfHero.width}w`, imageAlt: offfHero.alt, video: { src: offfHero.src, width: offfHero.width, height: offfHero.height, poster: offfHero.poster } },
+  { id: 'professions-in-digital', category: 'misc', title: 'Professions', description: professionsInDigitalDescription, tags: [...professionsInDigitalTags], logo: '/projects/professions-in-digital-case-study/logo.svg', logoBackground: 'white', image: professionsInDigitalHero.poster, imageWidth: professionsInDigitalHero.width, imageHeight: professionsInDigitalHero.height, imageSrcSet: `${professionsInDigitalHero.poster} ${professionsInDigitalHero.width}w`, imageAlt: professionsInDigitalHero.alt, video: { src: professionsInDigitalHero.src, width: professionsInDigitalHero.width, height: professionsInDigitalHero.height, poster: professionsInDigitalHero.poster, cropPixels: professionsInDigitalHero.cropPixels } },
+  { id: 'quit-university', category: 'misc', title: quitUniversityTitle, description: quitUniversityDescription, tags: [...quitUniversityTags], logo: '/projects/quit-university-case-study/logo.svg', logoBackground: 'white', image: quitUniversityHero.poster, imageWidth: quitUniversityHero.width, imageHeight: quitUniversityHero.height, imageSrcSet: `${quitUniversityHero.poster} ${quitUniversityHero.width}w`, imageAlt: quitUniversityHero.alt, video: { src: quitUniversityHero.src, width: quitUniversityHero.width, height: quitUniversityHero.height, poster: quitUniversityHero.poster, cropPixels: quitUniversityHero.cropPixels } },
 ];
 
 export interface ImpactMetric { value: string; label: string; note: string; }

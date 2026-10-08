@@ -23,16 +23,6 @@ export const hookoDemo = {
   strokePlacement: 'outside',
   controls: true,
   showTime: false,
-  preview: {
-    src: '/projects/hooko-case-study/demo-preview.jpg?v=e342e9b914ee',
-    columns: 8,
-    rows: 11,
-    count: 85,
-    interval: 1,
-    width: 120,
-    height: 245,
-    displayWidth: 80,
-  },
 } as const;
 
 export const hookoTools: (Tool & { label: string; description: string; iconColor: string })[] = [

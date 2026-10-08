@@ -1,12 +1,17 @@
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { projects, collectionProjects } from '../src/data/portfolio.ts';
-import { caseStudySamples } from '../src/data/case-studies.ts';
 import { hookoHero } from '../src/data/hooko-case-study.ts';
+import { caseVideoPreviews } from '../src/data/case-video-previews.ts';
 const all = [...projects, ...collectionProjects];
-assert.equal(all.length, 16);
-assert.deepEqual(Object.keys(caseStudySamples).sort(), all.filter(project => !['peak-hotel', 'yellow-leaf', 'index-law-firm', 'blaustrom', 'cravus', 'promshyna'].includes(project.id)).map(project => project.id).sort(), 'Every sample card has its own narrative');
+const controlledRecordings = new Set();
+assert.equal(all.length, 20);
 const home = readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8');
+for (const id of ['afterlight', 'still-life', 'soft-focus', 'slow-sunday', 'desk-notes', 'drift', 'open-water']) {
+  assert.ok(!home.includes(`data-case-link="${id}"`), 'Fictional cards are removed');
+  assert.ok(!existsSync(new URL(`../dist/case-studies/${id}/index.html`, import.meta.url)), 'Fictional routes are removed');
+}
 const css = readFileSync(new URL('../src/styles/global.css', import.meta.url), 'utf8');
 assert.ok(css.includes('transition: transform 350ms var(--ease-toggle-rotation)') && css.includes('.icon-button:hover svg > g { transform: rotate(180deg); }'), 'Close glyph turns on hover and transitions back to its resting angle on hover-out');
 assert.ok(!css.includes('@keyframes case-close-half-turn'), 'Close hover does not use a one-way fill animation');
@@ -19,7 +24,7 @@ const projectMetadata = (markup, card = false) => {
   const tags = markup.match(/<div\b[^>]*class="project-tags"[^>]*>([\s\S]*?)<\/div>/)?.[1];
   const summary = markup.match(card ? /<div\b[^>]*class="project-copy"[^>]*>([\s\S]*?)<\/div>/ : /<div\b[^>]*class="(?:case-study-overview__summary|case-study-summary)"[^>]*>([\s\S]*?)<\/div>/)?.[1];
   assert.ok(title && tags && summary, 'Project identity, tags and summary render together');
-  const copy = [...summary.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/g)].map(match => textFromMarkup(match[1]));
+  const copy = [...summary.matchAll(/<p\b([^>]*)>([\s\S]*?)<\/p>/g)].filter(match => !match[1].includes('data-case-credit')).map(match => textFromMarkup(match[2]));
   const identity = markup.match(/<span\b[^>]*class="project-identity[^\"]*"[^>]*>([\s\S]*?)<\/span>/)?.[1];
   return {
     title: textFromMarkup(title),
@@ -31,9 +36,6 @@ const projectMetadata = (markup, card = false) => {
   };
 };
 for (const project of all) {
-  const sample = caseStudySamples[project.id];
-  if (sample) assert.ok(sample.context.length > 100 && sample.direction.length > 100 && sample.detail.length > 100);
-  for (const id of sample?.related ?? []) assert.ok(all.some(item => item.id === id), `Valid reference imagery for ${project.id}`);
   const path = `/case-studies/${project.id}/`;
   assert.ok(home.includes(`href="${path}"`), `Real link for ${project.id}, including keyboard/new-tab fallback`);
   const html = readFileSync(new URL(`../dist${path}index.html`, import.meta.url), 'utf8');
@@ -45,10 +47,21 @@ for (const project of all) {
   const card = home.match(new RegExp(`<article\\b[^>]*id="project-${project.id}"[^>]*>([\\s\\S]*?)<\\/article>`))?.[1];
   const template = home.match(new RegExp(`<template\\b[^>]*data-case-template="${project.id}"[^>]*>([\\s\\S]*?)<\\/template>`))?.[1];
   assert.ok(card && template, `${project.id} has both a homepage card and an opened-case template`);
+  for (const [view, markup] of [['card', card], ['standalone', html], ['opened', template]]) for (const [video] of markup.matchAll(/<video\b[^>]*>/g)) assert.ok(/\sloop(?:\s|>|=)/.test(video.replace(/"[^"]*"/g, '""')), `${project.id} ${view} video loops regardless of its controls`);
   for (const [view, markup] of [['standalone', html], ['opened', template]]) {
     const heroes = [...markup.matchAll(/<(?:div|figure|case-video-player)\b[^>]*class="([^"]*\bcase-study-artwork\b[^"]*)"[^>]*>/g)];
     assert.equal(heroes.length, 1, `${project.id} ${view} case has one hero frame`);
     assert.ok(!/case-study-media--(?:floating|shadow|bare|wide-stroke|outside-stroke)/.test(heroes[0][1]), `${project.id} ${view} hero does not acquire a second content-media frame at the animation handoff`);
+    for (const player of markup.matchAll(/<case-video-player\b([^>]*)>([\s\S]*?)<\/case-video-player>/g)) {
+      const source = player[2].match(/<source\b[^>]*data-src="([^"]+)"/)?.[1].split('?')[0];
+      const preview = player[1].match(/data-preview="([^"]+)"/)?.[1];
+      assert.ok(source && preview && player[2].includes('data-video-preview'), `${project.id} ${view} controlled recordings always include the shared preview`);
+      const metadata = JSON.parse(textFromMarkup(preview));
+      assert.deepEqual(metadata, caseVideoPreviews[source], 'The thumbnail sheet belongs to this original recording');
+      assert.ok(existsSync(new URL(`../public${metadata.src.split('?')[0]}`, import.meta.url)), 'Every shared preview resolves to a real local thumbnail sheet');
+      assert.equal(player[2].includes('data-video-mute'), project.id === 'telegram-file-picker', 'Only Telegram has the sound toggle');
+      if (view === 'standalone') controlledRecordings.add(source);
+    }
   }
   const hasSubtitle = ['voximplant', 'hooko'].includes(project.id);
   assert.equal(Boolean(project.outcome), hasSubtitle, `${project.id} uses the approved intro hierarchy`);
@@ -114,6 +127,29 @@ for (const project of all) {
     assert.equal(imageSources.length, 15, 'Cravus includes every original product screenshot');
     assert.equal(vectorMarks.length, 2, 'Cravus uses its original SVG logo and shared vector icon sheet');
     assert.ok(!html.includes('Draft case study') && !html.includes('fictional concept'), 'Cravus is a complete real case study');
+  } else if (project.id === 'team-sternfit') {
+    for (const section of ['brands', 'main', 'flow', 'phone', 'guide']) assert.ok(html.includes(`id="ts-${section}"`), `Team Sternfit includes its complete ${section} chapter`);
+    assert.equal(imageSources.length, 20, 'Team Sternfit preserves every original photo, screen, type specimen and recording poster');
+    assert.equal(vectorMarks.length, 1, 'The original project logo uses shared SVG rendering');
+    const videoSources = [...html.matchAll(/<source[^>]+data-src="([^"]+)"/g)].map(match => match[1]);
+    assert.deepEqual(videoSources, ['signature', 'loader'].map(name => `/projects/team-sternfit-case-study/${name}.mp4`), 'Both original recordings use the shared viewport-aware player lifecycle');
+    for (const src of [...imageSources, ...videoSources, project.logo]) {
+      assert.deepEqual(readFileSync(new URL(`../public${src}`, import.meta.url)), readFileSync(new URL(`../../reference-research/team-sternfit/source/${src.split('/').at(-1)}`, import.meta.url)), 'Sternfit evidence matches the reference bytes without reconstruction or recompression');
+    }
+    assert.ok(html.includes('Roy Huang, Co-Founder of Team Sternfit.') && html.includes('Seeking the crazy ones.'), 'The complete team and five-block story retain the supplied copy');
+    assert.ok(!html.includes('Draft case study') && !html.includes('fictional concept'), 'Team Sternfit is a complete real case study');
+  } else if (project.id === 'gutsul-made') {
+    for (const section of ['branding', 'main', 'catalog', 'product', 'pages', 'responsive', 'style']) assert.ok(html.includes(`id="gm-${section}"`), `Gutsul Made includes the ${section} chapter`);
+    assert.equal(imageSources.length, 20, 'Gutsul Made keeps every original photograph, screen and recording poster');
+    assert.equal(vectorMarks.length, 9, 'The identity, four original diagrams and four ornament strips use shared SVG rendering');
+    assert.equal([...html.matchAll(/class="case-study-media__sequence"/g)].length, 2, 'Main and catalog compose continuous previews');
+    const videoSources = [...html.matchAll(/<source[^>]+data-src="([^"]+)"/g)].map(match => match[1]);
+    assert.deepEqual(videoSources, ['main-counters', 'phone-menu'].map(name => `/projects/gutsul-made-case-study/${name}.mp4`));
+    for (const src of [...imageSources, ...videoSources, '/projects/gutsul-made-case-study/logo.svg', ...['sketch','grid','frame','final'].map(name => `/projects/gutsul-made-case-study/logo-${name}.svg`)]) {
+      assert.deepEqual(readFileSync(new URL(`../public${src}`, import.meta.url)), readFileSync(new URL(`../../reference-research/gutsul-made/source/${src.split('/').at(-1)}`, import.meta.url)), 'Gutsul artwork matches the reference bytes');
+    }
+    assert.ok(html.includes('case-study-media--canvas') && card.includes('background:var(--floating-surface)'), 'The transparent hero retains the same white canvas in both presentations');
+    assert.ok(!html.includes('>Team</h2>') && !html.includes('Draft case study'), 'Only supplied project metadata is rendered');
   } else if (project.id === 'promshyna') {
     for (const section of ['path', 'responsive', 'other', 'branding']) assert.ok(html.includes(`id="ps-${section}"`), `PromShyna includes the ${section} chapter`);
     for (const number of ['01', '02', '03', '04', '05', '06']) assert.ok(html.includes(`id="ps-page-${number}"`), `PromShyna includes purchase step ${number}`);
@@ -129,10 +165,149 @@ for (const project of all) {
     assert.deepEqual(videoSources, ['home-slider', 'listing-top', 'phone-product'].map(name => `/projects/promshyna-case-study/${name}.mp4`), 'All three original recordings retain their narrative order');
     for (const src of videoSources) assert.ok(existsSync(new URL('../public' + src, import.meta.url)), 'Local PromShyna recording exists');
     assert.ok(!html.includes('Draft case study') && !html.includes('fictional concept'), 'PromShyna is a complete real case study');
+  } else if (project.id === 'pet-care') {
+    for (const section of ['competition', 'research', 'prototype', 'main', 'physical', 'emotional', 'needs', 'guide', 'animation']) assert.ok(html.includes(`id="pc-${section}"`), `Pet Care includes ${section}`);
+    assert.equal(imageSources.length, 10, 'Pet Care includes the supplied still hero plus all original screens, specimens and animation poster');
+    assert.equal(imageSources[0], '/projects/pet-care-case-study/hero-static.jpg', 'The supplied screenshot is the case hero');
+    assert.ok(!project.video && !card.includes('data-project-video'), 'The collection card uses the same static hero');
+    assert.ok(html.indexOf('id="pc-animation"') > html.indexOf('id="pc-guide"'), 'The original animation closes the case after the style guide');
+    assert.equal(vectorMarks.length, 2, 'Identity and style guide use the same supplied SVG through shared components');
+    const videoSources = [...html.matchAll(/<source[^>]+data-src="([^"]+)"/g)].map(match => match[1]);
+    assert.deepEqual(videoSources, ['/projects/pet-care-case-study/hero.mp4']);
+    for (const src of [...imageSources, ...videoSources, '/projects/pet-care-case-study/logo.svg']) assert.deepEqual(readFileSync(new URL(`../public${src}`, import.meta.url)), readFileSync(new URL(`../../reference-research/pet-care/source/${src.split('/').at(-1)}`, import.meta.url)), 'Pet Care evidence is byte-identical to the supplied reference');
+    for (const name of ['pets', 'physical', 'needs']) {
+      assert.ok(html.includes(`srcset="/projects/pet-care-case-study/${name}-static.png"`), 'Animated screens have reduced-motion alternatives');
+      assert.ok(existsSync(new URL(`../public/projects/pet-care-case-study/${name}-static.png`, import.meta.url)));
+    }
+    assert.ok(html.includes('Winner of a design competition. App concept for pet care.') && html.includes('>300</span>') && html.includes('>2</span>'), 'The approved winning-entry introduction and original brief statistics render');
+    assert.ok(!html.includes('>Team</h2>') && !html.includes('data-video-controls'), 'The supplied role and control-free playback are preserved');
+  } else if (project.id === 'square') {
+    for (const section of ['challenge', 'lookbook', 'libido']) assert.ok(html.includes(`id="sq-${section}"`), `SQUARE includes ${section}`);
+    assert.equal(imageSources.length, 4, 'SQUARE retains both Lookbook screens and both original recording posters');
+    assert.equal(vectorMarks.length, 1, 'SQUARE uses its supplied SVG identity through the shared component');
+    const videoSources = [...html.matchAll(/<source[^>]+data-src="([^\"]+)"/g)].map(match => match[1]);
+    assert.deepEqual(videoSources, ['lookbook', 'libido'].map(name => `/projects/square-case-study/${name}.mp4`), 'Both original motion concepts retain their order');
+    for (const src of [...imageSources, ...videoSources, project.logo, '/projects/square-case-study/cover.jpg']) {
+      assert.deepEqual(readFileSync(new URL(`../public${src}`, import.meta.url)), readFileSync(new URL(`../../reference-research/square/source/${src.split('/').at(-1)}`, import.meta.url)), 'SQUARE evidence matches the supplied reference bytes');
+    }
+    assert.ok(html.includes('Entry 41') && html.includes('Entry 36') && html.includes('Slava Kornilov'), 'Both entries and the original challenge context render');
+    const behance = html.match(/<a\b[^>]*href="https:\/\/www\.behance\.net\/gallery\/62789483\/SQUARE-Interface-Game"[^>]*>([\s\S]*?)<\/a>/);
+    assert.ok(behance && behance[0].includes('button--secondary') && behance[0].includes('button--arrow-up') && textFromMarkup(behance[1]) === 'See SQUARE on Behance', 'The source destination uses the requested shared secondary button and exact reference label');
+    assert.ok(!html.includes('>Team</h2>') && !html.includes('data-video-controls'), 'SQUARE keeps its supplied role and silent control-free animations');
+  } else if (project.id === 'kitchen-chatbot') {
+    const sourceCopy = JSON.parse(readFileSync(new URL('../../reference-research/kitchen-chatbot/reference-copy.json', import.meta.url), 'utf8'));
+    assert.ok(html.includes('id="kc-conversation"'), 'Kitchen Chatbot includes its complete conversation chapter');
+    assert.deepEqual(imageSources, ['/projects/kitchen-chatbot-case-study/chatbot.gif'], 'The supplied GIF remains the original hero');
+    assert.equal(vectorMarks.length, 1, 'Kitchen Chatbot uses its supplied genuine SVG identity through the shared component');
+    for (const src of [...imageSources, project.logo]) assert.deepEqual(readFileSync(new URL(`../public${src}`, import.meta.url)), readFileSync(new URL(`../../reference-research/kitchen-chatbot/source/${src.split('/').at(-1)}`, import.meta.url)), 'Kitchen Chatbot artwork matches the supplied reference bytes');
+    for (const markup of [html, template, card]) {
+      assert.ok(markup.includes('media-canvas-fade') && markup.includes('--media-fade-size:66.66666666666666% 88.23529411764706%'), 'Every hero presentation fades the native GIF rectangle into the staged canvas');
+      assert.ok(markup.includes('prefers-reduced-motion: reduce') && markup.includes('/projects/kitchen-chatbot-case-study/chatbot-static.png'), 'Card, opened case and standalone have a static reduced-motion alternative');
+    }
+    assert.ok(existsSync(new URL('../public/projects/kitchen-chatbot-case-study/chatbot-static.png', import.meta.url)));
+    for (const markup of [html, template]) {
+      const credit = markup.match(/<p\b[^>]*data-case-credit[^>]*>([\s\S]*?)<\/p>/)?.[1];
+      assert.equal(textFromMarkup(credit), sourceCopy.credit, 'The supplied Vic Bell mascot credit is preserved beside the introduction');
+      assert.ok(!markup.includes('>My role</h2>') && !markup.includes('>Team</h2>'), 'The source has no invented role or team block');
+      const readable = textFromMarkup(markup);
+      for (const copy of sourceCopy.conversation.description) assert.ok(readable.includes(copy), 'Conversation explanation retains exact source copy');
+      for (const message of sourceCopy.conversation.messages) {
+        if (message.kind === 'dishes') for (const dish of message.items) assert.ok(readable.includes(dish.title), 'All original recipe choices render');
+        else assert.ok(readable.includes(message.text), 'The complete original chat sequence renders');
+      }
+    }
+  } else if (project.id === 'telegram-file-picker') {
+    const sourceCopy = JSON.parse(readFileSync(new URL('../../reference-research/telegram-file-picker/reference-copy.json', import.meta.url), 'utf8'));
+    for (const section of ['competition', 'video', 'result']) assert.ok(html.includes(`id="tg-${section}"`), `Telegram includes ${section}`);
+    assert.deepEqual(imageSources, ['hero.jpg', 'poster.jpg', 'support.png'].map(name => `/projects/telegram-file-picker-case-study/${name}`), 'Telegram retains both native recording posters and the original support screenshot');
+    assert.equal(vectorMarks.length, 1, 'Telegram uses its genuine supplied SVG identity');
+    const videoSources = [...html.matchAll(/<source[^>]+data-src="([^"]+)"/g)].map(match => match[1]);
+    assert.deepEqual(videoSources, ['hero.mp4', 'entry.mp4'].map(name => `/projects/telegram-file-picker-case-study/${name}`), 'The hero loop precedes the full submission');
+    for (const src of [...imageSources, ...videoSources, project.logo]) assert.deepEqual(readFileSync(new URL(`../public${src}`, import.meta.url)), readFileSync(new URL(`../../reference-research/telegram-file-picker/source/${src.split('/').at(-1)}`, import.meta.url)), 'Telegram media matches the supplied original bytes');
+    for (const markup of [html, template]) {
+      const readable = textFromMarkup(markup);
+      for (const text of [...sourceCopy.competition.description, sourceCopy.entry.description, sourceCopy.result.description]) assert.ok(readable.includes(text), 'All narrative copy remains exact');
+      for (const stat of sourceCopy.competition.stats) for (const text of [stat.title, stat.value, stat.description]) assert.ok(readable.includes(text), 'All four supplied competition facts render');
+      const videos = [...markup.matchAll(/<video\b[^>]*>/g)].map(match => match[0]);
+      assert.equal(videos.length, 2);
+      assert.ok(videos.every(video => /\bloop\b/.test(video)), 'Both Telegram recordings loop, including the full entry');
+      assert.ok(markup.includes('data-audio-controls') && markup.includes('data-video-mute') && markup.includes('Sound off. Turn sound on'), 'The submission has the shared opt-in sound control');
+      assert.ok(!markup.includes('>My role</h2>') && !markup.includes('>Team</h2>'), 'Telegram has no invented role or team metadata');
+    }
+  } else if (project.id === 'design-cup') {
+    const sourceCopy = JSON.parse(readFileSync(new URL('../../reference-research/design-cup/reference-copy.json', import.meta.url), 'utf8'));
+    for (const section of ['page', 'jury', 'page-end', 'style']) assert.ok(html.includes(`id="dc-${section}"`), `Design Cup includes its ${section} chapter`);
+    assert.deepEqual(imageSources, ['hero.webp', 'landing.gif', 'jury.gif', 'signup-still.webp', 'organizers-still.webp', 'lettering.webp'].map(name => `/projects/design-cup-case-study/${name}`), 'Design Cup retains each original artwork presentation');
+    assert.equal(vectorMarks.length, 1, 'Design Cup identity uses the original genuine SVG');
+    const animatedSources = [...html.matchAll(/data-case-animated-image="([^"]+)"/g)].map(match => match[1]);
+    assert.deepEqual(animatedSources, ['signup.webp', 'organizers.webp'].map(name => `/projects/design-cup-case-study/${name}`), 'The two original play-once closing previews start through shared media');
+    for (const src of [...imageSources, ...animatedSources, project.logo, sourceCopy.hero.reducedMotionSrc, sourceCopy.jury.media.reducedMotionSrc]) assert.deepEqual(readFileSync(new URL(`../public${src}`, import.meta.url)), readFileSync(new URL(`../../reference-research/design-cup/source/${src.split('/').at(-1)}`, import.meta.url)), 'Design Cup media is byte-identical to the supplied source');
+    for (const markup of [html, template]) {
+      const readable = textFromMarkup(markup);
+      for (const text of [sourceCopy.page.description, sourceCopy.jury.description, ...sourceCopy.ending.map(block => block.description), sourceCopy.guide.description, sourceCopy.guide.lettering.description, sourceCopy.guide.coloursDescription]) assert.ok(readable.includes(text), 'Design Cup narrative retains exact source copy');
+      for (const colour of sourceCopy.guide.colours) for (const text of [colour.name, colour.description, colour.value]) assert.ok(readable.includes(text), 'All six original colour specimens render');
+      assert.ok(markup.includes('prefers-reduced-motion: reduce') && markup.includes('hero-still.webp') && markup.includes('jury-still.webp'), 'Every animation has its original static motion alternative');
+      assert.ok(markup.includes('>My role</h2>') && !markup.includes('>Team</h2>'), 'Design Cup includes the supplied Designer role without invented team metadata');
+      assert.ok(!markup.includes('data-video-controls'), 'Original GIF and WebP evidence does not acquire a video controller');
+    }
+  } else if (project.id === 'voximplant-ivr') {
+    const sourceCopy = JSON.parse(readFileSync(new URL('../../reference-research/voximplant-ivr/reference-copy.json', import.meta.url), 'utf8'));
+    assert.ok(html.includes('id="ivr-flow"'), 'Voximplant IVR includes its complete test-call flow');
+    assert.deepEqual(imageSources, ['hero.webp', 'landing.gif'].map(name => `/projects/voximplant-ivr-case-study/${name}`), 'The original hero and full-page animation retain source order');
+    assert.equal(vectorMarks.length, 1, 'Voximplant IVR identity uses the supplied genuine SVG');
+    for (const src of [...imageSources, project.logo, sourceCopy.hero.reducedMotionSrc, sourceCopy.flow.media.reducedMotionSrc]) assert.deepEqual(readFileSync(new URL(`../public${src}`, import.meta.url)), readFileSync(new URL(`../../reference-research/voximplant-ivr/source/${src.split('/').at(-1)}`, import.meta.url)), 'Voximplant IVR artwork matches the source bytes');
+    for (const markup of [html, template]) {
+      const readable = textFromMarkup(markup);
+      for (const text of [sourceCopy.team, sourceCopy.flow.title, ...sourceCopy.flow.description, sourceCopy.role.title, ...sourceCopy.role.items]) assert.ok(readable.includes(text), 'The supplied flow, role and team copy remain exact');
+      assert.ok(markup.includes('prefers-reduced-motion: reduce') && markup.includes('hero-still.webp') && markup.includes('landing-still.webp'), 'Both original animations retain their supplied reduced-motion stills');
+      assert.ok(markup.includes('>My role</h2>') && markup.includes('>Team</h2>'), 'The supplied Designer and engineering-team context render');
+      assert.ok(!markup.includes('data-video-controls'), 'Original animated image evidence does not acquire a video controller');
+    }
+    for (const markup of [html, template, card]) assert.ok(markup.includes('89.52%'), 'The hero keeps its source purple and white canvas boundary');
+  } else if (['offf-conference', 'professions-in-digital', 'quit-university'].includes(project.id)) {
+    const sourceCopy = JSON.parse(readFileSync(new URL(`../../reference-research/${project.id}/reference-copy.json`, import.meta.url), 'utf8'));
+    const base = `/projects/${project.id}-case-study/`;
+    const prefix = { 'offf-conference': 'offf', 'professions-in-digital': 'pid', 'quit-university': 'qu' }[project.id];
+    assert.ok(html.includes(`id="${prefix}-page"`), 'The shared recording case includes the complete Full scroll chapter');
+    assert.deepEqual(imageSources, Array(2).fill(base + 'hero-still.jpg'), 'Both original recordings retain the supplied poster');
+    assert.equal(vectorMarks.length, 1, 'The identity uses the supplied genuine SVG through the shared component');
+    const videoSources = [...html.matchAll(/<source[^>]+data-src="([^"]+)"/g)].map(match => match[1]);
+    assert.deepEqual(videoSources, ['hero.mp4', 'page.mp4'].map(name => base + name), 'The original hero intro precedes the full recording');
+    for (const src of [...new Set(imageSources), ...videoSources, project.logo]) assert.deepEqual(readFileSync(new URL(`../public${src}`, import.meta.url)), readFileSync(new URL(`../../reference-research/${project.id}/source/${src.split('/').at(-1)}`, import.meta.url)), 'Recording case media matches the original bytes');
+    const parts = project.id === 'offf-conference' ? [1, 2, 3] : [1, 2];
+    const chunks = parts.map(i => readFileSync(new URL(`../../reference-research/${project.id}/source/video-${i}.mp4`, import.meta.url)));
+    assert.deepEqual(readFileSync(new URL(`../public${base}page.mp4`, import.meta.url)), Buffer.concat(chunks), 'The full recording is restored from its successive byte chunks without reencoding');
+    const previewName = project.id === 'offf-conference' ? 'offf-page' : `${project.id}-page`;
+    const previewProof = JSON.parse(readFileSync(new URL(`../../reference-research/shared-video-controller/${previewName}-preview-metadata.json`, import.meta.url), 'utf8'));
+    const sha = src => createHash('sha256').update(readFileSync(new URL(`../public${src}`, import.meta.url))).digest('hex');
+    assert.equal(sha(base + 'page.mp4'), previewProof.sourceSha256, 'Hover thumbnails were decoded from this original recording');
+    assert.equal(sha(base + 'page-preview.jpg'), previewProof.previewSha256, 'The packed thumbnail sheet matches the decoded-frame manifest');
+    const preview = caseVideoPreviews[base + 'page.mp4'];
+    for (const key of ['count', 'interval', 'columns', 'rows', 'width', 'height']) assert.equal(preview[key], previewProof[key], `Recording preview ${key} matches the original-frame sheet`);
+    for (const markup of [html, template]) {
+      const readable = textFromMarkup(markup);
+      assert.ok(readable.includes(sourceCopy.page.title) && readable.includes(sourceCopy.page.description), 'Full scroll title and caption retain exact reference wording');
+      assert.equal([...markup.matchAll(/<case-video-player\b/g)].length, 1, 'The full recording uses the shared controller while the hero stays control-free');
+      assert.ok(!markup.includes('data-video-mute') && !markup.includes('data-audio-controls'), 'Recording cases have no sound on/off button');
+      assert.ok(!markup.includes('>My role</h2>') && !markup.includes('>Team</h2>'), 'Recording cases add no role or team metadata absent from the source');
+    }
+    if (['professions-in-digital', 'quit-university'].includes(project.id)) {
+      assert.equal(project.video.cropPixels, 3, 'The card uses the reference crop in original source pixels');
+      const { width, height, cropPixels } = sourceCopy.hero;
+      for (const markup of [card, html, template]) assert.ok(markup.includes('media-crop-content') && markup.includes(`--media-ratio:${width - cropPixels * 2} / ${height - cropPixels * 2}`) && markup.includes(`--media-source-ratio:${width} / ${height}`), 'The same shared crop travels from the card into the hero and full player');
+    }
+    if (project.id === 'quit-university') {
+      assert.equal(project.title, sourceCopy.title, 'Quit University keeps the exact source title');
+      assert.equal(project.description, sourceCopy.description, 'Quit University keeps the exact source introduction');
+      assert.deepEqual(project.tags, sourceCopy.tags, 'Quit University keeps the exact source disciplines');
+    }
   } else {
-    assert.equal(imageSources.length, 3, 'Sample cases have a hero and two gallery images');
-    assert.ok(html.includes(project.placeholder ? 'fictional concept' : 'Draft case study'), 'Samples do not imply new verified project claims');
+    assert.fail(`Unverified case study: ${project.id}`);
   }
+  assert.ok(!html.includes('Draft case study') && !html.includes('fictional concept'), 'All cases contain real supplied work');
   for (const src of imageSources) assert.ok(existsSync(new URL(`../public${src}`, import.meta.url)), `Local image exists: ${src}`);
 }
-console.log('PASS: all 16 cards, opened cases and standalone pages share matching metadata, valid imagery and return controls; all nine real projects have full case studies.');
+assert.equal(controlledRecordings.size, 10, 'All ten controlled recordings have shared previews');
+assert.deepEqual([...controlledRecordings].sort(), Object.keys(caseVideoPreviews).sort(), 'The shared mapping covers each controlled recording exactly once');
+console.log('PASS: all 20 real-project cards, opened cases and standalone pages share matching metadata, original imagery and return controls; fictional routes are removed.');
+console.log('PASS: all ten shared video controllers have matching thumbnail previews; sound controls appear only in Telegram.');
