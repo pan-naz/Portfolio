@@ -4,3 +4,7 @@ dist/
 .sites-runtime/
 .DS_Store
 *.log
+.env
+.env.*
+!.env.example
+review/

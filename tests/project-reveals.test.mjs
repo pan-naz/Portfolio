@@ -32,7 +32,7 @@ assert.ok(
   'Project-card chrome follows the shared theme palette with the approved raised surface'
 );
 assert.ok(
-  card.includes('<img src={project.image}') &&
+  /<img\b[^>]*\ssrc=\{project\.image\}/.test(card) &&
     !css.includes('.project-media img { filter:') &&
     !css.includes('.project-media img { opacity:'),
   'Project artwork keeps its source and visual treatment in both themes'
