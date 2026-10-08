@@ -7,5 +7,9 @@ const sources = import.meta.glob<string>(['../../public/**/*.svg', '../assets/pe
 const source = sources[`../../public${src}`] ?? sources[`../assets${src}`];
 if (!source) throw new Error(`Unknown shared SVG asset: ${src}`);
 const svg = prepareSvgAsset(source, `svg-${crypto.randomUUID()}`);
+// Source classes must join the shared class instead of overriding it through
+// Astro's attribute spread, so every vector keeps its component sizing rules.
+const sourceClass = svg.attributes.class;
+delete svg.attributes.class;
 ---
-<svg {...svg.attributes} {...attributes} aria-hidden={ariaHidden} class:list={['svg-asset', className]} data-svg-src={src} set:html={svg.body} />
+<svg {...svg.attributes} {...attributes} aria-hidden={ariaHidden} class:list={['svg-asset', sourceClass, className]} data-svg-src={src} set:html={svg.body} />

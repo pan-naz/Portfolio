@@ -1,0 +1,29 @@
+---
+import type { Project } from '../data/portfolio';
+import { voximplantIvrHero, voximplantIvrRole, voximplantIvrTeam, voximplantIvrFlow } from '../data/voximplant-ivr-case-study';
+import CaseStudyOverview from './CaseStudyOverview.astro';
+import CaseStudyMedia from './CaseStudyMedia.astro';
+import '../styles/voximplant-ivr-case-study.css';
+
+interface Props { project: Project; }
+const { project } = Astro.props;
+---
+<article class="case-study-content case-study-content--voximplant-ivr" data-case-content>
+  <CaseStudyMedia {...voximplantIvrHero} artwork />
+  <div class="case-study-body case-study-narrative voximplant-ivr-case">
+    <CaseStudyOverview project={project} titleId="ivr-title" presentation="compact">
+      <Fragment slot="role"><p>{voximplantIvrRole.title}</p><ul>{voximplantIvrRole.items.map(item => <li>{item}</li>)}</ul></Fragment>
+      <p slot="secondary">{voximplantIvrTeam}</p>
+    </CaseStudyOverview>
+
+    <section id="ivr-flow" aria-labelledby="ivr-flow-title">
+      <div class="case-study-columns ivr-row">
+        <div class="ivr-copy">
+          <div><p class="case-study-eyebrow">{voximplantIvrFlow.eyebrow}</p><h2 class="case-study-heading" id="ivr-flow-title">{voximplantIvrFlow.title}</h2></div>
+          {voximplantIvrFlow.description.map(text => <p class="ivr-muted">{text}</p>)}
+        </div>
+        <CaseStudyMedia {...voximplantIvrFlow.media} presentation="shadow" />
+      </div>
+    </section>
+  </div>
+</article>

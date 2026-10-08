@@ -15,6 +15,9 @@ export const icons = {
   moon: { nodes: [['path', { d: 'M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z' }]] },
   play: { weight: 'strong', nodes: [['path', { d: 'M10 6.27l7.28 4.63a1.3 1.3 0 0 1 0 2.2L10 17.73A1.3 1.3 0 0 1 8 16.63V7.37a1.3 1.3 0 0 1 2-1.1Z' }]] },
   pause: { weight: 'strong', nodes: [['path', { d: 'M8 5v14M16 5v14' }]] },
+  // Volume 2 / Volume X geometry from @lucide/icons 1.45.0 (ISC license).
+  volume: { nodes: [['path', { d: 'M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z' }], ['path', { d: 'M16 9a5 5 0 0 1 0 6' }], ['path', { d: 'M19.364 18.364a9 9 0 0 0 0-12.728' }]] },
+  'volume-muted': { nodes: [['path', { d: 'M11 4.702a.7.7 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.7.7 0 0 0 11 19.298z' }], ['path', { d: 'm16.5 14.5 5-5' }], ['path', { d: 'm16.5 9.5 5 5' }]] },
   'shield-check': { weight: 'strong', nodes: [['path', { d: 'M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z' }], ['path', { d: 'm9 12 2 2 4-4' }]] },
 } satisfies Record<string, IconDefinition>;
 

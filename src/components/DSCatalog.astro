@@ -18,6 +18,7 @@ import DSExample from './DSExample.astro';
 import { projects, impactGroups, experience, profile, cvUrl, hookoAppUrl } from '../data/portfolio';
 import { icons, type IconName } from '../data/icons';
 import tokenCSS from '../styles/tokens.css?raw';
+import { caseStudyMotionTokens, caseStudyPresentationTokens } from '../scripts/case-study-motion';
 const readTokens = (block: string) => Object.fromEntries([...block.matchAll(/--([\w-]+):\s*([^;]+);/g)].map(([,key,value]) => [key,value.trim()]));
 const light = Object.assign({}, ...[...tokenCSS.matchAll(/(?:^|\n):root\s*\{([^}]+)\}/g)].map(([, block]) => readTokens(block))) as Record<string, string>;
 const dark = { ...light, ...readTokens(tokenCSS.match(/:root\[data-theme='dark'\][^{]*\{([^}]+)\}/)![1]) };
@@ -72,8 +73,15 @@ const iconNames = Object.keys(icons) as IconName[];
     <div class="ds-foundation-block"><h3>Layout grid — 12 columns / 1728</h3><p>1200px content width, 264px margins and 24px gaps. The website adapts to 64px desktop gutters and 24px mobile gutters; columns stack on small screens.</p><div class="ds-grid-demo" aria-label="Twelve-column grid">{Array.from({length:12}, () => <span></span>)}</div></div>
   </section>
 
+  <section id="motion" class="ds-section" aria-labelledby="motion-title" tabindex="-1">
+    <header class="ds-heading"><p class="eyebrow">04 / Motion</p><h2 id="motion-title">Case-study motion</h2><p>Every project card uses one shared opening, closing and hero transition. The panel and live artwork follow the same timing and easing. These values read directly from the website tokens.</p></header>
+    <table class="ds-motion-table"><caption class="sr-only">Shared case-study motion tokens</caption><thead><tr><th scope="col">Role</th><th scope="col">Token</th><th scope="col">Value</th></tr></thead><tbody>{[...caseStudyMotionTokens, ...caseStudyPresentationTokens].map(token => <tr><th scope="row">{token.label}</th><td><code>{token.name}</code></td><td>{light[token.name.slice(2)]}</td></tr>)}</tbody></table>
+    <div class="ds-foundation-block"><h3>Hero handoff</h3><p>The card, traveling frame and settled hero share contained artwork, original canvas, padding and responsive ratio. Matching animated images and videos keep their actual live node through the handoff so playback does not restart. Closing returns that same node to the card. Reduced motion resolves duration and delay to zero; keyboard focus and interrupted transitions use the same shared controller. This catalog remains static.</p></div>
+    <p class="ds-source">tokens.css → case-study-motion.ts → case-studies.ts · case-study-artwork.ts · ProjectCard.astro · CaseStudyMedia.astro</p>
+  </section>
+
   <section id="components" class="ds-section" aria-labelledby="components-title" tabindex="-1">
-    <header class="ds-heading"><p class="eyebrow">04 / Components</p><h2 id="components-title">Components</h2><p>The components below are used on the website. Their color, typography, spacing and shape come from the same tokens. These specimens render the actual implementations.</p></header>
+    <header class="ds-heading"><p class="eyebrow">05 / Components</p><h2 id="components-title">Components</h2><p>The components below are used on the website. Their color, typography, spacing and shape come from the same tokens. These specimens render the actual implementations.</p></header>
     <DSExample id="icons" name="Icon" description="One SVG renderer and one geometry registry for reusable interface icons. Color inherits the surrounding semantic text or accent token." source="Icon.astro ← icons.ts · IconButton.astro → Icon.astro · Button / TextLink → Arrow.astro → Icon.astro · CaseStudyMedia.astro → IconButton.astro + Icon.astro" notes="The 24px size comes from --icon-size; compact TextLink arrows use --icon-size-compact at 20px. Regular, strong and emphasis strokes use --icon-stroke-regular (1.5), --icon-stroke-strong (2) and --icon-stroke-emphasis (2.5). Caps and joins use the shared round tokens. Play has curved SVG corners; pause, plus and playback controls retain the strong weight. Decorative SVGs stay hidden from assistive technology; IconButton provides the action's accessible name and 44px target. Project and tool marks use SvgAsset instead, preserving original brand geometry.">
       {(['light', 'dark'] as const).map(mode => <div class="ds-palette ds-mode" data-theme={mode}>
         <h3>{mode === 'light' ? 'Light mode' : 'Dark mode'}</h3>
@@ -115,7 +123,7 @@ const iconNames = Object.keys(icons) as IconName[];
   </section>
 
   <section id="dark-mode" class="ds-section ds-dark-section ds-mode" data-theme="dark" aria-labelledby="dark-title" tabindex="-1">
-    <header class="ds-heading"><p class="eyebrow">05 / Dark mode</p><h2 id="dark-title">Dark mode</h2><p>The page and ProjectCard chrome use the original #161715 black while sheets and contained section surfaces use the darker #0F100E. The supplied project artwork remains intact. The floating header pill and project filter use the shared Dark navigation surface, light ink, orange accent and floating-navigation shadow. Overlay controls keep their separate fixed-Light treatment.</p></header>
+    <header class="ds-heading"><p class="eyebrow">06 / Dark mode</p><h2 id="dark-title">Dark mode</h2><p>The page and ProjectCard chrome use the original #161715 black while sheets and contained section surfaces use the darker #0F100E. The supplied project artwork remains intact. The floating header pill and project filter use the shared Dark navigation surface, light ink, orange accent and floating-navigation shadow. Overlay controls keep their separate fixed-Light treatment.</p></header>
     <div class="ds-dark-example"><h3>Surface hierarchy</h3><div class="ds-surface-hierarchy"><span>Main background · #161715</span><div><span>Container · #0F100E</span></div></div></div>
     <div class="ds-dark-example"><h3>Text on dark</h3><p class="text-heading-l">Product Designer</p><p class="text-body-m">Successfully launched B2B products from 0 → 1, improved product adoption, and contributed to ARR growth.</p><p class="text-body-m text-secondary">Secondary body copy uses ink at 64%.</p><p class="text-body-s text-secondary">Timeline metadata uses Body/S at the same muted color.</p><p class="eyebrow">01 / Label on dark</p></div>
     <div class="ds-dark-example"><h3>Buttons</h3><div class="ds-row"><Button href={`mailto:${profile.email}`} arrow="up">Get in touch</Button><Button size="small" variant="secondary" href={cvUrl} arrow="up">Download CV (PDF)</Button></div></div>

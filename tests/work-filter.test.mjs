@@ -43,17 +43,10 @@ const { arrangeProjectCards } = await import('../src/scripts/work-filter-model.t
 const { projects, collectionProjects } = await import('../src/data/portfolio.ts');
 const allProjects = [...projects, ...collectionProjects];
 assert.equal(projects.length, 3);
-assert.deepEqual(collectionProjects.filter(p => p.category === 'websites').map(p => p.id), ['peak-hotel', 'yellow-leaf', 'index-law-firm', 'blaustrom', 'cravus', 'promshyna'], 'Websites contains the six real case studies in order, with no sample');
-assert.equal(collectionProjects.filter(p => p.category === 'misc').length, 7);
-assert.equal(new Set(allProjects.map(p => p.id)).size, 16, 'All three collections have distinct project identities');
-const concepts = collectionProjects.filter(p => p.placeholder);
-assert.ok(concepts.every(p => !p.href), 'Fictional samples do not pretend to be delivered case studies');
-assert.equal(new Set(concepts.map(p => p.image)).size, 7, 'Each remaining Misc concept has its own photo');
-for (const project of concepts) {
-  const image = readFileSync(new URL(`../public${project.image}`, import.meta.url));
-  assert.equal(image.toString('ascii', 0, 4), 'RIFF');
-  assert.equal(image.toString('ascii', 8, 12), 'WEBP', 'Every sample photo is a local WebP');
-}
+assert.deepEqual(collectionProjects.filter(p => p.category === 'websites').map(p => p.id), ['gutsul-made', 'peak-hotel', 'yellow-leaf', 'index-law-firm', 'blaustrom', 'promshyna', 'cravus', 'team-sternfit'], 'Team Sternfit follows Cravus while the earlier Websites retain their order');
+assert.deepEqual(collectionProjects.filter(p => p.category === 'misc').map(p => p.id), ['pet-care', 'telegram-file-picker', 'square', 'kitchen-chatbot', 'design-cup', 'voximplant-ivr', 'offf-conference', 'professions-in-digital', 'quit-university'], 'Picker Concept stays second and Quit University follows Professions in Misc');
+assert.equal(new Set(allProjects.map(p => p.id)).size, 20, 'All three collections have distinct project identities');
+assert.ok(allProjects.every(p => !('placeholder' in p) && !p.image.startsWith('/projects/concepts/')), 'No fictional project or stock placeholder remains');
 const heights = [400, 550, 500, 460, 620, 330, 580];
 for (const columns of [1, 2]) {
   const packed = arrangeProjectCards(heights, columns, 24);
@@ -67,4 +60,4 @@ for (const columns of [1, 2]) {
   assert.equal(packed.height, Math.max(...bottoms) - 24, 'Collection ends exactly at the lowest card');
 }
 assert.deepEqual(arrangeProjectCards([], 2, 24), { positions: [], height: 0 });
-console.log('PASS: three distinct collections, all 7 local Misc sample assets, natural-height masonry, responsive source order and precise last-card bounds.');
+console.log('PASS: three distinct real-project collections, nine original Misc projects, natural-height masonry, responsive source order and precise last-card bounds.');

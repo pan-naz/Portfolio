@@ -1,0 +1,34 @@
+/* Neon colours, cyan stage and wireframe floor are original Design Cup artwork. */
+.case-study-content--design-cup { --dc-black: #000105; --dc-jury: #030408; --dc-pink: #FB06B5; --dc-specimen: #0c0d14; padding-bottom: 0; }
+.design-cup-case > .case-study-overview { padding-top: var(--case-section-space); }
+.dc-muted { color: var(--muted); }
+.dc-heading { align-items: center; margin-bottom: var(--case-content-gap); }
+.dc-heading > p { margin-top: 0; }
+.dc-row { align-items: center; }
+.dc-copy { display: grid; align-content: start; gap: var(--space-6); }
+.dc-copy > p { margin-top: 0; }
+.dc-landing { max-width: 800px; margin-inline: auto; }
+.dc-jury { background: var(--dc-jury); }
+.dc-ending { display: grid; gap: var(--case-section-space); }
+.dc-row--reverse > .dc-copy { order: 2; margin-inline: 0; }
+.dc-row--reverse > .case-study-media { order: 1; margin-inline: 0 var(--grid-gap); }
+.dc-copy > .text-heading-m { font-size: var(--text-heading-m); line-height: 1.333333; letter-spacing: var(--letter-spacing-heading-m); font-weight: var(--font-weight-heading); }
+.dc-guide { background: var(--dc-black); position: relative; isolation: isolate; overflow: hidden; }
+.design-cup-case > .dc-guide { padding-bottom: calc(var(--case-section-space) + var(--space-24)); }
+.dc-guide::after { content: ''; position: absolute; inset: auto -25% 0; height: calc(var(--space-24) * 3); background-image: linear-gradient(color-mix(in srgb, var(--dc-pink) 55%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--dc-pink) 55%, transparent) 1px, transparent 1px); background-size: var(--space-16) calc(var(--space-8) + var(--space-2)); background-position: center bottom; transform: perspective(320px) rotateX(58deg); transform-origin: center bottom; mask-image: linear-gradient(0deg, #000 10%, transparent 85%); pointer-events: none; z-index: -1; }
+.dc-guide-inner { display: grid; gap: var(--grid-gap); }
+.dc-guide-inner > .dc-heading { margin-bottom: var(--space-6); }
+.dc-guide .case-study-decision-card { --surface: var(--dc-specimen); --ink: var(--inverse-ink); --muted: var(--inverse-text-secondary); box-shadow: none; padding: var(--space-8); }
+.dc-lettering .case-study-media { max-width: 476px; justify-self: end; width: 100%; overflow: hidden; border-radius: var(--radius-small); }
+.dc-palette { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--space-4); margin: var(--space-6) 0 0; padding: 0; list-style: none; }
+.dc-palette > li { min-width: 0; }
+.dc-swatch { aspect-ratio: 4 / 3; border-radius: var(--radius-small); margin-bottom: var(--space-3); }
+.dc-palette code { font: inherit; }
+@media (max-width: 1023px) { .dc-palette { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 767px) {
+  .dc-row--reverse > .dc-copy, .dc-row--reverse > .case-study-media { order: initial; margin-inline: 0; }
+  .dc-guide .case-study-decision-card { padding: var(--space-6); }
+  .dc-palette { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* At phone width the original 4:3 artwork fills the stage instead of acquiring side rails. */
+  #project-design-cup .project-media, #project-design-cup .project-media img, .case-study-content--design-cup > .case-study-artwork img { aspect-ratio: 4 / 3; }
+}

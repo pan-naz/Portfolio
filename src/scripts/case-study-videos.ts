@@ -8,6 +8,14 @@ const controllers = new WeakMap<ParentNode, VideoController>();
 type VideoOwner = { active: boolean; visible: Set<HTMLVideoElement>; sync(video: HTMLVideoElement): void };
 const owners = new WeakMap<HTMLVideoElement, VideoOwner>();
 const playbackIntent = new WeakMap<HTMLVideoElement, boolean>();
+const soundEnabled = new WeakSet<HTMLVideoElement>();
+
+/** Sound is enabled only by an explicit player action, and survives reentry. */
+export function setCaseVideoMuted(video: HTMLVideoElement, muted: boolean) {
+  if (muted) soundEnabled.delete(video);
+  else soundEnabled.add(video);
+  video.muted = muted;
+}
 
 /** Explicit controls take precedence over autoplay, but never play offscreen. */
 export function setCaseVideoPlaying(video: HTMLVideoElement, playing: boolean) {
@@ -43,8 +51,8 @@ export function initializeCaseStudyVideos(root: ParentNode = document): VideoCon
       source.src = source.dataset.src!;
       loaded = true;
     });
-    // Explicit muted playback also works on mobile browsers that block sound.
-    video.muted = true;
+    // All autoplay begins muted; only an explicit sound choice enables audio.
+    video.muted = !soundEnabled.has(video);
     if (loaded) video.load();
     void video.play().catch(() => {});
   };

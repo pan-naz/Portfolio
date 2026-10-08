@@ -1,0 +1,21 @@
+/* The challenge cover treatment and crimson band are original SQUARE artwork. */
+.case-study-content--square { --square-crimson: #1c0409; padding-bottom: 0; }
+.square-muted { color: var(--muted); }
+.square-challenge {
+  --control-border: var(--inverse-ink);
+  --focus-ring: var(--inverse-ink);
+  background: linear-gradient(90deg, rgba(10, 18, 16, .92) 0%, rgba(10, 18, 16, .78) 50%, rgba(10, 18, 16, .35) 100%), var(--square-cover) center / cover no-repeat, #0f1f1b;
+}
+.square-challenge-copy { display: grid; justify-items: start; gap: var(--space-6); max-width: calc(50% - var(--grid-gap)); }
+.square-challenge-copy > p { margin: 0; }
+.square-challenge-copy .button { margin-top: var(--space-4); }
+.square-section-heading { align-items: end; margin-bottom: var(--space-16); }
+.square-entry-title { margin-top: var(--space-6); text-transform: uppercase; }
+.square-looks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--grid-gap); }
+.square-looks > * { min-width: 0; }
+.square-libido { background: var(--square-crimson); }
+@media (max-width: 767px) {
+  .square-challenge-copy { max-width: 100%; }
+  .square-section-heading { margin-bottom: var(--space-8); }
+  .square-looks { grid-template-columns: minmax(0, 1fr); }
+}

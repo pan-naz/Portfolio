@@ -1,4 +1,4 @@
-import { setCaseVideoPlaying } from './case-study-videos';
+import { setCaseVideoPlaying, setCaseVideoMuted } from './case-study-videos';
 
 const timestamp = (seconds: number) => {
   const time = Math.max(0, Math.floor(seconds || 0));
@@ -15,14 +15,17 @@ class CaseVideoPlayer extends HTMLElement {
     const video = this.querySelector('video')!;
     const controls = this.querySelector<HTMLElement>('[data-video-controls]')!;
     const toggle = this.querySelector<HTMLButtonElement>('[data-video-toggle]')!;
+    const mute = this.querySelector<HTMLButtonElement>('[data-video-mute]');
     const seek = this.querySelector<HTMLInputElement>('[data-video-seek]')!;
     const time = this.querySelector<HTMLElement>('[data-video-time]');
+    const durationTime = this.querySelector<HTMLElement>('[data-video-duration]');
     const preview = this.querySelector<HTMLElement>('[data-video-preview]');
     const sheet = this.dataset.preview ? JSON.parse(this.dataset.preview) as {
       src: string; columns: number; rows: number; count: number; interval: number;
     } : undefined;
     let dragging = false;
     let duration = 0;
+    let previewProgress = 0;
 
     const update = () => {
       duration = Number.isFinite(video.duration) ? video.duration : 0;
@@ -32,15 +35,23 @@ class CaseVideoPlayer extends HTMLElement {
       const value = Number(seek.value);
       seek.style.setProperty('--video-progress', `${duration ? value / duration * 100 : 0}%`);
       seek.setAttribute('aria-valuetext', `${timestamp(value)} of ${timestamp(duration)}`);
-      if (time) time.textContent = `${timestamp(value)} / ${timestamp(duration)}`;
+      if (time) time.textContent = timestamp(value);
+      if (durationTime) durationTime.textContent = timestamp(duration);
       toggle.setAttribute('aria-label', video.paused ? 'Play video' : 'Pause video');
       this.querySelector('[data-play-icon]')!.toggleAttribute('hidden', !video.paused);
       this.querySelector('[data-pause-icon]')!.toggleAttribute('hidden', video.paused);
+      if (mute) {
+        mute.setAttribute('aria-label', video.muted ? 'Sound off. Turn sound on' : 'Sound on. Turn sound off');
+        mute.setAttribute('aria-pressed', String(!video.muted));
+        this.querySelector('[data-muted-icon]')!.toggleAttribute('hidden', !video.muted);
+        this.querySelector('[data-sound-icon]')!.toggleAttribute('hidden', video.muted);
+      }
     };
     const hidePreview = () => { if (preview) preview.hidden = true; };
     const showPreview = (fraction: number) => {
       if (!preview || !sheet || !duration) return;
       const progress = Math.max(0, Math.min(1, fraction));
+      previewProgress = progress;
       const index = Math.min(sheet.count - 1, Math.floor(progress * duration / sheet.interval));
       const frame = preview.querySelector<HTMLElement>('.case-video-preview-frame')!;
       // This static sheet loads on first interaction; no second video decoder.
@@ -49,11 +60,17 @@ class CaseVideoPlayer extends HTMLElement {
       frame.style.backgroundPosition = `${index % sheet.columns / Math.max(1, sheet.columns - 1) * 100}% ${Math.floor(index / sheet.columns) / Math.max(1, sheet.rows - 1) * 100}%`;
       preview.querySelector('[data-preview-time]')!.textContent = timestamp(progress * duration);
       preview.hidden = false;
-      const width = seek.clientWidth;
-      const half = preview.getBoundingClientRect().width / 2;
-      preview.style.left = `${Math.max(half, Math.min(width - half, progress * width))}px`;
+      // Follow the timeline point across the whole controller, including its
+      // buttons and timer. Layout offsets stay correct during parent transforms.
+      const center = seek.parentElement!.offsetLeft + seek.offsetLeft + progress * seek.clientWidth;
+      const half = preview.offsetWidth / 2;
+      preview.style.left = `${Math.max(half, Math.min(controls.clientWidth - half, center))}px`;
     };
     toggle.addEventListener('click', () => setCaseVideoPlaying(video, video.paused), { signal });
+    mute?.addEventListener('click', () => {
+      setCaseVideoMuted(video, !video.muted);
+      if (!video.muted && video.paused) setCaseVideoPlaying(video, true);
+    }, { signal });
     seek.addEventListener('pointerdown', () => { dragging = true; this.setAttribute('data-seeking', ''); }, { signal });
     const finishSeek = () => {
       if (!dragging) return;
@@ -77,7 +94,10 @@ class CaseVideoPlayer extends HTMLElement {
     seek.addEventListener('pointerleave', () => { if (!dragging && !seek.matches(':focus-visible')) hidePreview(); }, { signal });
     seek.addEventListener('focus', () => showPreview(Number(seek.value) / duration), { signal });
     seek.addEventListener('blur', hidePreview, { signal });
-    for (const event of ['loadedmetadata', 'durationchange', 'timeupdate', 'play', 'pause', 'emptied']) {
+    window.addEventListener('resize', () => {
+      if (preview && !preview.hidden) showPreview(previewProgress);
+    }, { signal });
+    for (const event of ['loadedmetadata', 'durationchange', 'timeupdate', 'play', 'pause', 'emptied', 'volumechange']) {
       video.addEventListener(event, update, { signal });
     }
     video.controls = false;

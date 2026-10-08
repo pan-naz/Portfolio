@@ -30,6 +30,7 @@
   --work-preview-height: 200px;
   --section-reveal-trigger-viewport-ratio: .9; --work-stage-trigger-viewport-ratio: .02; --work-stage-collapse-scroll-y: 1;
   --radius-pill: 999px; --radius-medium: 24px; --radius-media: 40px; --radius-chapter: clamp(40px, 5.8vw, 100px);
+  --radius-project-logo: 25%;
   /* Figma desktop ramp; mobile sizes are a responsive adaptation. */
   --font-body: 'Urbanist Variable', Urbanist, Arial, sans-serif;
   --font-heading: 'Funnel Display Variable', 'Funnel Display', Arial, sans-serif;
@@ -56,6 +57,16 @@
   --ease-out: cubic-bezier(.16, 1, .3, 1);
   --ease-entrance: cubic-bezier(.22, .61, .36, 1);
   --ease-work-stage: cubic-bezier(.22, .61, .36, 1);
+  /* One card/case/hero transition contract across all project collections. */
+  --duration-case-open: 700ms; --duration-case-close: 400ms;
+  --duration-case-caption-exit: 200ms; --duration-case-caption-enter: 600ms;
+  --delay-case-caption-enter: 100ms;
+  --duration-case-body-enter: 350ms; --delay-case-body-enter: 350ms;
+  --duration-case-corners: 260ms; --distance-case-copy: 16px;
+  --rotation-case-control: 225deg;
+  --ease-case-travel: cubic-bezier(.22, .75, .25, 1);
+  --ease-case-corners: ease-in-out;
+  --case-hero-fit: contain;
   --duration-entrance: 900ms;
   --intro-stage-progress: .5;
   --stagger-tag-reveal: 150ms;
@@ -74,7 +85,8 @@
   --duration-fast: 160ms; --duration-navigation: 420ms; --duration-layout: 500ms; --duration-work-stage: 800ms;
   --duration-filter-exit: 140ms; --duration-filter-enter: 200ms; --duration-filter-layout: 420ms;
   --work-filter-magnet-spring-speed: 14; --work-filter-magnet-inside-spring-speed: 2;
-  --work-filter-boundary-overshoot: 32; --work-filter-boundary-spring-speed: 10;
+  --work-filter-scroll-lag: 32; --work-filter-scroll-spring-speed: 10;
+  --work-filter-scroll-return-speed: 20; --delay-work-filter-scroll-return: 80ms;
   --project-tilt-angle: 6; --project-tilt-perspective: 1000px;
   --ease-filter-enter: cubic-bezier(.25, .46, .45, 1);
   --delay-filter-enter: 140ms; --scale-filter: .9; --scale-filter-exit: .97; --distance-filter-enter: 24px;

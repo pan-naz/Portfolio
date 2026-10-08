@@ -1,55 +1,52 @@
-**Source and implementation**
+# Full-controller hover preview QA — 8 October 2026
 
-- Source visual truth: `/Users/nazariypankiv/Documents/Codex (Portfolio)/case studies/Voximplant Kit — case study final.pdf` (1728 × 29694 px source page) and `/var/folders/tw/d092mts90jv8t060bfds48cm0000gn/T/codex-clipboard-7680b4cc-016d-4809-a195-95537f8dc5f8.png` (persona-section reference).
-- Rendered implementation: `http://127.0.0.1:4323/case-studies/voximplant/`, captured and inspected in the Codex in-app browser. The in-app capture is not exposed as a persistent filesystem path.
-- Desktop viewport: 1280 × 720 CSS px at browser density 1. Source and implementation were compared at fitted viewport scale because the PDF is a single 1728 × 29694 px page.
-- Mobile viewport: 390 × 844 CSS px at browser density 1.
-- States checked: standalone route, homepage card-to-case-study modal open and close, Light theme, Dark theme, desktop sticky audience section, mobile stacked audience section, horizontally scrollable competitive table, dark Solution chapter, and final impact blocks.
+Final result: **passed**.
 
-**Full-view comparison evidence**
+Source truth: the user’s request to let the preview move beyond slider width, the shared controller, updated reference lock and DESIGN.md. This changes the shared CaseStudyMedia structure, player positioning and preview CSS; all seven controllers inherit it.
 
-- The implementation follows the source chapter order, information hierarchy, light editorial canvas, dark Solution chapter, large rounded product imagery, impact grid, and exact final “For the business / For the team” ending.
-- Desktop typography, maximum content width, section spacing, rounded cards, muted secondary copy and orange impact accent are consistent with the supplied page and the portfolio design system.
-- The 390 px render has no page-level horizontal overflow (`pageScrollWidth: 390`, `bodyWidth: 390`). The competitive table is an exact 1200 × 641 crop from the PDF inside a focusable region with `overflow-x: auto`; a visually hidden semantic table preserves the source copy for assistive technology.
+## Verified layout and behavior
 
-**Focused region comparison evidence**
+The tooltip is an absolute child of the complete controller rather than the seek wrapper. It follows the hovered timeline point and clamps only at controller edges. Preferred 200px previews no longer shrink to the seek width; Hooko retains its 80px portrait preview. The visible 8px gap above the pill is unchanged. Layout offsets avoid mixing transformed screen dimensions with layout coordinates, and visible previews reflow on window resize.
 
-- Persona reference versus rendered audience section: the implementation preserves the left-copy/right-card composition, card order, tags, Need/Current split and copy. At desktop the left copy uses `position: sticky` with a 96 px top offset; at 390 px it resolves to `position: static` and normal document flow.
-- PDF product panels versus rendered media: research, prototypes, scenario editor, campaign, reporting and design-library crops retain the supplied UI artwork, aspect ratio and legibility. No visible product artwork was replaced with a code-drawn approximation.
-- Hero and closing state: the supplied project artwork and identity remain shared with the homepage card transition; Close and browser return restore the homepage and selected-work position.
+- Telegram desktop: at the beginning, the preview reaches x=80, the controller’s left edge, while the seek field begins at x=136. At the end, the 200px preview reaches x=1167, beyond the seek field’s x=1066.59375 endpoint and still within the controller’s x=1200 edge.
+- Resizing that open endpoint preview from 1280px to 320px correctly keeps its 200px width and realigns it to x=88–288, ending at the controller edge. The seek field ends at x=232. At the beginning, the preview starts at x=32, also the controller edge. No horizontal page overflow.
+- Hooko: its 80px portrait preview ends at the controller’s x=368 edge instead of the seek field’s x=356 edge. Timestamp and original frame remain correct.
+- DataGPT actual pointer hover: preview reaches x=1200, the controller edge, while the slider ends at x=1110.59375. Its 1:23 thumbnail appears while paused playback stays at 0.508054s, so hovering does not seek. No sound toggle appears.
+- Saved desktop/mobile/portrait captures and runtime bounds. `preview-controller-bounds-detail.png` is a focused crop of the actual DataGPT hover capture, showing the preview extending over the timer to the pill edge. Reviewed screenshots show no clipping or misplaced frames.
 
-**Findings**
+Hover previews, keyboard seeking, compact fixed timer slots, universal looping, manual Pause/Play and Telegram-only audio remain shared. Original recordings and thumbnail sheets are unchanged. No design-system catalog edits. No unresolved P0/P1/P2 findings.
 
-- No actionable P0, P1 or P2 differences remain.
-- [P3] Temporary image quality ceiling
-  Location: product imagery throughout the case study.
-  Evidence: visuals are deliberate crops from the supplied PDF, as requested, so small embedded UI labels inherit the PDF's raster resolution.
-  Impact: large screenshots are compositionally correct but cannot be sharper than the supplied source.
-  Fix: replace each local crop one-for-one when final source visuals are provided.
+## Validation
 
-**Comparison history**
+`pnpm check` and `pnpm build` pass: 168 files, no diagnostics, 17 routes; shared design-system, contrast, SVG and static-catalog guards pass. Case-study coverage passes for all 15 projects and all seven shared controllers, with native loops and original preview mappings. Shared video lifecycle/Pause/Play/sound regressions and `git diff --check` pass.
 
-- Pass 1 — P2: the prototype and Editing blocks crops included adjacent source copy, creating duplicate text beneath the authored page copy. The crops were tightened to the screenshot bounds. Post-fix evidence: both regions render only the intended interface artwork and preserve their natural aspect ratio.
-- Pass 1 — P2: the two design-library column crops exposed narrow fragments of the neighboring PDF column. The gallery now clips those source-edge fragments inside white rounded media surfaces. Post-fix evidence: the rendered two-column gallery reads as two clean panels with the original content intact.
-- Pass 2: desktop, mobile, Light/Dark, modal close, sticky behavior, table containment and final-page ending were rechecked. No actionable P0/P1/P2 findings remained.
-- Pass 3 — P2: the coded competitive matrix drifted from the PDF in cell colors, proportions and legend treatment. It was replaced with an exact 1200 × 641 source crop while retaining equivalent hidden table semantics. Post-fix evidence: the browser render reproduces the PDF pixels directly and remains locally scrollable at narrow widths.
 
-**Open Questions**
+Picker Concept metadata correction verified: the live standalone title/page title is “Picker Concept”, with Android / Interaction design / Principle / After Effects. Existing metadata checks confirm the same name and tags on the Misc card and opened template. Captured `reference-research/telegram-file-picker/approved-picker-name-tags.png`. Required check/build and all bundled guards pass again; no diagnostics.
 
-- Final visual assets are intentionally pending and can replace the temporary PDF crops without changing the page structure.
 
-**Implementation Checklist**
+Kitchen Chatbot attribution link verified: the exact “Vic Bell’s Blink Bot” phrase is one anchor to the original Dribbble shot, with the period outside. It inherits 16px/400 body text, remains inline and underlined, and has no arrow. Its external target/rel attributes follow shared TextLink. Desktop/320px captures show no horizontal overflow. The original destination was verified via its public page. Required check/build, SVG/static guards, case metadata tests and diff checks pass; original credit copy remains exact. Evidence: `reference-research/kitchen-chatbot/mascot-credit-linked-detail.png`.
 
-- [x] Preserve source copy literally.
-- [x] Use shared portfolio tokens and components.
-- [x] Keep audience copy sticky only while its desktop section is active.
-- [x] Keep the competitive table accessible and locally scrollable on mobile.
-- [x] Verify Light/Dark and the intentionally dark Solution chapter.
-- [x] End exactly with the two requested impact blocks.
-- [x] Verify modal open/close and direct-route rendering.
+Approved Misc ordering verified: Pet Care, Picker Concept, SQUARE, Kitchen Chatbot. The live collection renders Picker Concept second beside Pet Care on desktop. Captured `reference-research/telegram-file-picker/approved-misc-second-position.png`. The existing order check, required check/build and all bundled guards pass with no diagnostics.
 
-**Follow-up Polish**
+Design Cup addition verified against the supplied artifact: five source story sections, eleven byte-identical original artwork files, original SVG, exact copy and role. Misc now contains five projects, with Picker Concept still second and Design Cup last. Desktop/tablet/390px/320px and both themes pass; shared open/close and play-once image reentry verified. No horizontal overflow or browser warnings. Source evidence and final screenshots are in `reference-research/design-cup/`; full findings in its `design-qa.md`. Required check/build and focused metadata/image/video checks pass: 172 files, zero diagnostics, 18 routes, 51 genuine SVG assets.
 
-- Replace PDF crops with the final high-resolution visuals when supplied.
+Shared case-study motion correction passed: contained card/travel/hero fit, live-image handoff and modal-owned viewport return fix Design Cup’s opening/closing jump. All timings, fades, corner/control motion and hero fit now consume shared tokens across all cases, documented by thirteen rows in the static Motion catalog. Desktop/390px frame sampling, early Escape, a padded Gutsul hero and looping Picker video passed; catalog desktop/mobile has no overflow. Required check/build, production token checks, node-identity, navigation/reload and existing case/media checks pass with 175 files and zero diagnostics. Evidence: `reference-research/shared-case-study-motion/design-qa.md`.
+# Voximplant IVR — 8 October 2026
 
-final result: passed
+Added the sixth Misc case from the supplied artifact, preserving exact copy and five original assets. Reused shared overview, media, live hero handoff and motion tokens. Desktop and phone QA verifies source ratios, reading order, loaded artwork, no overflow and stable closing scroll position. Required check/build, all 17 case metadata/media checks, six-project Misc order and shared motion/image/navigation tests pass. Evidence and source manifests live in `../reference-research/voximplant-ivr/`.
+# Floating Work menu scroll correction — 8 October 2026
+
+Replaced the fixed 32px endpoint impulse with a continuous proportional follower of the existing sticky position. Slow scroll lingers gently; both upper and lower stops settle exactly against the card bounds. Desktop browser measurements confirm 493.296875px top alignment and 294.296875px bottom alignment, smooth reverse input and no errors. Shared pointer magnetism, touch/compact/reduced-motion behavior and category layout remain intact. Motion regression tests, filter/stage/pointer tests, required check/build and all guards pass. Evidence is in `../reference-research/work-filter-follow/`.
+# Quicker floating-menu return — 8 October 2026
+
+Kept the current scroll linger at speed 10 and added a shared speed-20 return after 80ms without scrolling. The transition retains position and velocity. Both endpoints approach alignment continuously and land within a fraction of a pixel in about half a second in browser QA; exact final alignment is preserved. Regression tests cover 60/120Hz response, unchanged active linger, pause/reduced-motion cleanup and no endpoint kick. Required check/build and existing filter/stage tests pass. Evidence: `../reference-research/work-filter-follow/quicker-return-*`.
+# OFFF Conference — 8 October 2026
+
+Added seventh in Misc from the supplied artifact with exact source copy, native hero and restored original full recording. Reused CaseStudyMedia's silent shared controller, generated its original-frame hover sheet and retained common loop/Pause behavior. Desktop and phone QA confirms playback, keyboard seeking, controller-wide preview bounds, no sound button or overflow, shared live-hero handoff and stable return scroll position. Required check/build, all 18 case metadata/media checks, eight shared controller previews and video/filter/artwork regressions pass. Evidence: `../reference-research/offf-conference/`.
+# Professions in Digital — 8 October 2026
+
+Added eighth in Misc with the exact reference copy, original recordings and genuine SVG. It shares RecordingCaseStudy with OFFF and the existing silent video controller with original-frame hover previews. A shared source-pixel crop preserves the reference's clean 1426×884 visible frame across card, traveling hero, settled hero and player. Desktop/phone playback, seeking, looping, preview bounds, crop continuity, stable return and OFFF regression pass. Required check/build and all 19 case metadata/media, nine controller mapping and relevant lifecycle tests pass. Evidence: `../reference-research/professions-in-digital/`.
+
+# Quit University — 8 October 2026
+
+Added ninth in Misc after Professions with exact source title, disciplines, introduction and Full scroll chapter. Original hero, still and graduation-cap SVG are unchanged; the two full-recording byte chunks are joined without reencoding. Existing RecordingCaseStudy, source-pixel clipping, silent controller and case animations are shared. Desktop/mobile playback, Pause, seeking, end looping, controller-wide original-frame previews, no audio button/overflow, crop continuity and exact return to Misc pass. Required check/build, all 20 case metadata/media and ten controller mappings, filter, video lifecycle, artwork/navigation and endpoint-only menu regressions pass. Evidence: `../reference-research/quit-university/`.

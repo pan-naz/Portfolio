@@ -3,7 +3,8 @@ interface Props {
   value: string;
   as?: 'span' | 'p' | 'strong';
   class?: string;
+  reveal?: boolean;
 }
-const { value, as: Tag = 'span', class: className }: Props = Astro.props;
+const { value, as: Tag = 'span', class: className, reveal = false }: Props = Astro.props;
 ---
-<Tag class:list={['font-heading', className]}>{value}</Tag>
+<Tag class:list={['font-heading', className]}>{reveal ? <><span class="sr-only">{value}</span><span aria-hidden="true" data-title-reveal-value>{value}</span></> : value}</Tag>

@@ -1,0 +1,33 @@
+---
+import type { Project } from '../data/portfolio';
+import { offfHero, offfPage } from '../data/offf-conference-case-study';
+import { professionsInDigitalHero, professionsInDigitalPage } from '../data/professions-in-digital-case-study';
+import { quitUniversityHero, quitUniversityPage } from '../data/quit-university-case-study';
+import CaseStudyOverview from './CaseStudyOverview.astro';
+import CaseStudyMedia from './CaseStudyMedia.astro';
+import '../styles/recording-case-study.css';
+
+interface Props { project: Project; }
+const { project } = Astro.props;
+const recordings = {
+  'offf-conference': { prefix: 'offf', hero: offfHero, page: offfPage },
+  'professions-in-digital': { prefix: 'pid', hero: professionsInDigitalHero, page: professionsInDigitalPage },
+  'quit-university': { prefix: 'qu', hero: quitUniversityHero, page: quitUniversityPage },
+};
+const study = recordings[project.id as keyof typeof recordings];
+if (!study) throw new Error(`Missing recording case study for ${project.id}`);
+---
+<article class="case-study-content case-study-content--recording" data-case-content>
+  <CaseStudyMedia {...study.hero} artwork />
+  <div class="case-study-body case-study-narrative recording-case">
+    <CaseStudyOverview project={project} titleId={`${study.prefix}-title`} presentation="compact" />
+
+    <section id={`${study.prefix}-page`} aria-labelledby={`${study.prefix}-page-title`}>
+      <div class="case-study-columns recording-heading">
+        <div><p class="case-study-eyebrow">{study.page.eyebrow}</p><h2 class="case-study-heading" id={`${study.prefix}-page-title`}>{study.page.title}</h2></div>
+        <p class="recording-muted">{study.page.description}</p>
+      </div>
+      <CaseStudyMedia {...study.page.media} />
+    </section>
+  </div>
+</article>

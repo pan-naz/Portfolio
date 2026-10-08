@@ -1,0 +1,49 @@
+// Exact narrative and original Voximplant IVR artwork from the supplied artifact.
+export const voximplantIvrDescription = "Landing page for Voximplant’s IVR order tracking. Customers call, say a waybill number or their name, and hear where their order is." as const;
+
+export const voximplantIvrTags = [
+  "Landing page",
+  "Voice interface",
+  "Animation"
+] as const;
+
+export const voximplantIvrRole = {
+  "title": "Designer",
+  "items": [
+    "Landing page",
+    "Test call window",
+    "Animation"
+  ]
+} as const;
+
+export const voximplantIvrTeam = "I worked directly with Voximplant’s engineering team. Their developers built the page." as const;
+
+export const voximplantIvrHero = {
+  "src": "/projects/voximplant-ivr-case-study/hero.webp",
+  "alt": "The first screen of the landing page on dark purple: the last word of the heading changes from faster to simpler to more convenient, and the pointer moves over the top button, then over Watch video and Try for free",
+  "width": 1200,
+  "height": 501,
+  "kind": "image",
+  "reducedMotionSrc": "/projects/voximplant-ivr-case-study/hero-still.webp",
+  "canvasColor": "linear-gradient(180deg, #190645 0 89.52%, #FEFEFE 89.52%)",
+  "canvasSourceRatio": 1.596806387225549
+} as const;
+
+export const voximplantIvrFlow = {
+  "eyebrow": "Flow",
+  "title": "From the first screen to a test call",
+  "description": [
+    "The first screen says that tracking works by voice, with no digits to type. Below it, a demo window plays a call over a map of Moscow, and the bot answers where the parcel is and when it will arrive.",
+    "Four cards list what the service does: several orders in one call, 98% recognition accuracy, a report on order status and delivery dates, and CRM integration. The bot speaks in the voice people know from Yandex.Navigator.",
+    "The test call window shows a number to dial and a code to enter once the call connects, with a 30-second timer. After that, you say the answers the page suggests."
+  ],
+  "media": {
+    "src": "/projects/voximplant-ivr-case-study/landing.gif",
+    "alt": "The whole landing page: the first screen, the demo call over a map of Moscow, the Yandex.Navigator voice block with four cards, the footer, then the test call window with the number, the code and the timer",
+    "width": 800,
+    "height": 600,
+    "kind": "image",
+    "reducedMotionSrc": "/projects/voximplant-ivr-case-study/landing-still.webp"
+  }
+} as const;
+

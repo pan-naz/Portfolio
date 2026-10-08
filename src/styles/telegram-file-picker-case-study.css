@@ -1,0 +1,32 @@
+/* Telegram blue is original project artwork, confined to facts and the result band. */
+.case-study-content--telegram { --tg-blue: #2aabee; --tg-blue-deep: #229ed9; padding-bottom: 0; }
+.telegram-case > .case-study-overview { padding-top: var(--case-section-space); }
+.telegram-case > :is(#tg-competition, #tg-video) { padding-bottom: 0; }
+.tg-head { row-gap: var(--space-6); }
+.tg-head > .case-study-eyebrow { grid-column: 1; grid-row: 1; }
+.tg-head > .case-study-heading { grid-column: 1; grid-row: 2; margin: 0 var(--grid-gap) 0 0; }
+.tg-head > .tg-copy { grid-column: 2; grid-row: 2; align-self: center; margin: 0; }
+.tg-copy { display: grid; gap: var(--space-3); }
+.tg-copy > p { margin: 0; }
+.tg-muted { color: var(--muted); }
+.tg-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--grid-gap); margin: var(--space-16) 0 0; padding: 0; list-style: none; }
+.tg-stats > li { min-width: 0; }
+.tg-stats .case-study-decision-card { height: 100%; }
+.tg-value { color: var(--tg-blue-deep); white-space: nowrap; text-wrap: wrap; }
+.tg-stats .tg-stat-note { color: var(--muted); text-wrap: wrap; }
+#tg-video > .case-study-media { margin-top: var(--space-16); }
+.telegram-case > .tg-result { margin-top: var(--case-section-space); background: linear-gradient(180deg, var(--tg-blue), var(--tg-blue-deep)); }
+.tg-result .case-study-chapter__inner { display: grid; gap: var(--space-16); }
+.tg-window { width: min(100%, 1000px); justify-self: center; filter: drop-shadow(var(--shadow-floating-light)); }
+@media (max-width: 1023px) {
+  .tg-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 767px) {
+  .tg-head > .case-study-heading { margin-inline-end: 0; }
+  .tg-head > .tg-copy { grid-column: 1; grid-row: 3; }
+  .tg-stats, #tg-video > .case-study-media { margin-top: var(--case-content-gap); }
+  .tg-result .case-study-chapter__inner { gap: var(--case-content-gap); }
+}
+@media (max-width: 359px) {
+  .tg-stats { grid-template-columns: minmax(0, 1fr); }
+}

@@ -23,6 +23,7 @@ function boot({ path = '/case-studies/datagpt/', hash = '', search = '', navigat
     sessionStorage: {
       getItem(key) { if (storageBlocked) throw new Error('Blocked'); return storage.get(key) ?? null; },
       setItem(key, value) { if (storageBlocked) throw new Error('Blocked'); storage.set(key, value); },
+      removeItem(key) { if (storageBlocked) throw new Error('Blocked'); storage.delete(key); },
     },
     performance: { getEntriesByType: () => [{ type: navigation }] },
     addEventListener: (name, callback) => events.set(name, callback),
@@ -35,13 +36,15 @@ function boot({ path = '/case-studies/datagpt/', hash = '', search = '', navigat
   };
 }
 
-const modal = boot({ path: '/', navigation: 'navigate', top: 2541, caseTop: 700, state: { caseStudy: 'datagpt', other: 'retained' } });
+const caseOrigin = { url: '/#websites', top: 2541 };
+const modal = boot({ path: '/', navigation: 'navigate', top: 2541, caseTop: 700, state: { caseStudy: 'datagpt', portfolioCaseOrigin: caseOrigin, other: 'retained' } });
 modal.location.pathname = '/case-studies/datagpt/';
 modal.events.get('pagehide')();
 assert.equal(modal.history.state.portfolioScroll.top, 700, 'Save the visible case viewport, not the paused homepage');
 assert.equal(modal.history.state.portfolioScroll.path, '/case-studies/datagpt/');
 assert.equal(modal.history.state.caseStudy, 'datagpt');
 assert.equal(modal.history.state.other, 'retained');
+assert.deepEqual(modal.history.state.portfolioCaseOrigin, caseOrigin, 'Saving the case reading position must retain the separate homepage origin');
 
 // Browsers may snapshot the history state before pagehide runs. Exercise that
 // ordering with stale history and the final position captured in tab storage.
@@ -91,6 +94,43 @@ assert.equal(freshHome.events.has('load'), false);
 const backHome = boot({ path: '/', navigation: 'back_forward', top: 5830, storage: home.storage });
 assert.equal(backHome.window.scrollY, 5830, 'Back to the homepage retains native history restoration');
 
+for (const hash of ['', '#websites', '#misc']) {
+  const origin = { url: `/?source=portfolio${hash}`, top: 5830 };
+  const storage = new Map([['portfolio-case-return', JSON.stringify(origin)]]);
+  const returned = boot({ path: '/', search: '?source=portfolio', hash, navigation: 'navigate', storage, max: 200 });
+  assert.equal(returned.root.dataset.caseReturn, 'true', 'A case return resolves the homepage’s completed entrance');
+  assert.equal(returned.root.dataset.scrollRestorePending, 'true', 'Hide the new document until its original viewport is restored');
+  assert.equal(storage.has('portfolio-case-return'), false, 'Only this return navigation consumes the handoff');
+  returned.events.get('DOMContentLoaded')();
+  returned.setMax(Infinity);
+  await returned.finish();
+  assert.equal(returned.window.scrollY, 5830, 'Returning from a reloaded case reaches the original last-card viewport after layout settles');
+  assert.equal(returned.root.dataset.scrollRestorePending, undefined);
+  const back = boot({ path: '/', search: '?source=portfolio', hash, navigation: 'reload', storage: new Map([['portfolio-case-return', JSON.stringify({ ...origin, reload: true })]]) });
+  await back.finish();
+  assert.equal(back.window.scrollY, 5830, 'Back from the standalone case loads the actual homepage even when its URL already matches the return hash');
+  assert.equal(back.root.dataset.caseReturn, 'true');
+  assert.equal(back.root.dataset.scrollRestorePending, undefined);
+  const refresh = boot({ path: '/', search: '?source=portfolio', hash, navigation: 'reload', top: 5830, storage });
+  await refresh.finish();
+  assert.equal(refresh.window.scrollY, 0, 'Reloading the returned homepage still replays the intro from the top');
+  assert.equal(refresh.root.dataset.caseReturn, undefined);
+}
+for (const pending of [
+  { url: '/#misc', top: 5830 },
+  { url: '/#websites', top: -1 },
+  { url: '/#websites', top: '5830' },
+]) {
+  const storage = new Map([['portfolio-case-return', JSON.stringify(pending)]]);
+  const unrelated = boot({ path: '/', hash: '#websites', navigation: 'navigate', storage });
+  assert.equal(unrelated.root.dataset.caseReturn, undefined);
+  assert.equal(unrelated.events.has('load'), false);
+}
+const pendingRefresh = boot({ path: '/', hash: '#websites', storage: new Map([['portfolio-case-return', JSON.stringify(caseOrigin)]]) });
+await pendingRefresh.finish();
+assert.equal(pendingRefresh.window.scrollY, 0, 'A stale handoff never overrides an actual homepage reload');
+assert.equal(pendingRefresh.root.dataset.caseReturn, undefined);
+
 for (const options of [
   { navigation: 'navigate', state: modal.history.state },
   { navigation: 'back_forward', state: modal.history.state },
@@ -117,4 +157,4 @@ assert.equal(corruptStorage.window.scrollY, 700, 'Malformed storage cannot break
 assert.ok(!layout.includes('resetToTopOnReload'));
 assert.ok(!readFileSync('src/pages/index.astro', 'utf8').includes('resetToTopOnReload'));
 assert.ok(readFileSync('src/styles/global.css', 'utf8').includes('html[data-scroll-restore-pending] body { visibility: hidden; }'));
-console.log('PASS: case reload continuity, repeated reloads, delayed layout, hidden-tab capture, homepage intro reset and native fresh/history navigation.');
+console.log('PASS: case reload continuity, exact origin return, one-shot navigation, delayed layout, homepage intro reset and native fresh/history navigation.');

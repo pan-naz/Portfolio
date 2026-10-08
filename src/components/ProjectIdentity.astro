@@ -1,6 +1,6 @@
 ---
 import SvgAsset from './SvgAsset.astro';
-interface Props { title: string; logo?: string; }
-const { title, logo } = Astro.props;
+interface Props { title: string; logo?: string; logoBackground?: 'white'; }
+const { title, logo, logoBackground } = Astro.props;
 ---
-<span class="project-identity font-heading">{logo && <SvgAsset src={logo} width="32" height="32" />}<span>{title}</span></span>
+<span class="project-identity font-heading">{logo && <SvgAsset src={logo} width="32" height="32" class={logoBackground === 'white' ? 'project-identity__logo--white' : undefined} />}<span>{title}</span></span>
