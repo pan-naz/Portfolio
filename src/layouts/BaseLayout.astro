@@ -20,7 +20,7 @@ const { title = `${profile.name} — naz.wtf`, homeIntro = false } = Astro.props
         try { saved = localStorage.getItem('naz-theme'); } catch {}
         const dark = saved === 'dark';
         document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-        document.querySelector('meta[name="theme-color"]').content = dark ? '#171716' : '#FAF8F7';
+        document.querySelector('meta[name="theme-color"]').content = dark ? '#161715' : '#FAF8F7';
       })();
     </script>
     <script is:inline>

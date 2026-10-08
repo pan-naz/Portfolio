@@ -100,7 +100,7 @@
   .vox-outcomes { gap: var(--space-4); }
   .vox-outcomes article { padding: var(--space-4); }
   .vox-hypotheses li { grid-template-columns: 36px minmax(0, 1fr); }
-  .vox-hypotheses li > span { font-size: 1.125rem; }
+  .vox-hypotheses li > span { font-size: var(--text-body-compact-relative); }
   .vox-stats--four, .vox-stats--impact { grid-template-columns: 1fr; gap: var(--space-6); }
   .vox-stats .stat { border-top: 1px solid var(--divider); padding-top: var(--space-4); }
   .vox-decisions { gap: var(--space-4); }

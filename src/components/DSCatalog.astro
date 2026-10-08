@@ -22,6 +22,12 @@ import { caseStudyMotionTokens, caseStudyPresentationTokens } from '../scripts/c
 const readTokens = (block: string) => Object.fromEntries([...block.matchAll(/--([\w-]+):\s*([^;]+);/g)].map(([,key,value]) => [key,value.trim()]));
 const light = Object.assign({}, ...[...tokenCSS.matchAll(/(?:^|\n):root\s*\{([^}]+)\}/g)].map(([, block]) => readTokens(block))) as Record<string, string>;
 const dark = { ...light, ...readTokens(tokenCSS.match(/:root\[data-theme='dark'\][^{]*\{([^}]+)\}/)![1]) };
+// Alias resolution preserves the existing displayed values and specimen copy.
+const tokenValue = (palette: Record<string, string>, token: string): string => {
+  const value = palette[token];
+  const alias = value.match(/^var\(--([\w-]+)\)$/);
+  return alias ? tokenValue(palette, alias[1]) : value;
+};
 const fontName = (token: string) => light[token].split(',')[0].trim().replace(/['"]/g, '').replace(/ Variable$/, '');
 const colors = [
   ['ink','dark','Text and primary buttons'],
@@ -54,7 +60,7 @@ const iconNames = Object.keys(icons) as IconName[];
     <header class="ds-heading"><p class="eyebrow">01 / Color</p><h1 id="colors-title" class="text-heading-l">Color</h1><p>Shared semantic tokens across two modes. Dark mode preserves the original #161715 page and uses #0F100E for darker contained surfaces. Floating controls retain their Light palette in both modes.</p></header>
     {(['light','dark'] as const).map(mode => <div class="ds-palette ds-mode" data-theme={mode}>
       <h3>{mode === 'light' ? 'Light mode' : 'Dark mode'}</h3>
-      <div class="ds-swatches">{colors.map(([token,name,usage]) => <div class="ds-swatch"><div class="ds-swatch-color" style={`background:var(--${token})`}></div><h4>{name}</h4><p>{(mode === 'light' ? light : dark)[token]}</p><p>{usage}</p></div>)}</div>
+      <div class="ds-swatches">{colors.map(([token,name,usage]) => <div class="ds-swatch"><div class="ds-swatch-color" style={`background:var(--${token})`}></div><h4>{name}</h4><p>{tokenValue(mode === 'light' ? light : dark, token)}</p><p>{usage}</p></div>)}</div>
     </div>)}
     <p class="ds-spec-note">Primary and secondary text pass 4.5:1 on supported surfaces in both modes. Decorative tertiary and accent treatments have separate usage rules; they are not body-text defaults.</p>
   </section>

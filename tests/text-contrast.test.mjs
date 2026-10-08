@@ -24,7 +24,7 @@ for (const [theme, palette] of Object.entries({ light, dark })) {
   }
 }
 assert.equal(light['text-secondary'], 'var(--muted)', 'Secondary remains mapped to the shared muted role');
-assert.equal(light['muted'], 'rgb(22 23 21 / .64)', 'Light secondary uses the Figma alpha token');
+assert.equal(resolve(light, 'muted'), 'rgb(22 23 21 / .64)', 'Light secondary uses the Figma alpha token');
 assert.equal(light['text-tertiary'], '#A19C98', 'Light tertiary uses the approved value');
 
 assert.equal(contrastRatio('rgb(0 0 0 / 0)', '#ffffff'), 1);
@@ -33,14 +33,14 @@ assert.equal(contrastRatio('rgb(0 0 0 / .5)', '#ffffff'), contrastRatio('rgb(127
 assert.throws(() => contrastRatio('#000000', 'rgb(255 255 255 / .5)'));
 assert.throws(() => contrastRatio('rgb(256 0 0)', '#ffffff'));
 assert.throws(() => contrastRatio('rgb(0 0 0 / 2)', '#ffffff'));
-assert.equal(light.accent, '#F25A30');
-assert.equal(dark.accent, '#FF6B42');
-assert.equal(dark.canvas, '#161715', 'Dark mode preserves the original main page canvas');
-assert.equal(dark.surface, '#0F100E', 'Dark containers use a separate neutral darker than the original canvas');
+assert.equal(resolve(light, 'accent'), '#F25A30');
+assert.equal(resolve(dark, 'accent'), '#FF6B42');
+assert.equal(resolve(dark, 'canvas'), '#161715', 'Dark mode preserves the original main page canvas');
+assert.equal(resolve(dark, 'surface'), '#0F100E', 'Dark containers use a separate neutral darker than the original canvas');
 for (const token of ['floating-ink', 'floating-ink-hover', 'floating-surface', 'floating-surface-subtle', 'floating-accent', 'floating-on-primary', 'floating-focus-ring', 'shadow-floating-light']) {
   assert.equal(dark[token], light[token], `${token} keeps the white overlay-control palette in dark mode`);
 }
-assert.ok(passesNormalTextAA(contrastRatio(light['floating-ink'], light['floating-surface'])), 'Overlay-control text passes AA on its white surface');
+assert.ok(passesNormalTextAA(contrastRatio(resolve(light, 'floating-ink'), resolve(light, 'floating-surface'))), 'Overlay-control text passes AA on its white surface');
 assert.notEqual(dark['floating-navigation-surface'], light['floating-navigation-surface'], 'Floating navigation changes to a dark surface in dark mode');
 assert.notEqual(dark['shadow-floating-navigation'], light['shadow-floating-navigation'], 'Floating navigation gains a stronger dark-mode elevation');
 for (const [theme, palette] of Object.entries({ light, dark })) {
