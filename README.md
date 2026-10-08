@@ -20,9 +20,9 @@ For phones and tablets on the same Wi-Fi, run `pnpm build` then `pnpm preview:la
 
 ## Content and assets
 
-`src/data/portfolio.ts` contains project cards, six impact metrics, seven experience rows and contact destinations transcribed from the approved homepage export. See `COPY.md` for provenance. Project images and original marks live in `public/projects/`; responsive WebP versions preserve the supplied artwork. The supplied CV is served from `/nazarii-pankiv-cv.pdf`.
+`src/data/portfolio.ts` contains project cards, six impact metrics, seven experience rows and contact destinations transcribed from the approved homepage export. See `COPY.md` for provenance. Project images, recordings and original marks live in `public/projects/`; original media are retained at their current paths. The supplied CV is served from `/nazarii-pankiv-cv.pdf`.
 
-Project-card destinations are optional: add `href` only when a real case-study destination is ready. Cards currently present the full approved content without a fabricated case-study link. The project rail filters Selected work, Websites and Misc; the latter two currently have no projects.
+All 20 project cards link to their case studies. The project rail filters Selected work (3 projects), Websites (8) and Misc (9). Case studies also have standalone routes under `/case-studies/`, and the homepage opens the same content in the shared dialog.
 
 The extraction script and reference renders are in `../reference-research/figma-migration/`. No flattened homepage screenshot is used as website content. The waterfall remains the existing live canvas animation.
 

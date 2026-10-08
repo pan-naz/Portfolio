@@ -17,7 +17,7 @@
   --shadow-floating-navigation: var(--shadow-floating-light);
   --divider: rgb(22 23 21 / .16); --control-border: var(--ink);
   --backdrop-menu: rgb(0 0 0 / .4); --backdrop-case: rgb(0 0 0 / .18);
-  --inverse: #161715; --sheet: var(--inverse); --inverse-muted: #aaa; --waterfall-ink: #111111;
+  --inverse: #161715; --sheet: var(--inverse); --waterfall-ink: #111111;
   --inverse-ink: #FAF8F7; --inverse-text-secondary: rgb(250 248 247 / .64); --inverse-copy: rgb(250 248 247 / .72);
   --inverse-accent: #FF6B42; --inverse-divider: rgb(250 248 247 / .10);
   --inverse-surface: var(--inverse); --inverse-raised-surface: #222320;
@@ -52,7 +52,6 @@
   --font-weight-heading-large: 400;
   --font-weight-body-m-strong: 500;
   --font-weight-label-m: 500;
-  --shadow-media: none;
   --shadow-floating: 0 8px 24px rgb(22 23 21 / .10);
   --ease-out: cubic-bezier(.16, 1, .3, 1);
   --ease-entrance: cubic-bezier(.22, .61, .36, 1);
@@ -119,6 +118,6 @@
   --icon-size-compact: 20px;
   --icon-stroke-regular: 1.5; --icon-stroke-strong: 2; --icon-stroke-emphasis: 2.5;
   --icon-linecap: round; --icon-linejoin: round;
-  --text-control: 1rem; --radius-small: 12px;
+  --radius-small: 12px;
   --focus-ring: var(--ink); --opacity-disabled: .4;
 }
