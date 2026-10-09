@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import SiteMetadata from '../components/SiteMetadata.astro';
 import '../styles/static-preview.css';
 import '../styles/hooko-artwork.css';
 interface Props { title?: string; }
@@ -10,7 +11,7 @@ const { title = 'Folio design system — naz.wtf' } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex, nofollow" />
+    <SiteMetadata title={title} description="Shared semantic tokens across two modes." />
     <meta name="theme-color" content="#FAF8F7" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=funnel-display" />
     <title>{title}</title>

@@ -55,3 +55,7 @@ When design-system work is explicitly requested, review its examples and documen
 ## Generated image candidates
 
 `pnpm build` generates static raster WebP/AVIF candidates in ignored `public/generated/images/` using the Sharp dependency already supplied by Astro. The policy in `scripts/responsive-image-policy.json` excludes posters and animated media. UI screenshots use lossless WebP; listed photos use quality 88. A format is served only when all its candidates are no heavier than the original. Three alpha-shadow screenshots retain native resolution. Original files stay at their existing paths and remain the fallback; a fresh dev checkout works without generated candidates. No runtime image optimizer is used.
+
+## Pre-launch indexing
+
+The production origin is `https://naz.wtf`. All pages keep `noindex, nofollow` through the single `indexingEnabled = false` flag in `src/data/site-config.ts`; change it to `true` and rebuild at launch. Robots allows crawling and lists the static sitemap. `vercel.json` contains the approved headers; verify their actual response values after deployment. Home and catalog OG images remain unset until artwork is supplied.

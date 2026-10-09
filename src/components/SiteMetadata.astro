@@ -1,0 +1,18 @@
+---
+import { indexingEnabled } from '../data/site-config';
+interface Props { title: string; description: string; image?: string; }
+const { title, description, image } = Astro.props;
+const pathname = Astro.url.pathname === '/' ? '/' : Astro.url.pathname.replace(/\/$/, '') + '/';
+const canonical = new URL(pathname === '/404/' ? '/404.html' : pathname, Astro.site);
+const shareImage = image ? new URL(image, Astro.site) : undefined;
+---
+<meta name="description" content={description} />
+<meta name="robots" content={indexingEnabled ? 'index, follow' : 'noindex, nofollow'} />
+<link rel="canonical" href={canonical.href} />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical.href} />
+<meta property="og:type" content="website" />
+{shareImage && <meta property="og:image" content={shareImage.href} />}
+<meta name="twitter:card" content={shareImage ? 'summary_large_image' : 'summary'} />

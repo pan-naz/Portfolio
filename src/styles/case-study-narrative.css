@@ -1,5 +1,6 @@
 /* Shared editorial roles for all full case studies. Project styles own composition only. */
 .case-study-narrative {
+  --section-heading-stack-space: var(--space-6);
   --case-section-space: var(--space-24);
   --case-content-gap: var(--space-12);
   font-size: var(--text-body-m);

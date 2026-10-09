@@ -5,6 +5,6 @@ const { id, label, reveal = true, layout = 'columns', appearance = 'default' } =
 {appearance === 'case' ? <><p class="case-study-eyebrow">{label}</p><h2 class="case-study-heading" id={id}><slot /></h2></> : (<div class:list={['section-heading', layout === 'stacked' && 'section-heading--stacked']} data-section-reveal={reveal ? '' : undefined}><div class="section-index"><slot name="index"><p class="eyebrow">{label}</p></slot></div><div><h2 id={id}><slot /></h2><slot name="description" /></div></div>)}
 
 <style>
-  .section-heading--stacked { grid-template-columns: minmax(0, 1fr); gap: var(--space-3); margin-bottom: 0; }
+  .section-heading--stacked { grid-template-columns: minmax(0, 1fr); gap: var(--section-heading-stack-space, var(--space-3)); margin-bottom: 0; }
   .section-heading--stacked h2 + :global(p) { margin-top: var(--space-3); }
 </style>
