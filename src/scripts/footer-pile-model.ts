@@ -1,4 +1,5 @@
 import Matter from 'matter-js';
+export { createWaterfallPaths } from './waterfall-icons';
 import { footerInterfaceIcons } from './footer-interface-icons';
 
 const { Engine, Bodies, Body, Composite, Sleeping } = Matter;

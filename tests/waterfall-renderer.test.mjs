@@ -10,7 +10,8 @@ const modules = new Map();
 function compile(path) {
   if (modules.has(path)) return modules.get(path);
   let source = readFileSync(path, 'utf8');
-  source = source.replace(/from '(\.\/[^']+)'/g, (_, specifier) => `from '${compile(resolve(dirname(path), specifier + '.ts'))}'`);
+  source = source.replace(/from '(\.\/[^']+)'/g, (_, specifier) => `from '${compile(resolve(dirname(path), specifier.endsWith('.ts') ? specifier : specifier + '.ts'))}'`);
+  source = source.replace(/import\('(.\/[^']+)'\)/g, (_, specifier) => `import('${compile(resolve(dirname(path), specifier.endsWith('.ts') ? specifier : specifier + '.ts'))}')`);
   source = source.replaceAll('import.meta.env.DEV', 'true').replaceAll('import.meta.hot', 'undefined');
   const js = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
   const url = `data:text/javascript;base64,${Buffer.from(js).toString('base64')}`;
@@ -24,7 +25,7 @@ let colorSeen = false;
 let verifyGroupColor = false;
 let verifiedGroupIcons = 0;
 let drawX = 0, drawY = 0;
-let vectorStrokes = 0, spriteDraws = 0;
+let vectorStrokes = 0, spriteDraws = 0, renderedFrames = 0, scaledPaths = 0;
 const useGPU = process.env.RAIN_GPU === '1';
 let textureUploads = 0, instanceDraws = 0, instanceData;
 const atlasPaths = [];
@@ -33,7 +34,7 @@ const gl = new Proxy({
   createShader: () => ({}), createProgram: () => ({}), createTexture: () => ({}),
   createBuffer: () => ({}), createVertexArray: () => ({}), getUniformLocation: () => ({}),
   texImage2D() { textureUploads++; },
-  clear() { frameSymbols.clear(); },
+  clear() { renderedFrames++; frameSymbols.clear(); },
   bufferSubData(_target, _offset, data, _start, length) { instanceData = data.slice(0, length); },
   drawArraysInstanced(_mode, _start, vertices, count) {
     instanceDraws++;
@@ -56,7 +57,7 @@ const grayColors = new Set(shades.filter((_, index) => index % (accentBlendSteps
 const accentColors = new Set(shades.filter((_, index) => index % (accentBlendSteps + 1) === accentBlendSteps));
 const context = {
   setTransform(a, _b, _c, d, e, f) { drawX = e / a - 160 + 5; drawY = f / d + 5; },
-  clearRect() { frameSymbols.clear(); },
+  clearRect() { renderedFrames++; frameSymbols.clear(); },
   drawImage(atlas, sx, sy, _sw, _sh, x, y) {
     const cached = atlas.tiles.get(`${sx}:${sy}`);
     assert.ok(cached, 'Every draw uses an initialized atlas tile');
@@ -77,7 +78,7 @@ const context = {
     frameSymbols.add(path);
   },
 };
-globalThis.Path2D = class { addPath() {} arc() {} roundRect() {} };
+globalThis.Path2D = class { addPath(_source, transform) { if (transform) scaledPaths++; } arc() {} roundRect() {} };
 globalThis.DOMMatrix = class { scale() { return this; } };
 globalThis.devicePixelRatio = 1.5;
 globalThis.getComputedStyle = () => ({ getPropertyValue: name => ({ '--text-primary':'#171716', '--canvas':'#FAF8F7', '--waterfall-ink':'#111111' })[name] });
@@ -135,6 +136,7 @@ let startupCallback;
 let startupDelay;
 globalThis.setTimeout = (callback, delay) => { startupCallback = callback; startupDelay = delay; return 1; };
 globalThis.clearTimeout = () => { startupCallback = undefined; };
+const settleImports = async () => { for (let i = 0; i < 10; i++) await new Promise(resolve => setImmediate(resolve)); };
 const animation = initializeWaterfall();
 assert.ok(animation);
 assert.equal(canvas.height, 1200, 'Desktop rain matches the 800px hero at 1.5 DPR');
@@ -142,11 +144,19 @@ assert.equal(nextFrame, undefined, 'No animation frames during the independent s
 assert.equal(field.dataset.motion, 'waiting');
 assert.equal(frameSymbols.size, 0, 'Canvas remains blank during startup delay');
 assert.equal(startupDelay, 2000);
+assert.equal(scaledPaths, 0, 'No glyph paths are built synchronously during page initialization');
+assert.equal(vectorStrokes, 0, 'Rain atlas initialization is deferred until the load import resolves');
+await settleImports();
+assert.equal(scaledPaths, 1044, 'The deferred chunk builds one glyph list');
+const { createWaterfallPaths } = await import(compile(resolve('src/scripts/waterfall-icons.ts')));
+assert.equal(createWaterfallPaths(), createWaterfallPaths(), 'All consumers receive the same Path2D array');
+assert.equal(scaledPaths, 1044, 'Reusing the shared array never rebuilds geometry');
 const firstTimer = startupCallback;
 fire('load');
 assert.equal(startupCallback, firstTimer, 'Repeated load cannot restart the delay');
 startupCallback();
 startupCallback = undefined;
+const beforeFrames = renderedFrames;
 for (let frame = 0; frame < 60 * 180; frame++) {
   const second = frame / 60;
   // Long dwell, moving cursor, overscan edges, then full exit and recovery.
@@ -164,6 +174,7 @@ for (let frame = 0; frame < 60 * 180; frame++) {
   assert.equal(Number(field.dataset.uniqueIcons ?? 0), Number(field.dataset.drawnIcons ?? 0));
   if (second < 30 || second > 170) assert.equal(Number(field.dataset.accentedIcons ?? 0), 0, 'No residual tint before hover or after recovery');
 }
+assert.equal(renderedFrames - beforeFrames, useGPU ? 10800 : 5400, 'WebGL keeps every RAF; only fallback renders at 30fps');
 assert.ok(vectorStrokes < spriteDraws * .3, `Cache avoids at least 70% of vector strokes (${vectorStrokes}/${spriteDraws})`);
 assert.ok(colorSeen, 'Real rendered icons acquire the accent during pointer interaction');
 assert.ok(verifiedGroupIcons > 1000, 'Group color verified across many glyph replacements');
@@ -219,10 +230,13 @@ animation.setPaused(true);
 assert.equal(nextFrame, undefined);
 animation.destroy();
 document.readyState = 'loading';
+const contextCount = vectorStrokes;
 const pending = initializeWaterfall();
 assert.equal(nextFrame, undefined);
 assert.equal(startupCallback, undefined, 'Delay waits for page load');
+assert.equal(vectorStrokes, contextCount, 'Before load there is no rain atlas work');
 fire('load');
+await settleImports();
 assert.equal(startupDelay, 2000);
 pending.setSuspended(true);
 startupCallback();
@@ -238,8 +252,13 @@ cancelled.destroy();
 assert.equal(startupCallback, undefined, 'Pending startup timer is cancelled on cleanup');
 lateCallback();
 assert.equal(nextFrame, undefined, 'Late timer cannot restart a disposed renderer');
+const beforeLateAtlas = vectorStrokes;
+await settleImports();
+assert.equal(vectorStrokes, beforeLateAtlas, 'A disposed import never initializes a late atlas/context');
+assert.equal(nextFrame, undefined, 'A disposed import never schedules animation');
+assert.equal(scaledPaths, 1044, 'Reinitialization still shares the same glyph geometry');
 console.log(`PASS: ${useGPU ? 'GPU batch' : '2D fallback'}: ${((1 - vectorStrokes / spriteDraws) * 100).toFixed(1)}% fewer vector strokes; ${textureUploads} texture uploads, ${instanceDraws} batched draws.`);
-console.log(`PASS: 10,800 real-renderer frames; no simultaneous repeats or exhausted pool; peak ${peak} visible icons, including hover and catch-up.`);
+console.log(`PASS: 10,800 RAF ticks with ${useGPU ? '60fps GPU' : '30fps fallback'} rendering; no simultaneous repeats or exhausted pool; peak ${peak} visible icons, including hover and catch-up.`);
 console.log('PASS: independent two-second page-load delay, blank canvas, no early RAF, suspension and timer cleanup.');
 console.log('PASS: a single touch drag repels the rain, ignores other fingers and settles after release.');
 if (useGPU) {

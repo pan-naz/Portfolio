@@ -1,4 +1,4 @@
-import { waterfallIconSize } from './waterfall-icons';
+import { waterfallIconSize } from './waterfall-constants';
 
 // Rasterize each original path once. Positions and opaque palette colors are
 // instance data, never new textures. No canvas-to-canvas copies in the hot loop.

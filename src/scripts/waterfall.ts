@@ -1,8 +1,8 @@
 import { refreshViewportPointer, watchViewportPointer, type ViewportPointer } from './viewport-pointer';
 import { advanceLocalFallClock, catchUpFallClock, pointerRepulsion, repulsionRadius, streamDrops, stretchedIconY, trailOpacity } from './waterfall-model';
-import { createWaterfallPaths, waterfallIconSize, waterfallIconGap } from './waterfall-icons';
-import { createWaterfallRenderer } from './waterfall-renderer';
-import { WaterfallSymbols } from './waterfall-symbols';
+import { waterfallIconSize, waterfallIconGap } from './waterfall-constants';
+import type { createWaterfallRenderer } from './waterfall-renderer';
+import type { WaterfallSymbols } from './waterfall-symbols';
 import { accentBlendSteps, accentDurationSeconds, accentProgress, createAccentPalette, trailShadeIndex, updateParticleAccent } from './waterfall-color';
 
 export function initializeWaterfall() {
@@ -13,11 +13,9 @@ export function initializeWaterfall() {
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
   const hero = document.querySelector<HTMLElement>('.hero')!;
   const pitch = waterfallIconSize + waterfallIconGap;
-  let icons: Path2D[];
-  try { icons = createWaterfallPaths(); } catch { return; }
-  const symbols = new WaterfallSymbols(icons.length);
-  const renderer = createWaterfallRenderer(canvas, icons);
-  if (!renderer) return;
+  let icons: Path2D[] = [];
+  let symbols: WaterfallSymbols | undefined;
+  let renderer: ReturnType<typeof createWaterfallRenderer>;
   let ratio = 1;
   let width = 800;
   // Leave room for the maximum 130px cursor push, plus the icon/stroke.
@@ -26,6 +24,7 @@ export function initializeWaterfall() {
   let time = 0;
   let symbolTime = 0;
   let last = 0;
+  let nextFallbackFrame = 0;
   let frame = 0;
   let inView = false;
   let paused = false;
@@ -48,6 +47,7 @@ export function initializeWaterfall() {
   }>();
 
   const draw = (delta = 0) => {
+    if (!renderer || !symbols) return;
     const started = import.meta.env.DEV ? performance.now() : 0;
     let drawn = 0;
     let slowed = 0;
@@ -164,6 +164,15 @@ export function initializeWaterfall() {
 
   const tick = (now: number) => {
     frame = requestAnimationFrame(tick);
+    // Only the 2D backend skips frames. Its clocks use the full elapsed time;
+    // a deadline grid avoids drifting to 20fps when RAF timestamps fluctuate.
+    const interval = renderer?.frameInterval ?? 0;
+    if (interval) {
+      if (nextFallbackFrame && now + .1 < nextFallbackFrame) return;
+      nextFallbackFrame = nextFallbackFrame
+        ? nextFallbackFrame + interval * Math.max(1, Math.floor((now - nextFallbackFrame) / interval) + 1)
+        : now + interval;
+    } else nextFallbackFrame = 0;
     const delta = last ? Math.min((now - last) / 1000, .1) : 0;
     last = now;
     time += delta;
@@ -176,12 +185,13 @@ export function initializeWaterfall() {
   };
 
   const synchronize = () => {
-    const running = loaded && icons.length > 0 && inView && !document.hidden && !paused && !suspended && !reduced.matches && !disposed;
+    const running = loaded && Boolean(renderer) && icons.length > 0 && inView && !document.hidden && !paused && !suspended && !reduced.matches && !disposed;
     field.dataset.motion = reduced.matches ? 'reduced' : !loaded && !disposed ? 'waiting' : running ? 'running' : 'paused';
     if (!running) {
       if (frame) cancelAnimationFrame(frame);
       frame = 0;
       last = 0;
+      nextFallbackFrame = 0;
       if (reduced.matches) draw();
     } else if (!frame) {
       // Repeated observer notifications must not keep resetting the fall clock.
@@ -200,7 +210,13 @@ export function initializeWaterfall() {
     field.style.setProperty('--waterfall-bleed', `${horizontalBleed}px`);
     const style = getComputedStyle(field);
     palette = createAccentPalette(style.getPropertyValue('--waterfall-ink').trim(), style.getPropertyValue('--text-primary').trim(), style.getPropertyValue('--canvas').trim());
-    renderer.resize(width + horizontalBleed * 2, height, ratio, palette);
+    if (renderer) renderer.resize(width + horizontalBleed * 2, height, ratio, palette);
+    else {
+      // Keep the original blank-canvas geometry before the deferred backend exists.
+      const w = Math.round((width + horizontalBleed * 2) * ratio), h = Math.round(height * ratio);
+      if (canvas.width !== w) canvas.width = w;
+      if (canvas.height !== h) canvas.height = h;
+    }
     columns = Math.floor(width / pitch);
     offset = (width - (columns - 1) * pitch) / 2;
     draw();
@@ -277,6 +293,16 @@ export function initializeWaterfall() {
       loaded = true;
       synchronize();
     }, 2000);
+    // Start fetching at load, not at the timer deadline. Late downloads never
+    // add a second delay; the same pause/input handlers stay active throughout.
+    void import('./waterfall-resources').then(resources => {
+      if (disposed) return;
+      icons = resources.createWaterfallPaths();
+      symbols = new resources.WaterfallSymbols(icons.length);
+      renderer = resources.createWaterfallRenderer(canvas, icons);
+      resize();
+      synchronize();
+    }).catch(() => { /* Keep the hero usable if the optional renderer cannot load. */ });
   };
   const unwatch = watchViewportPointer(move);
   window.addEventListener('touchstart', onTouchStart, { passive: true });
@@ -300,7 +326,7 @@ export function initializeWaterfall() {
     disposed = true;
     if (startupTimer !== undefined) clearTimeout(startupTimer);
     synchronize();
-    renderer.destroy();
+    renderer?.destroy();
     observer.disconnect();
     visibility.disconnect();
     unwatch();

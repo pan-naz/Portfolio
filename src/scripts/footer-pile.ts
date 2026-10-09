@@ -1,5 +1,5 @@
 import { refreshViewportPointer, watchViewportPointer, type ViewportPointer } from './viewport-pointer';
-import { createWaterfallPaths, waterfallIconSize } from './waterfall-icons';
+import { waterfallIconSize } from './waterfall-constants';
 import type { FooterPile } from './footer-pile-model';
 import { pileBleed, pileAbove, pileCursorRadius } from './footer-pile-constants';
 
@@ -12,8 +12,7 @@ export function initializeFooterPile() {
   if (!field || !footer || !layer || !canvas || !context || document.documentElement.hasAttribute('data-static')) return;
   const darkSection = document.querySelector<HTMLElement>('.about-details');
   const contact = document.querySelector<HTMLElement>('#contact');
-  let paths: Path2D[];
-  try { paths = createWaterfallPaths(); } catch { return; }
+  let paths: Path2D[] = [];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const fine = matchMedia('(hover: hover) and (pointer: fine)');
   const canUseMouse = () => fine.matches && navigator.maxTouchPoints === 0;
@@ -172,6 +171,7 @@ export function initializeFooterPile() {
     void import('./footer-pile-model').then(module => {
       if (disposed) return;
       loading = false;
+      paths = module.createWaterfallPaths();
       Pile = module.FooterPile;
       // Idle prefetch downloads the module; construction keeps its proximity gate.
       if (near) { resize(); sync(); }
@@ -182,7 +182,7 @@ export function initializeFooterPile() {
     if (Pile) resize(); else loadModel();
   };
   const schedulePrefetch = () => {
-    if (!prefetchRequested || disposed || document.hidden || Pile || loading || idleHandle !== undefined) return;
+    if (document.readyState !== 'complete' || !prefetchRequested || disposed || document.hidden || Pile || loading || idleHandle !== undefined) return;
     const run = () => { idleHandle = undefined; if (!disposed && !document.hidden) loadModel(); };
     idleTimeout = typeof window.requestIdleCallback !== 'function';
     idleHandle = idleTimeout ? window.setTimeout(run, 1000) : window.requestIdleCallback(run);
@@ -209,6 +209,7 @@ export function initializeFooterPile() {
   window.addEventListener('scroll', refreshTouchPosition, { passive: true, capture: true });
   window.addEventListener('blur', onBlur);
   window.addEventListener('themechange', resize);
+  window.addEventListener('load', schedulePrefetch, { once: true });
   document.addEventListener('visibilitychange', onVisibilityChange);
   reduced.addEventListener('change', sync);
   fine.addEventListener('change', sync);
@@ -228,6 +229,7 @@ export function initializeFooterPile() {
     window.removeEventListener('scroll', refreshTouchPosition, true);
     window.removeEventListener('blur', onBlur);
     window.removeEventListener('themechange', resize);
+    window.removeEventListener('load', schedulePrefetch);
     document.removeEventListener('visibilitychange', onVisibilityChange);
     reduced.removeEventListener('change', sync); fine.removeEventListener('change', sync);
   };

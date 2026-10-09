@@ -135,7 +135,7 @@ const field = { dataset: {}, clientWidth: 800, parentElement: layer, closest: ()
   querySelector: () => canvas, getBoundingClientRect: () => ({ left: fieldLeft, right: fieldLeft + field.clientWidth, top: fieldTop }) };
 const reduced = { matches: false, addEventListener() {}, removeEventListener() {} };
 const fine = { ...reduced, matches: true };
-globalThis.document = { hidden: false, elementFromPoint: () => null,
+globalThis.document = { readyState: 'complete', hidden: false, elementFromPoint: () => null,
   querySelector: selector => ({ '[data-footer-pile]': field, '.about-details': darkSection, '#contact': contact })[selector] ?? null,
   documentElement: { hasAttribute: () => false, addEventListener() {}, removeEventListener() {} },
   addEventListener: (type, fn) => addListener(documentEvents, type, fn),
@@ -305,6 +305,16 @@ assert.equal(idleTimers.size, 1); assert.equal([...idleTimers.values()][0].delay
 fallbackIdle.destroy();
 assert.equal(idleTimers.size, 0, 'Destroy cancels the fallback timer in browsers without idle callbacks');
 console.log('PASS: idle prefetch retains offscreen construction/drawing gates, deduplicates requests, postpones background work and cleans native/fallback callbacks.');
+
+document.readyState = 'loading';
+window.requestIdleCallback = fn => { idleTasks.set(++nextIdle, fn); return nextIdle; };
+field.dataset = {};
+const beforeLoadIdle = initializeFooterPile(); beforeLoadIdle.prefetchWhenIdle();
+assert.equal(idleTasks.size, 0, 'Idle geometry prefetch waits for page load as well as intro completion');
+document.readyState = 'complete'; fireWindow('load');
+assert.equal(idleTasks.size, 1, 'Load releases the requested idle prefetch');
+beforeLoadIdle.destroy();
+assert.equal(idleTasks.size, 0, 'Cleanup cancels the idle callback scheduled at load');
 
 Math.random = realRandom;
 console.log('PASS: actual renderer supports identical mouse and touch brush physics, reduced-motion fallback, menu/offscreen pause, idle shutdown, theme persistence and cleanup.');
