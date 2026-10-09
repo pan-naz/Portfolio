@@ -79,7 +79,6 @@
     "/projects/peak-hotel-case-study/home.webp",
     "/projects/peak-hotel-case-study/icons.webp",
     "/projects/peak-hotel-case-study/rental.webp",
-    "/projects/peak-hotel-case-study/restaurant.webp",
     "/projects/peak-hotel-case-study/reviews.webp",
     "/projects/peak-hotel-case-study/rooms.webp",
     "/projects/peak-hotel-case-study/safari.webp",
@@ -204,19 +203,12 @@
     "/projects/yellow-leaf-case-study/nav.webp",
     "/projects/yellow-leaf-case-study/phone-hero.webp"
   ],
-  "photoImages": [
-    "/projects/blaustrom-case-study/slider-people.png",
-    "/projects/square-case-study/adeline.jpg",
-    "/projects/square-case-study/jeanette.jpg",
-    "/projects/team-sternfit-case-study/photo-boxer.jpg",
-    "/projects/team-sternfit-case-study/photo-fighter.jpg",
-    "/projects/team-sternfit-case-study/photo-gym.jpg",
-    "/projects/team-sternfit-case-study/photo-kids.jpg",
-    "/projects/team-sternfit-case-study/photo-trainer.jpg"
-  ],
   "nativeAlphaImages": [
     "/projects/telegram-file-picker-case-study/support.png",
     "/projects/datagpt-case-study/before.png",
     "/projects/datagpt-case-study/after.png"
+  ],
+  "excludedShadowImages": [
+    "/projects/peak-hotel-case-study/restaurant.webp"
   ]
 }
