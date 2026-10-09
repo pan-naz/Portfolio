@@ -129,5 +129,5 @@ const { title = `${profile.name} — naz.wtf`, homeIntro = false } = Astro.props
       })();
     </script>
   </head>
-  <body><slot /><script>import '../scripts/theme';</script></body>
+  <body><a class="skip-link" href="#main">Skip to content</a><slot /><script>import '../scripts/theme';</script></body>
 </html>

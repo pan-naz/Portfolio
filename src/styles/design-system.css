@@ -116,3 +116,5 @@
   .ds-elevation { padding-inline: 0; gap: 32px; }
   .ds-grid-demo { gap: 8px; height: 96px; }
 }
+
+.ds-return.hit-area { position: relative; }

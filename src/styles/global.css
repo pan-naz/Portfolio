@@ -20,7 +20,7 @@ a[href] { cursor: pointer; }
 /* Low specificity preserves component pills and card radii, while otherwise
    unshaped controls still receive a rounded keyboard-focus outline. */
 :where(button, a, summary, input, select, textarea, [tabindex]:not([tabindex='-1'])) { border-radius: var(--radius-small); }
-:where(button, a, summary, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 4px; }
+:where(button, a, summary, input, select, textarea, [tabindex]):focus-visible, .hit-target--padded:focus-visible > .hit-target-content { outline: 2px solid var(--focus-ring); outline-offset: 4px; }
 /* Canvas separation keeps card focus visible over either Work background. */
 .project-surface:focus-visible { box-shadow: 0 0 0 calc(var(--space-1) + 2px) var(--canvas); }
 [tabindex='-1']:focus { outline: none; }
@@ -41,6 +41,12 @@ img, svg { display: block; max-width: 100%; }
 .arrow--up { rotate: -45deg; } .arrow--down { rotate: 90deg; }
 .arrow--inline { display: inline-block; width: 1em; height: 1em; vertical-align: -.15em; }
 .button { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-3); min-height: var(--control-height); padding: calc(var(--space-3) - 1px) var(--space-6); border-radius: var(--radius-pill); border: 1px solid transparent; transition: background-color var(--duration-fast), color var(--duration-fast), transform var(--duration-fast); }
+.hit-area::after { content: ''; opacity: 0; position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; min-width: var(--control-icon); min-height: var(--control-icon); transform: translate(-50%, -50%); }
+.button.hit-area::after { top: auto; left: auto; width: var(--control-icon); height: var(--control-icon); transform: none; }
+.hit-target--padded { --hit-padding: max(0px, calc((var(--control-icon) - 1lh) / 2)); padding-block: var(--hit-padding); margin-block: calc(-1 * var(--hit-padding)); }
+.hit-target-content { display: block; border-radius: var(--radius-small); }
+.hit-target--padded:focus-visible { outline: none; }
+.identity.hit-area::after { left: auto; right: 0; transform: translateY(-50%); }
 .button--primary { color: var(--on-primary); background: var(--ink); }
 .button .arrow { color: var(--accent); }
 .button .arrow path { stroke-width: var(--icon-stroke-strong); }
