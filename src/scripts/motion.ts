@@ -1,66 +1,47 @@
-import Lenis from 'lenis';
-import 'lenis/dist/lenis.css';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import type { ScrollEngine } from './scroll-engine';
+let smoothScroll: ScrollEngine['lenis'] | undefined;
+let scrollPaused = false;
+export const pauseScroll = () => { scrollPaused = true; smoothScroll?.stop(); };
+export const resumeScroll = () => { scrollPaused = false; smoothScroll?.start(); };
 
-gsap.registerPlugin(ScrollTrigger);
-let smoothScroll: Lenis | undefined;
-
-export const pauseScroll = () => smoothScroll?.stop();
-export const resumeScroll = () => smoothScroll?.start();
-
-/** Keep filter focus when a shorter collection replaces a long one. */
 export const repositionWork = (top: number) => {
   if (smoothScroll) smoothScroll.scrollTo(Math.max(0, top), { immediate: true });
   else window.scrollTo({ top: Math.max(0, top), behavior: 'instant' });
 };
-
 export function scrollToSection(target: HTMLElement) {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (smoothScroll) {
-    // Lenis already reads CSS scroll-padding and scroll-margin for element targets.
-    smoothScroll.scrollTo(target.id === 'top' ? 0 : target, { duration: .65, lerp: 0 });
-  } else if (target.id === 'top') {
-    window.scrollTo({ top: 0, behavior: reduced ? 'instant' : 'smooth' });
-  } else {
-    target.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth', block: 'start' });
-  }
+  if (smoothScroll) smoothScroll.scrollTo(target.id === 'top' ? 0 : target, { duration: .65, lerp: 0 });
+  else if (target.id === 'top') window.scrollTo({ top: 0, behavior: reduced ? 'instant' : 'smooth' });
+  else target.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth', block: 'start' });
 }
 
-/** One wheel pace for the homepage, standalone cases and modal case scroller. */
+/** Load the unchanged wheel engine only where it is used. */
 export function initializeSmoothScroll(wrapper: Window | HTMLElement = window, content: HTMLElement = document.documentElement) {
-  const media = gsap.matchMedia();
+  const capability = window.matchMedia('(min-width: 768px) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
   const isDocument = wrapper === window;
-
-  // Light wheel smoothing: follow input closely without a long trailing glide.
-  // Touch, small screens and reduced motion stay native.
-  media.add('(min-width: 768px) and (pointer: fine) and (prefers-reduced-motion: no-preference)', () => {
-    const lenis = new Lenis({
-      wrapper, content, lerp: .18, smoothWheel: true, syncTouch: false, anchors: false,
-      prevent: node => isDocument && node.closest('#mobile-menu, [data-case-dialog]') !== null,
-    });
-    if (isDocument) {
-      smoothScroll = lenis;
-      lenis.on('scroll', ScrollTrigger.update);
-      if (document.querySelector('dialog[open]')) lenis.stop();
-    }
-    const tick = (time: number) => lenis.raf(time * 1000);
-    gsap.ticker.add(tick);
-    gsap.ticker.lagSmoothing(0);
-    const cancelTravel = (event: KeyboardEvent) => {
-      if (['Tab', 'ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '].includes(event.key)) {
-        lenis.scrollTo(lenis.actualScroll, { immediate: true });
+  let engine: ScrollEngine | undefined;
+  let revision = 0, disposed = false;
+  let ready = Promise.resolve();
+  const clear = () => {
+    if (engine && smoothScroll === engine.lenis) smoothScroll = undefined;
+    engine?.destroy(); engine = undefined;
+  };
+  const sync = () => {
+    const ticket = ++revision;
+    clear();
+    if (disposed || !capability.matches) return;
+    ready = import('./scroll-engine').then(({ createScrollEngine }) => {
+      if (disposed || ticket !== revision || !capability.matches) return;
+      engine = createScrollEngine(wrapper, content);
+      if (isDocument) {
+        smoothScroll = engine.lenis;
+        if (scrollPaused) smoothScroll.stop();
       }
-    };
-    wrapper.addEventListener('keydown', cancelTravel as EventListener);
-    return () => {
-      wrapper.removeEventListener('keydown', cancelTravel as EventListener);
-      gsap.ticker.remove(tick);
-      lenis.destroy();
-      if (smoothScroll === lenis) smoothScroll = undefined;
-    };
-  });
-  return { destroy: () => media.revert() };
+    }).catch(() => { /* Native scrolling remains available if loading fails. */ });
+  };
+  capability.addEventListener('change', sync);
+  sync();
+  return { get ready() { return ready; }, destroy() { disposed = true; revision++; capability.removeEventListener('change', sync); clear(); } };
 }
 
 export function initializeMotion() {
@@ -89,6 +70,7 @@ export function initializeMotion() {
   initializeSmoothScroll();
 
   // Font metrics affect the start/end positions of all scroll scenes.
-  document.fonts.ready.then(() => ScrollTrigger.refresh());
-  return { refresh: () => ScrollTrigger.refresh() };
+  const refresh = () => window.dispatchEvent(new Event('sectionrevealrefresh'));
+  document.fonts.ready.then(refresh);
+  return { refresh };
 }
