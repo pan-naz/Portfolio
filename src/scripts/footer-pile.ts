@@ -23,6 +23,7 @@ export function initializeFooterPile() {
   let pile: FooterPile | undefined;
   let Pile: typeof FooterPile | undefined;
   let loading = false, near = false;
+  let prefetchRequested = false, idleHandle: number | undefined, idleTimeout = false;
   const seed = Math.floor(Math.random() * 0x100000000);
   let ink = '';
   let width = 0, height = 0, ratio = 1, viewLeft = pileBleed, viewRight = pileBleed;
@@ -84,7 +85,7 @@ export function initializeFooterPile() {
     layer.style.setProperty('--pile-above', `${above}px`);
     const nextViewLeft = Math.max(pileBleed, rect.left);
     const nextViewRight = Math.max(pileBleed, window.innerWidth - rect.right);
-    if (Pile && (!pile || (!pile.disturbed && nextWidth !== width))) {
+    if (Pile && (pile || near) && (!pile || (!pile.disturbed && nextWidth !== width))) {
       pile?.destroy();
       pile = new Pile(nextWidth, paths.length, seed, nextViewLeft, nextViewRight);
     }
@@ -165,15 +166,28 @@ export function initializeFooterPile() {
   };
   const leave = () => { pointer.active = false; pile?.releasePointer(); if (pile && !pile.sleeping) wake(); };
   const onBlur = () => { activeTouchId = null; leave(); };
-  const ensurePile = () => {
-    if (disposed || !near || !width || Pile || loading) return;
+  const loadModel = () => {
+    if (disposed || Pile || loading) return;
     loading = true;
     void import('./footer-pile-model').then(module => {
       if (disposed) return;
+      loading = false;
       Pile = module.FooterPile;
-      resize(); sync();
+      // Idle prefetch downloads the module; construction keeps its proximity gate.
+      if (near) { resize(); sync(); }
     }).catch(() => { loading = false; });
   };
+  const ensurePile = () => {
+    if (disposed || !near || !width) return;
+    if (Pile) resize(); else loadModel();
+  };
+  const schedulePrefetch = () => {
+    if (!prefetchRequested || disposed || document.hidden || Pile || loading || idleHandle !== undefined) return;
+    const run = () => { idleHandle = undefined; if (!disposed && !document.hidden) loadModel(); };
+    idleTimeout = typeof window.requestIdleCallback !== 'function';
+    idleHandle = idleTimeout ? window.setTimeout(run, 1000) : window.requestIdleCallback(run);
+  };
+  const onVisibilityChange = () => { sync(); schedulePrefetch(); };
   const approaching = new IntersectionObserver(([entry]) => { near = entry.isIntersecting; if (near) ensurePile(); }, { rootMargin: '300px' });
   const visibility = new IntersectionObserver(([entry]) => {
     inView = entry.isIntersecting;
@@ -195,11 +209,16 @@ export function initializeFooterPile() {
   window.addEventListener('scroll', refreshTouchPosition, { passive: true, capture: true });
   window.addEventListener('blur', onBlur);
   window.addEventListener('themechange', resize);
-  document.addEventListener('visibilitychange', sync);
+  document.addEventListener('visibilitychange', onVisibilityChange);
   reduced.addEventListener('change', sync);
   fine.addEventListener('change', sync);
   const destroy = () => {
-    disposed = true; stop(); visibility.disconnect(); approaching.disconnect(); sizing.disconnect();
+    disposed = true;
+    if (idleHandle !== undefined) {
+      if (idleTimeout) window.clearTimeout(idleHandle); else window.cancelIdleCallback(idleHandle);
+      idleHandle = undefined;
+    }
+    stop(); visibility.disconnect(); approaching.disconnect(); sizing.disconnect();
     pile?.destroy();
     unwatch();
     window.removeEventListener('touchstart', onTouchStart);
@@ -209,9 +228,9 @@ export function initializeFooterPile() {
     window.removeEventListener('scroll', refreshTouchPosition, true);
     window.removeEventListener('blur', onBlur);
     window.removeEventListener('themechange', resize);
-    document.removeEventListener('visibilitychange', sync);
+    document.removeEventListener('visibilitychange', onVisibilityChange);
     reduced.removeEventListener('change', sync); fine.removeEventListener('change', sync);
   };
   if (import.meta.hot) import.meta.hot.dispose(destroy);
-  return { setPaused(value: boolean) { if (paused === value) return; paused = value; sync(); }, destroy };
+  return { prefetchWhenIdle() { prefetchRequested = true; schedulePrefetch(); }, setPaused(value: boolean) { if (paused === value) return; paused = value; sync(); }, destroy };
 }

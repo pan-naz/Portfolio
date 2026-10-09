@@ -25,6 +25,7 @@ const workStage = initializeWorkStage();
 const heroIntro = initializeHeroIntro(workStage);
 const waterfall = initializeWaterfall();
 const footerPile = initializeFooterPile();
+void heroIntro?.finished.then(() => footerPile?.prefetchWhenIdle());
 const projectTilt = initializeProjectTilt();
 const projectCursor = initializeProjectCursor();
 const workFilterMagnet = initializeWorkFilterMagnet();
