@@ -1,0 +1,15 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { responsiveImage } from '../data/responsive-images';
+type Props = HTMLAttributes<'img'> & { src: string; alt: string; width: number | string; height: number | string; sizes?: string; };
+const { src, sizes: requestedSizes, style, srcset: originalSrcset, ...attributes } = Astro.props;
+const image = responsiveImage(src);
+const sizes = requestedSizes ?? (attributes.loading === 'lazy' ? 'auto, (max-width: 767px) calc(100vw - 48px), (max-width: 1328px) calc(100vw - 128px), 1200px' : '100vw');
+const imageStyle = [style, image && `--responsive-original-ratio:${image.width} / ${image.height}`].filter(Boolean).join(';') || undefined;
+const candidates = (format: 'webp' | 'avif') => image?.[format].map(item => `${item.src} ${item.width}w`).join(', ');
+---
+{image ? <picture style="display:contents">
+  {image.avif.length > 0 && <source hidden type="image/avif" srcset={candidates('avif')} sizes={sizes} />}
+  {image.webp.length > 0 && <source hidden type="image/webp" srcset={candidates('webp')} sizes={sizes} />}
+  <img {...attributes} src={src} data-responsive-image style={imageStyle} />
+</picture> : <img {...attributes} src={src} srcset={originalSrcset} sizes={requestedSizes} style={style} />}

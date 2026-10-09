@@ -1,4 +1,5 @@
 ---
+import ResponsiveImage from './ResponsiveImage.astro';
 import Button from './Button.astro';
 interface ComparisonImage { src: string; alt: string; width: number; height: number; }
 interface Props { before: ComparisonImage; after: ComparisonImage; label: string; }
@@ -10,8 +11,8 @@ const { before, after, label } = Astro.props;
     <Button size="small" appearance="comparison" variant="primary" data-comparison-choice="after" aria-pressed="true">After</Button>
   </div>
   <div class="case-comparison-images">
-    <img {...before} data-comparison-image="before" aria-hidden="true" loading="lazy" decoding="async" />
-    <img {...after} data-comparison-image="after" data-active aria-hidden="false" loading="lazy" decoding="async" />
+    <ResponsiveImage {...before} data-comparison-image="before" aria-hidden="true" loading="lazy" decoding="async" />
+    <ResponsiveImage {...after} data-comparison-image="after" data-active aria-hidden="false" loading="lazy" decoding="async" />
   </div>
   <span class="sr-only" aria-live="polite" data-comparison-status>Showing After</span>
 </case-study-comparison>
