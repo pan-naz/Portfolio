@@ -3,6 +3,8 @@ import type { Project } from '../data/portfolio';
 import { cravusMedia as media, cravusRole, cravusTeam, cravusConcepts, cravusHomeSections, cravusPages, cravusPalette } from '../data/cravus-case-study';
 import CaseStudyOverview from './CaseStudyOverview.astro';
 import CaseStudyMedia from './CaseStudyMedia.astro';
+import CaseStudyPalette from './CaseStudyPalette.astro';
+import CaseStudySpecimen from './CaseStudySpecimen.astro';
 import CaseStudySteps from './CaseStudySteps.astro';
 import SvgAsset from './SvgAsset.astro';
 import '../styles/cravus-case-study.css';
@@ -60,13 +62,13 @@ const { project } = Astro.props;
     <section class="case-study-chapter--inverse cravus-style" aria-labelledby="cv-style">
       <div class="case-study-chapter__inner">
         <p class="case-study-eyebrow">Style guide</p><h2 class="case-study-heading" id="cv-style">Colour, type and UI elements</h2>
-        <div class="cravus-block"><h3>Colour</h3><ul class="cravus-palette" aria-label="Colour palette">{cravusPalette.map(([label, value]) => <li><div class="cravus-swatch" style={'--cravus-swatch:' + value} aria-hidden="true" /><div><strong>{label}</strong><code>{value}</code></div></li>)}</ul></div>
+        <div class="cravus-block"><h3>Colour</h3><CaseStudyPalette items={cravusPalette} class="cravus-palette" swatchClass="cravus-swatch" swatchProperty="--cravus-swatch" /></div>
         <div class="cravus-block"><h3>Typography</h3>
           <div class="cravus-specimens">
-            <div class="cravus-brand-card"><p class="case-study-eyebrow">Titillium Web · 40px</p><p class="cravus-titillium cravus-s40">What Are You <span>Craving?</span></p></div>
-            <div class="cravus-brand-card"><p class="case-study-eyebrow">Titillium Web · 26px</p><p class="cravus-titillium cravus-s26">Today’s Cultural Adventure</p></div>
-            <div class="cravus-brand-card"><p class="case-study-eyebrow">Titillium Web · 18px</p><p class="cravus-titillium cravus-s18">Delicious pork chops in secret Chinese sauce</p></div>
-            <div class="cravus-brand-card"><p class="case-study-eyebrow">Titillium Web · 14px</p><p class="cravus-titillium cravus-s14">Cravus is your way of experiencing home-style cuisines from all over the world without the plane ticket.</p></div>
+            <CaseStudySpecimen class="cravus-brand-card" label="Titillium Web · 40px"><p class="cravus-titillium cravus-s40">What Are You <span>Craving?</span></p></CaseStudySpecimen>
+            <CaseStudySpecimen class="cravus-brand-card" label="Titillium Web · 26px"><p class="cravus-titillium cravus-s26">Today’s Cultural Adventure</p></CaseStudySpecimen>
+            <CaseStudySpecimen class="cravus-brand-card" label="Titillium Web · 18px"><p class="cravus-titillium cravus-s18">Delicious pork chops in secret Chinese sauce</p></CaseStudySpecimen>
+            <CaseStudySpecimen class="cravus-brand-card" label="Titillium Web · 14px"><p class="cravus-titillium cravus-s14">Cravus is your way of experiencing home-style cuisines from all over the world without the plane ticket.</p></CaseStudySpecimen>
           </div>
         </div>
         <div class="cravus-assets cravus-block">

@@ -3,6 +3,7 @@ import type { Project } from '../data/portfolio';
 import { peakHotelMedia as media, peakHotelLinks, peakHotelHomeSections, peakHotelInnerPages, peakHotelServices, peakHotelColors } from '../data/peak-hotel-case-study';
 import CaseStudyOverview from './CaseStudyOverview.astro';
 import CaseStudyMedia from './CaseStudyMedia.astro';
+import CaseStudyPalette from './CaseStudyPalette.astro';
 import CaseStudySteps from './CaseStudySteps.astro';
 import TextLink from './TextLink.astro';
 import '../styles/peak-hotel-case-study.css';
@@ -73,7 +74,7 @@ const { project } = Astro.props;
 
     <section aria-labelledby="peak-style">
       <p class="case-study-eyebrow">Style guide</p><h2 class="case-study-heading" id="peak-style">Warm dark tones and an italic serif</h2>
-      <div class="peak-block"><h3>Colour</h3><ul class="peak-palette" aria-label="Colour palette">{peakHotelColors.map(color => <li><div class="peak-swatch" style={'--peak-swatch:' + color.value} aria-hidden="true" /><div class="peak-color-label"><span>{color.label}</span><code>{color.value}</code></div></li>)}</ul></div>
+      <div class="peak-block"><h3>Colour</h3><CaseStudyPalette items={peakHotelColors} class="peak-palette" swatchClass="peak-swatch" swatchProperty="--peak-swatch" labelClass="peak-color-label" labelTag="span" /></div>
       <div class="peak-subsection"><h3>Typography</h3><div class="case-study-columns peak-type-grid">
         <div class="peak-type-specimen"><p class="peak-type-display peak-playfair-italic" aria-hidden="true">Aa</p><p class="case-study-eyebrow">Playfair Display · headings</p><div class="peak-type-example"><p class="text-body-s">Italic</p><p class="peak-type-sample peak-playfair-italic">In the highest part of Dragobrat</p></div><div class="peak-type-example"><p class="text-body-s">Bold</p><p class="peak-type-sample peak-playfair-bold">European service</p></div></div>
         <div class="peak-type-specimen"><p class="peak-type-display peak-lato-regular" aria-hidden="true">Aa</p><p class="case-study-eyebrow">Lato · body and buttons</p><div class="peak-type-example"><p class="text-body-s">Regular</p><p class="peak-type-sample peak-lato-regular">The spacious rooms are equipped with comfortable furnishings.</p></div><div class="peak-type-example"><p class="text-body-s">Black</p><p class="peak-type-sample peak-lato-black">Book your stay</p></div></div>

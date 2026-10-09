@@ -3,6 +3,8 @@ import type { Project } from '../data/portfolio';
 import { blaustromMedia as media, blaustromHomeSections, blaustromConfiguratorSteps, blaustromPalette } from '../data/blaustrom-case-study';
 import CaseStudyOverview from './CaseStudyOverview.astro';
 import CaseStudyMedia from './CaseStudyMedia.astro';
+import CaseStudyPalette from './CaseStudyPalette.astro';
+import CaseStudySpecimen from './CaseStudySpecimen.astro';
 import CaseStudySteps from './CaseStudySteps.astro';
 import CaseStudyDecisionCard from './CaseStudyDecisionCard.astro';
 import SvgAsset from './SvgAsset.astro';
@@ -73,12 +75,12 @@ const { project } = Astro.props;
     <section class="case-study-chapter--inverse blaustrom-style" aria-labelledby="bs-style">
       <div class="case-study-chapter__inner">
         <p class="case-study-eyebrow">Style guide</p><h2 class="case-study-heading" id="bs-style">Colour, type and controls</h2>
-        <div class="blaustrom-block"><h3>Colour</h3><ul class="blaustrom-palette" aria-label="Colour palette">{blaustromPalette.map(([label, value]) => <li><div class:list={['blaustrom-swatch', value.includes('→') && 'blaustrom-swatch--gradient']} style={!value.includes('→') ? '--blaustrom-swatch:' + value : undefined} aria-hidden="true" /><div><strong>{label}</strong><code>{value}</code></div></li>)}</ul></div>
+        <div class="blaustrom-block"><h3>Colour</h3><CaseStudyPalette items={blaustromPalette} class="blaustrom-palette" swatchClass="blaustrom-swatch" swatchProperty="--blaustrom-swatch" gradientClass="blaustrom-swatch--gradient" /></div>
         <div class="blaustrom-block"><h3>Typography</h3>
           <div class="case-study-media-grid blaustrom-type-grid">
-            <div class="blaustrom-brand-card"><p class="case-study-eyebrow">Headings · Open Sans Light 50px</p><p class="blaustrom-open-sans blaustrom-light blaustrom-type-heading">It’s all about energy</p></div>
-            <div class="blaustrom-brand-card"><p class="case-study-eyebrow">Subheadings · Open Sans Bold 16px</p><p class="blaustrom-open-sans blaustrom-bold">BYD – Market leader in rechargeable batteries</p></div>
-            <div class="blaustrom-brand-card"><p class="case-study-eyebrow">Body text · Open Sans Regular</p><p class="blaustrom-open-sans">What does your energy supplier do today? It delivers your electricity from large power plants over long distances to your house.</p></div>
+            <CaseStudySpecimen class="blaustrom-brand-card" label="Headings · Open Sans Light 50px"><p class="blaustrom-open-sans blaustrom-light blaustrom-type-heading">It’s all about energy</p></CaseStudySpecimen>
+            <CaseStudySpecimen class="blaustrom-brand-card" label="Subheadings · Open Sans Bold 16px"><p class="blaustrom-open-sans blaustrom-bold">BYD – Market leader in rechargeable batteries</p></CaseStudySpecimen>
+            <CaseStudySpecimen class="blaustrom-brand-card" label="Body text · Open Sans Regular"><p class="blaustrom-open-sans">What does your energy supplier do today? It delivers your electricity from large power plants over long distances to your house.</p></CaseStudySpecimen>
           </div>
         </div>
         <div class="blaustrom-block"><h3>Sliders and icons</h3><div class="blaustrom-controls blaustrom-brand-card">
