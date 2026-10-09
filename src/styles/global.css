@@ -46,6 +46,8 @@ img, svg { display: block; max-width: 100%; }
 .button--primary:not(:disabled):hover { background: var(--ink-hover); }
 .button--secondary { background: transparent; border-color: var(--control-border); }
 .button--secondary:not(:disabled):is(:hover, :focus-visible) { color: var(--floating-ink); background: var(--floating-surface); }
+.button--comparison.button--secondary { border-color: transparent; }
+.button--comparison.button--secondary:not(:disabled):is(:hover, :focus-visible) { color: var(--ink); background: var(--surface-subtle); }
 /* The SVG's rotate property turns its local X-axis toward the arrow tip. */
 .button:not(:disabled):hover .arrow { transform: translateX(3px); }
 .button:active { transform: scale(.98); }
