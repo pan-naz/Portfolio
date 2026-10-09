@@ -18,10 +18,4 @@ const { video, back } = hookoHero;
     </HookoPhoneFrame></div>
   </div>
 </div>
-<style is:global>
-  .hooko-hero { --phone-unit: calc(100cqw / 1750); position: relative; container-type: inline-size; aspect-ratio: var(--hooko-hero-ratio); overflow: hidden; background: #110a1d; }
-  .hooko-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 24% 48% at 50% 53%, rgb(158 42 111 / .24), transparent 95%), radial-gradient(ellipse 16% 38% at 50% 62%, rgb(191 67 46 / .13), transparent); }
-  .hooko-hero__phones { position: absolute; left: 50%; top: 49%; width: calc(280 * var(--phone-unit)); transform: translate(-50%, -50%); }
-  .hooko-hero__front { position: relative; z-index: 2; transform: rotate(6deg); }
-  .hooko-hero__back { position: absolute; z-index: 1; left: calc(-32 * var(--phone-unit)); top: calc(24 * var(--phone-unit)); transform: rotate(-6deg); }
-</style>
+

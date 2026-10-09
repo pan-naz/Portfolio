@@ -1,0 +1,47 @@
+---
+import type { Project } from '../data/portfolio';
+import css0 from '../styles/blaustrom-case-study.css?inline';
+import css1 from '../styles/voximplant-ivr-case-study.css?inline';
+import css2 from '../styles/gutsul-made-case-study.css?inline';
+import css3 from '../styles/cravus-case-study.css?inline';
+import css4 from '../styles/pet-care-case-study.css?inline';
+import css5 from '../styles/team-sternfit-case-study.css?inline';
+import css6 from '../styles/yellow-leaf-case-study.css?inline';
+import css7 from '../styles/promshyna-case-study.css?inline';
+import css8 from '../styles/recording-case-study.css?inline';
+import css9 from '../styles/peak-hotel-case-study.css?inline';
+import css10 from '../styles/telegram-file-picker-case-study.css?inline';
+import css11 from '../styles/hooko-case-study.css?inline';
+import css12 from '../styles/design-cup-case-study.css?inline';
+import css13 from '../styles/voximplant-case-study.css?inline';
+import css14 from '../styles/kitchen-chatbot-case-study.css?inline';
+import css15 from '../styles/index-law-firm-case-study.css?inline';
+import css16 from '../styles/square-case-study.css?inline';
+import css17 from '../styles/datagpt-case-study.css?inline';
+import hooko from '../styles/hooko-artwork.css?inline';
+interface Props { project: Project; }
+const { project } = Astro.props;
+const styles = {
+  'blaustrom': css0,
+  'voximplant-ivr': css1,
+  'gutsul-made': css2,
+  'cravus': css3,
+  'pet-care': css4,
+  'team-sternfit': css5,
+  'yellow-leaf': css6,
+  'promshyna': css7,
+  'recording': css8,
+  'peak-hotel': css9,
+  'telegram-file-picker': css10,
+  'hooko': css11,
+  'design-cup': css12,
+  'voximplant': css13,
+  'kitchen-chatbot': css14,
+  'index-law-firm': css15,
+  'square': css16,
+  'datagpt': css17,
+};
+const key = ['offf-conference','professions-in-digital','quit-university'].includes(project.id) ? 'recording' : project.id;
+const stylesheet = styles[key as keyof typeof styles] + (key === 'hooko' ? hooko : '');
+---
+<style is:global set:html={stylesheet} />
