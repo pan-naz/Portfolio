@@ -8,6 +8,6 @@ export function getStaticPaths() {
 }
 const { project } = Astro.props;
 ---
-<BaseLayout title={`${project.title} — naz.wtf`} description={caseDescription(project)} image={caseShareImage(project)}>
+<BaseLayout title={project.title} description={caseDescription(project)} image={caseShareImage(project)}>
   <CaseStudyPage project={project} />
 </BaseLayout>

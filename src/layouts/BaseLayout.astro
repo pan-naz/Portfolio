@@ -3,7 +3,7 @@ import '../styles/global.css';
 import SiteMetadata from '../components/SiteMetadata.astro';
 import { profile } from '../data/portfolio';
 interface Props { title?: string; homeIntro?: boolean; description?: string; image?: string; }
-const { title = `${profile.name} — naz.wtf`, homeIntro = false, description = profile.description, image } = Astro.props;
+const { title = profile.name, homeIntro = false, description = profile.description, image } = Astro.props;
 ---
 <!doctype html>
 <html lang="en">

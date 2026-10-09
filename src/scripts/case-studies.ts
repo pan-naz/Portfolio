@@ -134,7 +134,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     const title = scroll.querySelector<HTMLElement>('[data-case-title]')!;
     if (!title.id) title.id = 'active-case-title';
     dialog.setAttribute('aria-labelledby', title.id);
-    document.title = `${title.textContent} — naz.wtf`;
+    document.title = title.textContent ?? '';
     clone = document.createElement('div');
     clone.className = 'case-study-origin project';
     clone.setAttribute('aria-hidden', 'true');
