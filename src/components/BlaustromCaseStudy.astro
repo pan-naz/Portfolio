@@ -2,6 +2,8 @@
 import type { Project } from '../data/portfolio';
 import { blaustromMedia as media, blaustromHomeSections, blaustromConfiguratorSteps, blaustromPalette } from '../data/blaustrom-case-study';
 import CaseStudyOverview from './CaseStudyOverview.astro';
+import SectionHeading from './SectionHeading.astro';
+import CaseStudyBand from './CaseStudyBand.astro';
 import CaseStudyMedia from './CaseStudyMedia.astro';
 import CaseStudyPalette from './CaseStudyPalette.astro';
 import CaseStudySpecimen from './CaseStudySpecimen.astro';
@@ -45,15 +47,13 @@ const { project } = Astro.props;
       </div>
     </section>
 
-    <section class="blaustrom-band blaustrom-configurator" aria-labelledby="bs-configurator">
-      <div class="case-study-chapter__inner">
+    <CaseStudyBand class="blaustrom-band blaustrom-configurator" labelledBy="bs-configurator">
         <div class="case-study-columns">
           <div><p class="case-study-eyebrow"><span class="blaustrom-number">04</span> / 05</p><h2 class="case-study-heading" id="bs-configurator">Configurator</h2><p class="blaustrom-lede text-body-m">The configurator plans a system in four steps. Each step is its own screen, and the bar at the top shows which steps are done. The first screen asks for the address and whether the customer already has a solar system.</p></div>
           <CaseStudyMedia {...media.configurator} />
         </div>
         <div class="blaustrom-config-grid blaustrom-block">{blaustromConfiguratorSteps.map(step => <CaseStudyDecisionCard title={step.title} label={step.label} layout="figure"><CaseStudyMedia slot="media" {...step.media} /><p>{step.description}</p></CaseStudyDecisionCard>)}</div>
-      </div>
-    </section>
+      </CaseStudyBand>
 
     <section aria-labelledby="bs-contact">
       <div class="case-study-columns">
@@ -62,19 +62,16 @@ const { project } = Astro.props;
       </div>
     </section>
 
-    <section class="blaustrom-band blaustrom-responsive" aria-labelledby="bs-responsive">
-      <div class="case-study-chapter__inner">
+    <CaseStudyBand class="blaustrom-band blaustrom-responsive" labelledBy="bs-responsive">
         <div class="case-study-columns">
-          <div><p class="case-study-eyebrow">Responsive</p><h2 class="case-study-heading" id="bs-responsive">Tablet and phone layouts</h2><p class="blaustrom-breakpoint text-body-s">320px +</p><p class="blaustrom-lede text-body-m">On smaller screens the menu folds into a round button in the top-left corner and opens over the page. Slides and text stack in one column. The configurator needs a screen at least 720px wide, so phones show a short message about that in its place.</p></div>
+          <div><SectionHeading appearance="case" label="Responsive" id="bs-responsive">Tablet and phone layouts</SectionHeading><p class="blaustrom-breakpoint text-body-s">320px +</p><p class="blaustrom-lede text-body-m">On smaller screens the menu folds into a round button in the top-left corner and opens over the page. Slides and text stack in one column. The configurator needs a screen at least 720px wide, so phones show a short message about that in its place.</p></div>
           <CaseStudyMedia {...media.menu} />
         </div>
         <div class="blaustrom-block"><CaseStudyMedia {...media.responsive} /></div>
-      </div>
-    </section>
+      </CaseStudyBand>
 
-    <section class="case-study-chapter--inverse blaustrom-style" aria-labelledby="bs-style">
-      <div class="case-study-chapter__inner">
-        <p class="case-study-eyebrow">Style guide</p><h2 class="case-study-heading" id="bs-style">Colour, type and controls</h2>
+    <CaseStudyBand inverse class="blaustrom-style" labelledBy="bs-style">
+        <SectionHeading appearance="case" label="Style guide" id="bs-style">Colour, type and controls</SectionHeading>
         <div class="blaustrom-block"><h3>Colour</h3><CaseStudyPalette items={blaustromPalette} class="blaustrom-palette" swatchClass="blaustrom-swatch" swatchProperty="--blaustrom-swatch" gradientClass="blaustrom-swatch--gradient" /></div>
         <div class="blaustrom-block"><h3>Typography</h3>
           <div class="case-study-media-grid blaustrom-type-grid">
@@ -88,8 +85,7 @@ const { project } = Astro.props;
           <div class="blaustrom-control-row"><div><h4>Household size</h4><p class="text-body-s">Step 2, from 1 to 6 people</p></div><CaseStudyMedia {...media.people} presentation="bare" /></div>
           <div class="blaustrom-control-row"><div><h4>Icons</h4><p class="text-body-s">Drawn for the site</p></div><SvgAsset src="/projects/blaustrom-case-study/icons.svg" aria-hidden="false" role="img" aria-label="Seven blue icons: ruler and pencil, plug, speech bubbles, wrench, clipboard, gears, and a hat" /></div>
         </div></div>
-      </div>
-    </section>
+      </CaseStudyBand>
   </div>
 </article>
 <script>
