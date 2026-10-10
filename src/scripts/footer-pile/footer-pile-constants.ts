@@ -1,4 +1,4 @@
-import { waterfallIconSize } from './waterfall-constants.ts';
+import { waterfallIconSize } from '../waterfall/waterfall-constants.ts';
 
 export const pileRadius = waterfallIconSize * .72;
 export const pilePitch = pileRadius * 2;

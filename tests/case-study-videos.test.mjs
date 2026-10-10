@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { initializeCaseStudyVideos, setCaseVideoPlaying, setCaseVideoMuted } from '../src/scripts/case-study-videos.ts';
+import { initializeCaseStudyVideos, setCaseVideoPlaying, setCaseVideoMuted } from '../src/scripts/case-study/case-study-videos.ts';
 
 class Events {
   listeners = new Map();

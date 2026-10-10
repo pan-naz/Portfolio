@@ -1,7 +1,7 @@
 import { createNativeMotion, readMotionToken, revealEffects } from './native-motion.ts';
 import { createRoleAnimator, roleRevealEffects } from './hero-role-transition.ts';
 import { splitLetters, splitLines } from './text-reveal.ts';
-import type { WorkStageController } from './work-stage.ts';
+import type { WorkStageController } from './work-stage/work-stage.ts';
 
 export const heroRoles = ['System thinker', 'AI builder', 'Web designer', 'App designer'];
 

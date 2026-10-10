@@ -1,6 +1,6 @@
 import { createNativeMotion, readMotionToken, revealEffects, parallelRevealEffects, motionEndTime, type MotionEffect } from './native-motion.ts';
 import { splitLetters } from './text-reveal.ts';
-import { shouldRevealWorkContent } from './work-stage-model.ts';
+import { shouldRevealWorkContent } from './work-stage/work-stage-model.ts';
 
 /** One shared order: label, title, description, then section content. */
 export function sectionHeadingTiming(titleDuration: number, contentDuration: number, stageProgress: number, hasIndex = true, hasDescription = true) {

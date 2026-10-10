@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { initializeCaseStudyImages } from '../src/scripts/case-study-images.ts';
+import { initializeCaseStudyImages } from '../src/scripts/case-study/case-study-images.ts';
 
 const reduced = Object.assign(new EventTarget(), { matches: false });
 const page = Object.assign(new EventTarget(), { hidden: false });

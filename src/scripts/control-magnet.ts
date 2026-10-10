@@ -1,4 +1,4 @@
-import { calculateWorkFilterMagnet as calculateMagnet, resolveWorkFilterSpringSpeed, stepSpring, type Spring } from './work-filter-magnet.ts';
+import { calculateWorkFilterMagnet as calculateMagnet, resolveWorkFilterSpringSpeed, stepSpring, type Spring } from './work-filter/work-filter-magnet.ts';
 import { refreshViewportPointer, watchViewportPointer } from './viewport-pointer.ts';
 
 /** A single control uses the menu's proximity and spring without its rail mechanics. */

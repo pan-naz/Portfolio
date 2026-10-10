@@ -1,4 +1,4 @@
-import { refreshViewportPointer, watchViewportPointer, type ViewportPointer } from './viewport-pointer';
+import { refreshViewportPointer, watchViewportPointer, type ViewportPointer } from '../viewport-pointer';
 import { advanceLocalFallClock, catchUpFallClock, pointerRepulsion, repulsionRadius, streamDrops, stretchedIconY, trailOpacity } from './waterfall-model';
 import { waterfallIconSize, waterfallIconGap } from './waterfall-constants';
 import type { createWaterfallRenderer } from './waterfall-renderer';

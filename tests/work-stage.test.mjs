@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent, workStageCollapseScrollY, workStageExpandViewportRatio } from '../src/scripts/work-stage-model.ts';
+import { canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent, workStageCollapseScrollY, workStageExpandViewportRatio } from '../src/scripts/work-stage/work-stage-model.ts';
 const read = path => readFileSync(new URL(path, import.meta.url), 'utf8');
-const source = read('../src/scripts/work-stage.ts');
+const source = read('../src/scripts/work-stage/work-stage.ts');
 const work = read('../src/components/WorkSection.astro');
 const css = read('../src/styles/global.css');
 const tokens = read('../src/styles/tokens.css');

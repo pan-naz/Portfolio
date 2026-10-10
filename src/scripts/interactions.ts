@@ -1,17 +1,17 @@
 import { refreshViewportPointer } from './viewport-pointer';
 import { initializeMotion, pauseScroll, resumeScroll, scrollToSection, repositionWork } from './motion';
-import { initializeWaterfall } from './waterfall';
-import { initializeFooterPile } from './footer-pile';
+import { initializeWaterfall } from './waterfall/waterfall';
+import { initializeFooterPile } from './footer-pile/footer-pile';
 import { initializeHeroIntro } from './hero-intro';
-import { initializeHeaderMorph } from './header-morph';
-import { initializeWorkFilter } from './work-filter';
-import { initializeWorkStage } from './work-stage';
+import { initializeHeaderMorph } from './header-morph/header-morph';
+import { initializeWorkFilter } from './work-filter/work-filter';
+import { initializeWorkStage } from './work-stage/work-stage';
 import { initializeSectionReveals } from './section-reveals';
 import { initializeProjectTilt } from './project-tilt';
 import { initializeProjectCursor } from './project-cursor';
-import { initializeWorkFilterMagnet } from './work-filter-magnet';
-import { initializeCaseStudies } from './case-studies';
-import { initializeCaseStudyVideos } from './case-study-videos';
+import { initializeWorkFilterMagnet } from './work-filter/work-filter-magnet';
+import { initializeCaseStudies } from './case-study/case-studies';
+import { initializeCaseStudyVideos } from './case-study/case-study-videos';
 
 document.documentElement.classList.add('enhanced');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');

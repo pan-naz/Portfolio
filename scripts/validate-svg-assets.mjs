@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { projects, collectionProjects, tools } from '../src/data/portfolio.ts';
 import { hookoTools } from '../src/data/hooko-case-study.ts';
 import { competitors } from '../src/data/datagpt-case-study.ts';
-import { waterfallIconNodes } from '../src/scripts/waterfall-icon-data.ts';
+import { waterfallIconNodes } from '../src/scripts/waterfall/waterfall-icon-data.ts';
 import { icons } from '../src/data/icons.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');

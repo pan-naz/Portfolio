@@ -4,14 +4,14 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import ts from 'typescript';
-import { createAccentPalette, accentBlendSteps } from '../src/scripts/waterfall-color.ts';
+import { createAccentPalette, accentBlendSteps } from '../src/scripts/waterfall/waterfall-color.ts';
 
 const modules = new Map();
 function compile(path) {
   if (modules.has(path)) return modules.get(path);
   let source = readFileSync(path, 'utf8');
-  source = source.replace(/from '(\.\/[^']+)'/g, (_, specifier) => `from '${compile(resolve(dirname(path), specifier.endsWith('.ts') ? specifier : specifier + '.ts'))}'`);
-  source = source.replace(/import\('(.\/[^']+)'\)/g, (_, specifier) => `import('${compile(resolve(dirname(path), specifier.endsWith('.ts') ? specifier : specifier + '.ts'))}')`);
+  source = source.replace(/from '(\.{1,2}\/[^']+)'/g, (_, specifier) => `from '${compile(resolve(dirname(path), specifier.endsWith('.ts') ? specifier : specifier + '.ts'))}'`);
+  source = source.replace(/import\('(\.{1,2}\/[^']+)'\)/g, (_, specifier) => `import('${compile(resolve(dirname(path), specifier.endsWith('.ts') ? specifier : specifier + '.ts'))}')`);
   source = source.replaceAll('import.meta.env.DEV', 'true').replaceAll('import.meta.hot', 'undefined');
   const js = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
   const url = `data:text/javascript;base64,${Buffer.from(js).toString('base64')}`;
@@ -131,7 +131,7 @@ globalThis.IntersectionObserver = class {
 let nextFrame;
 globalThis.requestAnimationFrame = callback => { nextFrame = callback; return 1; };
 globalThis.cancelAnimationFrame = () => { nextFrame = undefined; };
-const { initializeWaterfall } = await import(compile(resolve('src/scripts/waterfall.ts')));
+const { initializeWaterfall } = await import(compile(resolve('src/scripts/waterfall/waterfall.ts')));
 let startupCallback;
 let startupDelay;
 globalThis.setTimeout = (callback, delay) => { startupCallback = callback; startupDelay = delay; return 1; };
@@ -148,7 +148,7 @@ assert.equal(scaledPaths, 0, 'No glyph paths are built synchronously during page
 assert.equal(vectorStrokes, 0, 'Rain atlas initialization is deferred until the load import resolves');
 await settleImports();
 assert.equal(scaledPaths, 1044, 'The deferred chunk builds one glyph list');
-const { createWaterfallPaths } = await import(compile(resolve('src/scripts/waterfall-icons.ts')));
+const { createWaterfallPaths } = await import(compile(resolve('src/scripts/waterfall/waterfall-icons.ts')));
 assert.equal(createWaterfallPaths(), createWaterfallPaths(), 'All consumers receive the same Path2D array');
 assert.equal(scaledPaths, 1044, 'Reusing the shared array never rebuilds geometry');
 const firstTimer = startupCallback;
@@ -262,7 +262,7 @@ console.log(`PASS: 10,800 RAF ticks with ${useGPU ? '60fps GPU' : '30fps fallbac
 console.log('PASS: independent two-second page-load delay, blank canvas, no early RAF, suspension and timer cleanup.');
 console.log('PASS: a single touch drag repels the rain, ignores other fingers and settles after release.');
 if (useGPU) {
-  const { createWaterfallRenderer } = await import(compile(resolve('src/scripts/waterfall-renderer.ts')));
+  const { createWaterfallRenderer } = await import(compile(resolve('src/scripts/waterfall/waterfall-renderer.ts')));
   gl.getShaderParameter = () => false;
   const rejectedCanvas = makeCanvas();
   const fallback = createWaterfallRenderer(rejectedCanvas, [new Path2D()]);
@@ -273,7 +273,7 @@ if (useGPU) {
   console.log('PASS: GPU context loss and shader failure use 2D fallback without resetting simulation.');
 }
 if (useGPU) {
-  const { createWaterfallRenderer } = await import(compile(resolve('src/scripts/waterfall-renderer.ts')));
+  const { createWaterfallRenderer } = await import(compile(resolve('src/scripts/waterfall/waterfall-renderer.ts')));
   const blocked = makeCanvas();
   blocked.getContext = type => { if (type === 'webgl2') throw new Error('GPU blocked'); return context; };
   const fallback = createWaterfallRenderer(blocked, [new Path2D()]);

@@ -1,5 +1,5 @@
-import { refreshViewportPointer, watchViewportPointer } from './viewport-pointer.ts';
-import { readMotionToken } from './native-motion.ts';
+import { refreshViewportPointer, watchViewportPointer } from '../viewport-pointer.ts';
+import { readMotionToken } from '../native-motion.ts';
 
 export type Spring = { value: number; velocity: number; target: number };
 

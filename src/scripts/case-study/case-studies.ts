@@ -1,14 +1,14 @@
-import type { WorkFilter } from './work-filter';
-import type { initializeProjectCursor } from './project-cursor';
-import { initializeSmoothScroll, pauseScroll, resumeScroll, repositionWork } from './motion';
-import { refreshViewportPointer } from './viewport-pointer';
+import type { WorkFilter } from '../work-filter/work-filter';
+import type { initializeProjectCursor } from '../project-cursor';
+import { initializeSmoothScroll, pauseScroll, resumeScroll, repositionWork } from '../motion';
+import { refreshViewportPointer } from '../viewport-pointer';
 import { initializeCaseStudyVideos } from './case-study-videos';
 import { initializeCaseStudyImages } from './case-study-images';
 import { borrowHeroImage, reserveHeroImage, restoreHeroImage, type HeroImageTransfer } from './case-study-artwork';
 import { readCaseStudyMotion } from './case-study-motion';
 import { suspendCaseStudyScrollRestoration } from './case-study-navigation';
-import { rescopeSvgAssets } from './svg-asset';
-import { initializeControlMagnet } from './control-magnet';
+import { rescopeSvgAssets } from '../svg-asset';
+import { initializeControlMagnet } from '../control-magnet';
 
 type Cursor = NonNullable<ReturnType<typeof initializeProjectCursor>>;
 

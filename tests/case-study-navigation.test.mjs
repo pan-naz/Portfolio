@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { initializeCaseStudyNavigation, suspendCaseStudyScrollRestoration } from '../src/scripts/case-study-navigation.ts';
+import { initializeCaseStudyNavigation, suspendCaseStudyScrollRestoration } from '../src/scripts/case-study/case-study-navigation.ts';
 
 for (const previous of ['auto', 'manual']) {
   const target = { scrollRestoration: previous };

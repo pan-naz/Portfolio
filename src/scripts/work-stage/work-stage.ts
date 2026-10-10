@@ -1,5 +1,5 @@
-import { createNativeMotion, readMotionToken } from './native-motion.ts';
-import { sectionRevealEffects } from './section-reveals';
+import { createNativeMotion, readMotionToken } from '../native-motion.ts';
+import { sectionRevealEffects } from '../section-reveals';
 import { canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent } from './work-stage-model.ts';
 
 interface IntroOptions { duration: number; delay: number; easing: string; }

@@ -18,7 +18,7 @@ import DSExample from './DSExample.astro';
 import { projects, impactGroups, experience, profile, cvUrl, hookoAppUrl } from '../data/portfolio';
 import { icons, type IconName } from '../data/icons';
 import tokenCSS from '../styles/tokens.css?raw';
-import { caseStudyMotionTokens, caseStudyPresentationTokens } from '../scripts/case-study-motion';
+import { caseStudyMotionTokens, caseStudyPresentationTokens } from '../scripts/case-study/case-study-motion';
 const readTokens = (block: string) => Object.fromEntries([...block.matchAll(/--([\w-]+):\s*([^;]+);/g)].map(([,key,value]) => [key,value.trim()]));
 const light = Object.assign({}, ...[...tokenCSS.matchAll(/(?:^|\n):root\s*\{([^}]+)\}/g)].map(([, block]) => readTokens(block))) as Record<string, string>;
 const dark = { ...light, ...readTokens(tokenCSS.match(/:root\[data-theme='dark'\][^{]*\{([^}]+)\}/)![1]) };
