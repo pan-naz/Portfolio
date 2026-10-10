@@ -174,6 +174,9 @@ html[data-work-stage-layout='true']:not([data-work-stage-motion='true']) .work-p
 .enhanced .work-stage-can-shift.is-work-rail-moving .work-rail { will-change: transform, opacity; }
 .work-content { position: relative; z-index: var(--layer-content); }
 .section-heading h2 { text-wrap: wrap; }
+@media (width < 1440px) {
+  .chapter .section-heading h2 { text-wrap: balance; }
+}
 .section-heading { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: var(--space-16); }
 .section-index { padding-top: 0; }
 .section-description { margin-top: var(--space-6); font-size: var(--text-body); line-height: var(--line-height-body); }

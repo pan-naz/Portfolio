@@ -20,6 +20,7 @@
 .case-study-narrative :where(h3, h4, p) + :where(p, ul, ol) { margin-top: var(--space-2); }
 .case-study-eyebrow, .case-study-narrative .eyebrow { margin: 0; font-size: var(--text-small); line-height: 1.428571; font-weight: var(--font-weight-label-m); letter-spacing: var(--letter-spacing-label-m); text-transform: uppercase; }
 .case-study-heading { max-width: 1100px; font-size: var(--text-heading-l); line-height: var(--line-height-heading-l); letter-spacing: var(--letter-spacing-heading-l); font-weight: var(--font-weight-heading-large); text-wrap: balance; }
+.case-study-heading-line { display: block; }
 .case-study-narrative .stat-value { font-size: var(--text-heading-l); line-height: var(--line-height-heading-l); }
 .case-study-narrative .stat-label { font-size: var(--text-body-m); line-height: var(--line-height-body); font-weight: var(--font-weight-body-m-strong); }
 .case-study-narrative .stat dd { font-size: var(--text-small); line-height: 1.428571; }
