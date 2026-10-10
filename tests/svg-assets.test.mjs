@@ -4,6 +4,13 @@ import { validateVectorSvg, validateSvgAssets } from '../scripts/validate-svg-as
 import { prepareSvgAsset, rescopeSvgAssets } from '../src/scripts/svg-asset.ts';
 
 const vector = '<svg viewBox="0 0 24 24"><path d="M4 12h16" /></svg>';
+for (const name of ['operations-lead', 'marketing-specialist']) {
+  const original = readFileSync(new URL(`../src/assets/personas/${name}.svg`, import.meta.url), 'utf8');
+  const rendered = prepareSvgAsset(original, 'theme-migration').body;
+  const body = original.match(/<svg\b[^>]*>([\s\S]*?)<\/svg>/)[1];
+  assert.equal(rendered.replaceAll('var(--color-bg-canvas)', 'var(--canvas)'), body, 'Theme migration preserves every original vector attribute and shape');
+  assert.ok(rendered.includes('var(--color-bg-canvas)') && !rendered.includes('var(--canvas)'), 'Original persona artwork renders with the canonical canvas token');
+}
 assert.deepEqual(validateVectorSvg(vector, 'vector'), []);
 for (const bitmap of [
   '<svg viewBox="0 0 24 24"><image href="icon.png" /></svg>',

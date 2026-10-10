@@ -3,7 +3,7 @@
 @layer project {
 /* Original store colours and tread geometry belong to its artwork, not portfolio UI. */
 .case-study-content--promshyna { --promshyna-orange: #FF973B; --promshyna-dark: #222222; --promshyna-rail: 56px; }
-.promshyna-muted { color: var(--muted); }
+.promshyna-muted { color: var(--color-text-secondary); }
 .promshyna-block { margin-top: var(--space-16); }
 .promshyna-chapter-heading { align-items: end; }
 .promshyna-path-intro { max-width: calc(50% - var(--grid-gap)); }
@@ -14,31 +14,31 @@
 .promshyna-step-inner { position: relative; }
 .promshyna-copy { display: grid; gap: var(--space-6); padding-left: calc(var(--promshyna-rail) + var(--space-6)); }
 .promshyna-copy > p { margin-top: 0; }
-.promshyna-specs { margin: 0; border-top: 1px solid var(--divider); }
-.promshyna-specs > div { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: var(--space-4); padding-block: var(--space-3); border-bottom: 1px solid var(--divider); }
-.promshyna-specs dt { color: var(--muted); }
+.promshyna-specs { margin: 0; border-top: 1px solid var(--color-border-default); }
+.promshyna-specs > div { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: var(--space-4); padding-block: var(--space-3); border-bottom: 1px solid var(--color-border-default); }
+.promshyna-specs dt { color: var(--color-text-secondary); }
 .promshyna-specs dd { margin: 0; font-weight: var(--font-weight-body-m-strong); overflow-wrap: anywhere; }
-.promshyna-rail { --promshyna-tread: var(--divider); position: absolute; inset: 0 auto 0 0; width: var(--promshyna-rail); }
+.promshyna-rail { --promshyna-tread: var(--color-border-default); position: absolute; inset: 0 auto 0 0; width: var(--promshyna-rail); }
 .promshyna-rail::before, .promshyna-rail::after { content: ''; position: absolute; inset-block: 0; width: 9px; }
 .promshyna-rail::before { left: calc(50% - 9px); background: repeating-linear-gradient(-45deg, transparent 0 5px, var(--promshyna-tread) 5px 9px); }
 .promshyna-rail::after { left: 50%; background: repeating-linear-gradient(45deg, transparent 0 5px, var(--promshyna-tread) 5px 9px); }
-.promshyna-badge { position: sticky; top: var(--space-6); z-index: 1; display: grid; place-items: center; width: 42px; height: 60px; margin-inline: auto; border: 5px solid var(--promshyna-dark); border-radius: var(--radius-pill); color: var(--ink); background: var(--canvas); font-weight: var(--font-weight-label-m); font-variant-numeric: tabular-nums; }
-.promshyna-delivery { --divider: var(--inverse-divider); padding-block: var(--case-section-space); background: var(--promshyna-dark); }
+.promshyna-badge { position: sticky; top: var(--space-6); z-index: 1; display: grid; place-items: center; width: 42px; height: 60px; margin-inline: auto; border: 5px solid var(--promshyna-dark); border-radius: var(--radius-pill); color: var(--color-text-primary); background: var(--color-bg-canvas); font-weight: var(--font-weight-label-m); font-variant-numeric: tabular-nums; }
+.promshyna-delivery { --color-border-default: var(--color-inverse-border-default); padding-block: var(--case-section-space); background: var(--promshyna-dark); }
 .promshyna-delivery .promshyna-badge { border-color: var(--promshyna-orange); background: var(--promshyna-dark); }
-.promshyna-phones { --ink: var(--floating-ink); --muted: var(--floating-muted); width: 100vw; margin-left: calc(50% - 50vw); color: var(--ink); background: var(--promshyna-orange); }
+.promshyna-phones { --color-text-primary: var(--color-overlay-text-primary); --color-text-secondary: var(--color-overlay-text-secondary); width: 100vw; margin-left: calc(50% - 50vw); color: var(--color-text-primary); background: var(--promshyna-orange); }
 .promshyna-phone-row { display: grid; grid-template-columns: 275fr 630fr 290fr; gap: var(--space-4); align-items: stretch; }
-.promshyna-phone { display: grid; place-items: center; min-width: 0; padding: var(--space-6); border-radius: var(--radius-medium); background: var(--floating-surface); }
+.promshyna-phone { display: grid; place-items: center; min-width: 0; padding: var(--space-6); border-radius: var(--radius-medium); background: var(--color-overlay-bg-surface); }
 .promshyna-phone > * { width: 100%; }
 .promshyna-other .case-study-media { aspect-ratio: 11 / 10; overflow: hidden; border-radius: var(--radius-small); }
 .promshyna-other .case-study-decision-card .case-study-media img { height: 100%; object-fit: cover; object-position: top; }
-.promshyna-brand-plate { display: grid; place-items: center; height: 200px; padding: var(--space-4); border: 1px solid var(--floating-divider); border-radius: var(--radius-small); background: var(--floating-surface); }
+.promshyna-brand-plate { display: grid; place-items: center; height: 200px; padding: var(--space-4); border: 1px solid var(--color-overlay-border-default); border-radius: var(--radius-small); background: var(--color-overlay-bg-surface); }
 .promshyna-brand-plate .case-study-media { width: var(--promshyna-specimen-width); max-width: 100%; }
 .promshyna-palette { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-4); margin: var(--space-6) 0 0; padding: 0; list-style: none; }
-.promshyna-palette > li { overflow: hidden; border-radius: var(--radius-medium); color: var(--floating-ink); background: var(--floating-surface); box-shadow: var(--shadow-floating); }
-.promshyna-swatch { aspect-ratio: 2 / 1; background: var(--promshyna-swatch); border-bottom: 1px solid var(--floating-divider); }
+.promshyna-palette > li { overflow: hidden; border-radius: var(--radius-medium); color: var(--color-overlay-text-primary); background: var(--color-overlay-bg-surface); box-shadow: var(--shadow-floating); }
+.promshyna-swatch { aspect-ratio: 2 / 1; background: var(--promshyna-swatch); border-bottom: 1px solid var(--color-overlay-border-default); }
 .promshyna-palette > li > div:last-child { display: grid; gap: var(--space-1); padding: var(--space-4); }
-.promshyna-palette code { color: var(--floating-muted); font: inherit; }
-.promshyna-palette p { margin-top: 0; color: var(--floating-muted); font-size: var(--text-small); line-height: 1.428571; }
+.promshyna-palette code { color: var(--color-overlay-text-secondary); font: inherit; }
+.promshyna-palette p { margin-top: 0; color: var(--color-overlay-text-secondary); font-size: var(--text-small); line-height: 1.428571; }
 @media (max-width: 1023px) {
   .promshyna-rail { display: none; }
   .promshyna-copy { padding-left: 0; }

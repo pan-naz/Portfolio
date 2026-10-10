@@ -2,7 +2,7 @@ export {};
 const root = document.documentElement;
 function syncTheme(dark: boolean) {
   root.dataset.theme = dark ? 'dark' : 'light';
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', getComputedStyle(root).getPropertyValue('--canvas').trim());
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', getComputedStyle(root).getPropertyValue('--color-bg-canvas').trim());
   document.querySelectorAll('.theme-toggle').forEach(button => button.setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} theme`));
   window.dispatchEvent(new Event('themechange'));
 }

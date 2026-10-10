@@ -1,7 +1,7 @@
 ---
-import ExperienceRow from './ExperienceRow.astro';
+import TimelineRow from './TimelineRow.astro';
 import type { Experience } from '../data/portfolio';
 interface Props { items: Experience[]; }
 const { items } = Astro.props;
 ---
-{items.length > 0 && <ol class="experience-list" aria-label="Experience timeline">{items.map(item => <ExperienceRow item={item} />)}</ol>}
+{items.length > 0 && <ol class="experience-list" aria-label="Experience timeline">{items.map(item => <TimelineRow item={item} />)}</ol>}

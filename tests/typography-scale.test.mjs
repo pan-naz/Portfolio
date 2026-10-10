@@ -35,7 +35,7 @@ assert.ok(read('../src/components/NavigationItem.astro').includes("'text-body-m-
 const sectionNavigation = read('../src/components/SectionNavigation.astro');
 assert.ok(sectionNavigation.includes('section-navigation') && sectionNavigation.includes('text-body-m-strong'), 'Left section menu consumes Body/M Strong');
 assert.ok(sectionNavigation.includes('floating-navigation-theme floating-navigation-surface'), 'Left section menu consumes the shared theme-aware floating-navigation treatment');
-const experienceRow = read('../src/components/ExperienceRow.astro');
+const experienceRow = read('../src/components/TimelineRow.astro');
 assert.match(experienceRow, /<h3 class="text-body-m-strong">/, 'Experience positions consume Body/M Strong');
 assert.match(experienceRow, /experience-summary text-body-m/, 'Experience descriptions consume Body/M');
 for (const metadataClass of ['experience-period text-body-s', 'experience-company text-body-s', 'experience-duration text-body-s']) {

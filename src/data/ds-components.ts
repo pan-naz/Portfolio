@@ -44,7 +44,7 @@ export const dsComponents = [
     "description": "Accessible theme control"
   },
   {
-    "name": "SkillTag",
+    "name": "Chip",
     "section": "tags",
     "preview": "direct",
     "description": "Skill tags and plain process labels"
@@ -80,7 +80,7 @@ export const dsComponents = [
     "description": "Career timeline list"
   },
   {
-    "name": "ExperienceRow",
+    "name": "TimelineRow",
     "section": "timeline",
     "preview": "direct",
     "description": "Responsive career timeline row"

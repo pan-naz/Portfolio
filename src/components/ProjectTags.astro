@@ -1,6 +1,6 @@
 ---
-import SkillTag from './SkillTag.astro';
+import Chip from './Chip.astro';
 interface Props { tags: string[]; }
 const { tags } = Astro.props;
 ---
-<div class="project-tags">{tags.map(label => <SkillTag label={label} variant="raised" />)}</div>
+<div class="project-tags">{tags.map(label => <Chip label={label} variant="raised" />)}</div>

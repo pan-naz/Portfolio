@@ -8,7 +8,7 @@ const text = content.replace(/<[^>]*>/g, ' ').replace(/&#(?:x([\da-f]+)|(\d+));/
 for (const copy of JSON.parse(read('./fixtures/index-law-firm-reference.json'))) assert.ok(text.includes(copy.toLowerCase()), 'Preserves source copy: ' + copy);
 assert.ok(text.includes('a popover shows what the firm does in that area.') && !text.includes('a click opens a card'), 'The approved introduction describes hover popovers');
 assert.deepEqual([...content.matchAll(/<section\b[^>]*aria-labelledby="(index-[^"]+)"/g)].map(match => match[1]), ['index-title', 'index-task', 'index-home', 'index-services', 'index-responsive', 'index-style']);
-assert.deepEqual([...content.matchAll(/<section\b[^>]*class="case-study-chapter--inverse"[^>]*aria-labelledby="([^"]+)"/g)].map(match => match[1]), ['index-services', 'index-style']);
+assert.deepEqual([...content.matchAll(/<section\b[^>]*class="case-study-chapter--color-neutral-950"[^>]*aria-labelledby="([^"]+)"/g)].map(match => match[1]), ['index-services', 'index-style']);
 assert.equal([...content.matchAll(/<case-study-sticky\b/g)].length, 1, 'Main-page copy retains shared sticky behavior');
 assert.equal([...content.matchAll(/data-service-tile=/g)].length, 8);
 assert.equal([...content.matchAll(/role="tooltip"/g)].length, 8);

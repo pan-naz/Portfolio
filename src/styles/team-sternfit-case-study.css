@@ -3,10 +3,10 @@
 @layer project {
 /* Black and the palette specimens are Team Sternfit artwork, not portfolio colours. */
 .case-study-content--team-sternfit { --sternfit-black: #000000; padding-bottom: 0; }
-.sternfit-muted { color: var(--muted); }
+.sternfit-muted { color: var(--color-text-secondary); }
 /* Offset the recording's blank left inset so its visible mark aligns with the Team copy. */
-.sternfit-signature { position: relative; isolation: isolate; width: 180px; max-width: 100%; margin-inline-start: calc(-1 * var(--space-2)); padding-block: var(--space-2); background: var(--canvas); }
-.sternfit-signature::before { content: ''; position: absolute; inset: calc(-1 * var(--space-6)) calc(-1 * var(--space-8)); background: radial-gradient(ellipse closest-side at center, var(--floating-surface) 0 65%, transparent 100%); pointer-events: none; }
+.sternfit-signature { position: relative; isolation: isolate; width: 180px; max-width: 100%; margin-inline-start: calc(-1 * var(--space-2)); padding-block: var(--space-2); background: var(--color-bg-canvas); }
+.sternfit-signature::before { content: ''; position: absolute; inset: calc(-1 * var(--space-6)) calc(-1 * var(--space-8)); background: radial-gradient(ellipse closest-side at center, var(--color-overlay-bg-surface) 0 65%, transparent 100%); pointer-events: none; }
 /* The recording's white pixels merge with the halo; its original ink stays intact. */
 .sternfit-signature .case-study-media { position: relative; mix-blend-mode: multiply; }
 .sternfit-night { background: var(--sternfit-black); }
@@ -14,13 +14,13 @@
 .sternfit-row { align-items: center; }
 .sternfit-copy { display: grid; gap: var(--space-6); }
 .sternfit-copy > p { margin-top: 0; }
-.sternfit-brand { padding-block: var(--space-16); border-top: 1px solid var(--inverse-divider); }
+.sternfit-brand { padding-block: var(--space-16); border-top: 1px solid var(--color-inverse-border-default); }
 .sternfit-brand:last-child { padding-bottom: 0; }
 .sternfit-brand-name, .sternfit-quote { font-size: var(--text-heading-m); line-height: 1.333333; letter-spacing: var(--letter-spacing-heading-m); font-weight: var(--font-weight-heading); }
 .sternfit-tagline { font-style: italic; }
 .sternfit-pair { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: var(--space-4); align-items: center; }
 .sternfit-pair .case-study-media { width: 100%; max-width: 285px; justify-self: center; }
-.sternfit-pair > .icon { color: var(--muted); }
+.sternfit-pair > .icon { color: var(--color-text-secondary); }
 .sternfit-other-photos { display: grid; grid-template-columns: 701fr 354fr; gap: var(--space-4); align-items: end; }
 .sternfit-pair .case-study-media, .sternfit-other-photos .case-study-media { overflow: hidden; border-radius: var(--radius-small); }
 .sternfit-section-heading { align-items: end; margin-bottom: var(--space-16); }
@@ -29,13 +29,13 @@
 .sternfit-story-row--reverse > .sternfit-copy { order: 2; margin-inline: var(--grid-gap) 0; }
 .sternfit-story-row--reverse > .sternfit-shot { order: 1; margin-inline-end: var(--grid-gap); }
 .sternfit-type-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
-.sternfit-type-plate { display: grid; place-items: center; min-height: calc(var(--space-24) * 2 + var(--space-12)); padding: var(--space-4); border: 1px solid var(--floating-divider); border-radius: var(--radius-small); background: var(--floating-surface); }
+.sternfit-type-plate { display: grid; place-items: center; min-height: calc(var(--space-24) * 2 + var(--space-12)); padding: var(--space-4); border: 1px solid var(--color-overlay-border-default); border-radius: var(--radius-small); background: var(--color-overlay-bg-surface); }
 .sternfit-type-plate .case-study-media { width: 100%; }
 .sternfit-colours { margin-top: var(--space-12); }
 .sternfit-palette { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); margin: var(--space-6) 0 0; padding: 0; list-style: none; }
 .sternfit-palette > li { display: grid; }
-.sternfit-swatch { aspect-ratio: 2 / 1; border: 1px solid var(--floating-divider); border-radius: var(--radius-small); }
-.sternfit-palette code { font: inherit; color: var(--floating-muted); }
+.sternfit-swatch { aspect-ratio: 2 / 1; border: 1px solid var(--color-overlay-border-default); border-radius: var(--radius-small); }
+.sternfit-palette code { font: inherit; color: var(--color-overlay-text-secondary); }
 @media (max-width: 767px) {
   .sternfit-section-heading { margin-bottom: var(--space-8); }
   .sternfit-blocks { gap: var(--space-8); }

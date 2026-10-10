@@ -8,14 +8,14 @@
 .case-study-content--gutsul-made { --gutsul-red: #EB3148; --gutsul-dark: #333333; --gutsul-grey: #A6A6A6; }
 /* The final chapter already owns the shared responsive bottom inset. */
 .case-study-content.case-study-content--gutsul-made { padding-bottom: 0; }
-.gutsul-muted { color: var(--muted); }
+.gutsul-muted { color: var(--color-text-secondary); }
 .gutsul-block { margin-top: var(--space-16); }
 .gutsul-heading { align-items: end; }
 .gutsul-copy { display: grid; gap: var(--space-6); }
 .gutsul-copy > p { margin-top: 0; }
-.gutsul-band { position: relative; color: var(--ink); }
+.gutsul-band { position: relative; color: var(--color-text-primary); }
 .gutsul-charcoal { background: var(--gutsul-dark); }
-.gutsul-red { --ink: var(--floating-on-primary); --muted: var(--ink); background: var(--gutsul-red); }
+.gutsul-red { --color-text-primary: var(--color-overlay-text-on-primary); --color-text-secondary: var(--color-text-primary); background: var(--gutsul-red); }
 /* Brand artwork lives on the background, outside the shared content rhythm. */
 .gutsul-ornament { position: absolute; inset-inline: 0; display: flex; justify-content: center; height: 24px; overflow: hidden; pointer-events: none; }
 .gutsul-ornament:first-child { top: 32px; }
@@ -51,7 +51,7 @@
 .gutsul-pages .case-study-media { aspect-ratio: 1; overflow: hidden; border-radius: var(--radius-small); }
 .gutsul-pages .case-study-decision-card .case-study-media img { height: 100%; object-fit: cover; object-position: top; }
 .gutsul-phones { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start; justify-items: center; gap: var(--grid-gap); }
-.gutsul-phones > * { width: min(100%, 207px); --surface: var(--floating-surface); }
+.gutsul-phones > * { width: min(100%, 207px); --color-bg-surface: var(--color-overlay-bg-surface); }
 .gutsul-guide { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--grid-gap); align-items: stretch; }
 .gutsul-guide > :first-child { grid-column: 1 / -1; }
 .gutsul-plate { display: grid; place-items: center; min-height: 220px; padding: var(--space-8) var(--space-4); border-radius: var(--radius-small); background: var(--gutsul-color-faf8f7); }
@@ -63,7 +63,7 @@
 .gutsul-palette { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); width: 100%; list-style: none; padding: 0; margin: 0; }
 .gutsul-palette > li { display: grid; justify-items: center; gap: var(--space-1); text-align: center; }
 .gutsul-palette span { width: 56px; height: 56px; margin: 10px 10px var(--space-6); border: 14px solid var(--gutsul-swatch); transform: rotate(45deg); }
-.gutsul-palette code { color: var(--floating-muted); font: inherit; font-size: var(--text-small); }
+.gutsul-palette code { color: var(--color-overlay-text-secondary); font: inherit; font-size: var(--text-small); }
 @media (max-width: 1023px) {
   .gutsul-story { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--grid-gap); }
   .gutsul-story-step { display: grid; gap: var(--space-3); align-content: start; }

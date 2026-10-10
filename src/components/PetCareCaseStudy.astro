@@ -7,7 +7,7 @@ import CaseStudyDecisionCard from './CaseStudyDecisionCard.astro';
 import MetricValue from './MetricValue.astro';
 import ProjectIdentity from './ProjectIdentity.astro';
 import Icon from './Icon.astro';
-import SkillTag from './SkillTag.astro';
+import Chip from './Chip.astro';
 import { petCarePrizeIcons } from '../data/pet-care-prize-icons';
 interface Props { project: Project; }
 const { project } = Astro.props;
@@ -19,7 +19,7 @@ const { project } = Astro.props;
       <Fragment slot="role"><p>Designer</p><ul>{petCareRole.map(item => <li>{item}</li>)}</ul></Fragment>
     </CaseStudyOverview>
 
-    <section class="case-study-chapter--inverse pc-pink" aria-labelledby="pc-competition">
+    <section class="case-study-chapter--color-neutral-950 pc-pink" aria-labelledby="pc-competition">
       <div class="case-study-chapter__inner pc-band-inner">
         <div class="case-study-columns pc-heading"><div><p class="case-study-eyebrow">{petCareCompetition.eyebrow}</p><h2 class="case-study-heading" id="pc-competition">{petCareCompetition.title}</h2></div><p class="pc-muted">{petCareCompetition.description}</p></div>
         <div class="pc-competition-cards">
@@ -33,7 +33,7 @@ const { project } = Astro.props;
             <ol class="pc-prizes" role="list" aria-label="Competition prizes">{petCareCompetition.prizes.map(prize => <li class:list={['pc-prize', prize.won && 'pc-prize--won']}>
               <span class="pc-prize-icon"><Icon nodes={petCarePrizeIcons[prize.icon]} size={32} /></span>
               <div class="pc-prize-copy">
-                <div class="pc-prize-place"><p class="text-body-s">{prize.place}</p>{prize.won && <SkillTag label="I won" variant="accent" />}</div>
+                <div class="pc-prize-place"><p class="text-body-s">{prize.place}</p>{prize.won && <Chip label="I won" variant="accent" />}</div>
                 <h4>{prize.title}</h4>
               </div>
             </li>)}</ol>
@@ -59,14 +59,14 @@ const { project } = Astro.props;
       </div>
     </section>
 
-    <section class="case-study-chapter--inverse pc-coral" aria-labelledby="pc-physical">
+    <section class="case-study-chapter--color-neutral-950 pc-coral" aria-labelledby="pc-physical">
       <div class="case-study-chapter__inner pc-band-inner">
         <div class="case-study-columns pc-row"><div class="pc-copy"><div><p class="case-study-eyebrow">{petCarePhysical.eyebrow}</p><h2 class="case-study-heading" id="pc-physical">{petCarePhysical.title}</h2></div>{petCarePhysical.paragraphs.map(text => <p class="pc-muted">{text}</p>)}</div><div class="pc-phone pc-phone--physical"><CaseStudyMedia {...petCarePhysical.media} /></div></div>
         <CaseStudyMedia {...petCarePhysical.cards} />
       </div>
     </section>
 
-    <section class="case-study-chapter--inverse pc-cream" aria-label="Emotional state and the pet's needs">
+    <section class="case-study-chapter--color-neutral-950 pc-cream" aria-label="Emotional state and the pet's needs">
       <div class="case-study-chapter__inner pc-band-inner">
         <div class="case-study-columns pc-row" aria-labelledby="pc-emotional"><div class="pc-copy"><div><p class="case-study-eyebrow">{petCareEmotional.eyebrow}</p><h2 class="case-study-heading" id="pc-emotional">{petCareEmotional.title}</h2></div>{petCareEmotional.paragraphs.map(text => <p class="pc-muted">{text}</p>)}</div><div class="pc-phone pc-phone--emotional"><CaseStudyMedia {...petCareEmotional.media} /></div></div>
         <div class="case-study-columns pc-row pc-row--reverse" aria-labelledby="pc-needs"><div class="pc-copy"><div><p class="case-study-eyebrow">{petCareNeeds.eyebrow}</p><h2 class="case-study-heading" id="pc-needs">{petCareNeeds.title}</h2></div>{petCareNeeds.paragraphs.map(text => <p class="pc-muted">{text}</p>)}</div><div class="pc-phone pc-phone--needs"><CaseStudyMedia {...petCareNeeds.media} /></div></div>

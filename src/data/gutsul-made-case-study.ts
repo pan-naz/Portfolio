@@ -21,7 +21,7 @@ export const gutsulHero = {
   "alt": "The Gutsul Made main page on a laptop and a phone: a dark photo of a beaded necklace, the store's headline and a shopping button, with the first recommended products below",
   "width": 1902,
   "height": 1100,
-  "canvasColor": "var(--floating-surface)",
+  "canvasColor": "var(--color-overlay-bg-surface)",
   "canvasInset": 8,
   "kind": "image",
   "presentation": "floating",

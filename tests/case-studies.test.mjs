@@ -148,7 +148,7 @@ for (const project of all) {
     for (const src of [...imageSources, ...videoSources, '/projects/gutsul-made-case-study/logo.svg', ...['sketch','grid','frame','final'].map(name => `/projects/gutsul-made-case-study/logo-${name}.svg`)]) {
       assert.deepEqual(readFileSync(new URL(`../public${src}`, import.meta.url)), readFileSync(new URL(`../../reference-research/gutsul-made/source/${src.split('/').at(-1)}`, import.meta.url)), 'Gutsul artwork matches the reference bytes');
     }
-    assert.ok(html.includes('case-study-media--canvas') && card.includes('background:var(--floating-surface)'), 'The transparent hero retains the same white canvas in both presentations');
+    assert.ok(html.includes('case-study-media--color-bg-canvas') && card.includes('background:var(--color-overlay-bg-surface)'), 'The transparent hero retains the same white canvas in both presentations');
     assert.ok(!html.includes('>Team</h2>') && !html.includes('Draft case study'), 'Only supplied project metadata is rendered');
   } else if (project.id === 'promshyna') {
     for (const section of ['path', 'responsive', 'other', 'branding']) assert.ok(html.includes(`id="ps-${section}"`), `PromShyna includes the ${section} chapter`);

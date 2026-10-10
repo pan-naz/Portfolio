@@ -8,7 +8,7 @@ import TextLink from './TextLink.astro';
 import Arrow from './Arrow.astro';
 import Icon from './Icon.astro';
 import SvgAsset from './SvgAsset.astro';
-import SkillTag from './SkillTag.astro';
+import Chip from './Chip.astro';
 import SectionHeading from './SectionHeading.astro';
 import CaseStudyMedia from './CaseStudyMedia.astro';
 import CaseStudyDecisionCard from './CaseStudyDecisionCard.astro';
@@ -100,7 +100,7 @@ const productLinks = [
         <CaseStudyDecisionCard title="No account, no stored videos" label="Privacy" labelVariant="accent" layout="media">
             <Icon slot="icon" name="shield-check" />
             <p>There is no registration screen. An anonymous identity is created on first launch, and uploaded videos are deleted from the server once the analysis finishes. Subscriptions go through RevenueCat and are tied to the user's Apple ID, so they survive a reinstall without an account.</p>
-            <div class="hk-pillrow" aria-label="First-run path"><SkillTag label="Open app" /><SkillTag label="Try the demo analysis" /><SkillTag label="Upload a video" /><SkillTag label="Get the plan" /></div>
+            <div class="hk-pillrow" aria-label="First-run path"><Chip label="Open app" /><Chip label="Try the demo analysis" /><Chip label="Upload a video" /><Chip label="Get the plan" /></div>
           </CaseStudyDecisionCard>
       </div>
     </div>
@@ -131,12 +131,12 @@ const productLinks = [
         <div class="hk-diagram-scroll">
           <svg viewBox="-4 -4 968 408" role="img" aria-labelledby="hk-arch-t">
             <title id="hk-arch-t">Hooko architecture: the Flutter app talks to Supabase, which calls Gemini for analysis and the YouTube Data API for examples. RevenueCat connects the app to App Store subscriptions. The v0-built site is hosted on Vercel and links to the App Store.</title>
-            <defs><marker id="hk-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--ink)"/></marker></defs>
-            <g font-family="var(--font-body)" fill="var(--ink)">
+            <defs><marker id="hk-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--color-text-primary)"/></marker></defs>
+            <g font-family="var(--font-body)" fill="var(--color-text-primary)">
               
-              <text x="0" y="20" font-size="11" font-weight="600" letter-spacing="0" fill="var(--muted)">CLIENT</text>
-              <text x="300" y="20" font-size="11" font-weight="600" letter-spacing="0" fill="var(--muted)">BACKEND</text>
-              <text x="640" y="20" font-size="11" font-weight="600" letter-spacing="0" fill="var(--muted)">SERVICES</text>
+              <text x="0" y="20" font-size="11" font-weight="600" letter-spacing="0" fill="var(--color-text-secondary)">CLIENT</text>
+              <text x="300" y="20" font-size="11" font-weight="600" letter-spacing="0" fill="var(--color-text-secondary)">BACKEND</text>
+              <text x="640" y="20" font-size="11" font-weight="600" letter-spacing="0" fill="var(--color-text-secondary)">SERVICES</text>
 
               
               <rect x="0" y="40" width="220" height="200" rx="18" fill="#110a1d"/>
@@ -150,40 +150,40 @@ const productLinks = [
               <text x="20" y="190" font-size="12" fill="#fefefe">Paywall</text>
 
               
-              <rect x="300" y="40" width="260" height="140" rx="18" fill="var(--surface)" stroke="#3FCF8E" stroke-width="2"/>
+              <rect x="300" y="40" width="260" height="140" rx="18" fill="var(--color-bg-surface)" stroke="#3FCF8E" stroke-width="2"/>
               <text x="320" y="72" font-size="16" font-weight="600">Supabase</text>
-              <text x="320" y="100" font-size="12" fill="var(--muted)">Anonymous user on first launch</text>
-              <text x="320" y="120" font-size="12" fill="var(--muted)">Video upload, deleted after analysis</text>
-              <text x="320" y="140" font-size="12" fill="var(--muted)">Analysis pipeline · daily limits</text>
-              <text x="320" y="160" font-size="12" fill="var(--muted)">Results and history</text>
+              <text x="320" y="100" font-size="12" fill="var(--color-text-secondary)">Anonymous user on first launch</text>
+              <text x="320" y="120" font-size="12" fill="var(--color-text-secondary)">Video upload, deleted after analysis</text>
+              <text x="320" y="140" font-size="12" fill="var(--color-text-secondary)">Analysis pipeline · daily limits</text>
+              <text x="320" y="160" font-size="12" fill="var(--color-text-secondary)">Results and history</text>
 
               
-              <rect x="640" y="40" width="320" height="64" rx="16" fill="var(--surface)" stroke="#8E75B2" stroke-width="2"/>
+              <rect x="640" y="40" width="320" height="64" rx="16" fill="var(--color-bg-surface)" stroke="#8E75B2" stroke-width="2"/>
               <text x="660" y="68" font-size="15" font-weight="600">Gemini API</text>
-              <text x="660" y="88" font-size="12" fill="var(--muted)">Niche, hook score, audio + visual, rewrites</text>
+              <text x="660" y="88" font-size="12" fill="var(--color-text-secondary)">Niche, hook score, audio + visual, rewrites</text>
               
-              <rect x="640" y="120" width="320" height="64" rx="16" fill="var(--surface)" stroke="#FF0000" stroke-width="2"/>
+              <rect x="640" y="120" width="320" height="64" rx="16" fill="var(--color-bg-surface)" stroke="#FF0000" stroke-width="2"/>
               <text x="660" y="148" font-size="15" font-weight="600">YouTube Data API</text>
-              <text x="660" y="168" font-size="12" fill="var(--muted)">Real Shorts in the same niche</text>
+              <text x="660" y="168" font-size="12" fill="var(--color-text-secondary)">Real Shorts in the same niche</text>
 
               
-              <rect x="300" y="210" width="260" height="64" rx="16" fill="var(--surface)" stroke="#F2545B" stroke-width="2"/>
+              <rect x="300" y="210" width="260" height="64" rx="16" fill="var(--color-bg-surface)" stroke="#F2545B" stroke-width="2"/>
               <text x="320" y="238" font-size="15" font-weight="600">RevenueCat</text>
-              <text x="320" y="258" font-size="12" fill="var(--muted)">Paywall · subscriptions · purchases</text>
-              <rect x="640" y="210" width="320" height="64" rx="16" fill="var(--surface)" stroke="#0D96F6" stroke-width="2"/>
+              <text x="320" y="258" font-size="12" fill="var(--color-text-secondary)">Paywall · subscriptions · purchases</text>
+              <rect x="640" y="210" width="320" height="64" rx="16" fill="var(--color-bg-surface)" stroke="#0D96F6" stroke-width="2"/>
               <text x="660" y="238" font-size="15" font-weight="600">App Store</text>
-              <text x="660" y="258" font-size="12" fill="var(--muted)">Subscriptions · Apple ID</text>
+              <text x="660" y="258" font-size="12" fill="var(--color-text-secondary)">Subscriptions · Apple ID</text>
 
               
-              <rect x="0" y="316" width="220" height="64" rx="16" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
+              <rect x="0" y="316" width="220" height="64" rx="16" fill="var(--color-bg-surface)" stroke="var(--color-text-primary)" stroke-width="1.5"/>
               <text x="20" y="344" font-size="15" font-weight="600">v0</text>
-              <text x="20" y="364" font-size="12" fill="var(--muted)">Site design and code</text>
-              <rect x="300" y="316" width="260" height="64" rx="16" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
+              <text x="20" y="364" font-size="12" fill="var(--color-text-secondary)">Site design and code</text>
+              <rect x="300" y="316" width="260" height="64" rx="16" fill="var(--color-bg-surface)" stroke="var(--color-text-primary)" stroke-width="1.5"/>
               <text x="320" y="344" font-size="15" font-weight="600">Vercel</text>
-              <text x="320" y="364" font-size="12" fill="var(--muted)">Landing, terms, privacy</text>
+              <text x="320" y="364" font-size="12" fill="var(--color-text-secondary)">Landing, terms, privacy</text>
 
               
-              <g stroke="var(--ink)" stroke-width="1.5" fill="none">
+              <g stroke="var(--color-text-primary)" stroke-width="1.5" fill="none">
                 <path d="M222 110 H296" marker-end="url(#hk-ah)"/>
                 <path d="M562 72 H636" marker-end="url(#hk-ah)"/>
                 <path d="M562 140 C600 140 600 152 636 152" marker-end="url(#hk-ah)"/>
@@ -192,8 +192,8 @@ const productLinks = [
                 <path d="M222 348 H296" marker-end="url(#hk-ah)"/>
                 <path d="M562 348 C800 348 800 300 800 278" marker-end="url(#hk-ah)" stroke-dasharray="4 4"/>
               </g>
-              <text x="236" y="100" font-size="11" fill="var(--muted)">video</text>
-              <text x="640" y="330" font-size="11" fill="var(--muted)">Download link</text>
+              <text x="236" y="100" font-size="11" fill="var(--color-text-secondary)">video</text>
+              <text x="640" y="330" font-size="11" fill="var(--color-text-secondary)">Download link</text>
             </g>
           </svg>
         </div>
@@ -249,10 +249,10 @@ const productLinks = [
         <p>I split my Apple Ads into four campaigns. Each one targets a different kind of search, so I could give each its own budget and see which searches actually bring installs.</p>
       </div>
       <div class="hk-campaigns">
-        <article class="hk-camp"><h4>Brand</h4><p class="hk-match">Exact match</p><p>Shows the ad when someone searches for Hooko by name. It's cheap and stops other apps from taking those searches.</p><div class="hk-kw"><SkillTag label="hooko" /><SkillTag label="hooko app" /></div></article>
-        <article class="hk-camp"><h4>Category</h4><p class="hk-match">Exact match</p><p>Searches for what Hooko does, like "hook analyzer". This campaign got most of the budget.</p><div class="hk-kw"><SkillTag label="hook analyzer" /><SkillTag label="go viral" /><SkillTag label="video score" /></div></article>
-        <article class="hk-camp"><h4>Competitor</h4><p class="hk-match">Exact match</p><p>Shows the ad when someone searches for a similar app by name. It has its own campaign so I could check if it was worth the cost.</p><div class="hk-kw"><SkillTag label="names of similar apps" /></div></article>
-        <article class="hk-camp"><h4>Discovery</h4><p class="hk-match">Broad match</p><p>Finds new search terms I hadn't thought of. Keywords I already target in other campaigns are blocked here, so I don't pay for them twice.</p><div class="hk-kw"><SkillTag label="search terms report" /></div></article>
+        <article class="hk-camp"><h4>Brand</h4><p class="hk-match">Exact match</p><p>Shows the ad when someone searches for Hooko by name. It's cheap and stops other apps from taking those searches.</p><div class="hk-kw"><Chip label="hooko" /><Chip label="hooko app" /></div></article>
+        <article class="hk-camp"><h4>Category</h4><p class="hk-match">Exact match</p><p>Searches for what Hooko does, like "hook analyzer". This campaign got most of the budget.</p><div class="hk-kw"><Chip label="hook analyzer" /><Chip label="go viral" /><Chip label="video score" /></div></article>
+        <article class="hk-camp"><h4>Competitor</h4><p class="hk-match">Exact match</p><p>Shows the ad when someone searches for a similar app by name. It has its own campaign so I could check if it was worth the cost.</p><div class="hk-kw"><Chip label="names of similar apps" /></div></article>
+        <article class="hk-camp"><h4>Discovery</h4><p class="hk-match">Broad match</p><p>Finds new search terms I hadn't thought of. Keywords I already target in other campaigns are blocked here, so I don't pay for them twice.</p><div class="hk-kw"><Chip label="search terms report" /></div></article>
       </div>
       <div class="hk-flowline" aria-label="How new keywords move between campaigns"><span>Discovery finds a new search term</span><Arrow /><span>It brings installs</span><Arrow /><span>Add it to Category</span><Arrow /><span>Block it in Discovery</span></div>
     </div>

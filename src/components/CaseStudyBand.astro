@@ -2,4 +2,4 @@
 interface Props { labelledBy: string; class?: string; inverse?: boolean; }
 const { labelledBy, class: className, inverse = false } = Astro.props;
 ---
-<section class:list={[inverse && 'case-study-chapter--inverse', className]} aria-labelledby={labelledBy}><div class="case-study-chapter__inner"><slot /></div></section>
+<section class:list={[inverse && 'case-study-chapter--color-neutral-950', className]} aria-labelledby={labelledBy}><div class="case-study-chapter__inner"><slot /></div></section>

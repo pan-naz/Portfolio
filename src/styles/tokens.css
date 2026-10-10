@@ -14,7 +14,7 @@
   --radius-12: 12px; --radius-24: 24px; --radius-40: 40px; --radius-999: 999px;
   --shadow-overlay-light: 0 8px 24px rgb(22 23 21 / .10);
   --ease-stage-entrance: cubic-bezier(.22, .61, .36, 1);
-  /* Semantic theme roles; the established names below stay compatible. */
+  /* Canonical semantic roles used directly by website consumers. */
   --color-text-primary: var(--color-neutral-950);
   --color-text-secondary: var(--color-ink-alpha-64-light);
   --color-bg-canvas: var(--color-canvas-light);
@@ -34,29 +34,26 @@
   --layer-controls: 10; --layer-tooltip: 20; --layer-header: 30;
   --layer-cursor: 40; --layer-overlay: 100;
   color-scheme: light;
-  --ink: var(--color-text-primary); --ink-hover: var(--color-neutral-800); --muted: var(--color-text-secondary);
-  --text-primary: var(--ink); --text-secondary: var(--muted);
-  --text-tertiary: #A19C98;
-  --accent: var(--color-interactive-accent); --canvas: var(--color-bg-canvas);
-  --surface: var(--color-bg-surface); --surface-subtle: var(--color-bg-surface-subtle); --on-primary: var(--color-white);
+  --color-text-primary-hover: var(--color-neutral-800); --color-text-tertiary: #A19C98;
+  --color-text-on-primary: var(--color-white);
   /* Overlay controls keep a high-contrast white surface; floating navigation follows the page theme. */
-  --floating-ink: var(--color-neutral-950); --floating-ink-hover: var(--color-neutral-800); --floating-surface: var(--color-white); --floating-surface-subtle: var(--color-surface-subtle-light);
-  --floating-muted: var(--color-ink-alpha-64-light); --floating-divider: var(--color-ink-alpha-16-light);
-  --floating-accent: var(--color-accent-light); --floating-on-primary: var(--color-white); --floating-focus-ring: var(--color-neutral-950);
-  --shadow-floating-light: var(--shadow-overlay-light);
-  --floating-navigation-ink: var(--floating-ink); --floating-navigation-ink-hover: var(--floating-ink-hover);
-  --floating-navigation-text-secondary: var(--color-ink-alpha-64-light); --floating-navigation-surface: var(--floating-surface);
-  --floating-navigation-surface-subtle: var(--floating-surface-subtle); --floating-navigation-accent: var(--floating-accent);
-  --floating-navigation-on-primary: var(--floating-on-primary); --floating-navigation-focus-ring: var(--floating-focus-ring);
-  --shadow-floating-navigation: var(--shadow-floating-light);
-  --divider: var(--color-border-default); --control-border: var(--ink);
+  --color-overlay-text-primary: var(--color-neutral-950); --color-overlay-text-primary-hover: var(--color-neutral-800); --color-overlay-bg-surface: var(--color-white); --color-overlay-bg-surface-subtle: var(--color-surface-subtle-light);
+  --color-overlay-text-secondary: var(--color-ink-alpha-64-light); --color-overlay-border-default: var(--color-ink-alpha-16-light);
+  --color-overlay-accent: var(--color-accent-light); --color-overlay-text-on-primary: var(--color-white); --color-overlay-focus-ring: var(--color-neutral-950);
+  --shadow-overlay: var(--shadow-overlay-light);
+  --color-navigation-text-primary: var(--color-overlay-text-primary); --color-navigation-text-primary-hover: var(--color-overlay-text-primary-hover);
+  --color-navigation-text-secondary: var(--color-ink-alpha-64-light); --color-navigation-bg-surface: var(--color-overlay-bg-surface);
+  --color-navigation-bg-surface-subtle: var(--color-overlay-bg-surface-subtle); --color-navigation-accent: var(--color-overlay-accent);
+  --color-navigation-text-on-primary: var(--color-overlay-text-on-primary); --color-navigation-focus-ring: var(--color-overlay-focus-ring);
+  --shadow-floating-navigation: var(--shadow-overlay);
+  --control-border: var(--color-text-primary);
   --backdrop-menu: rgb(0 0 0 / .4); --backdrop-case: rgb(0 0 0 / .18);
-  --inverse: var(--color-neutral-950); --sheet: var(--inverse); --waterfall-ink: #111111;
-  --inverse-ink: var(--color-canvas-light); --inverse-text-secondary: var(--color-ink-alpha-64-dark); --inverse-copy: rgb(250 248 247 / .72);
-  --inverse-accent: var(--color-accent-dark); --inverse-divider: var(--color-ink-alpha-10-dark);
-  --inverse-surface: var(--inverse); --inverse-raised-surface: #222320;
-  --project-surface: var(--surface);
-  --footer-icon-ink: #b8b8b8;
+  --color-section-bg-surface: var(--color-neutral-950); --waterfall-icon-color: #111111;
+  --color-inverse-text-primary: var(--color-canvas-light); --color-inverse-text-secondary: var(--color-ink-alpha-64-dark); --color-inverse-text-copy: rgb(250 248 247 / .72);
+  --color-inverse-accent: var(--color-accent-dark); --color-inverse-border-default: var(--color-ink-alpha-10-dark);
+  --color-inverse-bg-surface: var(--color-neutral-950); --color-inverse-bg-raised: #222320;
+  --project-card-bg-surface: var(--color-bg-surface);
+  --footer-pile-icon-color: #b8b8b8;
   --gutter: max(64px, calc((100vw - 1200px) / 2)); --hero-gutter: max(64px, calc((100vw - 1328px) / 2)); --hero-visual-gutter: calc(var(--hero-gutter) - 4px); --header-inset: 32px;
   --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
   --space-6: 24px; --space-8: 32px; --space-12: 48px; --space-16: 64px; --space-24: 96px;
@@ -135,19 +132,17 @@
   --color-interactive-accent: var(--color-accent-dark);
   --color-border-default: var(--color-ink-alpha-10-dark);
   color-scheme: dark;
-  --ink: var(--color-text-primary); --ink-hover: #dedad7; --muted: var(--color-text-secondary);
-  --text-primary: var(--ink); --text-secondary: var(--muted); --focus-ring: var(--ink);
-  --text-tertiary: #9e9996;
-  --sheet: var(--surface); --accent: var(--color-interactive-accent); --canvas: var(--color-bg-canvas); --surface: var(--color-bg-surface);
-  --surface-subtle: var(--color-bg-surface-subtle); --on-primary: var(--color-neutral-950);
-  --inverse-surface: var(--surface); --project-surface: var(--inverse-raised-surface);
-  --divider: var(--color-border-default); --control-border: var(--ink);
-  --waterfall-ink: #ddd8d4;
-  --footer-icon-ink: #747474;
-  --floating-navigation-ink: var(--color-canvas-light); --floating-navigation-ink-hover: #FFFFFF;
-  --floating-navigation-text-secondary: var(--color-ink-alpha-64-dark); --floating-navigation-surface: #242522;
-  --floating-navigation-surface-subtle: #343532; --floating-navigation-accent: var(--color-accent-dark);
-  --floating-navigation-on-primary: var(--color-neutral-950); --floating-navigation-focus-ring: var(--color-canvas-light);
+  --color-text-primary-hover: #dedad7; --focus-ring: var(--color-text-primary);
+  --color-text-tertiary: #9e9996;
+  --color-section-bg-surface: var(--color-bg-surface); --color-text-on-primary: var(--color-neutral-950);
+  --color-inverse-bg-surface: var(--color-bg-surface); --project-card-bg-surface: var(--color-inverse-bg-raised);
+  --control-border: var(--color-text-primary);
+  --waterfall-icon-color: #ddd8d4;
+  --footer-pile-icon-color: #747474;
+  --color-navigation-text-primary: var(--color-canvas-light); --color-navigation-text-primary-hover: #FFFFFF;
+  --color-navigation-text-secondary: var(--color-ink-alpha-64-dark); --color-navigation-bg-surface: #242522;
+  --color-navigation-bg-surface-subtle: #343532; --color-navigation-accent: var(--color-accent-dark);
+  --color-navigation-text-on-primary: var(--color-neutral-950); --color-navigation-focus-ring: var(--color-canvas-light);
   --shadow-floating-navigation: 0 8px 24px rgb(0 0 0 / .38), 0 24px 64px rgb(0 0 0 / .52);
   --shadow-floating: 0 2px 8px rgb(0 0 0 / .16), 0 12px 32px rgb(0 0 0 / .28);
 }
@@ -162,7 +157,7 @@
   --icon-stroke-regular: 1.5; --icon-stroke-strong: 2; --icon-stroke-emphasis: 2.5;
   --icon-linecap: round; --icon-linejoin: round;
   --radius-small: var(--radius-12);
-  --focus-ring: var(--ink); --opacity-disabled: .4;
+  --focus-ring: var(--color-text-primary); --opacity-disabled: .4;
 }
 
 }

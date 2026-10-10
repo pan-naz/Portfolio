@@ -9,7 +9,9 @@ export function scopeSvgFragmentIds(source: string, namespace: string) {
 }
 
 export function prepareSvgAsset(source: string, namespace: string) {
-  const root = scopeSvgFragmentIds(source, namespace).match(/<svg\b([^>]*)>([\s\S]*?)<\/svg>/i);
+  // Preserve original vector bytes while migrating their rendered theme role.
+  const themed = source.replace(/var\(--canvas\)/g, 'var(--color-bg-canvas)');
+  const root = scopeSvgFragmentIds(themed, namespace).match(/<svg\b([^>]*)>([\s\S]*?)<\/svg>/i);
   if (!root) throw new Error('Expected an SVG asset.');
   const attributes = Object.fromEntries([...root[1].matchAll(/([\w:-]+)\s*=\s*["']([^"']*)["']/g)].map(([, name, value]) => [name, value]));
   if (!attributes.viewBox) throw new Error('SVG asset requires a viewBox.');
