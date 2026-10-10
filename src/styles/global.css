@@ -177,6 +177,8 @@ html[data-work-stage-layout='true']:not([data-work-stage-motion='true']) .work-p
 @media (width < 1440px) {
   .chapter .section-heading h2 { text-wrap: balance; }
 }
+.work:has([data-active-filter="selected"]) #work-title,
+.section-heading #sample-work-title { text-wrap: balance; }
 .section-heading { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: var(--space-16); }
 .section-index { padding-top: 0; }
 .section-description { margin-top: var(--space-6); font-size: var(--text-body); line-height: var(--line-height-body); }
