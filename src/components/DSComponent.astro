@@ -2,6 +2,7 @@
 import type { SourceComponent } from '../data/system-inventory';
 import { documentationFor } from '../data/system-documentation';
 import Button from './Button.astro';
+import DSStates from './DSStates.astro';
 import Chip from './Chip.astro';
 import Icon from './Icon.astro';
 import IconButton from './IconButton.astro';
@@ -18,18 +19,20 @@ interface Props { component: SourceComponent; inventory: ReturnType<typeof impor
 const { component, inventory } = Astro.props;
 const doc = documentationFor(component);
 const id = `component-${component.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()}`;
+const variantsHavePreview = ['Button','Chip','NavigationItem','IconButton'].includes(component.name);
+const anatomyParts = [...new Set([...component.source.matchAll(/(?:class="|['"])([a-z][\w-]*(?:__|--|-)[\w-]+)['"]/g)].map(([, part]) => part))].filter(part => !part.startsWith('text-') && !part.startsWith('font-'));
 const tokens = inventory.tokens.filter(token => component.tokens.includes(token.name));
 const code = component.usages.find(usage => !inventory.privateNames.some(name => usage.code.includes(`--${name}`)))?.code ?? component.source.match(/interface Props[^\{]*\{[\s\S]*?\}/)?.[0] ?? component.file;
 ---
 <section id={id} class="ds-section ds-component" data-ds-component={component.name} aria-labelledby={`${id}-title`}>
   <header class="ds-heading"><h2 id={`${id}-title`}>{component.name}</h2></header>
   <h3>Purpose</h3><p>{doc.purpose}</p>
-  <div class="ds-example-preview" inert>
-    {component.name === 'Button' && <Button arrow="up">Get in touch</Button>}
+  <div class:list={['ds-example-preview', component.name === 'TimelineRow' && 'ds-context-inverse']} inert hidden={variantsHavePreview}>
+    {component.name === 'Button' && <Button arrow="up">{component.usages.find(use => use.props.arrow === 'up')?.label || profile.name}</Button>}
     {component.name === 'Chip' && <Chip label={projects[0].tags[0]} />}
     {component.name === 'Icon' && <Icon name="arrow" />}
-    {component.name === 'IconButton' && <IconButton icon="menu" label="Open navigation" />}
-    {component.name === 'TextLink' && <TextLink href={profile.linkedin}>LinkedIn</TextLink>}
+    {component.name === 'IconButton' && <IconButton icon="menu" label={component.usages.find(use => use.props.icon === 'menu')?.props.label || profile.name} />}
+    {component.name === 'TextLink' && <TextLink href={profile.linkedin}>{component.usages.find(use => use.label)?.label || profile.name}</TextLink>}
     {component.name === 'Logo' && <Logo />}
     {component.name === 'Arrow' && <Arrow />}
     {component.name === 'Stat' && <dl><Stat {...impactGroups[0].metrics[0]} /></dl>}
@@ -39,13 +42,16 @@ const code = component.usages.find(usage => !inventory.privateNames.some(name =>
     {component.name === 'NavigationItem' && <NavigationItem label="Work" href="/#work" />}
   </div>
   <h3>Anatomy</h3>
-  {component.props.length ? <div class="ds-table-scroll"><table><thead><tr><th>Part or input</th><th>Required</th><th>Type</th></tr></thead><tbody>{component.props.map(prop => <tr><th>{prop.name}</th><td>{prop.optional ? 'Optional' : 'Required'}</td><td><code>{prop.type}</code></td></tr>)}</tbody></table></div> : <p>Uses the supplied content and the shared layout for this role.</p>}
+  {component.props.length ? <div class="ds-table-scroll"><table><thead><tr><th>Part or input</th><th>Required</th></tr></thead><tbody>{component.props.map(prop => <tr><th>{prop.name}</th><td>{prop.optional ? 'Optional' : 'Required'}</td></tr>)}</tbody></table></div> : <p>Uses the supplied content and the shared layout for this role.</p>}
+  {anatomyParts.length > 0 && <details><summary>Named parts</summary><ul>{anatomyParts.map(part => <li><code>{part}</code></li>)}</ul></details>}
   <h3>Variants</h3><p>The website uses this component in {component.usages.length} {component.usages.length === 1 ? 'place' : 'places'}. Its supported inputs are listed above.</p>
-  <h3>States</h3><p>Default. Interaction and motion states follow the existing website implementation.</p>
+  <h3>States</h3>{variantsHavePreview ? <DSStates component={component} /> : <p>Default. Shared motion and media behavior are described in the patterns below.</p>}
   <h3>Usage</h3><dl class="ds-usage"><dt>Use when</dt><dd>{doc.useWhen}</dd><dt>Don’t use when</dt><dd>{doc.avoidWhen}</dd></dl>
   <h3>Accessibility</h3><p>{doc.accessibility}</p>
   <h3>Tokens</h3>
-{tokens.length ? <div class="ds-table-scroll"><table><thead><tr><th>Token</th><th>Light</th><th>Dark</th></tr></thead><tbody>{tokens.map(token => <tr id={token.owner === component.name ? `token-${token.name}` : undefined} data-ds-token={token.owner === component.name ? token.name : undefined}><th><a href={`#token-${token.name}`}><code>{`--${token.name}`}</code></a></th><td>{token.owner === component.name ? token.resolvedLight : 'Shared token'}</td><td>{token.owner === component.name ? token.resolvedDark : 'Shared token'}</td></tr>)}</tbody></table></div> : <p>No additional system tokens.</p>}
+{tokens.some(token => token.owner === component.name) && <div class="ds-table-scroll"><table><thead><tr><th>Token</th><th>Light</th><th>Dark</th></tr></thead><tbody>{tokens.filter(token => token.owner === component.name).map(token => <tr id={`token-${token.name}`} data-ds-token={token.name}><th><code>{`--${token.name}`}</code></th><td>{token.resolvedLight}</td><td>{token.resolvedDark}</td></tr>)}</tbody></table></div>}
+  {tokens.length ? <ul class="ds-token-links">{tokens.filter(token => token.owner !== component.name).map(token => <li><a href={`#token-${token.name}`}><code>{`--${token.name}`}</code></a></li>)}</ul> : <p>No additional system tokens.</p>}
+
   <h3>Code</h3><pre><code>{code}</code></pre>
   <details class="ds-implementation"><summary>Implementation</summary><p><code>{component.file}</code></p><ul>{[...new Set(component.usages.map(usage => usage.file))].map(file => <li><code>{file}</code></li>)}</ul></details>
 </section>

@@ -35,6 +35,13 @@
 .ds-implementation { margin-top: var(--space-6); font-size: var(--text-small); }
 .ds-implementation summary { cursor: pointer; min-height: var(--control-icon); }
 .ds-footer { padding-block: var(--space-8); border-top: 1px solid var(--color-border-default); }
+.ds-token-links { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); list-style: none; padding: 0; font-size: var(--text-small); }
+.ds-labelled-examples { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-6); }
+.ds-labelled-examples h4 { font-size: var(--text-small); margin-bottom: var(--space-3); }
+.ds-matrix-scroll { overflow-x: auto; max-width: 100%; }
+.ds-matrix { min-width: 780px; }
+.ds-state-example { padding: var(--space-3); border-radius: var(--radius-small); width: max-content; }
+.ds-context-inverse { background: var(--color-inverse-bg-surface); color: var(--color-inverse-text-primary); }
 @media (max-width: 1279px) { .ds-main { width: calc(100% - 336px); margin-left: 264px; } }
 @media (max-width: 767px) { .ds-sidebar { position: static; width: auto; padding: var(--space-6); } .ds-navigation { display: grid; } .ds-nav-group { min-width: 0; } .ds-main { width: auto; margin-inline: var(--space-6); padding-top: var(--space-8); } .ds-section { margin-bottom: var(--space-24); } .ds-section th, .ds-section td { padding: var(--space-2); } .ds-usage { grid-template-columns: minmax(0,1fr); } }
 }

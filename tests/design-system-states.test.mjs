@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { statePreviewStyles } from '../src/data/system-preview-styles.ts';
+const styles = statePreviewStyles();
+const shared = readFileSync('src/styles/global.css', 'utf8');
+assert.ok(styles.startsWith('@layer system, project; @layer system {'));
+for (const state of ['hover','focus','pressed','active']) assert.ok(styles.includes(`data-ds-preview-state="${state}"`));
+assert.ok(styles.includes(':where(button, a, summary, input, select, textarea, [tabindex]'), 'Focus selector remains intact when its comma list is scoped');
+assert.ok(styles.includes('outline: 2px solid var(--focus-ring)') && shared.includes('outline: 2px solid var(--focus-ring)'), 'Frozen focus comes from the real focus rule');
+assert.ok(styles.includes('transform: scale(.98)') && shared.includes('transform: scale(.98)'), 'Pressed state uses the real transform');
+assert.ok(!styles.includes('@layer project') && !styles.includes('/projects/'), 'Project values cannot enter state previews');
+console.log('Frozen catalog states preserve real selectors and shared values without project styles.');

@@ -1,4 +1,5 @@
 ---
+import { statePreviewStyles } from '../data/system-preview-styles';
 import DSFoundations from './DSFoundations.astro';
 import DSComponent from './DSComponent.astro';
 import DSPatterns from './DSPatterns.astro';
@@ -20,3 +21,5 @@ const inventory = buildSystemInventory();
   <section id="writing" class="ds-section"><header class="ds-heading"><h2>Writing</h2><p>Use short, clear labels. Put the purpose first. Keep project names and supplied claims unchanged, with their context.</p></header></section>
   <footer class="ds-footer"><TextLink href="/" compact>Back to portfolio</TextLink></footer>
 </main>
+
+<style is:global set:html={statePreviewStyles()} />

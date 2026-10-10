@@ -19,3 +19,9 @@ const update = () => {
 window.addEventListener('scroll', update, { passive: true });
 window.addEventListener('hashchange', () => mark(location.hash.slice(1)));
 mark(location.hash.slice(1) || 'overview');
+// Frozen examples use data attributes rather than adding catalog props to the
+// shared components. Their state CSS is generated from the real stylesheet.
+for (const wrapper of document.querySelectorAll<HTMLElement>('.ds-state-example[data-state]')) {
+  const target = wrapper.querySelector<HTMLElement>('.button, .icon-button, .navigation-item, .text-link');
+  if (target) target.dataset.dsPreviewState = wrapper.dataset.state;
+}

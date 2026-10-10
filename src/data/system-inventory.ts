@@ -5,7 +5,7 @@ export interface SourceToken {
   name: string; light: string; dark: string; resolvedLight: string; resolvedDark: string;
   users: string[]; tier: 'primitive' | 'semantic' | 'component'; category: string; owner?: string;
 }
-export interface ComponentUsage { file: string; props: Record<string, string>; code: string; }
+export interface ComponentUsage { file: string; props: Record<string, string>; code: string; label?: string; }
 export interface SourceComponent {
   name: string; file: string; usages: ComponentUsage[]; tokens: string[];
   props: { name: string; type: string; optional: boolean }[]; source: string;
@@ -39,7 +39,7 @@ export function buildSystemInventory(root = process.cwd()) {
   const infrastructure = new Set(['SiteMetadata', 'PortfolioPage', 'CaseStudyPage', 'CaseStudyContent', 'CaseStudyLayer', 'StandaloneCaseStyles']);
   const projectOnly = new Set(['HookoHero', 'HookoPhoneFrame']);
   const componentFiles = [...reachable].filter(file => file.includes('/components/') && !infrastructure.has(basename(file, '.astro')) && !projectOnly.has(basename(file, '.astro')) && !(file.endsWith('CaseStudy.astro') && !basename(file).startsWith('CaseStudy'))).sort();
-  const sources = all.filter(file => !file.includes('/pages/design-system') && !/\/(?:DS[^/]*\.astro|(?:design-system(?:-[\w-]+)?|ds-components|system-inventory|system-documentation)\.ts|(?:design-system|static-preview|tokens)\.css)$/.test(file));
+  const sources = all.filter(file => !file.includes('/pages/design-system') && !/\/(?:DS[^/]*\.astro|(?:design-system(?:-[\w-]+)?|ds-components|system-inventory|system-documentation|system-preview-styles)\.ts|(?:design-system|static-preview|tokens)\.css)$/.test(file));
   const css = read('src/styles/tokens.css');
   const palettes = readSystemTokens(css);
   const definitions = new Set(Object.keys(palettes.light));
@@ -74,7 +74,10 @@ export function buildSystemInventory(root = process.cwd()) {
       const imports = [...text.matchAll(/import\s+(\w+)\s+from\s+['"]([^'"]+\.astro)['"]/g)].filter(([, , specifier]) => resolve(dirname(caller), specifier) === file);
       for (const [, local] of imports) for (const match of text.replace(/<style\b[^>]*>[\s\S]*?<\/style>/g, '').matchAll(new RegExp(`<${local}\\b([^>]*?)(?:/>|>)`, 'g'))) {
         const props = Object.fromEntries([...match[1].matchAll(/([\w-]+)(?:=(?:"([^"]*)"|'([^']*)'|\{([^{}]*)\}))?/g)].map(([, key, double, single, expression]) => [key, double ?? single ?? (expression !== undefined ? `{${expression}}` : 'true')]));
-        usages.push({ file: relative(root, caller), props, code: match[0] });
+        const tail = text.replace(/<style\b[^>]*>[\s\S]*?<\/style>/g, '').slice((match.index || 0) + match[0].length);
+        const inner = match[0].endsWith('/>') ? '' : tail.slice(0, tail.indexOf(`</${local}>`)).trim();
+        const label = inner && /^[^<{}]+$/.test(inner) ? inner : undefined;
+        usages.push({ file: relative(root, caller), props, code: match[0], label });
       }
     }
     const propsBlock = source.match(/interface Props[^\{]*\{([\s\S]*?)\}/)?.[1] || '';
@@ -82,7 +85,7 @@ export function buildSystemInventory(root = process.cwd()) {
     const names = new Set([...source.matchAll(/(?<![\w-])--([\w-]+)(?![\w-])/g)].map(([, token]) => token));
     const classes = [...source.matchAll(/['"]([a-z][\w-]+)['"]/g)].map(([, value]) => value);
     for (const stylesheet of sources.filter(path => path.endsWith('.css') && !/^\/\* Project-only:/.test(readFileSync(path, 'utf8')))) {
-      for (const [, selectors, body] of readFileSync(stylesheet, 'utf8').matchAll(/([^{}]+)\{([^{}]*)\}/g)) if (classes.some(cls => selectors.includes('.' + cls))) for (const [, token] of body.matchAll(/var\(--([\w-]+)/g)) names.add(token);
+      for (const [, selectors, body] of readFileSync(stylesheet, 'utf8').matchAll(/([^{}]+)\{([^{}]*)\}/g)) if (classes.some(cls => new RegExp('\\.' + cls + '(?![\\w-])').test(selectors))) for (const [, token] of body.matchAll(/var\(--([\w-]+)/g)) names.add(token);
     }
     return { name, file: relative(root, file), usages, source, props, tokens: tokens.filter(token => names.has(token.name) || token.owner === name).map(token => token.name) };
   });
