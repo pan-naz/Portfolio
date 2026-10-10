@@ -1,6 +1,7 @@
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { icons } from '../src/data/icons.ts';
 import { buildSystemInventory } from '../src/data/system-inventory.ts';
 import { componentVariants } from '../src/data/system-variants.ts';
 import { componentPurposes } from '../src/data/system-documentation.ts';
@@ -120,6 +121,11 @@ export function validateVariantCoverage(model, documented) {
 }
 export function validateInventoryCoverage(model, documentedComponents, documentedTokens, documentedIcons, tokenSource, catalogSource) {
   const failures = [];
+  for (const name of model.unusedTokens || []) failures.push(`Unused system token: ${name}`);
+  const literalValues = (text) => [...text.matchAll(/#[\da-f]{3,8}\b|rgba?\([^)]*\)/gi)].map(([value]) => value.toLowerCase().replace(/^#([\da-f])([\da-f])([\da-f])$/, '#$1$1$2$2$3$3'));
+  const literals = literalValues(tokenSource + catalogSource);
+  for (const value of model.projectValues || []) if (literals.includes(value)) failures.push(`Project-only literal entered the system: ${value}`);
+  for (const value of model.projectBackgroundImages || []) if (tokenSource.includes(value) || catalogSource.includes(value)) failures.push(`Project-only image entered the system: ${value}`);
   const exact = (used, documented, kind) => {
     for (const value of used) if (!documented.includes(value)) failures.push(`Undocumented website ${kind}: ${value}`);
     for (const value of documented) if (!used.includes(value)) failures.push(`Catalog-only ${kind}: ${value}`);
@@ -133,6 +139,7 @@ export function validateInventoryCoverage(model, documentedComponents, documente
   return failures;
 }
 errors.push(...validateInventoryCoverage(inventory, Object.keys(componentPurposes), inventory.tokens.map(token => token.name), inventory.iconNames, read('src/styles/tokens.css'), catalog));
+for (const name of Object.keys(icons)) if (!inventory.iconNames.includes(name)) errors.push(`Unused system icon: ${name}`);
 if (read('src/layouts/DSLayout.astro').includes('hooko-artwork.css')) errors.push('Project artwork styles must not be imported by the catalog layout.');
 if (process.argv.includes('--self-test')) {
   for (const kind of ['component', 'token', 'icon']) {
@@ -156,4 +163,4 @@ if (process.argv.includes('--self-test')) {
   console.log('Design-system guard self-test passed (missing components, broken anchors and inline route designs rejected).');
 }
 if (errors.length) { console.error(errors.join('\n')); process.exit(1); }
-console.log(`Design-system contract verified: ${registry.length} documented components render direct specimens with stable section targets and no catalog style forks.`);
+console.log(`Design-system contract verified: ${registry.length} website components documented from source with stable section targets and no catalog style forks.`);

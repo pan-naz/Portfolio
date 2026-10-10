@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { buildSystemInventory } from '../src/data/system-inventory.ts';
+import { componentPurposes } from '../src/data/system-documentation.ts';
+import { validateInventoryCoverage } from '../scripts/validate-design-system.mjs';
+const model = buildSystemInventory();
+const css = readFileSync('src/styles/tokens.css','utf8');
+const catalog = readFileSync('src/components/DSCatalog.astro','utf8');
+const check = (source=css, page=catalog, inventory=model) => validateInventoryCoverage(inventory,Object.keys(componentPurposes),model.tokens.map(token=>token.name),model.iconNames,source,page);
+assert.deepEqual(check(), []);
+const colour = model.projectValues.find(value => value.startsWith('#') && value !== '#000000');
+assert.ok(colour);
+assert.ok(check(css + `\n--fixture: ${colour};`).some(error => error.includes('Project-only literal')));
+assert.ok(check(css,catalog + `<style>.fixture { background: ${colour}; }</style>`).some(error => error.includes('Project-only literal')));
+assert.ok(check(css,catalog + `url('${model.projectBackgroundImages[0]}')`).some(error => error.includes('Project-only image')));
+assert.ok(check(css,catalog,{...model, unusedTokens:['unused-fixture']}).some(error => error.includes('Unused system token')));
+// Shared white is allowed even when a project spells it in short hex form.
+assert.ok(!model.projectValues.includes('#ffffff'));
+assert.deepEqual(check(css+'\n--fixture-white: #fff;'),[]);
+console.log('Project literals/backgrounds and unused-token negative fixtures rejected; shared colours remain valid.');

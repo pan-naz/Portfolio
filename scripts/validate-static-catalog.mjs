@@ -23,7 +23,7 @@ const documentedNames = [...new Set([...catalog.matchAll(/data-ds-component="([^
 const documentedPaths = inventory.components.filter(component => documentedNames.includes(component.name)).map(component => component.file);
 const documentedTokens = [...new Set([...catalog.matchAll(/data-ds-token="([^"]+)"/g)].map(([, name]) => name))];
 const documentedIcons = [...new Set([...catalog.matchAll(/data-ds-icon="([^"]+)"/g)].map(([, name]) => name))];
-const coverageErrors = validateInventoryCoverage(inventory, documentedPaths, documentedTokens, documentedIcons, read('src/styles/tokens.css'), catalog);
+const coverageErrors = validateInventoryCoverage(inventory, documentedPaths, documentedTokens, documentedIcons, read('src/styles/tokens.css'), catalog + styles(catalog));
 assert.equal(coverageErrors.length, 0, coverageErrors.join('\n'));
 const variants = html => new Set([...html.matchAll(/\bclass="([^"]*)"/g)].flatMap(([, value]) => {
   const classes = value.split(/\s+/);
