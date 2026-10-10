@@ -16,7 +16,7 @@
 .peak-button figcaption { margin-top: var(--space-4); text-align: center; color: var(--color-text-secondary); }
 .peak-palette { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6) var(--grid-gap); margin: var(--space-6) 0 0; padding: 0; list-style: none; }
 .peak-swatch { height: var(--space-24); border: 1px solid var(--color-border-default); border-radius: var(--radius-small); background: var(--peak-swatch); }
-.peak-color-label { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-2); margin-top: var(--space-3); font-size: var(--text-small); }
+.peak-color-label { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-2); margin-top: var(--space-3); font-size: var(--text-body-s); }
 .peak-color-label code { font-family: var(--font-body); color: var(--color-text-secondary); }
 .peak-type-grid { margin-top: var(--space-6); }
 .peak-type-specimen { padding-top: var(--space-6); border-top: 1px solid var(--color-border-default); }
@@ -24,7 +24,7 @@
 .peak-type-display + .case-study-eyebrow { margin-top: var(--space-4); }
 .peak-type-example { margin-top: var(--space-6); }
 .peak-type-example > :first-child { color: var(--color-text-secondary); }
-.peak-case .peak-type-sample { margin-top: var(--space-2); font-size: var(--text-body); line-height: 1.5; }
+.peak-case .peak-type-sample { margin-top: var(--space-2); font-size: var(--text-body-l); line-height: 1.5; }
 /* These are original brand specimens; portfolio UI keeps the shared heading and body tokens. */
 @font-face { font-family: 'Peak Playfair'; font-style: italic; font-weight: 400; font-display: swap; src: url('/projects/peak-hotel-case-study/playfair-italic.ttf') format('truetype'); }
 @font-face { font-family: 'Peak Playfair'; font-style: normal; font-weight: 700; font-display: swap; src: url('/projects/peak-hotel-case-study/playfair-bold.ttf') format('truetype'); }

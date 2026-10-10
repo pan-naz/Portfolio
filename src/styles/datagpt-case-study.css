@@ -55,7 +55,7 @@
 .dg-results .stat dt { display: flex; height: 100%; flex-direction: column; gap: var(--space-4); }
 .dg-results .stat-label { order: -1; }
 .dg-results .stat-value { margin-top: auto; }
-.dg-testimonials figcaption { font-size: var(--text-small); }
+.dg-testimonials figcaption { font-size: var(--text-body-s); }
 .dg-testimonials blockquote { position: relative; margin: var(--space-4) 0; padding: var(--space-4) var(--space-4) var(--space-4) var(--space-8); border-radius: var(--dg-bubble-cut) var(--radius-medium) var(--radius-medium); background: var(--color-overlay-bg-surface); color: var(--color-overlay-text-primary); }
 .dg-testimonials blockquote::before { content: '“'; position: absolute; left: var(--space-3); top: var(--space-2); color: var(--color-interactive-accent); font-size: 2rem; font-weight: 600; }
 .dg-testimonials .dg-card > p { color: var(--color-text-secondary); }

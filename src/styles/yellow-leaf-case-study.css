@@ -12,17 +12,17 @@
 .yellow-duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--grid-gap); align-items: start; }
 .yellow-duo > * { min-width: 0; }
 .yellow-brand-card { display: grid; align-content: space-between; gap: var(--space-6); height: 100%; margin: 0; padding: var(--space-8); background: var(--color-bg-surface); border-radius: var(--radius-medium); box-shadow: var(--shadow-floating); }
-.yellow-brand-card figcaption { color: var(--color-text-secondary); font-size: var(--text-small); line-height: 1.428571; }
+.yellow-brand-card figcaption { color: var(--color-text-secondary); font-size: var(--text-body-s); line-height: 1.428571; }
 .yellow-equation { display: grid; grid-template-columns: minmax(0, 1fr) var(--space-6) minmax(0, 1fr) var(--space-6) minmax(0, 1fr); gap: var(--space-2); align-items: center; text-align: center; }
 .yellow-equation > div { display: grid; justify-items: center; gap: var(--space-3); }
 .yellow-equation .svg-asset { width: 100%; max-width: var(--space-24); height: auto; }
-.yellow-equation span { font-size: var(--text-small); line-height: 1.428571; }
+.yellow-equation span { font-size: var(--text-body-s); line-height: 1.428571; }
 .yellow-equation > svg { margin-bottom: var(--space-8); }
 .yellow-construction { display: block; width: 100%; max-width: 300px; height: auto; margin-inline: auto; }
 .yellow-palette { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--grid-gap); margin: var(--space-6) 0 0; padding: 0; list-style: none; }
 .yellow-palette > li { overflow: hidden; border: 1px solid var(--color-inverse-border-default); border-radius: var(--radius-small); }
 .yellow-swatch { aspect-ratio: 4 / 3; background: var(--yellow-swatch); }
-.yellow-colour-label { display: grid; gap: var(--space-1); padding: var(--space-4); font-size: var(--text-small); line-height: 1.428571; }
+.yellow-colour-label { display: grid; gap: var(--space-1); padding: var(--space-4); font-size: var(--text-body-s); line-height: 1.428571; }
 .yellow-colour-label code { color: var(--color-text-secondary); font-family: var(--font-body); }
 .yellow-type-grid { margin-top: var(--space-6); }
 .yellow-type-card { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-6); padding: var(--space-8); border: 1px solid var(--color-inverse-border-default); border-radius: var(--radius-medium); height: 100%; }
@@ -30,7 +30,7 @@
 .yellow-type-card > div > .case-study-eyebrow { margin-top: 0; }
 .yellow-type-example { margin-top: var(--space-6); }
 .yellow-type-example > :first-child { color: var(--color-text-secondary); }
-.yellow-case .yellow-type-sample { margin-top: var(--space-2); font-size: var(--text-body); line-height: 1.5; }
+.yellow-case .yellow-type-sample { margin-top: var(--space-2); font-size: var(--text-body-l); line-height: 1.5; }
 /* Original brand specimens alone retain Yellow Leaf's fonts and weights. */
 @font-face { font-family: 'Yellow Leaf Oswald'; font-style: normal; font-weight: 400 700; font-display: swap; src: url('/projects/yellow-leaf-case-study/oswald.woff2') format('woff2'); }
 @font-face { font-family: 'Yellow Leaf Raleway'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('/projects/yellow-leaf-case-study/raleway.woff2') format('woff2'); }

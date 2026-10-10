@@ -19,7 +19,7 @@
 .index-palette { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); margin: 0; padding: 0; list-style: none; }
 .index-palette > li { overflow: hidden; background: var(--color-overlay-bg-surface); color: var(--color-overlay-text-primary); border: 1px solid var(--color-inverse-border-default); border-radius: var(--radius-medium); }
 .index-swatch { aspect-ratio: 4 / 3; background: var(--index-swatch); }
-.index-palette > li > div:last-child { display: grid; gap: 2px; padding: var(--space-3) var(--space-4) var(--space-4); font-size: var(--text-small); line-height: 1.428571; }
+.index-palette > li > div:last-child { display: grid; gap: 2px; padding: var(--space-3) var(--space-4) var(--space-4); font-size: var(--text-body-s); line-height: 1.428571; }
 .index-palette code { font-family: var(--font-body); font-size: var(--text-label-s); color: var(--color-overlay-text-secondary); }
 .index-specimens { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
 .index-specimen { display: grid; align-content: start; gap: var(--space-4); min-width: 0; padding: var(--space-6); border-radius: var(--radius-medium); background: var(--color-overlay-bg-surface); color: var(--index-color-222222); }

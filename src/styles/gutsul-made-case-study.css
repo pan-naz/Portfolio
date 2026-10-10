@@ -63,7 +63,7 @@
 .gutsul-palette { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); width: 100%; list-style: none; padding: 0; margin: 0; }
 .gutsul-palette > li { display: grid; justify-items: center; gap: var(--space-1); text-align: center; }
 .gutsul-palette span { width: 56px; height: 56px; margin: 10px 10px var(--space-6); border: 14px solid var(--gutsul-swatch); transform: rotate(45deg); }
-.gutsul-palette code { color: var(--color-overlay-text-secondary); font: inherit; font-size: var(--text-small); }
+.gutsul-palette code { color: var(--color-overlay-text-secondary); font: inherit; font-size: var(--text-body-s); }
 @media (max-width: 1023px) {
   .gutsul-story { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--grid-gap); }
   .gutsul-story-step { display: grid; gap: var(--space-3); align-content: start; }

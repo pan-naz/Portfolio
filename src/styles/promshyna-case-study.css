@@ -38,7 +38,7 @@
 .promshyna-swatch { aspect-ratio: 2 / 1; background: var(--promshyna-swatch); border-bottom: 1px solid var(--color-overlay-border-default); }
 .promshyna-palette > li > div:last-child { display: grid; gap: var(--space-1); padding: var(--space-4); }
 .promshyna-palette code { color: var(--color-overlay-text-secondary); font: inherit; }
-.promshyna-palette p { margin-top: 0; color: var(--color-overlay-text-secondary); font-size: var(--text-small); line-height: 1.428571; }
+.promshyna-palette p { margin-top: 0; color: var(--color-overlay-text-secondary); font-size: var(--text-body-s); line-height: 1.428571; }
 @media (max-width: 1023px) {
   .promshyna-rail { display: none; }
   .promshyna-copy { padding-left: 0; }
