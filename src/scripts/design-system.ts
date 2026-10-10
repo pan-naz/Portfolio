@@ -73,6 +73,7 @@ const refreshValues=()=>{
  }
  for(const node of view.querySelectorAll<HTMLElement>('[data-ds-token-swatch]')){const name=node.dataset.dsTokenSwatch!;if(name.startsWith('color-')){node.style.backgroundColor=`var(--${name})`;node.dataset.color='';}}
  probe.remove();
+ for(const grid of view.querySelectorAll<HTMLElement>('[data-ds-grid]')){const computed=getComputedStyle(grid),count=computed.gridTemplateColumns.split(' ').length;view.querySelector('[data-ds-grid-spec="'+grid.dataset.dsGrid+'"]')!.textContent=`${count} columns here · ${computed.gap} gap`;}
  const namedWeights:Record<string,string>={'400':'Regular','500':'Medium','600':'Semibold'};
  for(const node of view.querySelectorAll<HTMLElement>('[data-ds-measure]')){
   const sample=view.querySelector<HTMLElement>('.ds-specimens '+node.dataset.dsMeasure);if(!sample)continue;
