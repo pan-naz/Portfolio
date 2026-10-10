@@ -15,7 +15,7 @@ assert.ok(validateVectorSvg('<svg viewBox="0 0 0 24"><path d="M0 0" /></svg>', '
 assert.ok(validateVectorSvg('<svg viewBox="0 0 24 24"><path d="M0 0" fill="url(logo.png)" /></svg>', 'external bitmap').some(error => error.includes('references')));
 assert.deepEqual(validateVectorSvg('<svg viewBox="0 0 24 24"><defs><linearGradient id="ink"/></defs><path d="M0 0" fill="url(#ink)" /></svg>', 'internal gradient'), []);
 assert.deepEqual(validateSvgAssets().errors, []);
-const hooko = readFileSync(new URL('../public/projects/hooko-logo.svg', import.meta.url), 'utf8');
+const hooko = readFileSync(new URL('../public/projects/hooko-case-study/hooko-logo.svg', import.meta.url), 'utf8');
 const card = prepareSvgAsset(hooko, 'card');
 const caseStudy = prepareSvgAsset(hooko, 'case');
 assert.equal(card.attributes.viewBox, '0 0 1024 1024', 'Keep the original logo coordinate system');
@@ -32,7 +32,7 @@ assert.ok(linked.body.includes('href="#copy-mark"') && linked.body.includes('fil
 assert.throws(() => prepareSvgAsset('<svg><path d="M0 0"/></svg>', 'invalid'), /viewBox/);
 // Exercise the runtime transition copier with the actual shared marks. Hiding
 // the source must never remove a copied leaf, gradient, filter or clip.
-const logoAssets = ['yellow-leaf-case-study/logo.svg', 'hooko-logo.svg', 'voximplant-logo.svg'];
+const logoAssets = ['yellow-leaf-case-study/logo.svg', 'hooko-case-study/hooko-logo.svg', 'voximplant-case-study/voximplant-logo.svg'];
 const copyMark = (asset, index) => {
   const original = prepareSvgAsset(readFileSync(new URL('../public/projects/' + asset, import.meta.url), 'utf8'), 'original-' + index);
   const attributes = { ...original.attributes, width: '32', height: '32', 'data-svg-src': '/projects/' + asset };
@@ -70,7 +70,7 @@ for (const copied of [...copiedMarks, ...repeatedMarks]) {
 }
 const home = readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8');
 assert.ok(!/<img\b[^>]*\bsrc="[^"]+\.svg"/.test(home), 'Homepage marks render as actual inline SVG components');
-assert.ok(home.includes('data-svg-src="/projects/voximplant-logo.svg"'), 'Project cards and opened case templates share the SVG mark renderer');
+assert.ok(home.includes('data-svg-src="/projects/voximplant-case-study/voximplant-logo.svg"'), 'Project cards and opened case templates share the SVG mark renderer');
 const pipeline = readFileSync(new URL('../dist/case-studies/hooko/index.html', import.meta.url), 'utf8').match(/<ol class="hk-pipeline"[^>]*>([\s\S]*?)<\/ol>/)?.[1];
 assert.equal([...pipeline.matchAll(/<li\b/g)].length, 6, 'Consolidating service marks preserves all six pipeline stages');
 assert.equal([...pipeline.matchAll(/data-svg-src=/g)].length, 6, 'Each service badge shares its source with the tool cards');
