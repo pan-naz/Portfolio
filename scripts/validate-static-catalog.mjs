@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { dsComponents } from '../src/data/ds-components.ts';
 import { buildSystemInventory } from '../src/data/system-inventory.ts';
 import { validateInventoryCoverage, validateVariantCoverage } from './validate-design-system.mjs';
 const root = resolve(import.meta.dirname, '..');
@@ -15,7 +16,11 @@ const styles = html => [...html.matchAll(/<link[^>]*href="([^"]+\.css)"[^>]*>/g)
 assert.ok(styles(catalog).includes('html[data-static]'), 'Catalog must load motion suppression');
 assert.ok(!styles(home).includes('html[data-static]'), 'Catalog motion CSS must not enter the website bundle');
 assert.ok(!catalog.includes('website-components') && !catalog.includes('/design-system/preview/') && !catalog.includes('<iframe'), 'The retired Website section and embedded preview must stay removed');
-assert.ok(!catalog.includes('role="tablist"') && !catalog.includes('id="ds-search"'), 'Retired tab and search interfaces must stay removed');
+assert.ok(!catalog.includes('id="ds-search"'), 'Retired search must stay removed');
+assert.equal((catalog.match(/<[^>]+role="tablist"/g) || []).length, dsComponents.length, 'Each reusable component has one detail tablist');
+assert.equal((catalog.match(/<[^>]+role="tabpanel"/g) || []).length, dsComponents.length * 4, 'Each card has four panels');
+assert.equal((catalog.match(/<[^>]+role="tab"/g) || []).length, dsComponents.length * 4, 'Each card has four tabs');
+assert.ok(!catalog.includes('Not used'), 'Preview must contain only used combinations');
 const ids = [...catalog.matchAll(/\bid="([^"]+)"/g)].map(([,id]) => id);
 assert.equal(new Set(ids).size, ids.length, 'Catalog IDs must remain unique');
 const inventory = buildSystemInventory(root);

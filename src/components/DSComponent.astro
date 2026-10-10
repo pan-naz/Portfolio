@@ -2,60 +2,42 @@
 import type { SourceComponent } from '../data/system-inventory';
 import { componentVariants } from '../data/system-variants';
 import { documentationFor } from '../data/system-documentation';
+import { componentManifest } from '../data/system-components';
 import Button from './Button.astro';
-import DSStates from './DSStates.astro';
-import Chip from './Chip.astro';
-import Icon from './Icon.astro';
-import IconButton from './IconButton.astro';
-import TextLink from './TextLink.astro';
-import Logo from './Logo.astro';
-import Stat from './Stat.astro';
-import TimelineRow from './TimelineRow.astro';
-import ProjectIdentity from './ProjectIdentity.astro';
-import ProjectTags from './ProjectTags.astro';
-import NavigationItem from './NavigationItem.astro';
-import Arrow from './Arrow.astro';
-import { profile, projects, impactGroups, experience } from '../data/portfolio';
+import DSPreview from './DSPreview.astro';
 interface Props { component: SourceComponent; inventory: ReturnType<typeof import('../data/system-inventory').buildSystemInventory>; }
 const { component, inventory } = Astro.props;
 const doc = documentationFor(component);
+const entry = componentManifest.find(item => item.file === component.file)!;
 const id = `component-${component.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()}`;
-const variantsHavePreview = ['Button','Chip','NavigationItem','IconButton','TextLink','Logo'].includes(component.name);
-const inlinePreview = ['Icon','Arrow','Stat','TimelineRow','ProjectIdentity','ProjectTags'].includes(component.name);
-const anatomyParts = [...new Set([...component.source.matchAll(/(?:class="|['"])([a-z][\w-]*(?:__|--|-)[\w-]+)['"]/g)].map(([, part]) => part))].filter(part => !part.startsWith('text-') && !part.startsWith('font-'));
 const tokens = inventory.tokens.filter(token => component.tokens.includes(token.name));
-const code = component.usages.find(usage => !inventory.privateNames.some(name => usage.code.includes(`--${name}`)))?.code ?? component.source.match(/interface Props[^\{]*\{[\s\S]*?\}/)?.[0] ?? component.file;
+const helpers = [...component.source.matchAll(/import\s+(\w+)\s+from\s+['"][^'"]+\.astro['"]/g)].map(([,name]) => name);
+const tabs = ['Preview', 'Specs', 'Usage', 'Code'];
+const code = component.usages.find(usage => !inventory.privateNames.some(name => usage.code.includes(`--${name}`)))?.code ?? component.file;
 ---
 <section id={id} class="ds-section ds-component" data-ds-component={component.name} aria-labelledby={`${id}-title`}>
-  <header class="ds-heading"><h2 id={`${id}-title`}>{component.name}</h2></header>
-  <h3>Purpose</h3><p>{doc.purpose}</p>
-  {inlinePreview && <div class:list={['ds-example-preview', component.name === 'TimelineRow' && 'ds-context-inverse']} inert>
-    {component.name === 'Button' && <Button arrow="up">{component.usages.find(use => use.props.arrow === 'up')?.label || profile.name}</Button>}
-    {component.name === 'Chip' && <Chip label={projects[0].tags[0]} />}
-    {component.name === 'Icon' && <Icon name="arrow" />}
-    {component.name === 'IconButton' && <IconButton icon="menu" label={component.usages.find(use => use.props.icon === 'menu')?.props.label || profile.name} />}
-    {component.name === 'TextLink' && <TextLink href={profile.linkedin}>{component.usages.find(use => use.label)?.label || profile.name}</TextLink>}
-    {component.name === 'Logo' && <Logo />}
-    {component.name === 'Arrow' && <Arrow />}
-    {component.name === 'Stat' && <dl><Stat {...impactGroups[0].metrics[0]} /></dl>}
-    {component.name === 'TimelineRow' && <ul class="experience-list"><TimelineRow item={experience[0]} /></ul>}
-    {component.name === 'ProjectIdentity' && <ProjectIdentity title={projects[0].title} />}
-    {component.name === 'ProjectTags' && <ProjectTags tags={projects[0].tags} />}
-    {component.name === 'NavigationItem' && <NavigationItem label="Work" href="/#work" />}
-  </div>}
-  {component.name === 'ThemeToggle' && <p>Use the theme control in this page’s navigation to try both themes.</p>}
-  <h3>Anatomy</h3>
-  {component.props.length ? <div class="ds-table-scroll"><table><thead><tr><th>Part or input</th><th>Required</th></tr></thead><tbody>{component.props.map(prop => <tr><th>{prop.name}</th><td>{prop.conditional ? 'Required in one input form' : prop.optional ? 'Optional' : 'Required'}</td></tr>)}</tbody></table></div> : <p>Uses the supplied content and the shared layout for this role.</p>}
-  {component.source.includes('<slot') && <p>Content slot: {component.name === 'Button' || component.name === 'TextLink' ? 'required visible label' : 'supplied content'}.</p>}
-  {anatomyParts.length > 0 && <details><summary>Named parts</summary><ul>{anatomyParts.map(part => <li><code>{part}</code></li>)}</ul></details>}
-  <h3>Variants</h3>{componentVariants(component).length ? <ul class="ds-token-links">{componentVariants(component).map(variant => <li data-ds-variant={`${component.name}:${variant}`}><code>{variant}</code></li>)}</ul> : <p>One shared form, with the supplied content.</p>}
-  <h3>States</h3>{variantsHavePreview ? <DSStates component={component} /> : <p>Default. Shared motion and media behavior are described in the patterns below.</p>}
-  <h3>Usage</h3><dl class="ds-usage"><dt>Use when</dt><dd>{doc.useWhen}</dd><dt>Don’t use when</dt><dd>{doc.avoidWhen}</dd></dl>
-  <h3>Accessibility</h3><p>{doc.accessibility}</p>
-  <h3>Tokens</h3>
-{tokens.some(token => token.owner === component.name) && <div class="ds-table-scroll"><table><thead><tr><th>Token</th><th>Light</th><th>Dark</th></tr></thead><tbody>{tokens.filter(token => token.owner === component.name).map(token => <tr id={`token-${token.name}`} data-ds-token={token.name}><th><code>{`--${token.name}`}</code></th><td>{token.resolvedLight}</td><td>{token.resolvedDark}</td></tr>)}</tbody></table></div>}
-  {tokens.length ? <ul class="ds-token-links">{tokens.filter(token => token.owner !== component.name).map(token => <li><a href={`#token-${token.name}`}><code>{`--${token.name}`}</code></a></li>)}</ul> : <p>No additional system tokens.</p>}
-
-  <h3>Code</h3><pre><code>{code}</code></pre>
-  <details class="ds-implementation"><summary>Implementation</summary><p><code>{component.file}</code></p><ul>{[...new Set(component.usages.map(usage => usage.file))].map(file => <li><code>{file}</code></li>)}</ul></details>
+  <header class="ds-heading"><h3 id={`${id}-title`} class="ds-component-title">{entry.title}</h3><p>{doc.purpose}</p></header>
+  <div class="ds-card" data-ds-card>
+    <div class="ds-card-tabs" role="tablist" aria-label={`${entry.title} details`}>
+      {tabs.map((label,index) => <Button size="small" variant={index === 0 ? 'primary' : 'secondary'} appearance="comparison" id={`${id}-tab-${index}`} role="tab" aria-selected={index === 0 ? 'true' : 'false'} aria-controls={`${id}-panel-${index}`} tabindex={index === 0 ? 0 : -1} data-ds-tab={index}>{label}</Button>)}
+    </div>
+    <div class="ds-card-panel ds-preview" id={`${id}-panel-0`} role="tabpanel" aria-labelledby={`${id}-tab-0`} tabindex="0"><DSPreview component={component} /></div>
+    <div class="ds-card-panel" id={`${id}-panel-1`} role="tabpanel" aria-labelledby={`${id}-tab-1`} tabindex="0" hidden>
+      <h4>Sizes, spacing & tokens</h4>
+      <p>Values come from the component’s shared styles and follow the page theme.</p>
+      <div class="ds-table-scroll"><table><thead><tr><th>Token</th><th>Light</th><th>Dark</th></tr></thead><tbody>{tokens.map(token => <tr id={token.owner === component.name ? `token-${token.name}` : undefined} data-ds-token={token.owner === component.name ? token.name : undefined}><th><code>{`--${token.name}`}</code></th><td>{token.resolvedLight}</td><td>{token.resolvedDark}</td></tr>)}</tbody></table></div>
+    </div>
+    <div class="ds-card-panel" id={`${id}-panel-2`} role="tabpanel" aria-labelledby={`${id}-tab-2`} tabindex="0" hidden>
+      <ul class="ds-guidance"><li><strong>Do:</strong> {doc.useWhen}</li><li><strong>Don’t:</strong> {doc.avoidWhen}</li><li><strong>Keep accessible:</strong> {doc.accessibility}</li></ul>
+    </div>
+    <div class="ds-card-panel" id={`${id}-panel-3`} role="tabpanel" aria-labelledby={`${id}-tab-3`} tabindex="0" hidden>
+      <p><code>{component.file}</code></p>
+      <div class="ds-table-scroll"><table><thead><tr><th>Prop</th><th>Type</th><th>Required</th></tr></thead><tbody>{component.props.map(prop => <tr><th><code>{prop.name}</code></th><td><code>{prop.type}</code></td><td>{prop.conditional ? 'In one input form' : prop.optional ? 'No' : 'Yes'}</td></tr>)}</tbody></table></div>
+      {component.source.includes('<slot') && <p>Slot: supplied content{['Button','TextLink'].includes(component.name) ? ' and visible label' : ''}.</p>}
+      <h4>Composed components & helpers</h4><p>{helpers.length ? helpers.join(', ') : 'No Astro helpers.'}</p>
+      <h4>Used on the website</h4><ul class="ds-file-list">{[...new Set(component.usages.map(usage => usage.file))].map(file => <li><code>{file}</code></li>)}</ul>
+      <details><summary>Used prop values</summary><ul>{componentVariants(component).map(variant => <li data-ds-variant={`${component.name}:${variant}`}><code>{variant}</code></li>)}</ul></details>
+      <pre><code>{code}</code></pre>
+    </div>
+  </div>
 </section>

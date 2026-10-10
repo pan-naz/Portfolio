@@ -1,6 +1,6 @@
 ---
 import { statePreviewStyles } from '../data/system-preview-styles';
-import { isReusableComponent } from '../data/system-components';
+import { componentGroups } from '../data/design-system';
 import DSFoundations from './DSFoundations.astro';
 import DSComponent from './DSComponent.astro';
 import DSGuidelines from './DSGuidelines.astro';
@@ -17,7 +17,7 @@ const inventory = buildSystemInventory();
     <p>Case studies have a separate project layer for their own colours, images and fonts. Those values are kept out of this system.</p>
   </section>
   <DSFoundations inventory={inventory} />
-  {inventory.components.filter(component => isReusableComponent(component.file)).map(component => <DSComponent component={component} inventory={inventory} />)}
+  {componentGroups.map(group => <div class="ds-component-group"><h2 class="ds-group-title">{group.label}</h2>{group.components.map(entry => <DSComponent component={inventory.components.find(component => component.file === entry.file)!} inventory={inventory} />)}</div>)}
   <DSPatterns inventory={inventory} />
   <DSGuidelines />
   <footer class="ds-footer"><TextLink href="/" compact>Back to portfolio</TextLink></footer>

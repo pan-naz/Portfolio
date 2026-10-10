@@ -2,6 +2,7 @@
 export type ComponentKind = 'reusable-ui' | 'page-section' | 'case-study' | 'internal-helper';
 export interface ComponentClassification { file: string; kind: ComponentKind; group?: string; title?: string; reason: string; }
 export const componentManifest: ComponentClassification[] = [
+  { file: 'src/components/DSPreview.astro', kind: 'internal-helper', reason: 'Documentation-only live specimens of existing components.' },
   { file: 'src/components/AboutSection.astro', kind: 'page-section', reason: 'Composes a page or a narrative chapter; not a catalog building block.' },
   { file: 'src/components/Arrow.astro', kind: 'internal-helper', reason: 'Implementation or documentation helper; described by its consumer.' },
   { file: 'src/components/BlaustromCaseStudy.astro', kind: 'case-study', reason: 'Project composition or artwork scaffolding; outside the design system.' },
@@ -17,7 +18,7 @@ export const componentManifest: ComponentClassification[] = [
   { file: 'src/components/CaseStudyOverview.astro', kind: 'page-section', reason: 'Composes a page or a narrative chapter; not a catalog building block.' },
   { file: 'src/components/CaseStudyPage.astro', kind: 'page-section', reason: 'Composes a page or a narrative chapter; not a catalog building block.' },
   { file: 'src/components/CaseStudyPalette.astro', kind: 'case-study', reason: 'Project composition or artwork scaffolding; outside the design system.' },
-  { file: 'src/components/CaseStudyServiceTiles.astro', kind: 'reusable-ui', group: 'Media & storytelling', title: 'Service tiles', reason: 'Website-used building block with shared UI styling.' },
+  { file: 'src/components/CaseStudyServiceTiles.astro', kind: 'case-study', reason: 'Index law firm product specimen with project-owned palette, font and tile layout.' },
   { file: 'src/components/CaseStudySpecimen.astro', kind: 'case-study', reason: 'Project composition or artwork scaffolding; outside the design system.' },
   { file: 'src/components/CaseStudySteps.astro', kind: 'reusable-ui', group: 'Media & storytelling', title: 'Steps', reason: 'Website-used building block with shared UI styling.' },
   { file: 'src/components/Chip.astro', kind: 'reusable-ui', group: 'Content', title: 'Chip', reason: 'Website-used building block with shared UI styling.' },

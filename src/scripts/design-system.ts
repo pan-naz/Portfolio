@@ -25,3 +25,34 @@ for (const wrapper of document.querySelectorAll<HTMLElement>('.ds-state-example[
   const target = wrapper.querySelector<HTMLElement>('.button, .icon-button, .navigation-item, .text-link');
   if (target) target.dataset.dsPreviewState = wrapper.dataset.state;
 }
+
+// Details are local to each specimen. Reuse shared buttons and preserve tab focus.
+for (const card of document.querySelectorAll<HTMLElement>('[data-ds-card]')) {
+  const tabs = [...card.querySelectorAll<HTMLButtonElement>('[data-ds-tab]')];
+  const panels = [...card.querySelectorAll<HTMLElement>('[role="tabpanel"]')];
+  const select = (index: number, focus = false) => {
+    tabs.forEach((tab, i) => {
+      tab.setAttribute('aria-selected', String(i === index));
+      tab.tabIndex = i === index ? 0 : -1;
+      tab.classList.toggle('button--primary', i === index);
+      tab.classList.toggle('button--secondary', i !== index);
+      panels[i].hidden = i !== index;
+    });
+    if (focus) tabs[index].focus();
+  };
+  tabs.forEach((tab,index) => {
+    tab.addEventListener('click', () => select(index));
+    tab.addEventListener('keydown', event => {
+      const next = event.key === 'ArrowRight' ? (index + 1) % tabs.length : event.key === 'ArrowLeft' ? (index + tabs.length - 1) % tabs.length : event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : undefined;
+      if (next !== undefined) { event.preventDefault(); select(next, true); }
+    });
+  });
+  const revealTarget = () => {
+    const target = document.getElementById(location.hash.slice(1));
+    if (!target || !card.contains(target)) return;
+    const index = panels.findIndex(panel => panel.contains(target));
+    if (index >= 0) { select(index); target.scrollIntoView(); }
+  };
+  window.addEventListener('hashchange', revealTarget);
+  revealTarget();
+}
