@@ -11,9 +11,3 @@ const { appearance = 'icon' } = Astro.props;
   <Icon name="moon" class="theme-moon" />
   </span>
 </IconButton>}
-<style>
-@layer system, project;
-@layer system {
-  .theme-toggle-group { display: inline-flex; gap: var(--space-1); padding: var(--space-1); border: 1px solid var(--color-border-default); border-radius: var(--radius-pill); width: max-content; }
-}
-</style>

@@ -9,8 +9,9 @@ document.documentElement.dataset.docNavigationReady='true';
 // Preserve genuine shared typography while removing specimen heading semantics.
 // Replacement selectors and declarations come from the loaded shared CSSOM.
 const headingSelector=(selector:string)=>selector.replace(/(^|[^\w-])h([1-6])\b/g,'$1[data-ds-heading="$2"]');
+const splitSelectors=(text:string)=>{const parts:string[]=[];let depth=0,start=0,quote='';for(let i=0;i<text.length;i++){const char=text[i];if(char==='\\'){i++;continue;}if(quote){if(char===quote)quote='';continue;}if(char==='"'||char==="'"){quote=char;continue;}if(char==='('||char==='[')depth++;if(char===')'||char===']')depth--;if(char===','&&depth===0){parts.push(text.slice(start,i));start=i+1;}}parts.push(text.slice(start));return parts;};
 const headingRules=(rules:CSSRuleList):string=>[...rules].map(rule=>{
- if(rule instanceof CSSStyleRule){const selector=headingSelector(rule.selectorText);return selector===rule.selectorText?'':selector.split(',').map(part=>`:where(.ds-specimens) :is(${part.trim()})`).join(',')+`{${rule.style.cssText}}`;}
+ if(rule instanceof CSSStyleRule){const selector=headingSelector(rule.selectorText);return selector===rule.selectorText?'':splitSelectors(selector).map(part=>`:where(.ds-specimens) :is(${part.trim()})`).join(',')+`{${rule.style.cssText}}`;}
  if('cssRules' in rule){const group=rule as CSSGroupingRule;const children=headingRules(group.cssRules);return children?rule.cssText.slice(0,rule.cssText.indexOf('{')+1)+children+'}':'';}
  return '';
 }).join('\n');
@@ -44,13 +45,15 @@ for(const tabset of document.querySelectorAll<HTMLElement>('[data-ds-tabset]')){
  tabs.forEach((tab,index)=>{tab.addEventListener('click',()=>{select(index);const view=tab.closest<HTMLElement>('[data-ds-view]');if(view)refreshMarkup(view);});tab.addEventListener('keydown',event=>{const next=event.key==='ArrowRight'?(index+1)%tabs.length:event.key==='ArrowLeft'?(index+tabs.length-1)%tabs.length:event.key==='Home'?0:event.key==='End'?tabs.length-1:undefined;if(next!==undefined){event.preventDefault();select(next,true);}});});
 }
 for(const preview of document.querySelectorAll<HTMLElement>('.ds-specimens')){
+ preview.querySelectorAll('[data-work-filter]').forEach(button=>button.removeAttribute('aria-controls'));
  const blockLink=(event:Event)=>{if((event.target as Element).closest('a')){event.preventDefault();event.stopImmediatePropagation();}};
  for(const event of ['click','auxclick','contextmenu','dragstart'])preview.addEventListener(event,blockLink,{capture:true});
  preview.addEventListener('click',event=>{
   const target=(event.target as Element).closest<HTMLElement>('[data-work-filter],[data-ds-comparison-choice]');if(!target)return;
   const comparison=target.hasAttribute('data-ds-comparison-choice');
-  const scope=target.closest('.section-filter')||preview;
+  const scope=target.closest('.section-navigation')||preview;
   scope.querySelectorAll<HTMLElement>(comparison?'[data-ds-comparison-choice]':'[data-work-filter]').forEach(button=>{const active=button===target;button.setAttribute('aria-pressed',String(active));if(comparison){button.classList.toggle('button--primary',active);button.classList.toggle('button--secondary',!active);}});
+  const status=scope.querySelector('[data-work-filter-status]');if(status)status.textContent=`${target.textContent?.trim()} selected`;
  });
 }
 const syncSpecimenChoice=()=>{document.querySelector('#theme-switch .skill-tag')?.replaceChildren(document.documentElement.dataset.theme==='dark'?'Dark':'Light');};

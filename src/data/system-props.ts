@@ -6,7 +6,7 @@ export function componentPropSpecs(component:SourceComponent){
  const ast=ts.createSourceFile(component.file,front,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
  const defaults=new Map<string,string>();
  const visit=(node:ts.Node)=>{if(ts.isVariableDeclaration(node)&&node.initializer?.getText(ast)==='Astro.props'&&ts.isObjectBindingPattern(node.name)) for(const element of node.name.elements) if(element.initializer) defaults.set(element.propertyName?.getText(ast)||element.name.getText(ast),element.initializer.getText(ast));ts.forEachChild(node,visit);};visit(ast);
- const direct=new Map<string,{name:string;type:string;optional:boolean;conditional?:boolean}>();
+ const direct=new Map<string,{name:string;type:string;optional:boolean;conditional?:boolean}>(component.props.map(prop=>[prop.name,prop]));
  for(const statement of ast.statements)if(ts.isInterfaceDeclaration(statement)&&statement.name.text==='Props')for(const member of statement.members)if(ts.isPropertySignature(member))direct.set(member.name.getText(ast),{name:member.name.getText(ast),type:member.type?.getText(ast)||'unknown',optional:Boolean(member.questionToken)});
- return (direct.size?[...direct.values()]:component.props).map(prop=>({...prop,default:defaults.get(prop.name)|| (prop.optional?'Not set':'Required'),description:descriptions[prop.name]||`${prop.optional?'Optional':'Required'} ${prop.name.replace(/([a-z])([A-Z])/g,'$1 $2').toLowerCase()} input.`}));
+ return [...direct.values()].map(prop=>({...prop,default:defaults.get(prop.name)|| (prop.optional?'Not set':prop.conditional?'Required in one input form':'Required'),description:descriptions[prop.name]||`${prop.optional?'Optional':'Required'} ${prop.name.replace(/([a-z])([A-Z])/g,'$1 $2').toLowerCase()} input.`}));
 }

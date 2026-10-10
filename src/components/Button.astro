@@ -17,15 +17,3 @@ const hasArrowFill = variant === 'primary' && Boolean(arrow);
     </>
   ) : <><slot />{arrow && <Arrow direction={arrow} />}</>}
 </Tag>
-
-<style>
-@layer system, project;
-@layer system {
-  /* Explicit documentation chrome; the website keeps default/comparison. */
-  .button--catalog { min-height: var(--space-8); padding: var(--space-2) var(--space-3); border-color: transparent; background: transparent; color: var(--color-text-secondary); font-size: var(--text-label-s); line-height: 1.333333; font-weight: var(--font-weight-body-m-strong); }
-  .button--catalog:is(:hover, :active) { background: var(--color-bg-surface-subtle); color: var(--color-text-primary); transform: none; }
-  .button--catalog[aria-selected='true'] { background: var(--color-bg-surface-subtle); color: var(--color-text-primary); }
-  .button--catalog:focus-visible { outline: 1px solid var(--focus-ring); outline-offset: 2px; }
-  .button--catalog[aria-pressed='true'] { background: var(--color-text-primary); color: var(--color-bg-canvas); }
-}
-</style>

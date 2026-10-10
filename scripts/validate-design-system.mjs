@@ -55,7 +55,7 @@ export function validateComponentClassification(files, used, manifest, shown) {
     else if (!kinds.includes(entries[0].kind)) failures.push(`Invalid component kind: ${file}`);
   }
   for (const item of manifest) {
-    if(item.documentedHidden && item.file!=='src/components/Logo.astro') failures.push(`Unauthorized hidden component: ${item.file}`);
+    if(item.documentedHidden && (item.file!=='src/components/Logo.astro'||item.documentedHidden!=='wordmark')) failures.push(`Unauthorized hidden component: ${item.file}`);
     if (!files.includes(item.file)) failures.push(`Stale classification: ${item.file}`);
     if (item.kind === 'reusable-ui' && (!used.includes(item.file) || (!shown.includes(item.file) && !item.documentedHidden))) failures.push(`Missing or unused reusable UI: ${item.file}`);
   }

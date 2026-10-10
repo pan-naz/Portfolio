@@ -51,9 +51,13 @@
 .ds-panel details p, .ds-panel details ul { margin-top:var(--space-2); }
 .ds-panel ul { padding-left:var(--space-4); }
 .ds-rules { display:grid; gap:var(--space-3); color:var(--color-text-secondary); }
-.ds-props-table table { width:100%; border-collapse:collapse; font-size:var(--text-label-s); table-layout:fixed; text-align:left; }
-.ds-props-table th, .ds-props-table td { border-top:1px solid var(--color-border-default); vertical-align:top; padding:var(--space-2) var(--space-1); width:50%; overflow-wrap:anywhere; font-weight:400; }
-.ds-props-table small, .ds-props-table td > span { display:block; margin-top:var(--space-1); color:var(--color-text-secondary); font-size:var(--text-label-s); }
+.ds-props-table table { width:100%; border-collapse:collapse; font-size:var(--text-label-s); text-align:left; }
+.ds-props-table tr { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:var(--space-1) var(--space-3); border-top:1px solid var(--color-border-default); padding-block:var(--space-2); }
+.ds-props-table th, .ds-props-table td { min-width:0; overflow-wrap:anywhere; font-weight:400; }
+.ds-props-table :is(th,td):nth-child(1) { grid-column:1; grid-row:1; }
+.ds-props-table :is(th,td):nth-child(2) { grid-column:1; grid-row:2; color:var(--color-text-secondary); }
+.ds-props-table :is(th,td):nth-child(3) { grid-column:2; grid-row:1; }
+.ds-props-table :is(th,td):nth-child(4) { grid-column:2; grid-row:2; color:var(--color-text-secondary); }
 .ds-value-dark { display:none; }
 html[data-theme='dark'] .ds-value-light { display:none; }
 html[data-theme='dark'] .ds-value-dark { display:inline; }
@@ -95,4 +99,15 @@ html[data-theme='dark'] .ds-value-dark { display:inline; }
   .ds-navigation { grid-template-columns:minmax(0,1fr); }
   .ds-demo-pair { grid-template-columns:minmax(0,1fr); }
 }
+/* Shared documentation-only appearances, loaded exclusively by DSLayout. */
+
+  /* Explicit documentation chrome; the website keeps default/comparison. */
+  .button.button--catalog { min-height: var(--space-8); padding: var(--space-2) var(--space-3); border-color: transparent; background: transparent; color: var(--color-text-secondary); font-size: var(--text-label-s); line-height: 1.333333; font-weight: var(--font-weight-body-m-strong); }
+  .button.button--catalog:is(:hover, :active) { background: var(--color-bg-surface-subtle); color: var(--color-text-primary); transform: none; }
+  .button.button--catalog[aria-selected='true'] { background: var(--color-bg-surface-subtle); color: var(--color-text-primary); }
+  .button.button--catalog:focus-visible { outline: 1px solid var(--focus-ring); outline-offset: 2px; }
+  .button.button--catalog[aria-pressed='true'] { background: var(--color-text-primary); color: var(--color-bg-canvas); }
+
+  .theme-toggle-group { display: inline-flex; gap: var(--space-1); padding: var(--space-1); border: 1px solid var(--color-border-default); border-radius: var(--radius-pill); width: max-content; }
+
 }

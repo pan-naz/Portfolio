@@ -14,6 +14,7 @@ assert.ok(check([...componentManifest, componentManifest[0]]).some(error => erro
 assert.ok(check(componentManifest, shown.slice(1)).some(error => error.includes('Missing')));
 assert.ok(check(componentManifest, [...shown, 'src/components/Hero.astro']).some(error => error.includes('Non-reusable')));
 assert.ok(check(componentManifest, shown, used.filter(file => file !== shown[0])).some(error => error.includes('unused reusable')));
+assert.ok(check(componentManifest.map(item=>item.file==='src/components/Button.astro'?{...item,documentedHidden:'wordmark'}:item)).some(error=>error.includes('Unauthorized hidden')));
 console.log('Classification rejects unclassified, duplicate, unused, missing and non-reusable entries.');
 
 const names = visibleComponents.map(item => item.name);
