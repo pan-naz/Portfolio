@@ -1,6 +1,6 @@
 ---
 import Icon from './Icon.astro';
-interface Props { direction?: 'up' | 'down' | 'right'; inline?: boolean; }
-const { direction = 'right', inline = false } = Astro.props;
+interface Props { direction?: 'up' | 'right'; }
+const { direction = 'right' } = Astro.props;
 ---
-<Icon name="arrow" class:list={['arrow', `arrow--${direction}`, inline && 'arrow--inline']} />
+<Icon name="arrow" class:list={['arrow', `arrow--${direction}`]} />

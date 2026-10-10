@@ -24,7 +24,7 @@ const { project } = Astro.props;
         {promshynaPages.map(page => {
           const Copy = page.sticky ? 'case-study-sticky' : 'div';
           const delivery = page.number === '06';
-          return <article class:list={['promshyna-step', { 'case-study-chapter--color-neutral-950 promshyna-delivery': delivery }]} aria-labelledby={`ps-page-${page.number}`}>
+          return <article class:list={['promshyna-step', { 'case-study-chapter--inverse promshyna-delivery': delivery }]} aria-labelledby={`ps-page-${page.number}`}>
             <div class:list={['promshyna-step-inner', { 'case-study-chapter__inner': delivery }]}>
               <div class="promshyna-rail" aria-hidden="true"><span class="promshyna-badge text-body-s">{page.number}</span></div>
               <div class="case-study-columns">

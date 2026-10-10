@@ -7,7 +7,7 @@ const text = content.replace(/<[^>]*>/g, ' ').replace(/&#(?:x([\da-f]+)|(\d+));/
 const referenceCopy = JSON.parse(readFileSync(new URL('./fixtures/yellow-leaf-reference.json', import.meta.url), 'utf8'));
 for (const copy of referenceCopy) assert.ok(text.includes(copy), 'Preserves supplied copy: ' + copy);
 assert.deepEqual([...content.matchAll(/<section\b[^>]*aria-labelledby="(yl-[^"]+)"/g)].map(match => match[1]), ['yl-title', 'yl-idea', 'yl-home', 'yl-estimate', 'yl-navigation', 'yl-responsive', 'yl-pages', 'yl-branding', 'yl-style'], 'Reference chapters retain their order');
-assert.deepEqual([...content.matchAll(/<section\b[^>]*class="case-study-chapter--color-neutral-950"[^>]*aria-labelledby="([^"]+)"/g)].map(match => match[1]), ['yl-estimate', 'yl-style'], 'Only the two supplied chapters have dark backgrounds');
+assert.deepEqual([...content.matchAll(/<section\b[^>]*class="case-study-chapter--inverse"[^>]*aria-labelledby="([^"]+)"/g)].map(match => match[1]), ['yl-estimate', 'yl-style'], 'Only the two supplied chapters have dark backgrounds');
 assert.equal([...content.matchAll(/<case-study-sticky\b/g)].length, 2, 'Main page and About us reuse sticky scrolling');
 assert.ok(/<svg\b[^>]*aria-label="Logo construction:[^"]+"[^>]*aria-hidden="false"[^>]*class="svg-asset yellow-construction"/.test(content), 'The informative shared SVG construction diagram exposes its accessible description');
 const links = [...content.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map(match => match[1]);

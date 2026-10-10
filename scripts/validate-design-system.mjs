@@ -1,6 +1,8 @@
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { buildSystemInventory } from '../src/data/system-inventory.ts';
+import { componentPurposes } from '../src/data/system-documentation.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const read = path => readFileSync(resolve(root, path), 'utf8');
@@ -108,7 +110,33 @@ function validate(entries) {
   return errors;
 }
 const errors = validate(registry);
+const inventory = buildSystemInventory(root);
+export function validateInventoryCoverage(model, documentedComponents, documentedTokens, documentedIcons, tokenSource, catalogSource) {
+  const failures = [];
+  const exact = (used, documented, kind) => {
+    for (const value of used) if (!documented.includes(value)) failures.push(`Undocumented website ${kind}: ${value}`);
+    for (const value of documented) if (!used.includes(value)) failures.push(`Catalog-only ${kind}: ${value}`);
+  };
+  exact(model.components.map(component => component.file), documentedComponents, 'component');
+  exact(model.tokens.map(token => token.name), documentedTokens, 'token');
+  exact(model.iconNames, documentedIcons, 'icon');
+  for (const name of model.privateNames) if (tokenSource.includes(`--${name}:`) || catalogSource.includes(`var(--${name})`)) failures.push(`Project-only value entered the system: --${name}`);
+  for (const font of model.projectFonts) if (tokenSource.includes(font) || catalogSource.includes(font)) failures.push(`Project-only font entered the system: ${font}`);
+  if (!/DSCoverage|DSFoundations|data-ds-component=/.test(catalogSource)) failures.push('Catalog must render the complete source-derived token/component inventory.');
+  return failures;
+}
+errors.push(...validateInventoryCoverage(inventory, Object.keys(componentPurposes), inventory.tokens.map(token => token.name), inventory.iconNames, read('src/styles/tokens.css'), catalog));
+if (read('src/layouts/DSLayout.astro').includes('hooko-artwork.css')) errors.push('Project artwork styles must not be imported by the catalog layout.');
 if (process.argv.includes('--self-test')) {
+  for (const kind of ['component', 'token', 'icon']) {
+    const components = Object.keys(componentPurposes), tokens = inventory.tokens.map(token => token.name), icons = [...inventory.iconNames];
+    if (kind === 'component') components.push('src/components/CatalogOnlyFixture.astro');
+    if (kind === 'token') tokens.push('catalog-only-fixture');
+    if (kind === 'icon') icons.push('catalog-only-fixture');
+    if (!validateInventoryCoverage(inventory, components, tokens, icons, read('src/styles/tokens.css'), catalog).some(error => error.includes(`Catalog-only ${kind}`))) throw Error(`Usage guard accepted an unused ${kind}`);
+  }
+  if (!validateInventoryCoverage(inventory, [], [], [], read('src/styles/tokens.css'), catalog).some(error => error.includes('Undocumented website token'))) throw Error('Usage guard accepted missing documentation');
+  if (!validateInventoryCoverage(inventory, Object.keys(componentPurposes), inventory.tokens.map(token => token.name), inventory.iconNames, read('src/styles/tokens.css') + `\n--${inventory.privateNames[0]}: red;`, catalog).some(error => error.includes('Project-only value'))) throw Error('Usage guard accepted a project-only token');
   const missing = validate([...registry, { name: 'MissingFixture', section: 'buttons', preview: 'direct', description: '' }]);
   const broken = validate(registry.map(item => item.name === 'Button' ? { ...item, section: 'missing-section' } : item));
   if (!missing.some(error => error.includes('Missing component: MissingFixture')) || !broken.some(error => error.includes('Missing documentation section: Button'))) {

@@ -34,8 +34,7 @@
   --layer-controls: 10; --layer-tooltip: 20; --layer-header: 30;
   --layer-cursor: 40; --layer-overlay: 100;
   color-scheme: light;
-  --color-text-primary-hover: var(--color-neutral-800); --color-text-tertiary: #A19C98;
-  --color-text-on-primary: var(--color-white);
+  --color-text-primary-hover: var(--color-neutral-800); --color-text-on-primary: var(--color-white);
   /* Overlay controls keep a high-contrast white surface; floating navigation follows the page theme. */
   --color-overlay-text-primary: var(--color-neutral-950); --color-overlay-text-primary-hover: var(--color-neutral-800); --color-overlay-bg-surface: var(--color-white); --color-overlay-bg-surface-subtle: var(--color-surface-subtle-light);
   --color-overlay-text-secondary: var(--color-ink-alpha-64-light); --color-overlay-border-default: var(--color-ink-alpha-16-light);
@@ -133,7 +132,6 @@
   --color-border-default: var(--color-ink-alpha-10-dark);
   color-scheme: dark;
   --color-text-primary-hover: #dedad7; --focus-ring: var(--color-text-primary);
-  --color-text-tertiary: #9e9996;
   --color-section-bg-surface: var(--color-bg-surface); --color-text-on-primary: var(--color-neutral-950);
   --color-inverse-bg-surface: var(--color-bg-surface); --project-card-bg-surface: var(--color-inverse-bg-raised);
   --control-border: var(--color-text-primary);

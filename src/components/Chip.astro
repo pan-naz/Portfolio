@@ -2,4 +2,4 @@
 interface Props { label: string; index?: number; variant?: 'tag' | 'plain' | 'raised' | 'accent'; }
 const { label, index = 0, variant = 'tag' } = Astro.props;
 ---
-<span class:list={['skill-tag', { 'skill-tag--plain': variant === 'plain', 'skill-tag--raised': variant === 'raised', 'skill-tag--color-interactive-accent': variant === 'accent' }]} style={`--tag-index:${index}`}><span>{label}</span></span>
+<span class:list={['skill-tag', { 'skill-tag--plain': variant === 'plain', 'skill-tag--raised': variant === 'raised', 'skill-tag--accent': variant === 'accent' }]} style={`--tag-index:${index}`}><span>{label}</span></span>

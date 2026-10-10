@@ -1,6 +1,5 @@
 ---
 import Logo from './Logo.astro';
-import Arrow from './Arrow.astro';
 import Button from './Button.astro';
 import TextLink from './TextLink.astro';
 import IconButton from './IconButton.astro';
@@ -15,6 +14,8 @@ import SectionHeading from './SectionHeading.astro';
 import Stat from './Stat.astro';
 import ExperienceList from './ExperienceList.astro';
 import DSExample from './DSExample.astro';
+import DSCoverage from './DSCoverage.astro';
+import homeSharingImage from '../../public/og/home.jpg';
 import { projects, impactGroups, experience, profile, cvUrl, hookoAppUrl } from '../data/portfolio';
 import { icons, type IconName } from '../data/icons';
 import tokenCSS from '../styles/tokens.css?raw';
@@ -57,6 +58,7 @@ const typeStyles = [
   ['Label/S','Medium 500 · 12 / 16','ds-type-label','Design system','letter-spacing-label-s','font-body'],
 ];
 const iconNames = Object.keys(icons) as IconName[];
+const neutralProject = (project: typeof projects[number]) => ({ ...project, logo: '/favicon.svg' as const, video: undefined, image: homeSharingImage.src, imageWidth: homeSharingImage.width, imageHeight: homeSharingImage.height, imageSrcSet: `${homeSharingImage.src} ${homeSharingImage.width}w`, imageCanvasColor: undefined, imageCanvasInset: undefined, imageCanvasFade: undefined, imageCanvasSourceRatio: undefined, imageReducedMotionSrc: undefined });
 ---
 <main id="main" class="ds-main" tabindex="-1">
   <section id="colors" class="ds-section" aria-labelledby="colors-title" tabindex="-1">
@@ -94,7 +96,7 @@ const iconNames = Object.keys(icons) as IconName[];
     <DSExample id="icons" name="Icon" description="One SVG renderer and one geometry registry for reusable interface icons. Color inherits the surrounding semantic text or accent token." source="Icon.astro ← icons.ts · IconButton.astro → Icon.astro · Button / TextLink → Arrow.astro → Icon.astro · CaseStudyMedia.astro → IconButton.astro + Icon.astro" notes="The 24px size comes from --icon-size; compact TextLink arrows use --icon-size-compact at 20px. Regular, strong and emphasis strokes use --icon-stroke-regular (1.5), --icon-stroke-strong (2) and --icon-stroke-emphasis (2.5). Caps and joins use the shared round tokens. Play has curved SVG corners; pause, plus and playback controls retain the strong weight. Decorative SVGs stay hidden from assistive technology; IconButton provides the action's accessible name and 44px target. Project and tool marks use SvgAsset instead, preserving original brand geometry.">
       {(['light', 'dark'] as const).map(mode => <div class="ds-palette ds-mode" data-theme={mode}>
         <h3>{mode === 'light' ? 'Light mode' : 'Dark mode'}</h3>
-        <ul class="ds-icon-grid">{iconNames.map(name => <li><Icon name={name} /><span>{name}</span></li>)}</ul>
+        <ul class="ds-icon-grid">{iconNames.map(name => <li data-ds-icon={name}><Icon name={name} /><span>{name}</span></li>)}</ul>
         <div class="ds-row" inert><IconButton icon="play" label="Play video" /><IconButton icon="pause" label="Pause video" /></div>
       </div>)}
     </DSExample>
@@ -103,18 +105,18 @@ const iconNames = Object.keys(icons) as IconName[];
       <div class="ds-row"><Chip label="Product design" variant="raised" /><Chip label="Design system" variant="raised" /></div>
       <div class="ds-row">{['Workflows','Testing','Feedback'].map(label => <Chip label={label} variant="plain" />)}</div>
     </DSExample>
-    <DSExample id="buttons" name="Button" description="Primary for the main action; secondary for supporting destinations. Large is 48px with Body/M Strong; small is 36px with Body/S." source="Button.astro · Arrow.astro" notes="Links navigate; buttons perform actions. Shared keyboard focus and disabled states remain visible. This catalog disables motion. On the website, primary buttons with arrows expand their contrasting arrow circle across the pill over 450ms; the label color fades and the orange arrow swaps position. The colors use the active theme tokens, and reduced motion resolves instantly.">
+    <DSExample id="buttons" name="Button" description="Primary for the main action; secondary for supporting destinations. Large is 48px with Body/M Strong; small is 36px with Body/S." source="Button.astro · Arrow.astro" notes="Links navigate; buttons perform actions. Shared keyboard focus remains visible. This catalog disables motion. On the website, primary buttons with arrows expand their contrasting arrow circle across the pill over 450ms; the label color fades and the orange arrow swaps position. The colors use the active theme tokens, and reduced motion resolves instantly.">
       <div class="ds-row"><Button href={`mailto:${profile.email}`} arrow="up">Get in touch</Button><Button href={cvUrl} size="small" variant="secondary" arrow="up">Download CV (PDF)</Button><Button href="/design-system/" size="small" variant="secondary">Design system</Button></div>
-      <div class="ds-state-row"><div><p>Default</p><Button>Get in touch</Button></div><div><p>Disabled state</p><Button disabled>Get in touch</Button></div></div>
+      <div class="ds-state-row"><div><p>Default</p><Button size="small" appearance="comparison">After</Button></div></div>
     </DSExample>
     <DSExample id="text-links" name="TextLink" description="Contact destinations use Body/M Strong text with a stronger 20px north-east arrow. Accent marks the App Store destination." source="TextLink.astro → Arrow.astro" notes="Both links use native anchors and the shared focus ring. On the website, hovering shifts the arrow about 3px toward the north-east, matching secondary Buttons, without an added underline. Reduced motion and this catalog keep the arrow still.">
       <div class="ds-text-link-stack"><TextLink href={profile.linkedin}>LinkedIn</TextLink><TextLink href={hookoAppUrl} accent>App Store — Hooko</TextLink></div>
     </DSExample>
     <DSExample id="project-identity" name="Logo" description="The portfolio wordmark and project names use Funnel Display Medium 500. Original 32px SVG brand marks stay beside their readable project names." source="Logo.astro · ProjectIdentity.astro → SvgAsset.astro · ProjectTags.astro → Chip.astro" notes="SvgAsset renders genuine brand vectors as decorative SVGs beside the readable project name. These are examples of the shared identity component; each project's original mark remains with its project assets. The wordmark is outlined SVG geometry generated from the shared heading family, 500 weight, Heading/M size and letter spacing. Project names consume the same heading tokens. Project cards and result groups consume the same identity component.">
-      <div class="ds-row"><Logo /></div><div class="ds-row">{projects.map(project => <ProjectIdentity title={project.title} logo={project.logo} />)}</div>
+      <div class="ds-row"><Logo /></div><div class="ds-row">{projects.map(project => <ProjectIdentity title={project.title} />)}</div>
     </DSExample>
     <DSExample id="cards" name="ProjectCard" description="Project identity and disciplines, then outcome and description, followed by the original project artwork." source="ProjectCard.astro → ProjectIdentity.astro → SvgAsset.astro · ProjectTags.astro → Chip.astro" notes="The homepage is the source for this final composition. Card chrome follows the active theme: Dark uses the global #161715 black above the darker #0F100E Work sheet, light text and #222320 raised chips. The supplied artwork, logo files, crop and aspect ratio remain unchanged in both themes. At mobile widths the two-column caption stacks. On the website, each complete card is one Work-timeline item: it fades and rises 8px over 900ms, starts 450ms after the prior stage, and remains hidden before its turn. Caption and media never animate separately. Keyboard focus resolves the waiting section and reduced motion shows it immediately. Case-study links appear only when a real destination exists. This catalog specimen is static.">
-      <ProjectCard project={projects[0]} />
+      <ProjectCard project={neutralProject(projects[0])} />
     </DSExample>
     <DSExample id="navigation" name="Navigation" description="Top-bar links, floating-pill links and the project-category filter all consume the same navigation-item component. Selected work, Websites and Misc use the same reusable filter items." source="NavLinks.astro · SectionNavigation.astro → NavigationItem.astro · ThemeToggle.astro → IconButton.astro" notes="Every navigation item stays background-free and uses the same 12px horizontal padding, 6px accent dot, 6px dot-to-label gap and 12px text push for hover, focus and active states. Horizontal navigation bars use space/12 (12px) between links, the theme toggle and pill sections at every breakpoint; the vertical mobile menu keeps a 0px item gap. The website defaults to Light in every browser and does not follow the OS color-scheme preference; Dark is restored only after a manual toggle choice. The 44px theme toggle uses simple 24px, 1.5px-stroke sun and moon SVGs. Either visible glyph rotates 180 degrees over a 600ms ease-in-out on hover and returns with the same timing; reduced motion keeps it still, and this catalog remains static. The floating pill and project filter consume the shared theme-aware navigation tokens: white surface and dark ink in Light, raised charcoal and light ink in Dark, with the corresponding accent and floating shadow. Overlay controls retain their separate fixed-Light tokens. The floating pill uses the compact ‘naz’ wordmark without punctuation, centered in a 44px wrapper with a 1px optical lift and 20px desktop / 12px mobile leading inset. The dot occupies the shared leading slot, moving in from the left while fading and scaling smoothly from its center over 420ms with the gentle entrance easing. The floating pill morphs in over 560ms and exits upward over 240ms only when the hero CTA starts entering the viewport. Once restored, the hero CTA reuses its original 900ms opacity-and-8px-rise reveal instead of blinking. On large precise-pointer desktops, the work filter is hidden before and throughout the stage expansion, then fades and rises 8px into its vertically centered sticky position only after the dark background settles at full width. Its sticky top includes half the filter height, so upward release aligns its visible top edge with the first project card instead of stopping above it. The rail ends at the Work section bottom, so downward release aligns the filter’s bottom edge with the last project card and grows automatically with additional projects. It has no horizontal travel and fades downward when the stage returns. Touch and reduced-motion contexts show it immediately, and widths below 1640px continue to omit the rail. The filter exposes pressed state and a live result count. The mobile dialog restores focus. Catalog specimens are static.">
       <div class="ds-row" inert><NavLinks showDS={false} /><ThemeToggle /><IconButton icon="menu" label="Open navigation" /></div>
@@ -140,8 +142,9 @@ const iconNames = Object.keys(icons) as IconName[];
     <div class="ds-dark-example"><h3>Chips & navigation</h3><div class="ds-row"><Chip label="Product design" /><Chip label="Design system" /><Chip label="Prototyping" /></div><div class="ds-row" inert><NavLinks showDS={false} /><ThemeToggle /></div></div>
     <div class="ds-dark-example"><h3>Floating pill &amp; project filter</h3><div class="ds-floating-control-row"><div class="ds-floating-pill floating-navigation-theme floating-navigation-surface" inert><span class="ds-floating-logo"><Logo compact /></span><NavLinks showDS={false} /><ThemeToggle /><Button href={`mailto:${profile.email}`} arrow="up">Get in touch</Button></div><div class="ds-index-specimen" inert><SectionNavigation /></div></div><p class="ds-spec-note">Both specimens consume the same theme-aware floating-navigation tokens used by the website. Dark mode uses the raised charcoal navigation surface and its shared shadow.</p></div>
     <div class="ds-dark-example"><h3>Stat</h3><dl class="ds-stat-sample"><Stat {...impactGroups[0].metrics[0]} /></dl></div>
-    <div class="ds-dark-example"><h3>Project card on a sheet</h3><ProjectCard project={projects[1]} /></div>
+    <div class="ds-dark-example"><h3>Project card on a sheet</h3><ProjectCard project={neutralProject(projects[2])} /></div>
   </section>
 
-  <footer class="ds-footer"><p>Folio / naz.wtf</p><a class="hit-target--padded" href="/"><span class="hit-target-content">Back to portfolio <Arrow direction="up" inline /></span></a></footer>
+  <DSCoverage />
+  <footer class="ds-footer"><p>Folio / naz.wtf</p><TextLink href="/" compact>Back to portfolio</TextLink></footer>
 </main>

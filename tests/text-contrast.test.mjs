@@ -14,9 +14,9 @@ const resolve = (palette, key) => palette[key].startsWith('var(') ? resolve(pale
 for (const [theme, palette] of Object.entries({ light, dark })) {
   for (const surface of ['color-bg-canvas', 'color-bg-surface', 'color-bg-surface-subtle']) {
     let previous = Infinity;
-    for (const role of ['color-text-primary', 'color-text-secondary', 'color-text-tertiary']) {
+    for (const role of ['color-text-primary', 'color-text-secondary']) {
       const ratio = contrastRatio(resolve(palette, role), resolve(palette, surface));
-      if (role !== 'color-text-tertiary') assert.ok(passesNormalTextAA(ratio), `${theme}: ${role} on ${surface} fails at ${ratio}:1`);
+      assert.ok(passesNormalTextAA(ratio), `${theme}: ${role} on ${surface} fails at ${ratio}:1`);
       assert.ok(ratio < previous, `${theme}: text hierarchy must progressively soften`);
       previous = ratio;
       console.log(`${theme}: ${role} on ${surface} = ${ratio.toFixed(2)}:1`);
@@ -25,7 +25,7 @@ for (const [theme, palette] of Object.entries({ light, dark })) {
 }
 assert.equal(light['color-text-secondary'], 'var(--color-ink-alpha-64-light)', 'Canonical secondary maps directly to its unchanged alpha primitive');
 assert.equal(resolve(light, 'color-text-secondary'), 'rgb(22 23 21 / .64)', 'Light secondary uses the Figma alpha token');
-assert.equal(light['color-text-tertiary'], '#A19C98', 'Light tertiary uses the approved value');
+assert.ok(!('color-text-tertiary' in light), 'The catalog-only tertiary role is removed');
 
 assert.equal(contrastRatio('rgb(0 0 0 / 0)', '#ffffff'), 1);
 assert.equal(contrastRatio('rgb(0 0 0 / 1)', '#ffffff'), 21);

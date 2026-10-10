@@ -4,7 +4,7 @@
 .case-study-content--index-law-firm { --index-font-index-lato-lato-arial-sans-serif: 'Index Lato', Lato, Arial, sans-serif; --index-color-222222: #222222; --index-color-ff9600: #FF9600; --index-color-f5f5f5: #F5F5F5; --index-color-6b6b6b: #6b6b6b; }
 .case-study-content--index-law-firm { padding-bottom: 0; }
 .index-case { display: grid; gap: var(--case-section-space); padding-top: var(--space-16); }
-.case-study-narrative.index-case > section:not(.case-study-chapter--color-neutral-950) { padding-block: 0; }
+.case-study-narrative.index-case > section:not(.case-study-chapter--inverse) { padding-block: 0; }
 .index-section { display: grid; gap: var(--space-16); }
 .index-block, .index-home-copy { display: grid; gap: var(--space-6); }
 .index-home-copy > p, .index-case .index-block > * { margin-top: 0; }

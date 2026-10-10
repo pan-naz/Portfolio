@@ -5,7 +5,6 @@ interface Props {
   filter?: string;
   controls?: string;
   pressed?: boolean;
-  disabled?: boolean;
   layout?: 'desktop' | 'mobile';
 }
 
@@ -15,18 +14,12 @@ const {
   filter,
   controls,
   pressed = false,
-  disabled = false,
   layout = 'desktop',
 } = Astro.props;
 
 const classes = ['navigation-item', 'text-body-m-strong', { 'navigation-item--mobile': layout === 'mobile' }];
 ---
-{disabled ? (
-  <span class:list={classes} aria-disabled="true">
-    <span class="navigation-item-indicator" aria-hidden="true"></span>
-    <span class="navigation-item-label">{label}</span>
-  </span>
-) : href ? (
+{href ? (
   <a class:list={classes} href={href}>
     <span class="navigation-item-indicator" aria-hidden="true"></span>
     <span class="navigation-item-label">{label}</span>

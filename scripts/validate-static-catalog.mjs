@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { buildSystemInventory } from '../src/data/system-inventory.ts';
+import { validateInventoryCoverage } from './validate-design-system.mjs';
 const root = resolve(import.meta.dirname, '..');
 const read = path => readFileSync(resolve(root, path), 'utf8');
 const home = read('dist/index.html');
@@ -14,4 +16,24 @@ assert.ok(!catalog.includes('website-components') && !catalog.includes('/design-
 assert.ok(!catalog.includes('role="tablist"') && !catalog.includes('id="ds-search"'), 'Retired tab and search interfaces must stay removed');
 const ids = [...catalog.matchAll(/\bid="([^"]+)"/g)].map(([,id]) => id);
 assert.equal(new Set(ids).size, ids.length, 'Catalog IDs must remain unique');
+const inventory = buildSystemInventory(root);
+const documentedNames = [...new Set([...catalog.matchAll(/data-ds-component="([^"]+)"/g)].map(([, name]) => name))];
+const documentedPaths = inventory.components.filter(component => documentedNames.includes(component.name)).map(component => component.file);
+const documentedTokens = [...new Set([...catalog.matchAll(/data-ds-token="([^"]+)"/g)].map(([, name]) => name))];
+const documentedIcons = [...new Set([...catalog.matchAll(/data-ds-icon="([^"]+)"/g)].map(([, name]) => name))];
+const coverageErrors = validateInventoryCoverage(inventory, documentedPaths, documentedTokens, documentedIcons, read('src/styles/tokens.css'), catalog);
+assert.equal(coverageErrors.length, 0, coverageErrors.join('\n'));
+const variants = html => new Set([...html.matchAll(/\bclass="([^"]*)"/g)].flatMap(([, value]) => {
+  const classes = value.split(/\s+/);
+  const modifier = prefix => classes.find(name => name.startsWith(prefix))?.slice(prefix.length);
+  if (classes.includes('button')) return [`Button:${modifier('button--primary') !== undefined ? 'primary' : 'secondary'}:${classes.includes('button--small') ? 'small' : 'large'}:${modifier('button--arrow-') === 'fill' ? 'up' : modifier('button--arrow-') || 'none'}:${classes.includes('button--comparison') ? 'comparison' : 'default'}`];
+  if (classes.includes('skill-tag')) return [`Chip:${modifier('skill-tag--') || 'tag'}`];
+  if (classes.includes('text-link')) return [`TextLink:${classes.includes('text-link--inline') ? 'inline' : classes.includes('text-link--compact') ? 'compact' : 'default'}:${classes.includes('text-link--accent') ? 'accent' : 'primary'}`];
+  if (classes.includes('navigation-item')) return [`NavigationItem:${classes.includes('navigation-item--mobile') ? 'mobile' : 'desktop'}`];
+  return [];
+}));
+const websiteHtml = readdirSync(resolve(root, 'dist'), { recursive: true }).filter(file => file.endsWith('.html') && file !== 'design-system/index.html').map(file => read('dist/' + file)).join('\n');
+const websiteVariants = variants(websiteHtml);
+for (const variant of variants(catalog)) assert.ok(websiteVariants.has(variant), `Catalog-only variant: ${variant}`);
+assert.ok(!inventory.projectFonts.some(font => styles(catalog).includes(font)), 'No client specimen font may enter catalog CSS');
 console.log('Static catalog verified: no Website section or embedded preview, isolated motion CSS and unique IDs.');

@@ -15,7 +15,7 @@ const { project } = Astro.props;
       <Fragment slot="role"><p>Designer</p><ul>{squareRole.map(item => <li>{item}</li>)}</ul></Fragment>
     </CaseStudyOverview>
 
-    <section class="square-challenge case-study-chapter--color-neutral-950" style={`--square-cover:url('${squareChallenge.cover}')`} aria-labelledby="sq-challenge">
+    <section class="square-challenge case-study-chapter--inverse" style={`--square-cover:url('${squareChallenge.cover}')`} aria-labelledby="sq-challenge">
       <div class="case-study-chapter__inner">
         <div class="square-challenge-copy">
           <div><p class="case-study-eyebrow">{squareChallenge.eyebrow}</p><h2 class="case-study-heading" id="sq-challenge">{squareChallenge.title}</h2></div>
@@ -33,7 +33,7 @@ const { project } = Astro.props;
       <div class="square-looks">{squareLookbook.media.map(media => <CaseStudyMedia {...media} presentation="shadow" />)}</div>
     </section>
 
-    <section class="square-libido case-study-chapter--color-neutral-950" aria-labelledby="sq-libido">
+    <section class="square-libido case-study-chapter--inverse" aria-labelledby="sq-libido">
       <div class="case-study-chapter__inner">
         <div class="case-study-columns square-section-heading">
           <div><p class="case-study-eyebrow">{squareLibido.eyebrow}</p><h2 class="square-entry-title text-heading-xl" id="sq-libido">{squareLibido.title}</h2></div>
