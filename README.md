@@ -1,61 +1,39 @@
 # naz.wtf portfolio
 
-Responsive Astro portfolio with a separately maintained static design-system catalog. The approved visual source is `../DESIGN.md`, based on the user-supplied `../figma-ds.svg` and `../figma-home.svg`.
+Static Astro portfolio. Runtime source is in `src/`, build validators and the responsive-image generator are in `scripts/`, and delivered media/assets are in `public/`. The workspace visual source of truth remains `../DESIGN.md`.
 
-## Run
+## Run and preview
 
-Use Node.js 22.12+ and pnpm.
+Use Node.js 24.x (the configured Vercel major) and pnpm. Run commands in this folder:
 
 ```sh
-pnpm install
+pnpm install --frozen-lockfile
 pnpm dev
 pnpm check
+pnpm typecheck
 pnpm build
-node --test tests/*.test.mjs
+pnpm preview --port 4337
 ```
 
-Run commands inside this folder. Astro prints the local preview URL. The site remains unpublished and retains its draft `noindex, nofollow` metadata.
-
-For phones and tablets on the same Wi-Fi, run `pnpm build` then `pnpm preview:lan` and open the Network URL printed by Astro. Keep the Mac awake and the server running. Rebuild after changes. Use this preview server for video byte-range requests; Python's basic `http.server` sends the whole video even when a browser asks for a small chunk. Videos load and play only when visible, and keep their posters with reduced motion enabled.
-
-## Content and assets
-
-`src/data/portfolio.ts` contains project cards, six impact metrics, seven experience rows and contact destinations transcribed from the approved homepage export. See `COPY.md` for provenance. Project images, recordings and original marks live in `public/projects/`; original media are retained at their current paths. The supplied CV is served from `/nazarii-pankiv-cv.pdf`.
-
-All 20 project cards link to their case studies. The project rail filters Selected work (3 projects), Websites (8) and Misc (9). Case studies also have standalone routes under `/case-studies/`, and the homepage opens the same content in the shared dialog.
-
-The extraction script and reference renders are in `../reference-research/figma-migration/`. No flattened homepage screenshot is used as website content. The waterfall remains the existing live canvas animation.
-
-Standalone icons and logos are genuine SVG vectors. `Icon` renders the shared geometry from `src/data/icons.ts`; `IconButton`, `Arrow`, theme controls, media controls and footer previews consume it. `SvgAsset` renders project, tool, competitor and persona assets as inline SVG, preserving each source viewBox and namespacing gradients, filters and clips for repeated instances. Use these components instead of copying SVG markup or loading logos through image tags. `Logo` uses outlined Funnel Display geometry from the shared heading tokens from `src/data/wordmark.ts`; regenerate it through `../reference-research/svg-audit/generate-wordmark.py` when the font or heading tokens change (FontTools and Brotli are generation-only dependencies). Original raster marks are archived in that audit folder. Photos, product screenshots and recordings keep their original media formats; the rain/footer canvas effects render Lucide SVG geometry.
-
-## Shared design system
-
-`src/data/ds-components.ts` registers only the components currently documented through direct catalog specimens. The website and `/design-system/` share `src/styles/tokens.css`, while `PortfolioPage.astro` composes only the homepage. `src/data/design-system.ts` supplies the catalog anchors; `src/data/navigation.ts` supplies website links.
-
-`src/styles/fonts.css`, imported by the shared global stylesheet, serves Funnel Display Variable for headings and Label/M, and Urbanist Variable for body copy, Label/S and controls. Every heading consumer uses `--font-heading`. Heading/XL and Heading/L consume `--font-weight-heading-large` at 400, while Heading/M consumes `--font-weight-heading` at 500, Body/M Strong consumes `--font-weight-body-m-strong` at 500, and Label/M consumes `--font-weight-label-m` at 500. Heading/XL and Heading/L use −3.64px and −2.64px letter spacing; existing sizes and line heights are preserved.
-
-The catalog follows the Figma specimen sheet: color, typography, space and shape, selected component specimens and dark-mode examples. The Website section, embedded portfolio preview, search, tabs and animated demos are removed. The mobile anchor index wraps above the sheet. Color readouts are extracted from the shared token CSS at build time. Scoped dark tokens render both modes together; component visual styles are never redefined by catalog CSS.
-
-The design system is maintained independently and changes only when the user explicitly requests a DS update. Website work does not require a catalog registration or documentation edit. Routes still compose components rather than containing page-specific designs, and documentation styles use the `ds-` prefix so they do not fork component styles.
-
-## Motion and responsive behavior
-
-The hero uses native staged reveals and cycles through System thinker, AI builder, Web designer and App designer. Stages begin at 450ms intervals over 900ms core reveals; the header is visible immediately and the waterfall starts after its independent two-second delay. Skills loop, header docking, project reveals, theme toggle and drawer behavior remain active. Shared navigation items use an accent dot and label shift for hover, focus and active states. The retired “A way of thinking” section and its dedicated animation were removed. Reduced motion reveals content immediately and suppresses decorative motion.
-
-`static-preview.css` is loaded only by `DSLayout`. It disables animation, transitions, smooth scrolling and moving hover treatments in catalog specimens. The catalog never initializes website motion or persists a theme choice. The normal website continues to use `BaseLayout` and its existing scripts.
-
-No mobile Figma design was provided. The implementation adapts desktop with stacked card headers, metrics and timeline rows, wrapping labels, 24px gutters and the existing accessible drawer. Desktop content is centered at 1200px; the hero keeps the supplied frame’s wider inset. Dark sheets use surface and project cards remain pinned to Light, as specified by the DS.
+For a device on the same Wi-Fi, use `pnpm preview:lan` after building and open Astro's printed Network URL. Keep the computer and preview running, and rebuild after changes. Astro preview supports video byte-range requests.
 
 ## Validation
 
-`pnpm check` and `pnpm build` run the catalog specimen guard, foreground/background contrast checks and `pnpm validate:svg`. The SVG guard checks standalone mark references, shared component ownership, public/persona vector contents and animated SVG geometry; it rejects raster logos, bitmap SVG wrappers and character-based control icons. The catalog guard validates only components intentionally documented in the DS; it does not require every website component to appear there. `node --test tests/*.test.mjs` covers typography, contrast and animation behavior. Primary and secondary text pass 4.5:1 on the supported surfaces; the contrast utility composites Figma’s alpha-muted colors before calculating ratios. Accent and decorative tertiary uses require their own size/context checks and are not covered by a blanket accessibility claim.
+`pnpm check` and `pnpm build` run the design-system, text-contrast and SVG guards. The build also validates the isolated static catalog. TypeCheck runs Astro diagnostics and TypeScript without emitting files.
 
-When design-system work is explicitly requested, review its examples and documentation in both themes with keyboard, responsive and reduced-motion checks. See `QA.md` for the latest verification.
+```sh
+node --test tests/*.test.mjs
+RAIN_GPU=1 node --test tests/waterfall-renderer.test.mjs
+```
 
-## Generated image candidates
+The test suite covers case-study media, genuine SVG geometry, typography and interactive/rendering behavior. Original-byte fixture tests also use the workspace's sibling `reference-research/` archive; keep that archive available when running the full suite locally. Browser comparison tools and their own dependencies live outside this repository in the workspace tools folder.
 
-`pnpm build` generates static raster WebP/AVIF candidates in ignored `public/generated/images/` using the Sharp dependency already supplied by Astro. The policy in `scripts/responsive-image-policy.json` excludes posters and animated media. UI screenshots use lossless WebP; listed photos use quality 88. A format is served only when all its candidates are no heavier than the original. Three alpha-shadow screenshots retain native resolution. Original files stay at their existing paths and remain the fallback; a fresh dev checkout works without generated candidates. No runtime image optimizer is used.
+Website routes compose shared components. The portfolio and separately maintained `/design-system/` catalog share `src/styles/tokens.css`. Catalog changes require an explicit design-system request. Standalone icons/logos use shared `Icon`, `SvgAsset` and `Logo`; project website links use shared `TextLink`.
+
+## Generated images
+
+`pnpm build` generates ignored `public/generated/images/` with the Sharp dependency supplied by Astro. `scripts/responsive-image-policy.json` lists eligible static sources and exclusions. PNG sources receive lossless WebP; other eligible static raster sources receive quality-88 WebP/AVIF. A format is served only when every candidate is no heavier than the original. Posters, animated media and videos remain excluded; the native-alpha/shadow exceptions stay explicit. Original assets are preserved as fallbacks. A fresh dev checkout works with originals before generation. No runtime image optimizer is used.
 
 ## Pre-launch indexing
 
-The production origin is `https://naz.wtf`. All pages keep `noindex, nofollow` through the single `indexingEnabled = false` flag in `src/data/site-config.ts`; change it to `true` and rebuild at launch. Robots allows crawling and lists the static sitemap. `vercel.json` contains the approved headers; verify their actual response values after deployment. Home and catalog OG images remain unset until artwork is supplied.
+The production origin is `https://naz.wtf`. All pages retain `noindex, nofollow` through `indexingEnabled = false` in `src/data/site-config.ts`. Change that flag only when launch is approved, then rebuild. Robots allows crawling and lists the generated sitemap. Static sharing JPGs live in `public/og/`; home and the catalog use `home.jpg`. `vercel.json` contains the approved response headers.

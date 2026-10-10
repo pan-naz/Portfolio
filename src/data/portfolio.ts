@@ -18,7 +18,7 @@ import { gutsulHero, gutsulDescription, gutsulTags } from './gutsul-made-case-st
 import { sternfitHero, sternfitDescription, sternfitTags } from './team-sternfit-case-study.ts';
 
 // Profile contact details retained from the supplied resume; homepage copy from Figma.
-// See COPY.md for sources, editorial decisions and deliberately omitted claims.
+// See ../../../docs/copy.md for sources, editorial decisions and deliberately omitted claims.
 export const profile = {
   name: 'Nazarii Pankiv',
   brand: 'naz.wtf',
