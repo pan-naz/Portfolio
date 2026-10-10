@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { contrastRatio, passesNormalTextAA } from '../src/scripts/text-contrast.ts';
+import { contrastRatio, passesNormalTextAA } from '../scripts/text-contrast.ts';
 assert.equal(contrastRatio('#000000', '#ffffff'), 21);
 assert.equal(contrastRatio('#64615f', '#64615f'), 1);
 assert.equal(passesNormalTextAA(4.4999), false, 'Never round a failing ratio into a pass');
