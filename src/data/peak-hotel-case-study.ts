@@ -1,5 +1,5 @@
-const asset = (name: string) => '/projects/peak-hotel-case-study/' + name;
-const image = (name: string, width: number, height: number, alt: string) => ({ src: asset(name + '.webp'), width, height, alt, kind: 'image' as const, presentation: 'floating' as const, radius: 'medium' as const });
+import { createCaseMedia } from './case-media.ts';
+const { asset, image } = createCaseMedia('/projects/peak-hotel-case-study/', { imageExtension: '.webp' });
 
 export const peakHotelLinks = {
   website: 'https://pikhotel.com/en/',

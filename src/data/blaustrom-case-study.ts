@@ -1,6 +1,5 @@
-const asset = (name: string) => '/projects/blaustrom-case-study/' + name;
-const image = (name: string, width: number, height: number, alt: string) => ({ src: asset(name), width, height, alt, kind: 'image' as const, presentation: 'floating' as const, radius: 'medium' as const });
-const video = (name: string, width: number, height: number, alt: string) => ({ src: asset(name + '.mp4'), poster: asset(name + '.jpg'), width, height, alt, presentation: 'floating' as const, radius: 'medium' as const });
+import { createCaseMedia } from './case-media.ts';
+const { asset, image, video } = createCaseMedia('/projects/blaustrom-case-study/');
 
 export const blaustromDescription = 'A website for Blaustrom, a Bavarian company that sells solar power systems for homes: solar panels, batteries and EV charging stations.';
 export const blaustromHomeSections = [

@@ -1,4 +1,3 @@
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createNativeMotion, readMotionToken, revealEffects, parallelRevealEffects, motionEndTime, type MotionEffect } from './native-motion.ts';
 import { splitLetters } from './text-reveal.ts';
 import { shouldRevealWorkContent } from './work-stage-model.ts';
@@ -136,7 +135,7 @@ export function initializeSectionReveals() {
     const play = () => {
       if (started || resolved) return;
       if (isWork && !shouldRevealWorkContent(trigger.getBoundingClientRect().top, window.scrollY, window.innerHeight * revealRatio)) {
-        // ScrollTrigger may enter during initialization; retry on real scroll.
+        // Initialization may enter the threshold; retry on real scroll.
         window.addEventListener('scroll', play, { passive: true });
         return;
       }
@@ -148,7 +147,17 @@ export function initializeSectionReveals() {
         motions.push(motion);
       });
     };
-    const scene = ScrollTrigger.create({ trigger, start, once: true, onEnter: play });
+    // Same one-time top/viewport threshold, without a desktop-only dependency.
+    const startRatio = parseFloat(start.split(' ')[1]) / 100;
+    let stopped = false;
+    const check = () => {
+      if (!stopped && trigger.getBoundingClientRect().top <= window.innerHeight * startRatio) { play(); scene.kill(); }
+    };
+    const scene = { kill() { stopped = true; window.removeEventListener('scroll', check); window.removeEventListener('resize', check); window.removeEventListener('sectionrevealrefresh', check); } };
+    window.addEventListener('scroll', check, { passive: true });
+    window.addEventListener('resize', check);
+    window.addEventListener('sectionrevealrefresh', check);
+    check();
     if (document.documentElement.dataset.caseReturn === 'true' && trigger.getBoundingClientRect().top < window.innerHeight) {
       finish();
       scene.kill();

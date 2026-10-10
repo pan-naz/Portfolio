@@ -1,0 +1,10 @@
+---
+import TextLink from './TextLink.astro';
+---
+<main id="main" tabindex="-1" class="container not-found">
+  <h1 class="text-heading-l">Page not found</h1>
+  <TextLink href="/" compact>Back to portfolio</TextLink>
+</main>
+<style>
+  .not-found { min-height: 100svh; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: var(--space-6); padding-block: var(--space-16); }
+</style>

@@ -27,7 +27,7 @@ export const profile = {
   linkedin: 'https://www.linkedin.com/in/nazariypankiv/',
   approach: 'Understand how people work. Map the problem, test the idea and refine the interaction. Then build the systems that help a product grow—from the first useful experience to the details people use every day.',
   biography: 'I’ve led design at DataGPT and Voximplant, working across web, mobile and enterprise SaaS. My practice brings together UX research, interaction design and design systems—from early discovery to delivery. Alongside hands-on design, I’ve hired designers, shaped teams and helped bring B2B products from idea to launch.',
-  description: 'Nazarii Pankiv — product designer with 10+ years in SaaS, UX research and design systems. Previously Design Lead at DataGPT and Head of Design at Voximplant.',
+  description: 'Nazarii Pankiv — product designer in SaaS, UX research and design systems. Previously Design Lead at DataGPT and Head of Design at Voximplant.',
 };
 
 export interface Project {

@@ -1,0 +1,17 @@
+---
+interface PaletteColour { label: string; value: string; }
+interface Props {
+  items: readonly (PaletteColour | readonly [string, string])[];
+  class: string;
+  swatchClass: string;
+  swatchProperty: string;
+  labelClass?: string;
+  labelTag?: 'strong' | 'span';
+  gradientClass?: string;
+}
+const { items, class: className, swatchClass, swatchProperty, labelClass, labelTag = 'strong', gradientClass } = Astro.props;
+const colours = items.map(item => 'label' in item ? item : { label: item[0], value: item[1] });
+const Label = labelTag;
+const isGradient = (value: string) => Boolean(gradientClass && value.includes('→'));
+---
+<ul class={className} aria-label="Colour palette">{colours.map(colour => <li><div class:list={[swatchClass, isGradient(colour.value) && gradientClass]} style={!isGradient(colour.value) ? `${swatchProperty}:${colour.value}` : undefined} aria-hidden="true" /><div class={labelClass}><Label>{colour.label}</Label><code>{colour.value}</code></div></li>)}</ul>

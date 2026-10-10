@@ -1,12 +1,13 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CaseStudyPage from '../../components/CaseStudyPage.astro';
+import { caseDescription, caseShareImage } from '../../data/case-sharing';
 import { projects, collectionProjects } from '../../data/portfolio';
 export function getStaticPaths() {
   return [...projects, ...collectionProjects].map(project => ({ params: { id: project.id }, props: { project } }));
 }
 const { project } = Astro.props;
 ---
-<BaseLayout title={`${project.title} — naz.wtf`}>
+<BaseLayout title={project.title} description={caseDescription(project)} image={caseShareImage(project)}>
   <CaseStudyPage project={project} />
 </BaseLayout>

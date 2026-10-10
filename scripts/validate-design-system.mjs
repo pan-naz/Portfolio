@@ -89,9 +89,7 @@ function validate(entries) {
   const largeHeadingSelectors = [
     ['src/styles/global.css', '.text-heading-xl'],
     ['src/styles/global.css', '.text-heading-l'],
-    ['src/styles/global.css', '.case-study-intro h1'],
     ['src/styles/global.css', '.stat-value'],
-    ['src/styles/global.css', '.case-study-metric'],
     ['src/styles/case-study-narrative.css', '.case-study-heading'],
     ['src/styles/voximplant-case-study.css', '.vox-solution-stats strong'],
   ];
@@ -102,7 +100,6 @@ function validate(entries) {
   const labelSelectors = [
     ['src/styles/global.css', '.eyebrow'],
     ['src/styles/global.css', '.hero-eyebrow'],
-    ['src/styles/global.css', '.case-study-label'],
     ['src/styles/case-study-narrative.css', '.case-study-eyebrow'],
   ];
   for (const [path, selector] of labelSelectors) {

@@ -1,6 +1,7 @@
 import { refreshViewportPointer, watchViewportPointer, type ViewportPointer } from './viewport-pointer';
-import { createWaterfallPaths, waterfallIconSize } from './waterfall-icons';
-import { FooterPile, pileBleed, pileAbove, pileCursorRadius } from './footer-pile-model';
+import { waterfallIconSize } from './waterfall-constants';
+import type { FooterPile } from './footer-pile-model';
+import { pileBleed, pileAbove, pileCursorRadius } from './footer-pile-constants';
 
 export function initializeFooterPile() {
   const field = document.querySelector<HTMLElement>('[data-footer-pile]');
@@ -11,24 +12,27 @@ export function initializeFooterPile() {
   if (!field || !footer || !layer || !canvas || !context || document.documentElement.hasAttribute('data-static')) return;
   const darkSection = document.querySelector<HTMLElement>('.about-details');
   const contact = document.querySelector<HTMLElement>('#contact');
-  let paths: Path2D[];
-  try { paths = createWaterfallPaths(); } catch { return; }
+  let paths: Path2D[] = [];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const fine = matchMedia('(hover: hover) and (pointer: fine)');
   const canUseMouse = () => fine.matches && navigator.maxTouchPoints === 0;
   const pointer = { x: 0, y: 0, active: false };
   let activeTouchId: number | null = null;
   let touchClientX = 0, touchClientY = 0;
-  let pile: FooterPile;
+  let pile: FooterPile | undefined;
+  let Pile: typeof FooterPile | undefined;
+  let loading = false, near = false;
+  let prefetchRequested = false, idleHandle: number | undefined, idleTimeout = false;
   const seed = Math.floor(Math.random() * 0x100000000);
   let ink = '';
   let width = 0, height = 0, ratio = 1, viewLeft = pileBleed, viewRight = pileBleed;
   let above = pileAbove;
   let inView = false, paused = false, disposed = false;
   let frame = 0, last = 0;
-  const allowed = () => !reduced.matches && inView && !paused && !document.hidden && !disposed;
+  const allowed = () => Boolean(pile) && !reduced.matches && inView && !paused && !document.hidden && !disposed;
 
   const draw = () => {
+    if (!pile) return;
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
     context.clearRect(0, 0, width + viewLeft + viewRight, height);
     context.lineWidth = 1;
@@ -59,7 +63,7 @@ export function initializeFooterPile() {
   };
   const tick = (now: number) => {
     frame = 0;
-    if (!allowed()) { stop(); return; }
+    if (!pile || !allowed()) { stop(); return; }
     const changed = pile.advance(last ? (now - last) / 1000 : 1 / 120, pointer);
     last = now;
     if (changed) draw();
@@ -67,7 +71,7 @@ export function initializeFooterPile() {
     else last = 0;
   };
   const wake = () => { if (!frame && allowed()) frame = requestAnimationFrame(tick); };
-  const sync = () => { stop(); if (!pile.sleeping) wake(); draw(); if (allowed()) refreshViewportPointer(); };
+  const sync = () => { stop(); if (!pile) { ensurePile(); return; } if (!pile.sleeping) wake(); draw(); if (allowed()) refreshViewportPointer(); };
   const resize = () => {
     const nextWidth = field.clientWidth;
     if (!nextWidth) return;
@@ -80,11 +84,11 @@ export function initializeFooterPile() {
     layer.style.setProperty('--pile-above', `${above}px`);
     const nextViewLeft = Math.max(pileBleed, rect.left);
     const nextViewRight = Math.max(pileBleed, window.innerWidth - rect.right);
-    if (!pile || (!pile.disturbed && nextWidth !== width)) {
+    if (Pile && (pile || near) && (!pile || (!pile.disturbed && nextWidth !== width))) {
       pile?.destroy();
-      pile = new FooterPile(nextWidth, paths.length, seed, nextViewLeft, nextViewRight);
+      pile = new Pile(nextWidth, paths.length, seed, nextViewLeft, nextViewRight);
     }
-    else if (nextWidth !== width || nextViewLeft !== viewLeft || nextViewRight !== viewRight) {
+    else if (pile && (nextWidth !== width || nextViewLeft !== viewLeft || nextViewRight !== viewRight)) {
       pile.resize(nextWidth, nextViewLeft, nextViewRight);
     }
     width = nextWidth;
@@ -104,6 +108,7 @@ export function initializeFooterPile() {
     const style = getComputedStyle(field);
     ink = style.getPropertyValue('--footer-icon-ink').trim();
     draw();
+    if (!pile) { ensurePile(); return; }
     field.dataset.ready = 'true';
     refreshViewportPointer();
     refreshTouchPosition();
@@ -119,7 +124,7 @@ export function initializeFooterPile() {
     pointer.x = x; pointer.y = y; pointer.active = true;
     field.dataset.pointerX = x.toFixed(2);
     field.dataset.pointerY = y.toFixed(2);
-    if (pile.needsPointerStep(x, y)) wake();
+    if (pile?.needsPointerStep(x, y)) wake();
     return true;
   };
   const move = (event: ViewportPointer) => {
@@ -158,8 +163,32 @@ export function initializeFooterPile() {
     activeTouchId = null;
     leave();
   };
-  const leave = () => { pointer.active = false; pile.releasePointer(); if (!pile.sleeping) wake(); };
+  const leave = () => { pointer.active = false; pile?.releasePointer(); if (pile && !pile.sleeping) wake(); };
   const onBlur = () => { activeTouchId = null; leave(); };
+  const loadModel = () => {
+    if (disposed || Pile || loading) return;
+    loading = true;
+    void import('./footer-pile-model').then(module => {
+      if (disposed) return;
+      loading = false;
+      paths = module.createWaterfallPaths();
+      Pile = module.FooterPile;
+      // Idle prefetch downloads the module; construction keeps its proximity gate.
+      if (near) { resize(); sync(); }
+    }).catch(() => { loading = false; });
+  };
+  const ensurePile = () => {
+    if (disposed || !near || !width) return;
+    if (Pile) resize(); else loadModel();
+  };
+  const schedulePrefetch = () => {
+    if (document.readyState !== 'complete' || !prefetchRequested || disposed || document.hidden || Pile || loading || idleHandle !== undefined) return;
+    const run = () => { idleHandle = undefined; if (!disposed && !document.hidden) loadModel(); };
+    idleTimeout = typeof window.requestIdleCallback !== 'function';
+    idleHandle = idleTimeout ? window.setTimeout(run, 1000) : window.requestIdleCallback(run);
+  };
+  const onVisibilityChange = () => { sync(); schedulePrefetch(); };
+  const approaching = new IntersectionObserver(([entry]) => { near = entry.isIntersecting; if (near) ensurePile(); }, { rootMargin: '300px' });
   const visibility = new IntersectionObserver(([entry]) => {
     inView = entry.isIntersecting;
     sync();
@@ -167,7 +196,9 @@ export function initializeFooterPile() {
   const sizing = new ResizeObserver(resize);
   resize();
   visibility.observe(layer);
+  approaching.observe(layer);
   sizing.observe(footer);
+  sizing.observe(field);
   if (darkSection) sizing.observe(darkSection);
   if (contact) sizing.observe(contact);
   const unwatch = watchViewportPointer(move);
@@ -178,12 +209,18 @@ export function initializeFooterPile() {
   window.addEventListener('scroll', refreshTouchPosition, { passive: true, capture: true });
   window.addEventListener('blur', onBlur);
   window.addEventListener('themechange', resize);
-  document.addEventListener('visibilitychange', sync);
+  window.addEventListener('load', schedulePrefetch, { once: true });
+  document.addEventListener('visibilitychange', onVisibilityChange);
   reduced.addEventListener('change', sync);
   fine.addEventListener('change', sync);
   const destroy = () => {
-    disposed = true; stop(); visibility.disconnect(); sizing.disconnect();
-    pile.destroy();
+    disposed = true;
+    if (idleHandle !== undefined) {
+      if (idleTimeout) window.clearTimeout(idleHandle); else window.cancelIdleCallback(idleHandle);
+      idleHandle = undefined;
+    }
+    stop(); visibility.disconnect(); approaching.disconnect(); sizing.disconnect();
+    pile?.destroy();
     unwatch();
     window.removeEventListener('touchstart', onTouchStart);
     window.removeEventListener('touchmove', onTouchMove);
@@ -192,9 +229,10 @@ export function initializeFooterPile() {
     window.removeEventListener('scroll', refreshTouchPosition, true);
     window.removeEventListener('blur', onBlur);
     window.removeEventListener('themechange', resize);
-    document.removeEventListener('visibilitychange', sync);
+    window.removeEventListener('load', schedulePrefetch);
+    document.removeEventListener('visibilitychange', onVisibilityChange);
     reduced.removeEventListener('change', sync); fine.removeEventListener('change', sync);
   };
   if (import.meta.hot) import.meta.hot.dispose(destroy);
-  return { setPaused(value: boolean) { if (paused === value) return; paused = value; sync(); }, destroy };
+  return { prefetchWhenIdle() { prefetchRequested = true; schedulePrefetch(); }, setPaused(value: boolean) { if (paused === value) return; paused = value; sync(); }, destroy };
 }

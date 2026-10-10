@@ -1,4 +1,4 @@
-import { waterfallIconSize } from './waterfall-icons';
+import { waterfallIconSize } from './waterfall-constants';
 
 // A bounded atlas avoids re-stroking hundreds of changing vector paths every
 // frame. Opaque palette colors preserve the existing appearance at overlaps.

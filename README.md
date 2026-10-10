@@ -20,9 +20,9 @@ For phones and tablets on the same Wi-Fi, run `pnpm build` then `pnpm preview:la
 
 ## Content and assets
 
-`src/data/portfolio.ts` contains project cards, six impact metrics, seven experience rows and contact destinations transcribed from the approved homepage export. See `COPY.md` for provenance. Project images and original marks live in `public/projects/`; responsive WebP versions preserve the supplied artwork. The supplied CV is served from `/nazarii-pankiv-cv.pdf`.
+`src/data/portfolio.ts` contains project cards, six impact metrics, seven experience rows and contact destinations transcribed from the approved homepage export. See `COPY.md` for provenance. Project images, recordings and original marks live in `public/projects/`; original media are retained at their current paths. The supplied CV is served from `/nazarii-pankiv-cv.pdf`.
 
-Project-card destinations are optional: add `href` only when a real case-study destination is ready. Cards currently present the full approved content without a fabricated case-study link. The project rail filters Selected work, Websites and Misc; the latter two currently have no projects.
+All 20 project cards link to their case studies. The project rail filters Selected work (3 projects), Websites (8) and Misc (9). Case studies also have standalone routes under `/case-studies/`, and the homepage opens the same content in the shared dialog.
 
 The extraction script and reference renders are in `../reference-research/figma-migration/`. No flattened homepage screenshot is used as website content. The waterfall remains the existing live canvas animation.
 
@@ -51,3 +51,11 @@ No mobile Figma design was provided. The implementation adapts desktop with stac
 `pnpm check` and `pnpm build` run the catalog specimen guard, foreground/background contrast checks and `pnpm validate:svg`. The SVG guard checks standalone mark references, shared component ownership, public/persona vector contents and animated SVG geometry; it rejects raster logos, bitmap SVG wrappers and character-based control icons. The catalog guard validates only components intentionally documented in the DS; it does not require every website component to appear there. `node --test tests/*.test.mjs` covers typography, contrast and animation behavior. Primary and secondary text pass 4.5:1 on the supported surfaces; the contrast utility composites Figma’s alpha-muted colors before calculating ratios. Accent and decorative tertiary uses require their own size/context checks and are not covered by a blanket accessibility claim.
 
 When design-system work is explicitly requested, review its examples and documentation in both themes with keyboard, responsive and reduced-motion checks. See `QA.md` for the latest verification.
+
+## Generated image candidates
+
+`pnpm build` generates static raster WebP/AVIF candidates in ignored `public/generated/images/` using the Sharp dependency already supplied by Astro. The policy in `scripts/responsive-image-policy.json` excludes posters and animated media. UI screenshots use lossless WebP; listed photos use quality 88. A format is served only when all its candidates are no heavier than the original. Three alpha-shadow screenshots retain native resolution. Original files stay at their existing paths and remain the fallback; a fresh dev checkout works without generated candidates. No runtime image optimizer is used.
+
+## Pre-launch indexing
+
+The production origin is `https://naz.wtf`. All pages keep `noindex, nofollow` through the single `indexingEnabled = false` flag in `src/data/site-config.ts`; change it to `true` and rebuild at launch. Robots allows crawling and lists the static sitemap. `vercel.json` contains the approved headers; verify their actual response values after deployment. Home and catalog OG images remain unset until artwork is supplied.

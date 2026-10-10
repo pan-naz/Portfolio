@@ -25,6 +25,7 @@ const workStage = initializeWorkStage();
 const heroIntro = initializeHeroIntro(workStage);
 const waterfall = initializeWaterfall();
 const footerPile = initializeFooterPile();
+void heroIntro?.finished.then(() => footerPile?.prefetchWhenIdle());
 const projectTilt = initializeProjectTilt();
 const projectCursor = initializeProjectCursor();
 const workFilterMagnet = initializeWorkFilterMagnet();
@@ -95,7 +96,7 @@ menu.addEventListener('keydown', event => {
   if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
   else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
 });
-document.querySelectorAll<HTMLAnchorElement>('a[href]').forEach(link => {
+document.querySelectorAll<HTMLAnchorElement>('a[href]:not(.skip-link)').forEach(link => {
   if (link.pathname !== location.pathname || !link.hash) return;
   link.addEventListener('click', event => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;

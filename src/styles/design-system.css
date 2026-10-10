@@ -1,6 +1,6 @@
 /* Catalog layout follows the supplied Folio specimen sheet. Component styles
    come exclusively from global.css and their shared implementations. */
-.ds-sidebar { position: fixed; inset: 48px auto 32px 32px; width: 184px; overflow-y: auto; z-index: 10; }
+.ds-sidebar { position: fixed; inset: 48px auto 32px 32px; width: 184px; overflow-y: auto; z-index: var(--layer-controls); }
 .ds-home { display: inline-flex; min-height: 44px; align-items: center; }
 .ds-sidebar-title { margin: 12px 0 28px; font-size: var(--text-label-s); font-weight: 500; color: var(--text-secondary); }
 .ds-navigation { display: grid; gap: 20px; }
@@ -116,3 +116,5 @@
   .ds-elevation { padding-inline: 0; gap: 32px; }
   .ds-grid-demo { gap: 8px; height: 96px; }
 }
+
+.ds-return.hit-area { position: relative; }

@@ -3,11 +3,11 @@ import type { Project } from '../data/portfolio';
 import { yellowLeafMedia as media, yellowLeafLinkedIn, yellowLeafHomeSections, yellowLeafEstimateSteps, yellowLeafPalette } from '../data/yellow-leaf-case-study';
 import CaseStudyOverview from './CaseStudyOverview.astro';
 import CaseStudyMedia from './CaseStudyMedia.astro';
+import CaseStudyPalette from './CaseStudyPalette.astro';
 import CaseStudySteps from './CaseStudySteps.astro';
 import TextLink from './TextLink.astro';
 import SvgAsset from './SvgAsset.astro';
 import Icon from './Icon.astro';
-import '../styles/yellow-leaf-case-study.css';
 interface Props { project: Project; }
 const { project } = Astro.props;
 const innerPages = [
@@ -117,7 +117,7 @@ const vector = (name: string) => '/projects/yellow-leaf-case-study/' + name + '.
     <section class="case-study-chapter--inverse" aria-labelledby="yl-style">
       <div class="case-study-chapter__inner">
         <p class="case-study-eyebrow">Style guide</p><h2 class="case-study-heading" id="yl-style">Yellow, black and bold capitals</h2>
-        <div class="yellow-block"><h3>Colour</h3><ul class="yellow-palette" aria-label="Colour palette">{yellowLeafPalette.map(([label, value]) => <li><div class="yellow-swatch" style={'--yellow-swatch:' + value} aria-hidden="true" /><div class="yellow-colour-label"><strong>{label}</strong><code>{value}</code></div></li>)}</ul></div>
+        <div class="yellow-block"><h3>Colour</h3><CaseStudyPalette items={yellowLeafPalette} class="yellow-palette" swatchClass="yellow-swatch" swatchProperty="--yellow-swatch" labelClass="yellow-colour-label" /></div>
         <div class="yellow-block"><h3>Typography</h3><div class="yellow-duo yellow-type-grid">
           <div class="yellow-type-card"><p class="yellow-type-display yellow-oswald yellow-type-bold" aria-hidden="true">Aa</p><div><p class="case-study-eyebrow">Oswald · headings and menu</p><div class="yellow-type-example"><p class="text-body-s">Bold, capitals</p><p class="yellow-type-sample yellow-oswald yellow-type-bold yellow-capitals">Developing complex solutions</p></div><div class="yellow-type-example"><p class="text-body-s">Medium</p><p class="yellow-type-sample yellow-oswald yellow-type-medium">What type of your project?</p></div></div></div>
           <div class="yellow-type-card"><p class="yellow-type-display yellow-raleway" aria-hidden="true">Aa</p><div><p class="case-study-eyebrow">Raleway · body and buttons</p><div class="yellow-type-example"><p class="text-body-s">Regular</p><p class="yellow-type-sample yellow-raleway">Yellow leaf is a full-service digital agency, busy designing and building digital products.</p></div><div class="yellow-type-example"><p class="text-body-s">Bold, capitals</p><p class="yellow-type-sample yellow-raleway yellow-type-bold yellow-capitals">Estimate project</p></div></div></div>

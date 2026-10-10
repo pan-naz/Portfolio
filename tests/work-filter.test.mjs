@@ -34,7 +34,8 @@ assert.ok(/\.navigation-item-indicator\s*\{[^}]*transform-origin: 50% 50%[^}]*va
 assert.ok(tokens.includes('--duration-navigation: 420ms'));
 assert.ok(/\.navigation-item-indicator\s*\{[^}]*var\(--duration-navigation\) var\(--ease-entrance\)/.test(css));
 assert.ok(/\[aria-current\][^}]*\[aria-pressed='true'\][^{]*\.navigation-item-indicator\s*\{[^}]*opacity: 1[^}]*translate3d\(0,-50%,0\) scale\(1\)/.test(css));
-assert.ok(/\.navigation-item\s*\{[^}]*--navigation-item-padding-inline: 12px[^}]*padding: 10px var\(--navigation-item-padding-inline\)/.test(css));
+assert.ok(/\.navigation-item\s*\{[^}]*--navigation-item-padding-inline: var\(--space-3\)[^}]*padding: 10px var\(--navigation-item-padding-inline\)/.test(css));
+assert.ok(tokens.includes('--space-3: 12px;'), 'The navigation padding alias preserves its exact 12px value');
 assert.ok(!/\[aria-current\][^}]*\[aria-pressed='true'\][^{]*\{[^}]*padding-inline-end/.test(css));
 assert.ok(!/\[aria-current\][^{]*\{[^}]*background:/.test(css));
 console.log('PASS: real project filters, pressed semantics, live status and one shared push-dot navigation item.');

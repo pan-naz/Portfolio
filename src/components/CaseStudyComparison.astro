@@ -1,4 +1,5 @@
 ---
+import ResponsiveImage from './ResponsiveImage.astro';
 import Button from './Button.astro';
 interface ComparisonImage { src: string; alt: string; width: number; height: number; }
 interface Props { before: ComparisonImage; after: ComparisonImage; label: string; }
@@ -6,12 +7,12 @@ const { before, after, label } = Astro.props;
 ---
 <case-study-comparison class="case-comparison">
   <div class="case-comparison-controls" role="group" aria-label={label}>
-    <Button size="small" variant="secondary" data-comparison-choice="before" aria-pressed="false">Before</Button>
-    <Button size="small" variant="primary" data-comparison-choice="after" aria-pressed="true">After</Button>
+    <Button size="small" appearance="comparison" variant="secondary" data-comparison-choice="before" aria-pressed="false">Before</Button>
+    <Button size="small" appearance="comparison" variant="primary" data-comparison-choice="after" aria-pressed="true">After</Button>
   </div>
   <div class="case-comparison-images">
-    <img {...before} data-comparison-image="before" aria-hidden="true" loading="lazy" decoding="async" />
-    <img {...after} data-comparison-image="after" data-active aria-hidden="false" loading="lazy" decoding="async" />
+    <ResponsiveImage {...before} data-comparison-image="before" aria-hidden="true" loading="lazy" decoding="async" />
+    <ResponsiveImage {...after} data-comparison-image="after" data-active aria-hidden="false" loading="lazy" decoding="async" />
   </div>
   <span class="sr-only" aria-live="polite" data-comparison-status>Showing After</span>
 </case-study-comparison>
@@ -19,8 +20,6 @@ const { before, after, label } = Astro.props;
 <style>
   .case-comparison { display: block; }
   .case-comparison-controls { display: flex; justify-content: center; gap: var(--space-1); width: fit-content; margin: 0 auto var(--space-4); padding: var(--space-1); border-radius: var(--radius-pill); background: var(--surface); box-shadow: var(--shadow-floating); }
-  .case-comparison-controls :global(.button--secondary) { border-color: transparent; }
-  .case-comparison-controls :global(.button--secondary:not(:disabled):is(:hover, :focus-visible)) { color: var(--ink); background: var(--surface-subtle); }
   .case-comparison-images { display: grid; align-items: start; filter: drop-shadow(var(--shadow-floating-light)); }
   .case-comparison-images img { grid-area: 1 / 1; display: block; width: 100%; height: auto; border-radius: var(--radius-medium); opacity: 0; transition: opacity var(--duration-fast) ease-in-out; }
   .case-comparison-images img[data-active] { opacity: 1; }

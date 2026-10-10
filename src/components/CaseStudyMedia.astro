@@ -1,4 +1,5 @@
 ---
+import ResponsiveImage from './ResponsiveImage.astro';
 import IconButton from './IconButton.astro';
 import Icon from './Icon.astro';
 import { mediaCanvasStyle, mediaCrop } from './media-canvas';
@@ -14,6 +15,7 @@ interface Props {
   reducedMotionSrc?: string;
   animationSrc?: string;
   artwork?: boolean;
+  priority?: boolean;
   presentation?: 'framed' | 'bare' | 'shadow' | 'floating';
   strokeWidth?: 4 | 8;
   strokePlacement?: 'center' | 'outside';
@@ -30,7 +32,8 @@ interface Props {
   segments?: readonly { src: string; alt: string; width: number; height: number; poster?: string; kind?: 'image' | 'video' }[];
 }
 
-const { src, alt, width, height, poster, kind = 'video', reducedMotionSrc, animationSrc, artwork = false, presentation: requestedPresentation = 'framed', strokeWidth = 4, strokePlacement = 'center', radius = 'medium', controls = false, audioControls = false, canvasColor, canvasInset, canvasFade = false, canvasSourceRatio, cropPixels = 0, showTime = true, preview: requestedPreview, segments } = Astro.props;
+const { src, alt, width, height, poster, kind = 'video', reducedMotionSrc, animationSrc, artwork = false, priority: requestedPriority, presentation: requestedPresentation = 'framed', strokeWidth = 4, strokePlacement = 'center', radius = 'medium', controls = false, audioControls = false, canvasColor, canvasInset, canvasFade = false, canvasSourceRatio, cropPixels = 0, showTime = true, preview: requestedPreview, segments } = Astro.props;
+const priority = requestedPriority ?? (artwork && Astro.url.pathname.startsWith('/case-studies/'));
 const player = !segments?.length && kind === 'video' && controls;
 const preview = player ? requestedPreview ?? getCaseVideoPreview(src) : undefined;
 if (player && !preview) throw new Error(`Missing timeline preview for controlled recording: ${src}`);
@@ -46,7 +49,7 @@ const crop = mediaCrop({ width, height, cropPixels });
 const videoStyle = [mediaStyle, crop.style].filter(Boolean).join(';') || undefined;
 ---
 <MediaRoot class:list={['case-study-media', artwork && 'case-study-artwork', canvasColor && 'case-study-media--canvas', presentation === 'bare' && 'case-study-media--bare', presentation === 'shadow' && 'case-study-media--shadow', floating && 'case-study-media--floating', floating && strokeWidth === 8 && 'case-study-media--wide-stroke', floating && strokePlacement === 'outside' && 'case-study-media--outside-stroke', player && 'case-video-player']} style={`--case-media-radius:var(--radius-${mediaRadius})${canvasColor ? `;--media-ratio:${width} / ${height};--media-canvas:${canvasColor};background:${canvasColor}` : ''}`} data-preview={player && preview ? JSON.stringify(preview) : undefined} data-audio-controls={player && audioControls ? true : undefined}>
-  {segments?.length ? <div class="case-study-media__sequence">{segments.map(segment => <Astro.self {...segment} presentation="bare" />)}</div> : kind === 'image' ? reducedMotionSrc ? <picture><source media="(prefers-reduced-motion: reduce)" srcset={reducedMotionSrc} /><img class:list={[canvasFade && 'media-canvas-fade']} src={src} data-case-animated-image={animationSrc} alt={alt} width={width} height={height} loading="lazy" decoding="async" style={mediaStyle} /></picture> : <img class:list={[canvasFade && 'media-canvas-fade']} src={src} data-case-animated-image={animationSrc} alt={alt} width={width} height={height} loading="lazy" decoding="async" style={mediaStyle} /> : <div class:list={['case-media-frame', cropPixels && 'media-crop']} style={cropPixels ? `--media-ratio:${crop.width} / ${crop.height}` : undefined}><video class:list={[canvasFade && 'media-canvas-fade', cropPixels && 'media-crop-content']} data-case-video muted loop playsinline preload="none" poster={poster} width={width} height={height} controls={player} aria-label={alt} style={videoStyle}>
+  {segments?.length ? <div class="case-study-media__sequence">{segments.map(segment => <Astro.self {...segment} presentation="bare" />)}</div> : kind === 'image' ? reducedMotionSrc ? <picture><source media="(prefers-reduced-motion: reduce)" srcset={reducedMotionSrc} /><img class:list={[canvasFade && 'media-canvas-fade']} src={src} data-case-animated-image={animationSrc} alt={alt} width={width} height={height} loading={priority ? "eager" : "lazy"} fetchpriority={priority ? "high" : undefined} decoding="async" style={mediaStyle} /></picture> : <ResponsiveImage class:list={[canvasFade && 'media-canvas-fade']} src={src} data-case-animated-image={animationSrc} alt={alt} width={width} height={height} loading={priority ? "eager" : "lazy"} fetchpriority={priority ? "high" : undefined} decoding="async" style={mediaStyle} /> : <div class:list={['case-media-frame', cropPixels && 'media-crop']} style={cropPixels ? `--media-ratio:${crop.width} / ${crop.height}` : undefined}><video class:list={[canvasFade && 'media-canvas-fade', cropPixels && 'media-crop-content']} data-case-video muted loop playsinline preload="none" poster={poster} width={width} height={height} controls={player} aria-label={alt} style={videoStyle}>
     <source data-src={src} type="video/mp4" />
     {poster && <img src={poster} alt={alt} width={width} height={height} loading="lazy" decoding="async" style={mediaStyle} />}
   </video></div>}

@@ -10,7 +10,8 @@ function compile(path) {
   let source = readFileSync(path, 'utf8');
   source = source.replaceAll('import.meta.hot', 'undefined');
   source = source.replace("from 'matter-js'", `from '${pathToFileURL(resolve('node_modules/matter-js/build/matter.js')).href}'`);
-  source = source.replace(/from '(\.\/[^']+)'/g, (_, specifier) => `from '${compile(resolve(dirname(path), specifier + '.ts'))}'`);
+  source = source.replace(/from '(\.\/[^']+)'/g, (_, specifier) => `from '${compile(resolve(dirname(path), specifier.endsWith('.ts') ? specifier : specifier + '.ts'))}'`);
+  source = source.replace(/import\('(\.\/[^']+)'\)/g, (_, specifier) => `import('${compile(resolve(dirname(path), specifier.endsWith('.ts') ? specifier : specifier + '.ts'))}')`);
   const js = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
   const url = `data:text/javascript;base64,${Buffer.from(js).toString('base64')}`;
   modules.set(path, url);
@@ -129,12 +130,12 @@ const layerStyles = new Map();
 const layer = { style: { setProperty: (name, value) => layerStyles.set(name, value) } };
 const darkSection = { getBoundingClientRect: () => ({ bottom: fieldTop - 500 }) };
 const contact = {};
-let observedVisibilityTarget;
+let observedVisibilityTarget, near;
 const field = { dataset: {}, clientWidth: 800, parentElement: layer, closest: () => footer,
   querySelector: () => canvas, getBoundingClientRect: () => ({ left: fieldLeft, right: fieldLeft + field.clientWidth, top: fieldTop }) };
 const reduced = { matches: false, addEventListener() {}, removeEventListener() {} };
 const fine = { ...reduced, matches: true };
-globalThis.document = { hidden: false, elementFromPoint: () => null,
+globalThis.document = { readyState: 'complete', hidden: false, elementFromPoint: () => null,
   querySelector: selector => ({ '[data-footer-pile]': field, '.about-details': darkSection, '#contact': contact })[selector] ?? null,
   documentElement: { hasAttribute: () => false, addEventListener() {}, removeEventListener() {} },
   addEventListener: (type, fn) => addListener(documentEvents, type, fn),
@@ -150,7 +151,7 @@ globalThis.getComputedStyle = () => ({ getPropertyValue: name => ({ '--footer-ic
 globalThis.requestAnimationFrame = fn => { frames.set(++nextFrame, fn); return nextFrame; };
 globalThis.cancelAnimationFrame = id => frames.delete(id);
 globalThis.ResizeObserver = class { observe() {} disconnect() {} };
-globalThis.IntersectionObserver = class { constructor(fn) { visible = fn; } observe(target) { observedVisibilityTarget = target; } disconnect() {} };
+globalThis.IntersectionObserver = class { constructor(fn, options) { if (options?.rootMargin) near = fn; else visible = fn; } observe(target) { observedVisibilityTarget = target; } disconnect() {} };
 globalThis.DOMMatrix = class { scale() { return this; } };
 globalThis.Path2D = class { addPath() {} arc() {} roundRect() {} };
 const { initializeFooterPile } = await import(compile(resolve('src/scripts/footer-pile.ts')));
@@ -158,6 +159,10 @@ let testRandom = .42;
 const realRandom = Math.random;
 Math.random = () => testRandom;
 const live = initializeFooterPile();
+assert.equal(colors.size, 0, 'Offscreen setup does not construct or draw the physics model');
+near([{ isIntersecting: true }]);
+for (let i = 0; i < 20 && field.dataset.ready !== 'true'; i++) await new Promise(resolve => setImmediate(resolve));
+assert.equal(field.dataset.ready, 'true', 'Approaching the footer initializes the same renderer');
 const initialSeed = field.dataset.seed;
 assert.equal(windowOptions.get('touchmove')?.passive, true, 'Touch brushing leaves native page scrolling enabled');
 assert.ok(windowEvents.has('scroll'), 'Scrolling reprojects the stationary pointer; it does not apply a page-bottom impulse');
@@ -218,7 +223,10 @@ testRandom = .64;
 field.clientWidth = 342;
 fieldLeft = 24;
 window.innerWidth = 390;
+field.dataset = {};
 const reloaded = initializeFooterPile();
+near([{ isIntersecting: true }]);
+for (let i = 0; i < 20 && field.dataset.ready !== 'true'; i++) await new Promise(resolve => setImmediate(resolve));
 assert.notEqual(field.dataset.seed, initialSeed, 'Reload selects a new random arrangement');
 visible([{ isIntersecting: true }]);
 navigator.maxTouchPoints = 1;
@@ -250,5 +258,63 @@ assert.ok(Number(field.dataset.spilled) > 0, 'A finger sweep can wipe icons beyo
 assert.equal(frames.size, 0, 'The touch-driven pile sleeps after settling');
 reloaded.destroy();
 assert.ok(!windowEvents.has('touchmove'), 'Cleanup removes touch input listeners');
+// Real handlers must be safe before any engine exists, including zero-width/background setup.
+field.dataset = {}; field.clientWidth = 0;
+const hidden = initializeFooterPile(); document.hidden = true;
+assert.doesNotThrow(() => { for (const fn of documentEvents.get('visibilitychange') ?? []) fn(); fireWindow('blur'); near([{ isIntersecting: true }]); hidden.setPaused(true); hidden.setPaused(false); });
+assert.equal(field.dataset.ready, undefined); hidden.destroy(); document.hidden = false;
+field.clientWidth = 342; field.dataset = {};
+const pendingRenderer = initializeFooterPile(); near([{ isIntersecting: true }]); pendingRenderer.destroy();
+for (let i = 0; i < 5; i++) await new Promise(resolve => setImmediate(resolve));
+assert.equal(field.dataset.ready, undefined, 'A disposed pending loader never constructs or paints a late engine');
+
+// Idle prefetch must never construct/draw early, and all pending callbacks are disposable.
+const idleTasks = new Map(); let nextIdle = 0;
+window.requestIdleCallback = fn => { idleTasks.set(++nextIdle, fn); return nextIdle; };
+window.cancelIdleCallback = id => idleTasks.delete(id);
+field.dataset = {}; document.hidden = false;
+const beforeIdlePaint = paintCount;
+const idleRenderer = initializeFooterPile();
+idleRenderer.prefetchWhenIdle(); idleRenderer.prefetchWhenIdle();
+assert.equal(idleTasks.size, 1, 'Repeated prefetch requests schedule only one idle callback');
+const [idleId, idleCallback] = [...idleTasks][0]; idleTasks.delete(idleId); idleCallback();
+for (let i = 0; i < 10; i++) await new Promise(resolve => setImmediate(resolve));
+assert.equal(field.dataset.ready, undefined, 'A prefetched constructor does not initialize an offscreen pile');
+assert.equal(paintCount, beforeIdlePaint, 'Idle prefetch draws no offscreen pixels');
+fireWindow('themechange');
+assert.equal(field.dataset.ready, undefined, 'A resize/theme update after prefetch preserves the proximity gate');
+near([{ isIntersecting: true }]);
+assert.equal(field.dataset.ready, 'true', 'The cached constructor initializes immediately at the original proximity gate');
+idleRenderer.destroy();
+field.dataset = {};
+const cancelledIdle = initializeFooterPile(); cancelledIdle.prefetchWhenIdle();
+assert.equal(idleTasks.size, 1); cancelledIdle.destroy();
+assert.equal(idleTasks.size, 0, 'Destroy cancels pending native idle callbacks');
+const backgroundIdle = initializeFooterPile(); document.hidden = true; backgroundIdle.prefetchWhenIdle();
+assert.equal(idleTasks.size, 0, 'Background documents postpone idle prefetch');
+document.hidden = false; for (const fn of documentEvents.get('visibilitychange') ?? []) fn();
+assert.equal(idleTasks.size, 1, 'Returning to the foreground resumes the requested prefetch');
+backgroundIdle.destroy();
+assert.equal(idleTasks.size, 0);
+delete window.requestIdleCallback;
+const idleTimers = new Map(); let nextTimer = 0;
+window.setTimeout = (fn, delay) => { idleTimers.set(++nextTimer, { fn, delay }); return nextTimer; };
+window.clearTimeout = id => idleTimers.delete(id);
+const fallbackIdle = initializeFooterPile(); fallbackIdle.prefetchWhenIdle();
+assert.equal(idleTimers.size, 1); assert.equal([...idleTimers.values()][0].delay, 1000);
+fallbackIdle.destroy();
+assert.equal(idleTimers.size, 0, 'Destroy cancels the fallback timer in browsers without idle callbacks');
+console.log('PASS: idle prefetch retains offscreen construction/drawing gates, deduplicates requests, postpones background work and cleans native/fallback callbacks.');
+
+document.readyState = 'loading';
+window.requestIdleCallback = fn => { idleTasks.set(++nextIdle, fn); return nextIdle; };
+field.dataset = {};
+const beforeLoadIdle = initializeFooterPile(); beforeLoadIdle.prefetchWhenIdle();
+assert.equal(idleTasks.size, 0, 'Idle geometry prefetch waits for page load as well as intro completion');
+document.readyState = 'complete'; fireWindow('load');
+assert.equal(idleTasks.size, 1, 'Load releases the requested idle prefetch');
+beforeLoadIdle.destroy();
+assert.equal(idleTasks.size, 0, 'Cleanup cancels the idle callback scheduled at load');
+
 Math.random = realRandom;
 console.log('PASS: actual renderer supports identical mouse and touch brush physics, reduced-motion fallback, menu/offscreen pause, idle shutdown, theme persistence and cleanup.');

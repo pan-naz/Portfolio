@@ -6,7 +6,6 @@ import Stat from './Stat.astro';
 import SvgAsset from './SvgAsset.astro';
 import CaseStudyMedia from './CaseStudyMedia.astro';
 import CaseStudyComparison from './CaseStudyComparison.astro';
-import '../styles/datagpt-case-study.css';
 interface Props { project: Project; }
 const { project } = Astro.props;
 const researchMetrics = [
@@ -28,7 +27,7 @@ const researchMetrics = [
       <ul slot="secondary"><li>Product owner</li><li>Product manager</li><li>Engineering team</li></ul>
     </CaseStudyOverview>
     <section aria-labelledby="dg-problem">
-      <p class="case-study-eyebrow">Problem</p><h2 class="case-study-heading" id="dg-problem">Dashboards showed what happened.<br />Nobody could simply ask why.</h2>
+      <p class="case-study-eyebrow">Problem</p><h2 class="case-study-heading" id="dg-problem"><span class="case-study-heading-line">Dashboards showed what happened.</span><span class="case-study-heading-line">Nobody could simply ask why.</span></h2>
       <div class="case-study-columns dg-block">
         <div class="dg-copy-stack"><div><h3>Business context</h3><p>Companies spend heavily on BI tools, but getting from data to a decision still went through a data team. Dashboards were static, and business users couldn't ask follow-up questions.</p></div><div><h3>User pains</h3><p>Executives waited for the next meeting to learn why revenue moved. Analysts were "drowning in ad hoc requests". Marketers pieced a story together from dozens of reports.</p></div><div class="dg-goal"><h3>Goal</h3><p>Let anyone ask a complex question in plain English and get an answer they can trust.</p></div></div>
         <div class="dg-card dg-voices">

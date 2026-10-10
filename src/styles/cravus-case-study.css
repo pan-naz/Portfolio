@@ -1,5 +1,5 @@
 /* Cravus artwork and brand specimens retain their original identity. */
-.case-study-content--cravus { --cravus-orange: #F3981E; --cravus-brown: #36210D; --cravus-cream: #F9E8BF; --cravus-screen: #FDECC4; padding-bottom: 0; }
+.case-study-content--cravus { --cravus-brown: #36210D; --cravus-cream: #F9E8BF; --cravus-screen: #FDECC4; padding-bottom: 0; }
 .cravus-block { margin-top: var(--space-16); }
 .cravus-number { color: var(--accent); font-variant-numeric: tabular-nums; }
 .cravus-muted { color: var(--muted); }

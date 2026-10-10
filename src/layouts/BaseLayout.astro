@@ -1,16 +1,16 @@
 ---
 import '../styles/global.css';
+import SiteMetadata from '../components/SiteMetadata.astro';
 import { profile } from '../data/portfolio';
-interface Props { title?: string; homeIntro?: boolean; }
-const { title = `${profile.name} — naz.wtf`, homeIntro = false } = Astro.props;
+interface Props { title?: string; homeIntro?: boolean; description?: string; image?: string; }
+const { title = profile.name, homeIntro = false, description = profile.description, image } = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={profile.description} />
-    <meta name="robots" content="noindex, nofollow" />
+    <SiteMetadata title={title} description={description} image={image} />
     <meta name="theme-color" content="#FAF8F7" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=funnel-display" />
     <title>{title}</title>
@@ -20,7 +20,7 @@ const { title = `${profile.name} — naz.wtf`, homeIntro = false } = Astro.props
         try { saved = localStorage.getItem('naz-theme'); } catch {}
         const dark = saved === 'dark';
         document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-        document.querySelector('meta[name="theme-color"]').content = dark ? '#171716' : '#FAF8F7';
+        document.querySelector('meta[name="theme-color"]').content = dark ? '#161715' : '#FAF8F7';
       })();
     </script>
     <script is:inline>
@@ -129,5 +129,5 @@ const { title = `${profile.name} — naz.wtf`, homeIntro = false } = Astro.props
       })();
     </script>
   </head>
-  <body><slot /><script>import '../scripts/theme';</script></body>
+  <body><a class="skip-link" href="#main">Skip to content</a><slot /><script>import '../scripts/theme';</script></body>
 </html>

@@ -3,12 +3,12 @@ import type { Project } from '../data/portfolio';
 import { indexLawFirmMedia as media, indexLawFirmHomeSections, indexLawFirmServices, indexLawFirmTileOrder, indexLawFirmPalette } from '../data/index-law-firm-case-study';
 import CaseStudyOverview from './CaseStudyOverview.astro';
 import CaseStudyMedia from './CaseStudyMedia.astro';
+import CaseStudyPalette from './CaseStudyPalette.astro';
 import CaseStudySteps from './CaseStudySteps.astro';
 import CaseStudyGuides from './CaseStudyGuides.astro';
 import CaseStudyMarker from './CaseStudyMarker.astro';
 import CaseStudyServiceTiles from './CaseStudyServiceTiles.astro';
 import SvgAsset from './SvgAsset.astro';
-import '../styles/index-law-firm-case-study.css';
 interface Props { project: Project; }
 const { project } = Astro.props;
 ---
@@ -75,7 +75,7 @@ const { project } = Astro.props;
       <section class="case-study-chapter--inverse" aria-labelledby="index-style">
         <div class="case-study-chapter__inner index-section">
           <div><p class="case-study-eyebrow">Style guide</p><h2 class="case-study-heading" id="index-style">Colour, type and grid</h2></div>
-          <div class="index-block"><h3>Colour</h3><ul class="index-palette" aria-label="Colour palette">{indexLawFirmPalette.map(([label, value]) => <li><div class="index-swatch" style={'--index-swatch:' + value} aria-hidden="true" /><div><strong>{label}</strong><code>{value}</code></div></li>)}</ul></div>
+          <div class="index-block"><h3>Colour</h3><CaseStudyPalette items={indexLawFirmPalette} class="index-palette" swatchClass="index-swatch" swatchProperty="--index-swatch" /></div>
           <div class="index-block"><h3>Typography</h3><div class="index-specimens">
             <div class="index-specimen"><p class="case-study-eyebrow">Lato Regular · display</p><p class="index-specimen-size text-body-s">26px</p><p class="index-lato index-display-sample">Representation in court</p></div>
             <div class="index-specimen"><p class="case-study-eyebrow">Lato Regular · UI and copy</p><p class="index-specimen-size text-body-s">14px</p><p class="index-lato index-body-sample">Consultation and clarification of legal issues, with written notes on the current law.</p></div>

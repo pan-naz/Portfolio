@@ -22,6 +22,15 @@ import { caseStudyMotionTokens, caseStudyPresentationTokens } from '../scripts/c
 const readTokens = (block: string) => Object.fromEntries([...block.matchAll(/--([\w-]+):\s*([^;]+);/g)].map(([,key,value]) => [key,value.trim()]));
 const light = Object.assign({}, ...[...tokenCSS.matchAll(/(?:^|\n):root\s*\{([^}]+)\}/g)].map(([, block]) => readTokens(block))) as Record<string, string>;
 const dark = { ...light, ...readTokens(tokenCSS.match(/:root\[data-theme='dark'\][^{]*\{([^}]+)\}/)![1]) };
+// Keep the existing desktop pixel readouts for aliases and proportional tracking.
+const tokenValue = (palette: Record<string, string>, token: string): string => {
+  const value = palette[token];
+  const alias = value.match(/^var\(--([\w-]+)\)$/);
+  if (alias) return tokenValue(palette, alias[1]);
+  const tracking = token.startsWith('letter-spacing-heading-')
+    && value.match(/^calc\(([-\d.]+) \/ [\d.]+ \* 1em\)$/);
+  return tracking ? `${tracking[1]}px` : value;
+};
 const fontName = (token: string) => light[token].split(',')[0].trim().replace(/['"]/g, '').replace(/ Variable$/, '');
 const colors = [
   ['ink','dark','Text and primary buttons'],
@@ -54,14 +63,14 @@ const iconNames = Object.keys(icons) as IconName[];
     <header class="ds-heading"><p class="eyebrow">01 / Color</p><h1 id="colors-title" class="text-heading-l">Color</h1><p>Shared semantic tokens across two modes. Dark mode preserves the original #161715 page and uses #0F100E for darker contained surfaces. Floating controls retain their Light palette in both modes.</p></header>
     {(['light','dark'] as const).map(mode => <div class="ds-palette ds-mode" data-theme={mode}>
       <h3>{mode === 'light' ? 'Light mode' : 'Dark mode'}</h3>
-      <div class="ds-swatches">{colors.map(([token,name,usage]) => <div class="ds-swatch"><div class="ds-swatch-color" style={`background:var(--${token})`}></div><h4>{name}</h4><p>{(mode === 'light' ? light : dark)[token]}</p><p>{usage}</p></div>)}</div>
+      <div class="ds-swatches">{colors.map(([token,name,usage]) => <div class="ds-swatch"><div class="ds-swatch-color" style={`background:var(--${token})`}></div><h4>{name}</h4><p>{tokenValue(mode === 'light' ? light : dark, token)}</p><p>{usage}</p></div>)}</div>
     </div>)}
     <p class="ds-spec-note">Primary and secondary text pass 4.5:1 on supported surfaces in both modes. Decorative tertiary and accent treatments have separate usage rules; they are not body-text defaults.</p>
   </section>
 
   <section id="typography" class="ds-section" aria-labelledby="typography-title" tabindex="-1">
     <header class="ds-heading"><p class="eyebrow">02 / Typography</p><h2 id="typography-title">Typography</h2><p>Funnel Display for headings, Label/M, project names and display values; Urbanist for body copy, Label/S and controls. Both families are served locally through shared font definitions. Heading styles consume <code>--font-heading</code>. Heading/XL and Heading/L use <code>--font-weight-heading-large</code> at 400; Heading/M uses <code>--font-weight-heading</code> at 500; Body/M Strong uses <code>--font-weight-body-m-strong</code> at 500, and Label/M uses <code>--font-weight-label-m</code> at 500. Body styles use <code>--font-body</code>. Each typography style has a shared letter-spacing token: Heading/XL uses −3.64px, Heading/L −2.64px, Heading/M −1px and Label/M −0.5px. Body/L, Body/M, Body/M Strong, Body/S and Label/S each use 0px. The values below read directly from those tokens. The website and these specimens share the same typography rules on desktop and mobile.</p></header>
-    <div class="ds-type-list">{typeStyles.map(([name,spec,style,copy,spacingToken,fontToken]) => <div class="ds-type-row"><div class="ds-type-meta"><h3>{name}</h3><p>{fontName(fontToken)}</p><p>{spec} · {light[spacingToken].replace('-', '−')} letter spacing</p></div><p class={style}>{copy}</p></div>)}</div>
+    <div class="ds-type-list">{typeStyles.map(([name,spec,style,copy,spacingToken,fontToken]) => <div class="ds-type-row"><div class="ds-type-meta"><h3>{name}</h3><p>{fontName(fontToken)}</p><p>{spec} · {tokenValue(light, spacingToken).replace('-', '−')} letter spacing</p></div><p class={style}>{copy}</p></div>)}</div>
     <p class="ds-spec-note">Mobile adapts Heading/XL to 40px and Heading/L to 26px. Text can wrap and enlarge. Label/S follows the Figma specimen at 12 / 16.</p>
   </section>
 
@@ -70,7 +79,7 @@ const iconNames = Object.keys(icons) as IconName[];
     <div class="ds-foundation-block"><h3>Spacing</h3><p>Shared steps used by controls and page composition. The 48px step supports the existing website layout.</p><div class="ds-spacing-list">{spaces.map(([token,value]) => <div><span>{`space/${value}`}</span><div class="ds-spacing-bar" style={`width:var(--${token})`}></div><span>{value}</span></div>)}</div></div>
     <div class="ds-foundation-block"><h3>Radius</h3><p>Icon geometry, floating surfaces, project media, responsive section sheets and pill controls.</p><div class="ds-radius-list">{radii.map(([token,name,value]) => <div><div class="ds-radius-shape" style={`border-radius:var(--${token})`}></div><p>{name} · {value}</p></div>)}</div></div>
     <div class="ds-foundation-block"><h3>Elevation</h3><p>Resting media has no shadow. Overlay controls keep the fixed-Light shadow; floating navigation and raised chips consume their respective theme-aware shadow tokens.</p><div class="ds-elevation"><div><div></div><p>Resting · none</p></div><div><div style="box-shadow:var(--shadow-floating)"></div><p>Floating · 0 8px 24px / 10%</p></div></div></div>
-    <div class="ds-foundation-block"><h3>Layout grid — 12 columns / 1728</h3><p>1200px content width, 264px margins and 24px gaps. The website adapts to 64px desktop gutters and 24px mobile gutters; columns stack on small screens.</p><div class="ds-grid-demo" aria-label="Twelve-column grid">{Array.from({length:12}, () => <span></span>)}</div></div>
+    <div class="ds-foundation-block"><h3>Layout grid — 12 columns / 1728</h3><p>1200px content width, 264px margins and 24px gaps. The website adapts to 64px desktop gutters and 24px mobile gutters; columns stack on small screens.</p><div class="ds-grid-demo">{Array.from({length:12}, () => <span></span>)}</div></div>
   </section>
 
   <section id="motion" class="ds-section" aria-labelledby="motion-title" tabindex="-1">
@@ -134,5 +143,5 @@ const iconNames = Object.keys(icons) as IconName[];
     <div class="ds-dark-example"><h3>Project card on a sheet</h3><ProjectCard project={projects[1]} /></div>
   </section>
 
-  <footer class="ds-footer"><p>Folio / naz.wtf</p><a href="/">Back to portfolio <Arrow direction="up" inline /></a></footer>
+  <footer class="ds-footer"><p>Folio / naz.wtf</p><a class="hit-target--padded" href="/"><span class="hit-target-content">Back to portfolio <Arrow direction="up" inline /></span></a></footer>
 </main>

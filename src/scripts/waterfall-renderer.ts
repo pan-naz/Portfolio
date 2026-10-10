@@ -67,6 +67,7 @@ export function createWaterfallRenderer(initialCanvas: HTMLCanvasElement, icons:
   canvas.dataset.renderer = engine instanceof WaterfallGPU ? 'webgl2' : '2d';
   canvas.addEventListener('webglcontextlost', lost);
   return {
+    get frameInterval() { return engine instanceof WaterfallGPU ? 0 : 1000 / 30; },
     resize(width: number, height: number, ratio: number, palette: string[]) {
       size = [width, height, ratio, palette];
       try { engine.resize(...size); }

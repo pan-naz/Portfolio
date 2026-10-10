@@ -2,7 +2,7 @@
 import Button from './Button.astro';
 import Icon from './Icon.astro';
 import { waterfallIconNodes } from '../scripts/waterfall-icon-data';
-import { waterfallIconSize } from '../scripts/waterfall-icons';
+import { waterfallIconSize } from '../scripts/waterfall-constants';
 import { FooterPile, pilePreviewWidth, pilePreviewHeight, pileBleed, pileAbove } from '../scripts/footer-pile-model';
 const previews = [
   { name: 'desktop', width: pilePreviewWidth },
@@ -13,14 +13,22 @@ const previews = [
   pile.destroy();
   return { ...preview, icons };
 });
+const desktop = previews[0], mobile = previews[1];
+const definitions = [...new Set([...desktop.icons, ...mobile.icons].map(icon => icon.icon))].map(index => ({ id: `footer-pile-icon-${index}`, nodes: waterfallIconNodes[index] }));
+const position = (icon: typeof desktop.icons[number], width: number) => ({ x: `calc(50% + ${icon.x - width / 2 - waterfallIconSize / 2}px)`, y: `${-icon.y - waterfallIconSize / 2}px`, angle: `${icon.angle}rad` });
 ---
 <footer class="footer container">
   <p>© {new Date().getFullYear()} naz</p><p>Ivano-Frankivsk</p><Button href="/design-system/" variant="secondary" size="small" arrow="up">Design system</Button>
   <div class="footer-icon-pile-layer" aria-hidden="true" style={`--pile-icon-size:${waterfallIconSize}px;--pile-height:${pilePreviewHeight}px;--pile-bleed:${pileBleed}px;--pile-above:${pileAbove}px`}>
     <div class="footer-icon-pile" data-footer-pile>
-      {previews.map(preview => <div class={`footer-icon-pile-rest footer-icon-pile-rest--${preview.name}`}>
-        {preview.icons.map(icon => <Icon nodes={waterfallIconNodes[icon.icon]} size={waterfallIconSize} strokeWidth={24 / waterfallIconSize} style={`left:calc(50% + ${icon.x - preview.width / 2 - waterfallIconSize / 2}px);bottom:${-icon.y - waterfallIconSize / 2}px;transform:rotate(${icon.angle}rad)`} />)}
-      </div>)}
+      <Icon definitions={definitions} style="position:absolute;width:0;height:0;overflow:hidden" />
+      <div class="footer-icon-pile-rest">
+        {desktop.icons.map(icon => {
+          const small = mobile.icons.find(item => item.id === icon.id);
+          const d = position(icon, desktop.width), m = small ? position(small, mobile.width) : d;
+          return <Icon href={`#footer-pile-icon-${icon.icon}`} size={waterfallIconSize} strokeWidth={24 / waterfallIconSize} class={!small ? "footer-pile-desktop-only" : undefined} style={`--pile-x:${d.x};--pile-y:${d.y};--pile-angle:${d.angle}${small ? `;--pile-mobile-x:${m.x};--pile-mobile-y:${m.y};--pile-mobile-angle:${m.angle}` : ''}`} />;
+        })}
+      </div>
       <canvas></canvas>
     </div>
   </div>

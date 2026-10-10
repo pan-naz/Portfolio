@@ -1,12 +1,13 @@
 import { waterfallIconNodes } from './waterfall-icon-data';
 
-// Scale the viewBox stroke to retain an effective 1 CSS px at the final size.
-export const waterfallIconSize = 10;
-export const waterfallIconGap = 8;
+import { waterfallIconSize } from './waterfall-constants';
+
+let paths: Path2D[] | undefined;
 
 export function createWaterfallPaths() {
+  if (paths) return paths;
   const scale = new DOMMatrix().scale(waterfallIconSize / 24);
-  return waterfallIconNodes.map((nodes) => {
+  paths = waterfallIconNodes.map((nodes) => {
     const source = new Path2D();
     for (const [tag, attrs] of nodes) {
       if (tag === 'path') source.addPath(new Path2D(String(attrs.d)));
@@ -24,4 +25,5 @@ export function createWaterfallPaths() {
     path.addPath(source, scale);
     return path;
   });
+  return paths;
 }

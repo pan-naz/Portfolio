@@ -1,41 +1,74 @@
 :root {
+  /* Palette and geometry primitives; project-brand colours remain project-scoped. */
+  --color-neutral-950: #161715; --color-neutral-800: #343432;
+  --color-canvas-light: #FAF8F7; --color-white: #ffffff;
+  --color-surface-subtle-light: #f0edeb; --color-surface-dark: #0F100E;
+  --color-surface-subtle-dark: #2b2a29;
+  --color-accent-light: #F25A30; --color-accent-dark: #FF6B42;
+  --color-ink-alpha-64-light: rgb(22 23 21 / .64);
+  --color-ink-alpha-16-light: rgb(22 23 21 / .16);
+  --color-ink-alpha-64-dark: rgb(250 248 247 / .64);
+  --color-ink-alpha-10-dark: rgb(250 248 247 / .10);
+  --radius-12: 12px; --radius-24: 24px; --radius-40: 40px; --radius-999: 999px;
+  --shadow-overlay-light: 0 8px 24px rgb(22 23 21 / .10);
+  --ease-stage-entrance: cubic-bezier(.22, .61, .36, 1);
+  /* Semantic theme roles; the established names below stay compatible. */
+  --color-text-primary: var(--color-neutral-950);
+  --color-text-secondary: var(--color-ink-alpha-64-light);
+  --color-bg-canvas: var(--color-canvas-light);
+  --color-bg-surface: var(--color-white);
+  --color-bg-surface-subtle: var(--color-surface-subtle-light);
+  --color-interactive-accent: var(--color-accent-light);
+  --color-border-default: var(--color-ink-alpha-16-light);
+  /* One compact body role, with aliases preserving each consumer's px/rem contract. */
+  --type-body-compact: 1.125;
+  --text-body-compact: calc(var(--type-body-compact) * 16px);
+  --text-body-compact-relative: calc(var(--type-body-compact) * 1rem);
+  --text-stat-compact: 48px; --text-contact-compact: 64px;
+  --line-height-body: 1.5; --line-height-heading-l: 1.142857;
+  --duration-button-fill: 450ms;
+  --duration-tooltip-opacity: 320ms; --duration-tooltip-scale: 440ms;
+  --layer-behind: -1; --layer-base: 0; --layer-content: 1; --layer-raised: 2;
+  --layer-controls: 10; --layer-tooltip: 20; --layer-header: 30;
+  --layer-cursor: 40; --layer-overlay: 100;
   color-scheme: light;
-  --ink: #161715; --ink-hover: #343432; --muted: rgb(22 23 21 / .64);
+  --ink: var(--color-text-primary); --ink-hover: var(--color-neutral-800); --muted: var(--color-text-secondary);
   --text-primary: var(--ink); --text-secondary: var(--muted);
   --text-tertiary: #A19C98;
-  --accent: #F25A30; --canvas: #FAF8F7;
-  --surface: #ffffff; --surface-subtle: #f0edeb; --on-primary: #ffffff;
+  --accent: var(--color-interactive-accent); --canvas: var(--color-bg-canvas);
+  --surface: var(--color-bg-surface); --surface-subtle: var(--color-bg-surface-subtle); --on-primary: var(--color-white);
   /* Overlay controls keep a high-contrast white surface; floating navigation follows the page theme. */
-  --floating-ink: #161715; --floating-ink-hover: #343432; --floating-surface: #ffffff; --floating-surface-subtle: #f0edeb;
-  --floating-muted: rgb(22 23 21 / .64); --floating-divider: rgb(22 23 21 / .16);
-  --floating-accent: #F25A30; --floating-on-primary: #ffffff; --floating-focus-ring: #161715;
-  --shadow-floating-light: 0 8px 24px rgb(22 23 21 / .10);
+  --floating-ink: var(--color-neutral-950); --floating-ink-hover: var(--color-neutral-800); --floating-surface: var(--color-white); --floating-surface-subtle: var(--color-surface-subtle-light);
+  --floating-muted: var(--color-ink-alpha-64-light); --floating-divider: var(--color-ink-alpha-16-light);
+  --floating-accent: var(--color-accent-light); --floating-on-primary: var(--color-white); --floating-focus-ring: var(--color-neutral-950);
+  --shadow-floating-light: var(--shadow-overlay-light);
   --floating-navigation-ink: var(--floating-ink); --floating-navigation-ink-hover: var(--floating-ink-hover);
-  --floating-navigation-text-secondary: rgb(22 23 21 / .64); --floating-navigation-surface: var(--floating-surface);
+  --floating-navigation-text-secondary: var(--color-ink-alpha-64-light); --floating-navigation-surface: var(--floating-surface);
   --floating-navigation-surface-subtle: var(--floating-surface-subtle); --floating-navigation-accent: var(--floating-accent);
   --floating-navigation-on-primary: var(--floating-on-primary); --floating-navigation-focus-ring: var(--floating-focus-ring);
   --shadow-floating-navigation: var(--shadow-floating-light);
-  --divider: rgb(22 23 21 / .16); --control-border: var(--ink);
+  --divider: var(--color-border-default); --control-border: var(--ink);
   --backdrop-menu: rgb(0 0 0 / .4); --backdrop-case: rgb(0 0 0 / .18);
-  --inverse: #161715; --sheet: var(--inverse); --inverse-muted: #aaa; --waterfall-ink: #111111;
-  --inverse-ink: #FAF8F7; --inverse-text-secondary: rgb(250 248 247 / .64); --inverse-copy: rgb(250 248 247 / .72);
-  --inverse-accent: #FF6B42; --inverse-divider: rgb(250 248 247 / .10);
+  --inverse: var(--color-neutral-950); --sheet: var(--inverse); --waterfall-ink: #111111;
+  --inverse-ink: var(--color-canvas-light); --inverse-text-secondary: var(--color-ink-alpha-64-dark); --inverse-copy: rgb(250 248 247 / .72);
+  --inverse-accent: var(--color-accent-dark); --inverse-divider: var(--color-ink-alpha-10-dark);
   --inverse-surface: var(--inverse); --inverse-raised-surface: #222320;
   --project-surface: var(--surface);
   --footer-icon-ink: #b8b8b8;
   --gutter: max(64px, calc((100vw - 1200px) / 2)); --hero-gutter: max(64px, calc((100vw - 1328px) / 2)); --hero-visual-gutter: calc(var(--hero-gutter) - 4px); --header-inset: 32px;
   --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
   --space-6: 24px; --space-8: 32px; --space-12: 48px; --space-16: 64px; --space-24: 96px;
-  --section-space: 96px; --grid-gap: 24px;
+  --section-space: var(--space-24); --grid-gap: var(--space-6);
   --work-preview-height: 200px;
   --section-reveal-trigger-viewport-ratio: .9; --work-stage-trigger-viewport-ratio: .02; --work-stage-collapse-scroll-y: 1;
-  --radius-pill: 999px; --radius-medium: 24px; --radius-media: 40px; --radius-chapter: clamp(40px, 5.8vw, 100px);
+  --radius-pill: var(--radius-999); --radius-medium: var(--radius-24); --radius-media: var(--radius-40); --radius-chapter: clamp(40px, 5.8vw, 100px);
   --radius-project-logo: 25%;
   /* Figma desktop ramp; mobile sizes are a responsive adaptation. */
   --font-body: 'Urbanist Variable', Urbanist, Arial, sans-serif;
   --font-heading: 'Funnel Display Variable', 'Funnel Display', Arial, sans-serif;
-  --letter-spacing-heading-xl: -3.64px;
-  --letter-spacing-heading-l: -2.64px;
+  /* Exact 1440px clamp sizes keep desktop tracking unchanged as smaller text scales. */
+  --letter-spacing-heading-xl: calc(-3.64 / 76.0048 * 1em);
+  --letter-spacing-heading-l: calc(-2.64 / 55.9952 * 1em);
   --letter-spacing-heading-m: -1px;
   --letter-spacing-body-l: 0px;
   --letter-spacing-body-m: 0px;
@@ -52,11 +85,10 @@
   --font-weight-heading-large: 400;
   --font-weight-body-m-strong: 500;
   --font-weight-label-m: 500;
-  --shadow-media: none;
-  --shadow-floating: 0 8px 24px rgb(22 23 21 / .10);
+  --shadow-floating: var(--shadow-overlay-light);
   --ease-out: cubic-bezier(.16, 1, .3, 1);
-  --ease-entrance: cubic-bezier(.22, .61, .36, 1);
-  --ease-work-stage: cubic-bezier(.22, .61, .36, 1);
+  --ease-entrance: var(--ease-stage-entrance);
+  --ease-work-stage: var(--ease-stage-entrance);
   /* One card/case/hero transition contract across all project collections. */
   --duration-case-open: 700ms; --duration-case-close: 400ms;
   --duration-case-caption-exit: 200ms; --duration-case-caption-enter: 600ms;
@@ -92,25 +124,33 @@
   --delay-filter-enter: 140ms; --scale-filter: .9; --scale-filter-exit: .97; --distance-filter-enter: 24px;
 }
 :root[data-theme='dark'], [data-theme='dark'] {
+  /* Preserve the original serialized ink spelling used by catalog readouts. */
+  --color-text-primary: #faf8f7;
+  --color-text-secondary: var(--color-ink-alpha-64-dark);
+  --color-bg-canvas: var(--color-neutral-950);
+  --color-bg-surface: var(--color-surface-dark);
+  --color-bg-surface-subtle: var(--color-surface-subtle-dark);
+  --color-interactive-accent: var(--color-accent-dark);
+  --color-border-default: var(--color-ink-alpha-10-dark);
   color-scheme: dark;
-  --ink: #faf8f7; --ink-hover: #dedad7; --muted: rgb(250 248 247 / .64);
+  --ink: var(--color-text-primary); --ink-hover: #dedad7; --muted: var(--color-text-secondary);
   --text-primary: var(--ink); --text-secondary: var(--muted); --focus-ring: var(--ink);
   --text-tertiary: #9e9996;
-  --sheet: var(--surface); --accent: #FF6B42; --canvas: #161715; --surface: #0F100E;
-  --surface-subtle: #2b2a29; --on-primary: #161715;
+  --sheet: var(--surface); --accent: var(--color-interactive-accent); --canvas: var(--color-bg-canvas); --surface: var(--color-bg-surface);
+  --surface-subtle: var(--color-bg-surface-subtle); --on-primary: var(--color-neutral-950);
   --inverse-surface: var(--surface); --project-surface: var(--inverse-raised-surface);
-  --divider: rgb(250 248 247 / .10); --control-border: var(--ink);
+  --divider: var(--color-border-default); --control-border: var(--ink);
   --waterfall-ink: #ddd8d4;
   --footer-icon-ink: #747474;
-  --floating-navigation-ink: #FAF8F7; --floating-navigation-ink-hover: #FFFFFF;
-  --floating-navigation-text-secondary: rgb(250 248 247 / .64); --floating-navigation-surface: #242522;
-  --floating-navigation-surface-subtle: #343532; --floating-navigation-accent: #FF6B42;
-  --floating-navigation-on-primary: #161715; --floating-navigation-focus-ring: #FAF8F7;
+  --floating-navigation-ink: var(--color-canvas-light); --floating-navigation-ink-hover: #FFFFFF;
+  --floating-navigation-text-secondary: var(--color-ink-alpha-64-dark); --floating-navigation-surface: #242522;
+  --floating-navigation-surface-subtle: #343532; --floating-navigation-accent: var(--color-accent-dark);
+  --floating-navigation-on-primary: var(--color-neutral-950); --floating-navigation-focus-ring: var(--color-canvas-light);
   --shadow-floating-navigation: 0 8px 24px rgb(0 0 0 / .38), 0 24px 64px rgb(0 0 0 / .52);
   --shadow-floating: 0 2px 8px rgb(0 0 0 / .16), 0 12px 32px rgb(0 0 0 / .28);
 }
 @media (max-width: 767px) {
-  :root { --gutter: 24px; --hero-gutter: 24px; --hero-visual-gutter: 24px; --header-inset: 24px; --section-space: 64px; --grid-gap: 16px; --radius-media: 24px; --radius-chapter: 40px; --work-preview-height: 120px; }
+  :root { --gutter: 24px; --hero-gutter: 24px; --hero-visual-gutter: 24px; --header-inset: 24px; --section-space: var(--space-16); --grid-gap: var(--space-4); --radius-media: var(--radius-24); --radius-chapter: var(--radius-40); --work-preview-height: 120px; }
 }
 
 /* Shared control geometry and interaction states. */
@@ -119,6 +159,6 @@
   --icon-size-compact: 20px;
   --icon-stroke-regular: 1.5; --icon-stroke-strong: 2; --icon-stroke-emphasis: 2.5;
   --icon-linecap: round; --icon-linejoin: round;
-  --text-control: 1rem; --radius-small: 12px;
+  --radius-small: var(--radius-12);
   --focus-ring: var(--ink); --opacity-disabled: .4;
 }

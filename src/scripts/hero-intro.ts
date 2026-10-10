@@ -25,6 +25,8 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
   const hero = document.querySelector<HTMLElement>('.hero');
   const heading = hero?.querySelector<HTMLElement>('[data-hero-heading]');
   if (!hero || !heading) return;
+  let resolveFinished!: () => void;
+  const finished = new Promise<void>(resolve => { resolveFinished = resolve; });
   const header = document.querySelector<HTMLElement>('.site-header');
   const root = document.documentElement;
   const returningFromCase = root.dataset.caseReturn === 'true';
@@ -61,6 +63,8 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
   };
   const reset = () => {
     const current = ++generation;
+    let contentFinished = false, tagsFinished = false;
+    const finishIntro = () => { if (current === generation && contentFinished && tagsFinished) resolveFinished(); };
     if (headerFrame) cancelAnimationFrame(headerFrame);
     headerFrame = 0;
     finishHeader = () => {};
@@ -87,6 +91,7 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
     if (reduced.matches || typeof permanent.animate !== 'function') {
       hero.classList.add('is-tags-ready');
       releaseGate();
+      resolveFinished();
       return;
     }
     roots.forEach(element => { element.style.opacity = '0'; });
@@ -162,6 +167,8 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
       })), { paused: true, onComplete: () => {
         if (current !== generation) return;
         hero.classList.add('is-tags-ready');
+        tagsFinished = true;
+        finishIntro();
       } });
       intro = createNativeMotion([
         ...revealEffects(processTags, { duration: entrance, distance, easing, delay: timing.processStart, stagger: tagStagger }),
@@ -176,7 +183,10 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
         }),
         ...revealEffects([cta], { ...copy, delay: timing.ctaStart }),
       ], { paused: true, onComplete: () => {
-        if (current === generation) roleMotion?.startCycling();
+        if (current !== generation) return;
+        roleMotion?.startCycling();
+        contentFinished = true;
+        finishIntro();
       } });
       // Effects already supply backwards-fill states before these containers show.
       [permanent, cycling, paragraph].forEach(element => { element.style.opacity = '1'; });
@@ -192,6 +202,7 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
       roots.forEach(element => { element.style.opacity = '1'; element.style.removeProperty('transform'); });
       if (header) header.style.opacity = '1';
       releaseGate();
+      resolveFinished();
     });
   };
   // Focus finishes the same native group; no separate class or timing workaround.
@@ -210,7 +221,7 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
   reduced.addEventListener('change', reset);
   reset();
   root.classList.add('hero-intro-ready');
-  return { setPaused(value: boolean) {
+  return { finished, setPaused(value: boolean) {
     paused = value;
     if (introStarted) intro?.setPaused(value);
     // The header remains usable when the hero scrolls away or a menu opens.
