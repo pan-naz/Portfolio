@@ -1,3 +1,6 @@
+/* Project-only: Kitchen Chatbot brand styles, not part of the design system */
+@layer system, project;
+@layer project {
 /* Purple and teal belong to the supplied conversation specimen. */
 .case-study-content--kitchen-chatbot { --kc-purple: #6954ae; --kc-teal: #40d4b1; padding-bottom: 0; }
 .kitchen-case > .case-study-overview { padding-top: var(--case-section-space); }
@@ -26,4 +29,6 @@
   .kc-chat { padding: 0; }
   .kc-message { max-width: 88%; }
   .kc-dishes { width: 100%; }
+}
+
 }

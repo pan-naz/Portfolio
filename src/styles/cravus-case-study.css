@@ -1,3 +1,7 @@
+/* Project-only: Cravus brand styles, not part of the design system */
+@layer system, project;
+@layer project {
+.case-study-content--cravus { --cravus-font-cravus-titillium-web-sans-serif: 'Cravus Titillium Web', sans-serif; --cravus-color-d97e06: #D97E06; }
 /* Cravus artwork and brand specimens retain their original identity. */
 .case-study-content--cravus { --cravus-brown: #36210D; --cravus-cream: #F9E8BF; --cravus-screen: #FDECC4; padding-bottom: 0; }
 .cravus-block { margin-top: var(--space-16); }
@@ -37,11 +41,11 @@
 @font-face { font-family: 'Cravus Titillium Web'; font-style: normal; font-weight: 300; font-display: swap; src: url('/projects/cravus-case-study/titillium-web-300.ttf') format('truetype'); }
 @font-face { font-family: 'Cravus Titillium Web'; font-style: normal; font-weight: 400; font-display: swap; src: url('/projects/cravus-case-study/titillium-web-400.ttf') format('truetype'); }
 @font-face { font-family: 'Cravus Titillium Web'; font-style: normal; font-weight: 700; font-display: swap; src: url('/projects/cravus-case-study/titillium-web-700.ttf') format('truetype'); }
-.cravus-titillium { font-family: 'Cravus Titillium Web', sans-serif; font-weight: 400; }
+.cravus-titillium { font-family:var(--cravus-font-cravus-titillium-web-sans-serif); font-weight: 400; }
 .cravus-titillium.cravus-light, .cravus-titillium .cravus-light { font-weight: 300; }
 .cravus-titillium.cravus-bold, .cravus-titillium .cravus-bold { font-weight: 700; }
 .cravus-s40 { font-size: 40px; line-height: 46px; font-weight: 700; }
-.cravus-s40 span { color: #D97E06; }
+.cravus-s40 span { color: var(--cravus-color-d97e06); }
 .cravus-s26 { font-size: 26px; line-height: 32px; font-weight: 700; }
 .cravus-s18 { font-size: 18px; line-height: 26px; }
 .cravus-s14 { font-size: 14px; line-height: 22px; }
@@ -55,4 +59,6 @@
 @media (max-width: 479px) {
   .cravus-palette, .cravus-specimens, .cravus-grid-card { grid-template-columns: minmax(0, 1fr); }
   .cravus-swatch { aspect-ratio: 3 / 1; }
+}
+
 }

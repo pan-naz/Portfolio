@@ -1,3 +1,7 @@
+/* Project-only: Gutsul Made brand styles, not part of the design system */
+@layer system, project;
+@layer project {
+.case-study-content--gutsul-made { --gutsul-color-2a2a2a: #2A2A2A; --gutsul-color-f3efe6: #F3EFE6; --gutsul-color-faf8f7: #FAF8F7; --gutsul-font-gutsul-open-sans-sans-serif: 'Gutsul Open Sans', sans-serif; }
 /* Original store identity and embroidery specimens stay scoped to this project. */
 @font-face { font-family: 'Gutsul Open Sans'; src: url('/projects/blaustrom-case-study/open-sans-400.ttf') format('truetype'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Gutsul Open Sans'; src: url('/projects/blaustrom-case-study/open-sans-700.ttf') format('truetype'); font-weight: 700; font-display: swap; }
@@ -23,8 +27,8 @@
 .gutsul-diamonds li::before { content: ''; position: absolute; top: .55em; left: 3px; width: 7px; height: 7px; transform: rotate(45deg); background: var(--gutsul-red); }
 .gutsul-story { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.5fr; column-gap: var(--grid-gap); }
 .gutsul-story-step { display: contents; margin: 0; }
-.gutsul-brand-tile { position: relative; aspect-ratio: 1; overflow: hidden; border-radius: var(--radius-medium); background: #2A2A2A; }
-.gutsul-brand-tile--paper { background: #F3EFE6; }
+.gutsul-brand-tile { position: relative; aspect-ratio: 1; overflow: hidden; border-radius: var(--radius-medium); background: var(--gutsul-color-2a2a2a); }
+.gutsul-brand-tile--paper { background: var(--gutsul-color-f3efe6); }
 .gutsul-brand-tile > :is(.case-study-media, .svg-asset) { width: 100%; height: 100%; }
 .gutsul-brand-tile .case-study-media img { height: 100%; object-fit: cover; }
 .gutsul-story figcaption { padding-top: var(--space-3); }
@@ -50,10 +54,10 @@
 .gutsul-phones > * { width: min(100%, 207px); --surface: var(--floating-surface); }
 .gutsul-guide { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--grid-gap); align-items: stretch; }
 .gutsul-guide > :first-child { grid-column: 1 / -1; }
-.gutsul-plate { display: grid; place-items: center; min-height: 220px; padding: var(--space-8) var(--space-4); border-radius: var(--radius-small); background: #FAF8F7; }
+.gutsul-plate { display: grid; place-items: center; min-height: 220px; padding: var(--space-8) var(--space-4); border-radius: var(--radius-small); background: var(--gutsul-color-faf8f7); }
 .gutsul-icons .case-study-media { width: min(100%, 753px); }
 .gutsul-icons img { mix-blend-mode: multiply; }
-.gutsul-type { font-family: 'Gutsul Open Sans', sans-serif; font-size: 40px; line-height: 1.2; text-align: center; color: var(--gutsul-dark); }
+.gutsul-type { font-family:var(--gutsul-font-gutsul-open-sans-sans-serif); font-size: 40px; line-height: 1.2; text-align: center; color: var(--gutsul-dark); }
 .gutsul-type span { color: var(--gutsul-grey); }
 .gutsul-case .gutsul-type b { font-weight: 700; }
 .gutsul-palette { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); width: 100%; list-style: none; padding: 0; margin: 0; }
@@ -79,4 +83,6 @@
   .gutsul-pages .case-study-decision-card .case-study-media img { height: auto; object-fit: contain; }
   .gutsul-palette { gap: var(--space-2); }
   .gutsul-palette span { width: 40px; height: 40px; border-width: 10px; }
+}
+
 }

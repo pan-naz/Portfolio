@@ -1,3 +1,5 @@
+@layer system, project;
+@layer system {
 :root {
   /* Palette and geometry primitives; project-brand colours remain project-scoped. */
   --color-neutral-950: #161715; --color-neutral-800: #343432;
@@ -161,4 +163,6 @@
   --icon-linecap: round; --icon-linejoin: round;
   --radius-small: var(--radius-12);
   --focus-ring: var(--ink); --opacity-disabled: .4;
+}
+
 }

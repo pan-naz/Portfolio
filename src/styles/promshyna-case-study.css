@@ -1,3 +1,6 @@
+/* Project-only: PromShyna brand styles, not part of the design system */
+@layer system, project;
+@layer project {
 /* Original store colours and tread geometry belong to its artwork, not portfolio UI. */
 .case-study-content--promshyna { --promshyna-orange: #FF973B; --promshyna-dark: #222222; --promshyna-rail: 56px; }
 .promshyna-muted { color: var(--muted); }
@@ -48,4 +51,6 @@
   .promshyna-phone { padding: var(--space-3); }
   .promshyna-palette { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .promshyna-specs > div { grid-template-columns: minmax(0, 1fr); gap: var(--space-1); }
+}
+
 }

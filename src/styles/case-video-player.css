@@ -1,3 +1,5 @@
+@layer system, project;
+@layer system {
 .case-video-controls { position: absolute; z-index: var(--layer-raised); inset: auto var(--space-4) var(--space-4); display: flex; align-items: center; gap: var(--space-2); padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1); border-radius: var(--radius-pill); color: var(--ink); background: var(--surface); box-shadow: var(--shadow-floating); opacity: 0; pointer-events: none; transition: opacity var(--duration-fast) ease-out; }
 .case-video-player[data-audio-controls] .case-video-controls { padding-inline-end: var(--space-1); }
 .case-video-controls[hidden], .case-video-controls [hidden] { display: none; }
@@ -22,3 +24,5 @@
 @media (max-width: 600px) { .case-video-controls { inset: auto var(--space-2) var(--space-2); gap: var(--space-2); } }
 @media (max-width: 600px) { .case-video-player[data-audio-controls] .case-video-time { display: none; } }
 @media (prefers-reduced-motion: reduce) { .case-video-controls { transition: none; } }
+
+}

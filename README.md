@@ -30,6 +30,8 @@ The test suite covers case-study media, genuine SVG geometry, typography and int
 
 Website routes compose shared components. The portfolio and separately maintained `/design-system/` catalog share `src/styles/tokens.css`. Catalog changes require an explicit design-system request. Standalone icons/logos use shared `Icon`, `SvgAsset` and `Logo`; project website links use shared `TextLink`.
 
+CSS declares `@layer system, project;`: shared tokens and component rules use `system`; case-specific styles use the higher `project` layer. Project-only colours, backgrounds and specimen fonts stay in each project's scoped variables and are excluded from design-system tokens and consolidation. Browser comparisons also require all 20 home popups to match their direct-page backgrounds in both themes at 375 and 1440.
+
 ## Generated images
 
 `pnpm build` generates ignored `public/generated/images/` with the Sharp dependency supplied by Astro. `scripts/responsive-image-policy.json` lists eligible static sources and exclusions. PNG sources receive lossless WebP; other eligible static raster sources receive quality-88 WebP/AVIF. A format is served only when every candidate is no heavier than the original. Posters, animated media and videos remain excluded; the native-alpha/shadow exceptions stay explicit. Original assets are preserved as fallbacks. A fresh dev checkout works with originals before generation. No runtime image optimizer is used.

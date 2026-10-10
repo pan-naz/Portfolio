@@ -1,3 +1,7 @@
+/* Project-only: Yellow Leaf brand styles, not part of the design system */
+@layer system, project;
+@layer project {
+.case-study-content--yellow-leaf { --yellow-font-yellow-leaf-oswald-sans-serif: 'Yellow Leaf Oswald', sans-serif; --yellow-font-yellow-leaf-raleway-sans-serif: 'Yellow Leaf Raleway', sans-serif; }
 /* Reference composition; all portfolio UI roles come from the shared narrative and tokens. */
 .case-study-content--yellow-leaf { padding-bottom: 0; }
 .yellow-block { margin-top: var(--space-16); }
@@ -30,8 +34,8 @@
 /* Original brand specimens alone retain Yellow Leaf's fonts and weights. */
 @font-face { font-family: 'Yellow Leaf Oswald'; font-style: normal; font-weight: 400 700; font-display: swap; src: url('/projects/yellow-leaf-case-study/oswald.woff2') format('woff2'); }
 @font-face { font-family: 'Yellow Leaf Raleway'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('/projects/yellow-leaf-case-study/raleway.woff2') format('woff2'); }
-.yellow-oswald { font-family: 'Yellow Leaf Oswald', sans-serif; font-weight: 400; }
-.yellow-raleway { font-family: 'Yellow Leaf Raleway', sans-serif; font-weight: 400; }
+.yellow-oswald { font-family:var(--yellow-font-yellow-leaf-oswald-sans-serif); font-weight: 400; }
+.yellow-raleway { font-family:var(--yellow-font-yellow-leaf-raleway-sans-serif); font-weight: 400; }
 .yellow-type-bold { font-weight: 700; }
 .yellow-type-medium { font-weight: 500; }
 .yellow-capitals { text-transform: uppercase; }
@@ -48,4 +52,6 @@
 @media (max-width: 479px) {
   .yellow-type-card { grid-template-columns: minmax(0, 1fr); }
   .yellow-phone-grid { gap: var(--space-3); }
+}
+
 }

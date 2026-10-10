@@ -6,5 +6,9 @@ import TextLink from './TextLink.astro';
   <TextLink href="/" compact>Back to portfolio</TextLink>
 </main>
 <style>
+@layer system, project;
+@layer system {
   .not-found { min-height: 100svh; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: var(--space-6); padding-block: var(--space-16); }
+
+}
 </style>

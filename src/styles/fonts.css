@@ -1,3 +1,4 @@
+@layer system, project;
 /* Shared, self-hosted families for the website and design-system catalog. */
-@import '@fontsource-variable/urbanist';
-@import '@fontsource-variable/funnel-display';
+@import '@fontsource-variable/urbanist' layer(system);
+@import '@fontsource-variable/funnel-display' layer(system);

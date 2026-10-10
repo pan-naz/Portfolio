@@ -1,3 +1,6 @@
+/* Project-only: Voximplant Kit brand styles, not part of the design system */
+@layer system, project;
+@layer project {
 .case-study-content--voximplant { padding-bottom: 0; }
 .vox-accent { color: var(--accent); font-size: var(--text-body-m); line-height: 1.5; font-weight: var(--font-weight-body-m-strong); }
 .vox-subhead { margin: var(--space-8) 0 var(--space-4); font-weight: var(--font-weight-body-m-strong); }
@@ -114,4 +117,6 @@
   .vox-product-feature--design-system, .vox-final-cards { grid-template-columns: 1fr; }
   .vox-final-cards { margin-top: var(--space-16); }
   .vox-final-cards article { padding: var(--space-6); }
+}
+
 }

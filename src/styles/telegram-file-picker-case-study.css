@@ -1,3 +1,6 @@
+/* Project-only: Telegram File Picker brand styles, not part of the design system */
+@layer system, project;
+@layer project {
 /* Telegram blue is original project artwork, confined to facts and the result band. */
 .case-study-content--telegram { --tg-blue: #2aabee; --tg-blue-deep: #229ed9; padding-bottom: 0; }
 .telegram-case > .case-study-overview { padding-top: var(--case-section-space); }
@@ -29,4 +32,6 @@
 }
 @media (max-width: 359px) {
   .tg-stats { grid-template-columns: minmax(0, 1fr); }
+}
+
 }

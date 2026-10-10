@@ -1,3 +1,7 @@
+/* Project-only: Peak Hotel brand styles, not part of the design system */
+@layer system, project;
+@layer project {
+.case-study-content--peak-hotel { --peak-font-peak-playfair-serif: 'Peak Playfair', serif; --peak-font-peak-lato-sans-serif: 'Peak Lato', sans-serif; }
 /* Folio's shared editorial roles own type and section spacing. */
 .case-study-content--peak-hotel { padding-bottom: 0; }
 .peak-block { margin-top: var(--case-content-gap); }
@@ -26,10 +30,12 @@
 @font-face { font-family: 'Peak Playfair'; font-style: normal; font-weight: 700; font-display: swap; src: url('/projects/peak-hotel-case-study/playfair-bold.ttf') format('truetype'); }
 @font-face { font-family: 'Peak Lato'; font-style: normal; font-weight: 400; font-display: swap; src: url('/projects/peak-hotel-case-study/lato-regular.ttf') format('truetype'); }
 @font-face { font-family: 'Peak Lato'; font-style: normal; font-weight: 900; font-display: swap; src: url('/projects/peak-hotel-case-study/lato-black.ttf') format('truetype'); }
-.peak-playfair-italic { font-family: 'Peak Playfair', serif; font-style: italic; font-weight: 400; }
-.peak-playfair-bold { font-family: 'Peak Playfair', serif; font-style: normal; font-weight: 700; }
-.peak-lato-regular { font-family: 'Peak Lato', sans-serif; font-weight: 400; }
-.peak-lato-black { font-family: 'Peak Lato', sans-serif; font-weight: 900; }
+.peak-playfair-italic { font-family:var(--peak-font-peak-playfair-serif); font-style: italic; font-weight: 400; }
+.peak-playfair-bold { font-family:var(--peak-font-peak-playfair-serif); font-style: normal; font-weight: 700; }
+.peak-lato-regular { font-family:var(--peak-font-peak-lato-sans-serif); font-weight: 400; }
+.peak-lato-black { font-family:var(--peak-font-peak-lato-sans-serif); font-weight: 900; }
 @media (max-width: 767px) {
   .peak-color-label { flex-direction: column; }
+}
+
 }
