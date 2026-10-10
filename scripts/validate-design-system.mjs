@@ -47,6 +47,11 @@ function componentsReachableFrom(entry, seen = new Set()) {
   }
   return seen;
 }
+const hiddenSections = {
+ 'Logo':'Wordmark','CaseStudyComparison':'Before and after','CaseStudyDecisionCard':'Decision card','CaseStudySteps':'Steps','CaseStudyMedia':'Media','ToolCard':'Tool card','ProjectIdentity':'Project identity','ProjectTags':'Project tags','SectionNavigation':'Project filter','ThemeToggle':'Theme switch','Icon':'Icon',
+};
+const hiddenKeys = Object.fromEntries(Object.entries(hiddenSections).map(([file,title])=>['src/components/'+file+'.astro',title.toLowerCase().replaceAll(' ','-')]));
+const expectedVisible = ['Button','Chip','IconButton','NavigationItem','ProjectCard','SectionHeading','Stat','TextLink','TimelineRow'];
 export function validateComponentClassification(files, used, manifest, shown) {
   const failures = [];
   const kinds = ['reusable-ui', 'page-section', 'case-study', 'internal-helper'];
@@ -56,7 +61,7 @@ export function validateComponentClassification(files, used, manifest, shown) {
     else if (!kinds.includes(entries[0].kind)) failures.push(`Invalid component kind: ${file}`);
   }
   for (const item of manifest) {
-    if(item.documentedHidden && (item.file!=='src/components/Logo.astro'||item.documentedHidden!=='wordmark')) failures.push(`Unauthorized hidden component: ${item.file}`);
+    if(item.documentedHidden && (hiddenKeys[item.file]!==item.documentedHidden)) failures.push(`Unauthorized hidden component: ${item.file}`);
     if (!files.includes(item.file)) failures.push(`Stale classification: ${item.file}`);
     if (item.kind === 'reusable-ui' && (!used.includes(item.file) || (!shown.includes(item.file) && !item.documentedHidden))) failures.push(`Missing or unused reusable UI: ${item.file}`);
   }
@@ -134,19 +139,21 @@ function validate(entries) {
 }
 export function validateHiddenDocumentation(records, text) {
   const failures=[];
-  for(const section of ['Accessibility','Writing','Wordmark']){
+  for(const section of ['Accessibility','Writing',...Object.values(hiddenSections)]){
     const entries=records.filter(record=>record.section===section);
     if(entries.length!==1 || !/^[a-f0-9]{64}$/.test(entries[0]?.sha256||'') || entries[0]?.characters<100){ failures.push(`Missing hidden documentation: ${section}`); continue; }
     if(text!==undefined){
       // Use the next section boundary rather than the end-of-line multiline dollar.
       const start=text.indexOf('## '+section+'\n'), next=text.indexOf('\n## ',start+4);
       const value=start<0?'':text.slice(start,next<0?undefined:next).trim();
-      if(!value || createHash('sha256').update(value).digest('hex')!==entries[0].sha256)failures.push(`Stale or missing hidden documentation: ${section}`);
+      if(!value || !/Documented, hidden\./.test(value) || createHash('sha256').update(value).digest('hex')!==entries[0].sha256)failures.push(`Stale or missing hidden documentation: ${section}`);
     }
   }
   return failures;
 }
 const errors = validate(registry);
+if(JSON.stringify(visibleComponents.map(item=>item.name).sort())!==JSON.stringify([...expectedVisible].sort()))errors.push('Visible catalog must contain exactly the approved nine components');
+for(const [file,key] of Object.entries(hiddenKeys))if(componentManifest.find(item=>item.file===file)?.documentedHidden!==key)errors.push('Missing documented-hidden classification: '+file);
 errors.push(...validateHoverSource(root));
 const externalDocs=resolve(root,'../docs/design-system.md');
 errors.push(...validateHiddenDocumentation(hiddenDocumentation,existsSync(externalDocs)?readFileSync(externalDocs,'utf8'):undefined));

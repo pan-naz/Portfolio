@@ -4,5 +4,5 @@ import Logo from './Logo.astro';
 ---
 <aside class="ds-sidebar">
   <a class="ds-home" href="/" aria-label="naz.wtf — portfolio"><Logo /></a>
-  <details data-ds-contents><summary>Sections</summary><nav class="ds-navigation" aria-label="Design system sections">{dsGroups.map(group=><div class="ds-nav-group"><p>{group.label}</p>{group.links.map(([id,label])=><a href={`#${id}`} aria-current={id==='color'?'page':undefined}>{label}</a>)}</div>)}</nav></details>
+  <details data-ds-contents><summary>Sections</summary><nav class="ds-navigation" aria-label="Design system sections">{dsGroups.map(group=><div class="ds-nav-group"><p>{group.label}</p>{group.links.map(([id,label])=><a href={`#${id}`} data-ds-nav>{label}</a>)}</div>)}</nav></details>
 </aside>

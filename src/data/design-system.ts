@@ -1,13 +1,14 @@
 import { visibleComponents } from './ds-components.ts';
 export const foundations = [
-  { id:'color', title:'Color', description:'Choose a role, then let the theme choose its value.' },
-  { id:'typography', title:'Typography', description:'The text styles used by the portfolio, shown at their real sizes.' },
-  { id:'spacing-layout', title:'Spacing & layout', description:'Shared spacing, corners, elevation and grids give the page its rhythm.' },
-  { id:'motion', title:'Motion', description:'Shared durations and easings keep interaction consistent.' },
-  { id:'icons', title:'Icons', description:'Named SVG geometry for the portfolio’s interface.' },
+  {id:'color',title:'Color',description:'Each colour has a role. The theme chooses its value.'},
+  {id:'typography',title:'Typography',description:'Funnel Display for headings and Urbanist for reading, shown at their real sizes.'},
+  {id:'spacing-layout',title:'Spacing & layout',description:'One spacing scale, shared corners and a responsive grid.'},
+  {id:'motion',title:'Motion',description:'Shared durations and easing keep feedback consistent. Reduced motion skips decoration.'},
+  {id:'icons',title:'Icons',description:'The interface icons used on the portfolio, drawn from the live geometry.'},
 ];
 export const dsGroups = [
-  { label:'Foundations', links:foundations.map(item => [item.id,item.title]) },
-  { label:'Components', links:visibleComponents.map(item => [item.section,item.title!]) },
+ {label:'Foundations',links:foundations.map(item=>[item.id,item.title])},
+ {label:'Components',links:visibleComponents.map(item=>[item.section,item.title!])},
 ];
-export const catalogItems = [...foundations.map(item=>({...item,group:'Foundations'})), ...visibleComponents.map(item=>({id:item.section,title:item.title!,description:item.description,group:'Components'}))];
+export const dashboardDescription='The foundations and components behind this portfolio, taken from the live code.';
+export const catalogItems=[...foundations.map(item=>({...item,group:'Foundations'})),...visibleComponents.map(item=>({id:item.section,title:item.title!,description:item.description,group:'Components'}))];

@@ -1,6 +1,6 @@
 history.scrollRestoration='manual';
 const views=[...document.querySelectorAll<HTMLElement>('[data-ds-view]')];
-const links=[...document.querySelectorAll<HTMLAnchorElement>('.ds-navigation a')];
+const links=[...document.querySelectorAll<HTMLAnchorElement>('[data-ds-nav]')];
 const contents=document.querySelector<HTMLDetailsElement>('[data-ds-contents]');
 const wide=matchMedia('(min-width:1100px)');
 const syncMenu=()=>{if(contents)contents.open=wide.matches;};syncMenu();wide.addEventListener('change',syncMenu);
@@ -8,7 +8,7 @@ document.documentElement.dataset.docNavigationReady='true';
 
 // Preserve genuine shared typography while removing specimen heading semantics.
 // Replacement selectors and declarations come from the loaded shared CSSOM.
-const headingSelector=(selector:string)=>selector.replace(/(^|[^\w-])h([1-6])\b/g,'$1[data-ds-heading="$2"]');
+const headingSelector=(selector:string)=>selector.replace(/(^|[^\w-])h([1-6])\b/g,'$1:is(h$2,:where([data-ds-heading="$2"]))');
 const splitSelectors=(text:string)=>{const parts:string[]=[];let depth=0,start=0,quote='';for(let i=0;i<text.length;i++){const char=text[i];if(char==='\\'){i++;continue;}if(quote){if(char===quote)quote='';continue;}if(char==='"'||char==="'"){quote=char;continue;}if(char==='('||char==='[')depth++;if(char===')'||char===']')depth--;if(char===','&&depth===0){parts.push(text.slice(start,i));start=i+1;}}parts.push(text.slice(start));return parts;};
 const headingRules=(rules:CSSRuleList):string=>[...rules].map(rule=>{
  if(rule instanceof CSSStyleRule){const selector=headingSelector(rule.selectorText);return selector===rule.selectorText?'':splitSelectors(selector).map(part=>`:where(.ds-specimens) :is(${part.trim()})`).join(',')+`{${rule.style.cssText}}`;}
@@ -27,13 +27,14 @@ const refreshMarkup=(view:HTMLElement)=>{
  code.textContent=clone.innerHTML.trim().replace(/></g,'>\n<');
 };
 const selectView=()=>{
- const id=location.hash.slice(1)||'color';const selected=views.find(view=>view.id===id)||views[0];
+ const id=location.hash.slice(1)||'dashboard';const selected=views.find(view=>view.id===id)||views.find(view=>view.id==='dashboard')!;
  for(const view of views)view.hidden=view!==selected;
- for(const link of links){if(link.hash===`#${selected.id}`)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');}
+ for(const link of links){if(selected.id!=='dashboard'&&link.hash===`#${selected.id}`)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');}
  document.querySelector('[data-ds-title]')!.textContent=selected.dataset.title!;
  document.querySelector('[data-ds-group]')!.textContent=selected.dataset.group!;
+ document.querySelector<HTMLElement>('[data-ds-breadcrumb]')!.hidden=selected.id==='dashboard';
  document.querySelector('[data-ds-description]')!.textContent=selected.dataset.description!;
- refreshMarkup(selected);if(contents&&!wide.matches)contents.open=false;
+ refreshMarkup(selected);refreshValues();if(contents&&!wide.matches)contents.open=false;
  scrollTo({top:0,left:0,behavior:'instant'});
  requestAnimationFrame(()=>requestAnimationFrame(()=>scrollTo({top:0,left:0,behavior:'instant'})));
 };
@@ -44,9 +45,11 @@ for(const tabset of document.querySelectorAll<HTMLElement>('[data-ds-tabset]')){
  const select=(index:number,focus=false)=>{tabs.forEach((tab,i)=>{tab.setAttribute('aria-selected',String(i===index));tab.tabIndex=i===index?0:-1;document.getElementById(tab.getAttribute('aria-controls')!)!.hidden=i!==index;});if(focus)tabs[index].focus();};
  tabs.forEach((tab,index)=>{tab.addEventListener('click',()=>{select(index);const view=tab.closest<HTMLElement>('[data-ds-view]');if(view)refreshMarkup(view);});tab.addEventListener('keydown',event=>{const next=event.key==='ArrowRight'?(index+1)%tabs.length:event.key==='ArrowLeft'?(index+tabs.length-1)%tabs.length:event.key==='Home'?0:event.key==='End'?tabs.length-1:undefined;if(next!==undefined){event.preventDefault();select(next,true);}});});
 }
+document.querySelector('[data-ds-dashboard-link]')?.addEventListener('click',event=>{event.preventDefault();history.pushState(null,'',location.pathname);selectView();});
+for(const toggle of document.querySelectorAll<HTMLButtonElement>('[data-ds-names]'))toggle.addEventListener('click',()=>{const on=toggle.getAttribute('aria-checked')!=='true';toggle.setAttribute('aria-checked',String(on));toggle.closest<HTMLElement>('[data-ds-view]')!.dataset.showNames=String(on);});
 for(const preview of document.querySelectorAll<HTMLElement>('.ds-specimens')){
  preview.querySelectorAll('[data-work-filter]').forEach(button=>button.removeAttribute('aria-controls'));
- const blockLink=(event:Event)=>{if((event.target as Element).closest('a')){event.preventDefault();event.stopImmediatePropagation();}};
+ const blockLink=(event:Event)=>{if((event.target as Element).closest('a,.theme-toggle')){event.preventDefault();event.stopImmediatePropagation();}};
  for(const event of ['click','auxclick','contextmenu','dragstart'])preview.addEventListener(event,blockLink,{capture:true});
  preview.addEventListener('click',event=>{
   const target=(event.target as Element).closest<HTMLElement>('[data-work-filter],[data-ds-comparison-choice]');if(!target)return;
@@ -56,5 +59,25 @@ for(const preview of document.querySelectorAll<HTMLElement>('.ds-specimens')){
   const status=scope.querySelector('[data-work-filter-status]');if(status)status.textContent=`${target.textContent?.trim()} selected`;
  });
 }
-const syncSpecimenChoice=()=>{document.querySelector('#theme-switch .skill-tag')?.replaceChildren(document.documentElement.dataset.theme==='dark'?'Dark':'Light');};
-window.addEventListener('themechange',syncSpecimenChoice);syncSpecimenChoice();selectView();
+// Human values are resolved by the same browser CSS engine as the specimens.
+const hex=(value:string)=>{const match=value.match(/^rgba?\(([^)]+)\)$/);if(!match)return value;const parts=match[1].split(',').map(Number);return '#'+parts.slice(0,3).map(number=>number.toString(16).padStart(2,'0')).join('').toUpperCase()+(parts.length>3&&parts[3]<1?Math.round(parts[3]*255).toString(16).padStart(2,'0').toUpperCase():'');};
+const readable=(value:string)=>value.replace(/-?[\d.]+px/g,number=>`${+parseFloat(number).toFixed(2)}px`);
+const refreshValues=()=>{
+ const view=views.find(view=>!view.hidden);if(!view)return;
+ const probe=document.createElement('span');probe.style.cssText='position:absolute;visibility:hidden;';view.append(probe);
+ for(const node of view.querySelectorAll<HTMLElement>('[data-ds-human-token]')){
+  const name=node.dataset.dsHumanToken!,raw=getComputedStyle(document.documentElement).getPropertyValue('--'+name).trim();
+  if(/^(color-|control-border|focus-ring|backdrop)/.test(name)){probe.style.backgroundColor=`var(--${name})`;node.textContent=hex(getComputedStyle(probe).backgroundColor);}
+  else if(name.startsWith('icon-stroke-'))node.textContent=parseFloat(raw)+'px';
+  else {probe.style.width=`var(--${name})`;node.textContent=getComputedStyle(probe).width;}
+ }
+ for(const node of view.querySelectorAll<HTMLElement>('[data-ds-token-swatch]')){const name=node.dataset.dsTokenSwatch!;if(name.startsWith('color-')){node.style.backgroundColor=`var(--${name})`;node.dataset.color='';}}
+ probe.remove();
+ const namedWeights:Record<string,string>={'400':'Regular','500':'Medium','600':'Semibold'};
+ for(const node of view.querySelectorAll<HTMLElement>('[data-ds-measure]')){
+  const sample=view.querySelector<HTMLElement>('.ds-specimens '+node.dataset.dsMeasure);if(!sample)continue;
+  const computed=getComputedStyle(sample);node.textContent=node.dataset.properties!.split(',').map(property=>{const value=computed.getPropertyValue(property).trim();return property==='font-weight'?namedWeights[value]||value:readable(value);}).join(' · ');
+ }
+ for(const row of view.querySelectorAll<HTMLElement>('[data-ds-type]')){const sample=row.querySelector<HTMLElement>('.ds-type-sample > *')!,computed=getComputedStyle(sample);row.querySelector('[data-ds-type-metrics]')!.textContent=`Line height ${readable(computed.lineHeight)} · tracking ${computed.letterSpacing==='normal'?'0px':readable(computed.letterSpacing)}`;}
+};
+window.addEventListener('resize',refreshValues);window.addEventListener('themechange',refreshValues);selectView();

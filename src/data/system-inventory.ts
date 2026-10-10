@@ -114,6 +114,9 @@ export function buildSystemInventory(root = process.cwd()) {
   const colorLiterals = (text: string) => [...text.matchAll(/#[\da-f]{3,8}\b|rgba?\([^)]*\)/gi)].map(([value]) => value.toLowerCase().replace(/^#([\da-f])([\da-f])([\da-f])$/, '#$1$1$2$2$3$3'));
   const sharedCss = sources.filter(file => file.endsWith('.css') && !/^\/\* Project-only:/.test(readFileSync(file,'utf8'))).map(file => readFileSync(file,'utf8')).join('\n');
   const sharedValues = new Set(colorLiterals(css + sharedCss));
+  // Shared narrative/media APIs are not private brand variables merely because
+  // a project supplies their local layout value. Never promote brand variables.
+  const sharedNames = new Set([...sharedCss.matchAll(/(?<![\w-])--([\w-]+)(?![\w-])/g)].map(([,name])=>name));
   const projectFonts = new Set<string>();
   const projectSources = all.filter(file => file.endsWith('-case-study.ts') || file.includes('/components/') && /(?:[A-Z]\w+|Recording)CaseStudy\.astro$/.test(file) || file.endsWith('.css') && /^\/\* Project-only:/.test(readFileSync(file,'utf8')));
   const projectText = projectSources.map(file => readFileSync(file,'utf8')).join('\n');
@@ -123,7 +126,7 @@ export function buildSystemInventory(root = process.cwd()) {
     const text = readFileSync(file, 'utf8');
     for (const value of colorLiterals(text)) if (!sharedValues.has(value)) projectValues.add(value);
     for (const [, image] of text.matchAll(/url\(['"]?([^'")]+)['"]?\)/g)) if (!image.includes('${') && !/\.woff2?$/.test(image)) projectBackgroundImages.add(image);
-    for (const [, name] of text.matchAll(/(?<![\w-])--([\w-]+)(?![\w-])/g)) if (!definitions.has(name)) privateNames.add(name);
+    for (const [, name] of text.matchAll(/(?<![\w-])--([\w-]+)(?![\w-])/g)) if (!definitions.has(name) && !sharedNames.has(name)) privateNames.add(name);
     for (const [, family] of text.matchAll(/@font-face\s*\{[^}]*font-family:\s*['"]([^'"]+)['"]/g)) projectFonts.add(family);
   }
   return { tokens, components, iconNames: [...iconNames].sort(), unusedTokens: [...definitions].filter(name => !used.has(name)), privateNames: [...privateNames], projectValues: [...projectValues], projectBackgroundImages: [...projectBackgroundImages], projectFonts: [...projectFonts], palettes, root };

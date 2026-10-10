@@ -1,50 +1,53 @@
 ---
-import type { SourceComponent } from '../data/system-inventory';
-import Button from './Button.astro';
-import TextLink from './TextLink.astro';
-import IconButton from './IconButton.astro';
-import NavigationItem from './NavigationItem.astro';
-import Chip from './Chip.astro';
-import Icon from './Icon.astro';
-
-import Stat from './Stat.astro';
-import TimelineRow from './TimelineRow.astro';
-import ProjectIdentity from './ProjectIdentity.astro';
-import ProjectTags from './ProjectTags.astro';
-import ProjectCard from './ProjectCard.astro';
-import SectionHeading from './SectionHeading.astro';
-import SectionNavigation from './SectionNavigation.astro';
-import ToolCard from './ToolCard.astro';
-import CaseStudyMedia from './CaseStudyMedia.astro';
+import '../styles/case-video-player.css';
+import type {SourceComponent} from '../data/system-inventory';
+import Button from './Button.astro';import TextLink from './TextLink.astro';import IconButton from './IconButton.astro';import Icon from './Icon.astro';
+import Chip from './Chip.astro';import Stat from './Stat.astro';import TimelineRow from './TimelineRow.astro';import ProjectCard from './ProjectCard.astro';
+import SectionHeading from './SectionHeading.astro';import SectionNavigation from './SectionNavigation.astro';import NavLinks from './NavLinks.astro';import Logo from './Logo.astro';
 import CaseStudyComparison from './CaseStudyComparison.astro';
-import CaseStudyDecisionCard from './CaseStudyDecisionCard.astro';
-import CaseStudySteps from './CaseStudySteps.astro';
-import { projects, collectionProjects, impactGroups, experience, tools } from '../data/portfolio';
-import { dataGPTMedia } from '../data/datagpt-case-study';
-import { peakHotelHomeSections } from '../data/peak-hotel-case-study';
-interface Props { component: SourceComponent; }
-const { component } = Astro.props;
-const name = component.name;
-const buttonRows = [...new Map(component.usages.map(({props}) => { const row={size:props.size||'large',variant:props.variant||'primary',arrow:props.arrow||'none',appearance:props.appearance||'default'}; return [JSON.stringify(row),row]; })).values()].sort((a,b)=>Number(a.appearance==='comparison')-Number(b.appearance==='comparison') || Number(a.size==='small')-Number(b.size==='small') || Number(a.variant==='secondary')-Number(b.variant==='secondary'));
-const linkRows = [...new Map(component.usages.map(({props})=>{const row={inline:props.inline==='true',compact:props.compact==='true',accent:props.accent==='true'};return [JSON.stringify(row),row];})).values()];
-const chipVariants=[...new Set(component.usages.map(({props})=>props.variant||'tag'))];
+import {projects,impactGroups,experience,profile,cvUrl,hookoSiteUrl} from '../data/portfolio';
+import {dataGPTMedia} from '../data/datagpt-case-study';import {workCategories} from '../data/work-categories';
+interface Props {component:SourceComponent;miniature?:boolean;}
+const {component,miniature=false}=Astro.props,name=component.name;
+const prefix=miniature?'tile-':'example-';
 ---
-{name==='Button'&&<div class="ds-specimen-composition">{buttonRows.map(row=><div class="ds-labelled-specimen"><span>{row.variant==='primary'?'Primary':'Secondary'} · {row.size==='small'?'Small':'Large'}{row.arrow!=='none'?' · With icon':''}{row.appearance==='comparison'?' · Comparison':''}</span><Button variant={row.variant==='secondary'?'secondary':'primary'} size={row.size==='small'?'small':'large'} appearance={row.appearance==='comparison'?'comparison':'default'} arrow={row.arrow==='up'?'up':undefined} href={row.appearance==='comparison'?undefined:'/'} aria-pressed={row.appearance==='comparison'?(row.variant==='primary'?'true':'false'):undefined} data-ds-comparison-choice={row.appearance==='comparison'?row.variant:undefined}>{row.appearance==='comparison'?(row.variant==='primary'?'Before':'After'):row.arrow==='up'?'Get in touch':row.size==='small'?'Small':'Design system'}</Button></div>)}</div>}
-{name==='Chip'&&<div class="ds-specimen-composition">{chipVariants.map(variant=><div class="ds-labelled-specimen"><span>{variant==='tag'?'Skill':variant[0].toUpperCase()+variant.slice(1)}</span><Chip label={projects[0].tags[0]} variant={variant as 'tag'|'plain'|'raised'|'accent'} /></div>)}</div>}
-{name==='IconButton'&&<div class="ds-specimen-composition"><IconButton icon="menu" label="Open navigation" /><IconButton icon="close" label="Close" /></div>}
-{name==='TextLink'&&<div class="ds-specimen-composition">{linkRows.map(row=><div class="ds-labelled-specimen"><span>{row.inline?'Inline':row.compact?'Compact':'Default'} · {row.accent?'Accent':'Primary'}</span><TextLink href="/" {...row}>{row.accent?'Website':'LinkedIn'}</TextLink></div>)}</div>}
-{name==='NavigationItem'&&<div class="ds-specimen-composition"><div class="ds-labelled-specimen"><span>Top bar</span><NavigationItem label="Work" href="/#work" /></div><div class="ds-labelled-specimen floating-navigation-theme floating-navigation-surface"><span>Floating</span><NavigationItem label="Work" href="/#work" /></div><div class="ds-labelled-specimen"><span>Mobile</span><NavigationItem label="Work" href="/#work" layout="mobile" /></div><div class="ds-labelled-specimen"><span>Filter</span><NavigationItem label="Selected work" filter="selected" pressed /></div></div>}
-{name==='ThemeToggle'&&<div class="ds-theme-specimen"><p>The live theme switch is in this view’s header.</p><Chip label="Light" variant="plain" /><p>Choose Light or Dark above to try the saved preference.</p></div>}
-{name === 'Icon' && <div class="ds-labelled-examples"><Icon name="arrow" /><Icon name="close" /><Icon name="menu" /><Icon name="plus" /></div>}
-{name === 'Stat' && <dl class="ds-demo-content"><Stat {...impactGroups[0].metrics[0]} /></dl>}
-{name === 'TimelineRow' && <div class="ds-context-inverse ds-demo-content"><ol class="experience-list"><TimelineRow item={experience[0]} /></ol></div>}
-{name === 'ProjectIdentity' && <div class="ds-labelled-examples"><div><h4>Project name</h4><ProjectIdentity title={projects[0].title} /></div></div>}
-{name === 'ProjectTags' && <div class="ds-labelled-examples"><ProjectTags tags={projects[0].tags} /></div>}
-{name === 'ToolCard' && <div class="ds-demo-stack"><div><h4>Logo</h4><div class="ds-demo-tool"><ToolCard tool={tools[0]} /></div></div><div><h4>With details</h4><ToolCard tool={tools[0]} variant="detail" description={tools[0].name} /></div></div>}
-{name === 'SectionNavigation' && <div class="ds-demo-stack"><div><h4>Full</h4><SectionNavigation /></div><div><h4>Compact</h4><SectionNavigation compact /></div></div>}
-{name === 'SectionHeading' && <div class="ds-demo-stack"><div><h4>Columns</h4><SectionHeading id="ds-section-heading-columns" label="Work" >Projects worth a closer look.</SectionHeading></div><div><h4>Stacked</h4><SectionHeading id="ds-section-heading-stacked" label="Work"  layout="stacked">Projects worth a closer look.</SectionHeading></div><div><h4>Case study</h4><SectionHeading id="ds-section-heading-case" label="Overview" appearance="case">Projects worth a closer look.</SectionHeading></div></div>}
-{name === 'ProjectCard' && <div class="ds-demo-stack"><div><h4>Featured</h4><ProjectCard project={projects[0]} lead /></div><div class="ds-demo-pair"><div><h4>Standard</h4><ProjectCard project={projects.find(project => project.id === 'datagpt')!} /></div><div class="ds-demo-compact"><h4>Compact</h4><ProjectCard project={{...collectionProjects.find(project => project.id === 'peak-hotel')!, logo: undefined}} compact /></div></div></div>}
-{name === 'CaseStudyMedia' && <div class="ds-demo-stack"><div class="ds-demo-pair"><div><h4>Framed image</h4><CaseStudyMedia {...dataGPTMedia.after} kind="image" /></div><div><h4>Bare · Small radius</h4><CaseStudyMedia {...dataGPTMedia.after} kind="image" presentation="bare" radius="small" /></div><div><h4>Shadow · Media radius</h4><CaseStudyMedia {...dataGPTMedia.after} kind="image" presentation="shadow" radius="media" /></div><div><h4>Project hero</h4><CaseStudyMedia {...dataGPTMedia.after} kind="image" artwork /></div></div><div><h4>Video with controls</h4><CaseStudyMedia {...dataGPTMedia.pilot} controls /></div></div>}
-{name === 'CaseStudyComparison' && <div class="ds-demo-content"><CaseStudyComparison before={dataGPTMedia.before} after={dataGPTMedia.after} label="Compare date and filter visibility" /></div>}
-{name === 'CaseStudyDecisionCard' && <div class="ds-demo-stack"><div><h4>Text</h4><CaseStudyDecisionCard title="A canvas, not a form builder." label="Decision"><p>{projects[0].description}</p></CaseStudyDecisionCard></div><div class="ds-demo-pair"><div><h4>With media</h4><CaseStudyDecisionCard title="Niche benchmark" label="Context" labelVariant="accent" layout="media"><p>{projects[0].description}</p><CaseStudyMedia slot="media" {...dataGPTMedia.after} kind="image" presentation="bare" /></CaseStudyDecisionCard></div><div><h4>Figure</h4><CaseStudyDecisionCard title="With media" layout="figure" titleHidden><CaseStudyMedia slot="media" {...dataGPTMedia.after} kind="image" presentation="bare" /><p>{projects[0].description}</p></CaseStudyDecisionCard></div></div></div>}
-{name === 'CaseStudySteps' && <div class="ds-demo-content"><CaseStudySteps items={peakHotelHomeSections.slice(0, 3)} /></div>}
+{name==='Button'&&<div class="ds-specimen-composition">
+ <div class="ds-labelled-specimen"><span>Primary</span><div data-ds-example="primary" data-ds-target=".button"><Button href={`mailto:${profile.email}`} arrow="up">Get in touch</Button></div></div>
+ {!miniature&&<><div class="ds-labelled-specimen"><span>Secondary</span><div data-ds-example="secondary" data-ds-target=".button"><Button href={cvUrl} variant="secondary" download>Download CV (PDF)</Button></div></div>
+ <div class="ds-labelled-specimen"><span>Small</span><div data-ds-example="small" data-ds-target=".button"><Button href="/design-system/" size="small" variant="secondary" arrow="up">Design system</Button></div></div>
+ <div class="ds-labelled-specimen"><span>Before / After</span><div class="ds-comparison-switch" data-ds-example="comparison" data-ds-target=".case-comparison-controls"><CaseStudyComparison before={dataGPTMedia.before} after={dataGPTMedia.after} label="Compare date and filter visibility" /></div></div></>}
+</div>}
+{name==='Chip'&&<div class="ds-specimen-composition">
+ <div class="ds-labelled-specimen"><span>Default</span><div data-ds-example="chip-default" data-ds-target=".skill-tag"><Chip label="Accessibility" /></div></div>
+ {!miniature&&<><div class="ds-labelled-specimen"><span>Raised</span><div class="ds-project-context" data-ds-example="chip-raised" data-ds-target=".skill-tag"><Chip label={projects[0].tags[0]} variant="raised" /></div></div>
+ <div class="ds-labelled-specimen"><span>Accent</span><div data-ds-example="chip-accent" data-ds-target=".skill-tag"><Chip label="Context" variant="accent" /></div></div>
+ <div class="ds-labelled-specimen"><span>Plain</span><div data-ds-example="chip-plain" data-ds-target=".skill-tag"><Chip label="Workflows" variant="plain" /></div></div></>}
+</div>}
+{name==='IconButton'&&<div class="ds-specimen-composition">
+ <div class="ds-labelled-specimen"><span>Raised</span><div class="ds-inline-controls">
+ <div class="floating-navigation-theme floating-navigation-surface ds-icon-surface" data-ds-example="icon-menu" data-ds-target=".icon-button"><IconButton icon="menu" label="Open navigation" /></div>
+ <div class="case-study-direct-close ds-close-holder" data-ds-example="icon-close" data-ds-target=".icon-button"><IconButton href="/#work" label="Close case study" class="floating-control-theme floating-control-surface"><Icon name="plus" style="transform:rotate(45deg)" /></IconButton></div>
+ </div></div>
+ {!miniature&&<><div class="ds-labelled-specimen"><span>Plain</span><div data-ds-example="icon-theme" data-ds-target=".icon-button"><IconButton class="theme-toggle" label="Switch theme"><span class="theme-toggle-glyph" aria-hidden="true"><Icon name="sun" class="theme-sun"/><Icon name="moon" class="theme-moon"/></span></IconButton></div></div>
+ <div class="ds-labelled-specimen"><span>Media</span><div class="case-video-controls ds-media-controls" data-theme="dark">
+ <div data-ds-example="icon-play" data-ds-target=".icon-button"><IconButton label="Play video" data-video-toggle><span data-play-icon><Icon name="play" /></span><span data-pause-icon hidden><Icon name="pause" /></span></IconButton></div>
+ <div data-ds-example="icon-sound" data-ds-target=".icon-button"><IconButton label="Sound off. Turn sound on" data-video-mute aria-pressed="false"><span data-muted-icon><Icon name="volume-muted" /></span><span data-sound-icon hidden><Icon name="volume" /></span></IconButton></div>
+ </div></div></>}
+</div>}
+{name==='TextLink'&&<div class="ds-specimen-composition">
+ <div class="ds-labelled-specimen"><span>Default</span><div data-ds-example="link-default" data-ds-target=".text-link"><TextLink href={profile.linkedin}>LinkedIn</TextLink></div></div>
+ {!miniature&&<><div class="ds-labelled-specimen"><span>Accent</span><div data-ds-example="link-accent" data-ds-target=".text-link"><TextLink href={hookoSiteUrl} accent>iOS App - Hooko</TextLink></div></div>
+ <div class="ds-labelled-specimen"><span>Inline</span><p class="text-body-m" data-ds-example="link-inline" data-ds-target=".text-link"><TextLink href="https://dribbble.com/shots/2937858-Blink-Bot" inline>Vic Bell’s Blink Bot</TextLink></p></div></>}
+</div>}
+{name==='NavigationItem'&&<div class="ds-specimen-composition ds-navigation-composition">
+ <div class="ds-labelled-specimen"><span>Top bar</span><div class="ds-inline-controls"><div data-ds-example="nav-top" data-ds-target=".desktop-nav"><NavLinks showDS={false} /></div><div data-ds-example="nav-top-theme" data-ds-target=".icon-button"><IconButton class="theme-toggle" label="Switch theme"><span class="theme-toggle-glyph" aria-hidden="true"><Icon name="sun" class="theme-sun"/><Icon name="moon" class="theme-moon"/></span></IconButton></div></div></div>
+ {!miniature&&<><div class="ds-labelled-specimen"><span>Floating header</span><div class="ds-floating-header floating-navigation-theme floating-navigation-surface"><a href="/#top" aria-label="naz.wtf — home" data-ds-example="nav-wordmark" data-ds-target=".wordmark"><Logo compact /></a><div data-ds-example="nav-floating" data-ds-target=".desktop-nav"><NavLinks showDS={false} /></div><div data-ds-example="nav-floating-theme" data-ds-target=".icon-button"><IconButton class="theme-toggle" label="Switch theme"><span class="theme-toggle-glyph" aria-hidden="true"><Icon name="sun" class="theme-sun"/><Icon name="moon" class="theme-moon"/></span></IconButton></div><div data-ds-example="nav-action" data-ds-target=".button"><Button href={`mailto:${profile.email}`} arrow="up">Get in touch</Button></div></div></div>
+ <div class="ds-labelled-specimen"><span>Project filter</span><div data-ds-example="nav-filter" data-ds-target=".section-navigation"><SectionNavigation /></div></div></>}
+</div>}
+{name==='Stat'&&<dl class="ds-stat-composition">{[impactGroups[0].metrics[0],...(!miniature?[impactGroups[0].metrics[1],impactGroups[1].metrics[1]]:[])].map((metric,index)=><div data-ds-example={`stat-${index}`} data-ds-target=".stat"><Stat {...metric} revealValue/></div>)}</dl>}
+{name==='TimelineRow'&&<div class="about-details ds-context-about"><ol class="experience-list" data-ds-example="timeline" data-ds-target=".experience-list">{experience.map(item=><TimelineRow item={item}/>)}</ol></div>}
+{name==='SectionHeading'&&<div class="ds-heading-composition">
+ <div class="work ds-context-work" data-ds-example="heading-columns" data-ds-target=".section-heading"><SectionHeading id={miniature?'work-title':'sample-work-title'} label={workCategories.selected.label}>{workCategories.selected.title}<p slot="description" class="section-description text-body-l">{workCategories.selected.description}</p></SectionHeading></div>
+ {!miniature&&<><div class="case-study-narrative" data-ds-example="heading-stacked" data-ds-target=".section-heading"><SectionHeading id={`${prefix}heading-stacked`} label="Product" layout="stacked" reveal={false}>How it works</SectionHeading></div><div class="case-study-narrative" data-ds-example="heading-case" data-ds-target=".ds-case-heading"><div class="ds-case-heading"><SectionHeading id={`${prefix}heading-case`} label="Pages" appearance="case">Main page</SectionHeading></div></div></>}
+</div>}
+{name==='ProjectCard'&&<div class="ds-project-example" data-ds-example="project-card" data-ds-target=".project"><ProjectCard project={projects[0]} lead /></div>}
