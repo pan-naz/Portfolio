@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { buildSystemInventory } from '../src/data/system-inventory.ts';
-import { componentPurposes } from '../src/data/system-documentation.ts';
+import { dsComponents } from '../src/data/ds-components.ts';
 import { validateInventoryCoverage } from '../scripts/validate-design-system.mjs';
 const model = buildSystemInventory();
 const css = readFileSync('src/styles/tokens.css','utf8');
 const catalog = readFileSync('src/components/DSCatalog.astro','utf8');
-const check = (source=css, page=catalog, inventory=model) => validateInventoryCoverage(inventory,Object.keys(componentPurposes),model.tokens.map(token=>token.name),model.iconNames,source,page);
+const check = (source=css, page=catalog, inventory=model) => validateInventoryCoverage(inventory,dsComponents.map(item => item.file),model.tokens.map(token=>token.name),model.iconNames,source,page);
 assert.deepEqual(check(), []);
 const colour = model.projectValues.find(value => value.startsWith('#') && value !== '#000000');
 assert.ok(colour);

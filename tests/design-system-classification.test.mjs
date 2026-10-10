@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import { readdirSync } from 'node:fs';
+import { componentManifest } from '../src/data/system-components.ts';
+import { dsComponents } from '../src/data/ds-components.ts';
+import { buildSystemInventory } from '../src/data/system-inventory.ts';
+import { validateComponentClassification } from '../scripts/validate-design-system.mjs';
+const files = readdirSync('src/components').filter(file => file.endsWith('.astro')).map(file => `src/components/${file}`);
+const used = buildSystemInventory().components.map(item => item.file).concat(componentManifest.filter(item => item.kind !== 'reusable-ui').map(item => item.file));
+const shown = dsComponents.map(item => item.file);
+const check = (manifest = componentManifest, visible = shown, website = used) => validateComponentClassification(files, website, manifest, visible);
+assert.deepEqual(check(), []);
+assert.ok(check(componentManifest.slice(1)).some(error => error.includes('Unclassified')));
+assert.ok(check([...componentManifest, componentManifest[0]]).some(error => error.includes('duplicate')));
+assert.ok(check(componentManifest, shown.slice(1)).some(error => error.includes('Missing')));
+assert.ok(check(componentManifest, [...shown, 'src/components/Hero.astro']).some(error => error.includes('Non-reusable')));
+assert.ok(check(componentManifest, shown, used.filter(file => file !== shown[0])).some(error => error.includes('unused reusable')));
+console.log('Classification rejects unclassified, duplicate, unused, missing and non-reusable entries.');

@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { buildSystemInventory } from '../src/data/system-inventory.ts';
-import { componentPurposes } from '../src/data/system-documentation.ts';
+import { dsComponents } from '../src/data/ds-components.ts';
 import { validateInventoryCoverage } from '../scripts/validate-design-system.mjs';
 const model = buildSystemInventory();
-const components = Object.keys(componentPurposes);
+const components = dsComponents.map(item => item.file);
 const tokens = model.tokens.map(token => token.name);
 const icons = model.iconNames;
 const css = readFileSync('src/styles/tokens.css', 'utf8');

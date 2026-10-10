@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { icons } from '../src/data/icons.ts';
 import { buildSystemInventory } from '../src/data/system-inventory.ts';
 import { componentVariants } from '../src/data/system-variants.ts';
-import { componentPurposes } from '../src/data/system-documentation.ts';
+import { componentManifest, isReusableComponent } from '../src/data/system-components.ts';
 import { dsComponents as registry } from '../src/data/ds-components.ts';
 import { dsGroups } from '../src/data/design-system.ts';
 
@@ -43,6 +43,21 @@ function componentsReachableFrom(entry, seen = new Set()) {
     componentsReachableFrom(resolve(dirname(path), match[1]), seen);
   }
   return seen;
+}
+export function validateComponentClassification(files, used, manifest, shown) {
+  const failures = [];
+  const kinds = ['reusable-ui', 'page-section', 'case-study', 'internal-helper'];
+  for (const file of files) {
+    const entries = manifest.filter(item => item.file === file);
+    if (entries.length !== 1) failures.push(`Unclassified or duplicate component: ${file}`);
+    else if (!kinds.includes(entries[0].kind)) failures.push(`Invalid component kind: ${file}`);
+  }
+  for (const item of manifest) {
+    if (!files.includes(item.file)) failures.push(`Stale classification: ${item.file}`);
+    if (item.kind === 'reusable-ui' && (!used.includes(item.file) || !shown.includes(item.file))) failures.push(`Missing or unused reusable UI: ${item.file}`);
+  }
+  for (const file of shown) if (!used.includes(file) || !manifest.some(item => item.file === file && item.kind === 'reusable-ui')) failures.push(`Non-reusable component shown: ${file}`);
+  return failures;
 }
 const specimens = componentsReachableFrom('src/pages/design-system.astro');
 function validate(entries) {
@@ -114,9 +129,10 @@ function validate(entries) {
   return errors;
 }
 const errors = validate(registry);
+errors.push(...validateComponentClassification(filesUnder('src/components').filter(file => file.endsWith('.astro')), [...new Set(websitePages.flatMap(page => [...componentsReachableFrom(page)]))].map(file => file.slice(root.length + 1)), componentManifest, registry.map(item => item.file)));
 const inventory = buildSystemInventory(root);
 export function validateVariantCoverage(model, documented) {
-  const used = model.components.flatMap(component => componentVariants(component).map(variant => `${component.name}:${variant}`));
+  const used = model.components.filter(component => isReusableComponent(component.file)).flatMap(component => componentVariants(component).map(variant => `${component.name}:${variant}`));
   return [...used.filter(value => !documented.includes(value)).map(value => `Undocumented website variant: ${value}`), ...documented.filter(value => !used.includes(value)).map(value => `Catalog-only variant: ${value}`)];
 }
 export function validateInventoryCoverage(model, documentedComponents, documentedTokens, documentedIcons, tokenSource, catalogSource) {
@@ -130,7 +146,7 @@ export function validateInventoryCoverage(model, documentedComponents, documente
     for (const value of used) if (!documented.includes(value)) failures.push(`Undocumented website ${kind}: ${value}`);
     for (const value of documented) if (!used.includes(value)) failures.push(`Catalog-only ${kind}: ${value}`);
   };
-  exact(model.components.map(component => component.file), documentedComponents, 'component');
+  exact(model.components.filter(component => isReusableComponent(component.file)).map(component => component.file), documentedComponents, 'component');
   exact(model.tokens.map(token => token.name), documentedTokens, 'token');
   exact(model.iconNames, documentedIcons, 'icon');
   for (const name of model.privateNames) if (tokenSource.includes(`--${name}:`) || catalogSource.includes(`var(--${name})`)) failures.push(`Project-only value entered the system: --${name}`);
@@ -138,19 +154,19 @@ export function validateInventoryCoverage(model, documentedComponents, documente
   if (!/DSCoverage|DSFoundations|data-ds-component=/.test(catalogSource)) failures.push('Catalog must render the complete source-derived token/component inventory.');
   return failures;
 }
-errors.push(...validateInventoryCoverage(inventory, Object.keys(componentPurposes), inventory.tokens.map(token => token.name), inventory.iconNames, read('src/styles/tokens.css'), catalog));
+errors.push(...validateInventoryCoverage(inventory, registry.map(item => item.file), inventory.tokens.map(token => token.name), inventory.iconNames, read('src/styles/tokens.css'), catalog));
 for (const name of Object.keys(icons)) if (!inventory.iconNames.includes(name)) errors.push(`Unused system icon: ${name}`);
 if (read('src/layouts/DSLayout.astro').includes('hooko-artwork.css')) errors.push('Project artwork styles must not be imported by the catalog layout.');
 if (process.argv.includes('--self-test')) {
   for (const kind of ['component', 'token', 'icon']) {
-    const components = Object.keys(componentPurposes), tokens = inventory.tokens.map(token => token.name), icons = [...inventory.iconNames];
+    const components = registry.map(item => item.file), tokens = inventory.tokens.map(token => token.name), icons = [...inventory.iconNames];
     if (kind === 'component') components.push('src/components/CatalogOnlyFixture.astro');
     if (kind === 'token') tokens.push('catalog-only-fixture');
     if (kind === 'icon') icons.push('catalog-only-fixture');
     if (!validateInventoryCoverage(inventory, components, tokens, icons, read('src/styles/tokens.css'), catalog).some(error => error.includes(`Catalog-only ${kind}`))) throw Error(`Usage guard accepted an unused ${kind}`);
   }
   if (!validateInventoryCoverage(inventory, [], [], [], read('src/styles/tokens.css'), catalog).some(error => error.includes('Undocumented website token'))) throw Error('Usage guard accepted missing documentation');
-  if (!validateInventoryCoverage(inventory, Object.keys(componentPurposes), inventory.tokens.map(token => token.name), inventory.iconNames, read('src/styles/tokens.css') + `\n--${inventory.privateNames[0]}: red;`, catalog).some(error => error.includes('Project-only value'))) throw Error('Usage guard accepted a project-only token');
+  if (!validateInventoryCoverage(inventory, registry.map(item => item.file), inventory.tokens.map(token => token.name), inventory.iconNames, read('src/styles/tokens.css') + `\n--${inventory.privateNames[0]}: red;`, catalog).some(error => error.includes('Project-only value'))) throw Error('Usage guard accepted a project-only token');
   const missing = validate([...registry, { name: 'MissingFixture', section: 'buttons', preview: 'direct', description: '' }]);
   const broken = validate(registry.map(item => item.name === 'Button' ? { ...item, section: 'missing-section' } : item));
   if (!missing.some(error => error.includes('Missing component: MissingFixture')) || !broken.some(error => error.includes('Missing documentation section: Button'))) {

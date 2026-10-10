@@ -1,4 +1,5 @@
 ---
+import { isReusableComponent } from '../data/system-components';
 import { getIcon, type IconName } from '../data/icons';
 import { responsiveTokenOverrides } from '../data/system-responsive';
 import { systemTypography } from '../data/system-typography';
@@ -9,7 +10,7 @@ interface Props { inventory: ReturnType<typeof import('../data/system-inventory'
 const { inventory } = Astro.props;
 const categories = [['color','Color'],['typography','Typography'],['spacing','Spacing'],['shape','Radius & elevation'],['layout','Layout'],['motion','Motion'],['iconography','Iconography']] as const;
 const roleName = (name: string) => name.replace(/^color-/, '').replaceAll('-', '/');
-const rows = (category: string) => inventory.tokens.filter(token => token.category === category && !token.owner && !(category === 'motion' && /^(duration-|ease-)/.test(token.name)));
+const rows = (category: string) => inventory.tokens.filter(token => token.category === category && (!token.owner || !inventory.components.some(component => component.name === token.owner && isReusableComponent(component.file))) && !(category === 'motion' && /^(duration-|ease-)/.test(token.name)));
 const weight = (name: IconName) => getIcon(name).weight === 'strong' ? 'icon-stroke-strong' : 'icon-stroke-regular';
 const uses = (name: string) => inventory.components.filter(component => component.tokens.includes(name));
 const target = (name: string) => `component-${name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()}`;
