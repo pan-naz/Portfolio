@@ -66,8 +66,9 @@
   /* Figma desktop ramp; mobile sizes are a responsive adaptation. */
   --font-body: 'Urbanist Variable', Urbanist, Arial, sans-serif;
   --font-heading: 'Funnel Display Variable', 'Funnel Display', Arial, sans-serif;
-  --letter-spacing-heading-xl: -3.64px;
-  --letter-spacing-heading-l: -2.64px;
+  /* Exact 1440px clamp sizes keep desktop tracking unchanged as smaller text scales. */
+  --letter-spacing-heading-xl: calc(-3.64 / 76.0048 * 1em);
+  --letter-spacing-heading-l: calc(-2.64 / 55.9952 * 1em);
   --letter-spacing-heading-m: -1px;
   --letter-spacing-body-l: 0px;
   --letter-spacing-body-m: 0px;
