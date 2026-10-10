@@ -1,5 +1,6 @@
 ---
 import type { SourceComponent } from '../data/system-inventory';
+import { caseStudyMotionTokens, caseStudyPresentationTokens } from '../scripts/case-study/case-study-motion';
 import { componentVariants } from '../data/system-variants';
 import { documentationFor } from '../data/system-documentation';
 import { componentManifest } from '../data/system-components';
@@ -10,6 +11,7 @@ const { component, inventory } = Astro.props;
 const doc = documentationFor(component);
 const entry = componentManifest.find(item => item.file === component.file)!;
 const id = `component-${component.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()}`;
+const transition = [...caseStudyMotionTokens, ...caseStudyPresentationTokens];
 const tokens = inventory.tokens.filter(token => component.tokens.includes(token.name));
 const helpers = [...component.source.matchAll(/import\s+(\w+)\s+from\s+['"][^'"]+\.astro['"]/g)].map(([,name]) => name);
 const tabs = ['Preview', 'Specs', 'Usage', 'Code'];
@@ -25,7 +27,8 @@ const code = component.usages.find(usage => !inventory.privateNames.some(name =>
     <div class="ds-card-panel" id={`${id}-panel-1`} role="tabpanel" aria-labelledby={`${id}-tab-1`} tabindex="0" hidden>
       <h4>Sizes, spacing & tokens</h4>
       <p>Values come from the component’s shared styles and follow the page theme.</p>
-      <div class="ds-table-scroll"><table><thead><tr><th>Token</th><th>Light</th><th>Dark</th></tr></thead><tbody>{tokens.map(token => <tr id={token.owner === component.name ? `token-${token.name}` : undefined} data-ds-token={token.owner === component.name ? token.name : undefined}><th><code>{`--${token.name}`}</code></th><td>{token.resolvedLight}</td><td>{token.resolvedDark}</td></tr>)}</tbody></table></div>
+      <div class="ds-table-scroll"><table><thead><tr><th>Token</th><th>Light</th><th>Dark</th></tr></thead><tbody>{tokens.map(token => <tr ><th><code>{`--${token.name}`}</code></th><td>{token.resolvedLight}</td><td>{token.resolvedDark}</td></tr>)}</tbody></table></div>
+      {component.name === 'ProjectCard' && <><h4>Case-study transition</h4><div class="ds-table-scroll"><table><thead><tr><th>Role</th><th>Token</th><th>Value</th></tr></thead><tbody>{transition.map(item => <tr id={`token-${item.name.slice(2)}`} data-ds-token={item.name.slice(2)}><th>{item.label}</th><td><code>{item.name}</code></td><td>{inventory.palettes.light[item.name.slice(2)]}</td></tr>)}</tbody></table></div></>}
     </div>
     <div class="ds-card-panel" id={`${id}-panel-2`} role="tabpanel" aria-labelledby={`${id}-tab-2`} tabindex="0" hidden>
       <ul class="ds-guidance"><li><strong>Do:</strong> {doc.useWhen}</li><li><strong>Don’t:</strong> {doc.avoidWhen}</li><li><strong>Keep accessible:</strong> {doc.accessibility}</li></ul>

@@ -17,6 +17,8 @@ assert.ok(styles(catalog).includes('html[data-static]'), 'Catalog must load moti
 assert.ok(!styles(home).includes('html[data-static]'), 'Catalog motion CSS must not enter the website bundle');
 assert.ok(!catalog.includes('website-components') && !catalog.includes('/design-system/preview/') && !catalog.includes('<iframe'), 'The retired Website section and embedded preview must stay removed');
 assert.ok(!catalog.includes('id="ds-search"'), 'Retired search must stay removed');
+assert.ok(!catalog.includes('id="case-study-transition"') && !catalog.includes('id="floating-header"') && !catalog.includes('id="work-filter"'), 'Patterns stay removed; transition details belong in Project card Specs');
+assert.ok(catalog.includes('data-ds-swatch='), 'Colour roles must have real swatches');
 assert.equal((catalog.match(/<[^>]+role="tablist"/g) || []).length, dsComponents.length, 'Each reusable component has one detail tablist');
 assert.equal((catalog.match(/<[^>]+role="tabpanel"/g) || []).length, dsComponents.length * 4, 'Each card has four panels');
 assert.equal((catalog.match(/<[^>]+role="tab"/g) || []).length, dsComponents.length * 4, 'Each card has four tabs');
