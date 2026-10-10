@@ -110,4 +110,37 @@ html[data-theme='dark'] .ds-value-dark { display: inline; }
 .ds-motion-scale code { overflow-wrap: anywhere; }
 @media (max-width: 767px) { .ds-layout-preview { gap: var(--space-1); } .ds-spacing-scale > div { grid-template-columns: 80px 96px 1fr; gap: var(--space-2); } }
 
+/* Keep the default read compact; all larger source tables remain on demand. */
+.ds-section { margin-bottom: var(--space-16); }
+.ds-heading { margin-bottom: var(--space-6); }
+.ds-heading > h1, .ds-heading > h2 { margin-bottom: var(--space-4); }
+.ds-component-group { margin-block: var(--space-16); }
+.ds-group-title { margin-bottom: var(--space-8); }
+.ds-demo-stack { gap: var(--space-6); }
+.ds-demo-pair { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--space-6); align-items: start; }
+.ds-demo-pair > div { min-width: 0; }
+.ds-swatch { height: var(--space-16); }
+.ds-tier-diagram { display: flex; align-items: center; gap: var(--space-4); margin-top: var(--space-6); }
+.ds-tier-diagram > div { flex: 1; padding: var(--space-4); background: var(--color-bg-surface); border: 1px solid var(--color-border-default); border-radius: var(--radius-small); }
+.ds-tier-diagram strong { display: block; font-size: var(--text-body-m); }
+.ds-tier-diagram span { font-size: var(--text-body-s); color: var(--color-text-secondary); }
+@media (min-width: 1280px) {
+  .ds-type-row { display: grid; grid-template-columns: minmax(0,1fr) 200px auto; align-items: center; gap: var(--space-4); }
+  .ds-type-specimen { margin-bottom: 0; }
+  .ds-type-caption { display: block; }
+}
+@media (max-width: 767px) {
+  .ds-demo-pair { grid-template-columns: minmax(0,1fr); }
+  .ds-tier-diagram { gap: var(--space-2); flex-wrap: wrap; }
+  .ds-tier-diagram > div { flex-basis: 100%; }
+  .ds-tier-diagram > .ds-tier-arrow { display: none; }
+}
+
+.ds-section { margin-bottom: var(--space-12); }
+.ds-card-panel { padding: var(--space-4); }
+.ds-state-example { padding: var(--space-2); }
+.ds-foundation-group { margin-block: var(--space-4); }
+.ds-type-row { padding-block: var(--space-4); }
+.ds-group-title { margin-bottom: var(--space-6); }
+
 }

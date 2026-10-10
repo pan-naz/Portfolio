@@ -5,15 +5,14 @@ import DSFoundations from './DSFoundations.astro';
 import DSComponent from './DSComponent.astro';
 import DSGuidelines from './DSGuidelines.astro';
 import TextLink from './TextLink.astro';
+import Arrow from './Arrow.astro';
 import { buildSystemInventory } from '../data/system-inventory';
 const inventory = buildSystemInventory();
 ---
 <main id="main" class="ds-main" tabindex="-1">
   <section id="overview" class="ds-section" aria-labelledby="overview-title">
-    <header class="ds-heading"><h1 id="overview-title" class="text-heading-l">Design system</h1><p>The components and tokens used by this portfolio, with examples and guidance for using them.</p></header>
-    <h2>Principles</h2><ul class="ds-principles"><li>Use the existing component for its intended role.</li><li>Keep names and values aligned with the website.</li><li>Preserve reading order, keyboard access and reduced motion.</li></ul>
-    <h2>Token tiers</h2><p>Primitives hold base values. Semantic tokens assign a role. Component tokens define a specific part of the interface.</p>
-    <p>Case studies have a separate project layer for their own colours, images and fonts. Those values are kept out of this system.</p>
+    <header class="ds-heading"><h1 id="overview-title" class="text-heading-l">Design system</h1><p>These are the reusable components and tokens used by the portfolio. Preview the real UI, then open a tab for specs, guidance or code. Case-study brand styles stay with their projects.</p></header>
+    <div class="ds-tier-diagram" role="group" aria-label="Token tiers"><div><strong>Primitives</strong><span>Base values</span></div><span class="ds-tier-arrow" aria-hidden="true"><Arrow /></span><div><strong>Semantic</strong><span>A named role</span></div><span class="ds-tier-arrow" aria-hidden="true"><Arrow /></span><div><strong>Component</strong><span>A specific part</span></div></div>
   </section>
   <DSFoundations inventory={inventory} />
   {componentGroups.map(group => <div class="ds-component-group"><h2 class="ds-group-title">{group.label}</h2>{group.components.map(entry => <DSComponent component={inventory.components.find(component => component.file === entry.file)!} inventory={inventory} />)}</div>)}
