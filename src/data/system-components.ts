@@ -1,7 +1,9 @@
 /** Every Astro component has an explicit ownership and catalog decision. */
 export type ComponentKind = 'reusable-ui' | 'page-section' | 'case-study' | 'internal-helper';
-export interface ComponentClassification { file: string; kind: ComponentKind; group?: string; title?: string; reason: string; }
+export interface ComponentClassification { file: string; kind: ComponentKind; group?: string; title?: string; reason: string; documentedHidden?: 'wordmark'; }
 export const componentManifest: ComponentClassification[] = [
+  { file: 'src/components/DSTabs.astro', kind: 'internal-helper', reason: 'Catalog tab wiring composed from the shared Button documentation variant.' },
+  { file: 'src/components/DSTokens.astro', kind: 'internal-helper', reason: 'Source-derived catalog token values and theme-aware swatches.' },
   { file: 'src/components/DSPreview.astro', kind: 'internal-helper', reason: 'Documentation-only live specimens of existing components.' },
   { file: 'src/components/AboutSection.astro', kind: 'page-section', reason: 'Composes a page or a narrative chapter; not a catalog building block.' },
   { file: 'src/components/Arrow.astro', kind: 'internal-helper', reason: 'Implementation or documentation helper; described by its consumer.' },
@@ -45,7 +47,7 @@ export const componentManifest: ComponentClassification[] = [
   { file: 'src/components/ImpactSection.astro', kind: 'page-section', reason: 'Composes a page or a narrative chapter; not a catalog building block.' },
   { file: 'src/components/IndexLawFirmCaseStudy.astro', kind: 'case-study', reason: 'Project composition or artwork scaffolding; outside the design system.' },
   { file: 'src/components/KitchenChatbotCaseStudy.astro', kind: 'case-study', reason: 'Project composition or artwork scaffolding; outside the design system.' },
-  { file: 'src/components/Logo.astro', kind: 'reusable-ui', group: 'Identity', title: 'Wordmark', reason: 'Website-used building block with shared UI styling.' },
+  { file: 'src/components/Logo.astro', documentedHidden: 'wordmark', kind: 'reusable-ui', group: 'Identity', title: 'Wordmark', reason: 'Website-used building block with shared UI styling.' },
   { file: 'src/components/MetricValue.astro', kind: 'internal-helper', reason: 'Implementation or documentation helper; described by its consumer.' },
   { file: 'src/components/NavLinks.astro', kind: 'internal-helper', reason: 'Implementation or documentation helper; described by its consumer.' },
   { file: 'src/components/NavigationItem.astro', kind: 'reusable-ui', group: 'Navigation', title: 'Navigation item', reason: 'Website-used building block with shared UI styling.' },

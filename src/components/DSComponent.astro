@@ -1,49 +1,44 @@
 ---
-import type { SourceComponent } from '../data/system-inventory';
-import { caseStudyMotionTokens, caseStudyPresentationTokens } from '../scripts/case-study/case-study-motion';
-import { componentStyleSpecs } from '../data/system-specs';
-import { componentVariants } from '../data/system-variants';
-import { documentationFor } from '../data/system-documentation';
-import { componentManifest } from '../data/system-components';
-import Button from './Button.astro';
+import type {SourceComponent} from '../data/system-inventory';
+import {caseStudyMotionTokens,caseStudyPresentationTokens} from '../scripts/case-study/case-study-motion';
+import {componentStyleSpecs} from '../data/system-specs';
+import {documentationFor} from '../data/system-documentation';
+import {componentPropSpecs} from '../data/system-props';
+import {anatomyFor,plainComponentNames} from '../data/system-anatomy';
+import {variantLabels} from '../data/system-variant-labels';
+import {dsComponents} from '../data/ds-components';
 import DSPreview from './DSPreview.astro';
-interface Props { component: SourceComponent; inventory: ReturnType<typeof import('../data/system-inventory').buildSystemInventory>; }
-const { component, inventory } = Astro.props;
-const doc = documentationFor(component);
-const entry = componentManifest.find(item => item.file === component.file)!;
-const id = `component-${component.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()}`;
-const transition = [...caseStudyMotionTokens, ...caseStudyPresentationTokens];
-const tokens = inventory.tokens.filter(token => component.tokens.includes(token.name));
-const sizeRules = componentStyleSpecs(component);
-const helpers = [...component.source.matchAll(/import\s+(\w+)\s+from\s+['"][^'"]+\.astro['"]/g)].map(([,name]) => name).concat([...component.source.matchAll(/import\s+\{([^}]+)\}\s+from\s+['"][^'"]+['"]/g)].flatMap(([,names]) => names.split(',').map(name => name.trim()).filter(name => !name.startsWith('type '))));
-const tabs = ['Preview', 'Specs', 'Usage', 'Code'];
-const code = component.usages.find(usage => !inventory.privateNames.some(name => usage.code.includes(`--${name}`)))?.code ?? component.file;
+import DSTabs from './DSTabs.astro';
+import DSTokens from './DSTokens.astro';
+interface Props {component:SourceComponent;inventory:ReturnType<typeof import('../data/system-inventory').buildSystemInventory>;}
+const {component,inventory}=Astro.props;
+const entry=dsComponents.find(item=>item.file===component.file)!;
+const id=entry.section,doc=documentationFor(component), variants=variantLabels(component),props=componentPropSpecs(component);
+const tokens=inventory.tokens.filter(token=>component.tokens.includes(token.name));
+const primaryTokens=[...['color-text-primary','color-text-on-primary','color-interactive-accent','color-border-default','color-navigation-text-primary','color-overlay-bg-surface','focus-ring'].flatMap(name=>tokens.filter(token=>token.name===name)).slice(0,4),...tokens.filter(token=>['control-height','control-icon','radius-pill','radius-media','space-3','duration-button-fill'].includes(token.name)).slice(0,4)];
+const rules=componentStyleSpecs(component).filter(rule=>!rule.selector.includes('catalog'));
+const sizes=[...new Map(rules.map(rule=>[`${rule.property}:${rule.value}`,rule])).values()];
+const displayValue=(value:string)=>value.replace(/var\(--([\w-]+)\)/g,(_,name)=>inventory.palettes.value(inventory.palettes.light,name));
+const buttonSizes=[{name:'Large',value:inventory.palettes.value(inventory.palettes.light,'control-height'),style:'Body/M Strong'},{name:'Small',value:rules.find(rule=>rule.selector.includes('.button--small')&&rule.property==='min-height')?.value||'',style:'Body/S'}];
+const hiddenVariantProps=['download','reveal','priority','size'];
+const helpers=[...component.source.matchAll(/import\s+(\w+)\s+from\s+['"][^'"]+\.astro['"]/g)].map(([,name])=>name);
+const previewTabs=`${id}-canvas`,panelTabs=`${id}-details`;
 ---
-<section id={id} class="ds-section ds-component" data-ds-component={component.name} aria-labelledby={`${id}-title`}>
-  <header class="ds-heading"><h3 id={`${id}-title`} class="ds-component-title">{entry.title}</h3><p>{doc.purpose}</p></header>
-  <div class="ds-card" data-ds-card>
-    <div class="ds-card-tabs" role="tablist" aria-label={`${entry.title} details`}>
-      {tabs.map((label,index) => <Button size="small" variant={index === 0 ? 'primary' : 'secondary'} appearance="comparison" id={`${id}-tab-${index}`} role="tab" aria-selected={index === 0 ? 'true' : 'false'} aria-controls={`${id}-panel-${index}`} tabindex={index === 0 ? 0 : -1} data-ds-tab={index}>{label}</Button>)}
-    </div>
-    <div class="ds-card-panel ds-preview" id={`${id}-panel-0`} role="tabpanel" aria-labelledby={`${id}-tab-0`} tabindex="0"><DSPreview component={component} /></div>
-    <div class="ds-card-panel" id={`${id}-panel-1`} role="tabpanel" aria-labelledby={`${id}-tab-1`} tabindex="0" hidden>
-      <details><summary>Exact size & spacing declarations</summary><p>Read from shared source styles; file locations retain responsive and state context.</p><div class="ds-table-scroll"><table><thead><tr><th>Selector / source</th><th>Property</th><th>CSS value</th></tr></thead><tbody>{sizeRules.map(rule => <tr><th><code>{rule.selector}</code><br /><code>{rule.location}</code></th><td>{rule.property}</td><td><code>{rule.value}</code></td></tr>)}</tbody></table></div></details>
-      <h4>Sizes, spacing & tokens</h4>
-      <p>Values come from the component’s shared styles and follow the page theme.</p>
-      <div class="ds-table-scroll"><table><thead><tr><th>Token</th><th>Light</th><th>Dark</th></tr></thead><tbody>{tokens.map(token => <tr ><th><code>{`--${token.name}`}</code></th><td>{token.resolvedLight}</td><td>{token.resolvedDark}</td></tr>)}</tbody></table></div>
-      {component.name === 'ProjectCard' && <><h4>Case-study transition</h4><div class="ds-table-scroll"><table><thead><tr><th>Role</th><th>Token</th><th>Value</th></tr></thead><tbody>{transition.map(item => <tr id={`token-${item.name.slice(2)}`} data-ds-token={item.name.slice(2)}><th>{item.label}</th><td><code>{item.name}</code></td><td>{inventory.palettes.light[item.name.slice(2)]}</td></tr>)}</tbody></table></div></>}
-    </div>
-    <div class="ds-card-panel" id={`${id}-panel-2`} role="tabpanel" aria-labelledby={`${id}-tab-2`} tabindex="0" hidden>
-      <ul class="ds-guidance"><li><strong>Do:</strong> {doc.useWhen}</li><li><strong>Don’t:</strong> {doc.avoidWhen}</li><li><strong>Keep accessible:</strong> {doc.accessibility}</li></ul>
-    </div>
-    <div class="ds-card-panel" id={`${id}-panel-3`} role="tabpanel" aria-labelledby={`${id}-tab-3`} tabindex="0" hidden>
-      <p><code>{component.file}</code></p>
-      <div class="ds-table-scroll"><table><thead><tr><th>Prop</th><th>Type</th><th>Required</th></tr></thead><tbody>{component.props.map(prop => <tr><th><code>{prop.name}</code></th><td><code>{prop.type}</code></td><td>{prop.conditional ? 'In one input form' : prop.optional ? 'No' : 'Yes'}</td></tr>)}</tbody></table></div>
-      {component.source.includes('<slot') && <p>Slot: supplied content{['Button','TextLink'].includes(component.name) ? ' and visible label' : ''}.</p>}
-      <h4>Composed components & helpers</h4><p>{helpers.length ? helpers.join(', ') : 'No Astro helpers.'}</p>
-      <h4>Used on the website</h4><ul class="ds-file-list">{[...new Set(component.usages.map(usage => usage.file))].map(file => <li><code>{file}</code></li>)}</ul>
-      <details><summary>Used prop values</summary><ul>{componentVariants(component).map(variant => <li data-ds-variant={`${component.name}:${variant}`}><code>{variant}</code></li>)}</ul></details>
-      <pre><code>{code}</code></pre>
-    </div>
+<section id={id} class="ds-view" data-ds-view data-ds-component={component.name} data-title={entry.title} data-group="Components" data-description={doc.purpose} hidden>
+  <div class="ds-stage" data-ds-card>
+    <div class="ds-stage-bar"><DSTabs id={previewTabs} labels={['Preview','Markup']} /><p class="ds-hint">Hover and click to try states</p></div>
+    <div class="ds-canvas" id={`${previewTabs}-panel-0`} role="tabpanel" aria-labelledby={`${previewTabs}-tab-0`}><div class="ds-specimens"><DSPreview component={component} /></div></div>
+    <div class="ds-markup" id={`${previewTabs}-panel-1`} role="tabpanel" aria-labelledby={`${previewTabs}-tab-1`} hidden><pre><code data-ds-markup>Generated from the rendered specimen.</code></pre></div>
   </div>
+  <aside class="ds-panel"><DSTabs id={panelTabs} labels={['Specs','Rules']} />
+    <div id={`${panelTabs}-panel-0`} role="tabpanel" aria-labelledby={`${panelTabs}-tab-0`}>
+      <h3>Variants</h3><dl class="ds-key-values">{variants.filter(variant=>!hiddenVariantProps.includes(variant.code.split('=')[0])).map(variant=><div data-ds-variant={`${component.name}:${variant.code}`}><dt>{variant.name}</dt><dd>{variant.use}</dd></div>)}</dl>
+      <h3>Sizes</h3><dl class="ds-key-values">{component.name==='Button'?buttonSizes.map(size=><div><dt>{size.name}</dt><dd><code>{size.value}</code> · {size.style}</dd></div>):sizes.filter(rule=>['min-height','font-size','border-radius'].includes(rule.property)).slice(0,4).map(rule=><div><dt>{rule.property.replaceAll('-',' ')}</dt><dd><code>{displayValue(rule.value)}</code></dd></div>)}</dl><details><summary>Source sizes & spacing</summary><dl class="ds-key-values">{sizes.map(rule=><div><dt>{rule.property}</dt><dd><code>{rule.value}</code></dd></div>)}</dl></details>
+      <h3>Tokens</h3><DSTokens tokens={primaryTokens} /><details><summary>All component tokens</summary><DSTokens tokens={tokens.filter(token=>!primaryTokens.includes(token))} /></details>
+      {component.name==='ProjectCard'&&<details><summary>Case-study transition</summary><DSTokens tokens={inventory.tokens.filter(token=>[...caseStudyMotionTokens,...caseStudyPresentationTokens].some(item=>item.name===`--${token.name}`))} register /></details>}
+      <h3>Props</h3><div class="ds-props-table"><table><thead><tr><th>Prop / type</th><th>Default / description</th></tr></thead><tbody>{props.map(prop=><tr><th><code>{prop.name}</code><small><code>{prop.type}</code></small></th><td><code>{prop.default}</code><span>{prop.description}</span></td></tr>)}</tbody></table></div>
+      <details><summary>Used prop values</summary><ul>{variants.filter(variant=>hiddenVariantProps.includes(variant.code.split('=')[0])).map(variant=><li data-ds-variant={`${component.name}:${variant.code}`}><code>{variant.code}</code></li>)}</ul></details><details><summary>Source & helpers</summary><p><code>{component.file}</code></p><p>{helpers.length?helpers.join(', '):'No composed Astro helpers.'}</p><ul>{[...new Set(component.usages.map(usage=>usage.file))].map(file=><li><code>{file}</code></li>)}</ul></details>
+    </div>
+    <div id={`${panelTabs}-panel-1`} role="tabpanel" aria-labelledby={`${panelTabs}-tab-1`} hidden><ul class="ds-rules"><li>{anatomyFor(component)}</li><li>{plainComponentNames(doc.useWhen)}</li><li>{plainComponentNames(doc.avoidWhen)}</li><li>{plainComponentNames(doc.accessibility)}</li></ul></div>
+  </aside>
 </section>

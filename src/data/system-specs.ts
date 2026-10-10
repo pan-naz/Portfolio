@@ -10,6 +10,7 @@ export function componentStyleSpecs(component: SourceComponent, root = process.c
   const rows: {selector:string;property:string;value:string;location:string}[] = [];
   for(const source of sources) for(const match of source.text.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
     const selector=match[1].trim();
+    if(selector.includes('.button--catalog')) continue;
     if(!classes.some(name=>new RegExp('\\.'+name+'(?=--|__|[^\\w-]|$)').test(selector))) continue;
     for(const [,property,value] of match[2].matchAll(/(?:^|;)\s*([\w-]+):\s*([^;]+)/g)) if(properties.test(property)) rows.push({selector,property,value:value.trim(),location:`${source.file}:${source.text.slice(0,match.index + match[1].indexOf(selector)).split('\n').length}`});
   }

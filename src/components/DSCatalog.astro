@@ -1,23 +1,13 @@
 ---
-import { statePreviewStyles } from '../data/system-preview-styles';
-import { componentGroups } from '../data/design-system';
 import DSFoundations from './DSFoundations.astro';
 import DSComponent from './DSComponent.astro';
-import DSGuidelines from './DSGuidelines.astro';
-import TextLink from './TextLink.astro';
-import Arrow from './Arrow.astro';
-import { buildSystemInventory } from '../data/system-inventory';
-const inventory = buildSystemInventory();
+import ThemeToggle from './ThemeToggle.astro';
+import {visibleComponents} from '../data/ds-components';
+import {buildSystemInventory} from '../data/system-inventory';
+const inventory=buildSystemInventory();
 ---
 <main id="main" class="ds-main" tabindex="-1">
-  <section id="overview" class="ds-section" aria-labelledby="overview-title">
-    <header class="ds-heading"><h1 id="overview-title" class="text-heading-l">Design system</h1><p>These are the reusable components and tokens used by the portfolio. Preview the real UI, then open a tab for specs, guidance or code. Case-study brand styles stay with their projects.</p></header>
-    <div class="ds-tier-diagram" role="group" aria-label="Token tiers"><div><strong>Primitives</strong><span>Base values</span></div><span class="ds-tier-arrow" aria-hidden="true"><Arrow /></span><div><strong>Semantic</strong><span>A named role</span></div><span class="ds-tier-arrow" aria-hidden="true"><Arrow /></span><div><strong>Component</strong><span>A specific part</span></div></div>
-  </section>
+  <header class="ds-item-header"><div><p class="ds-group-label" data-ds-group>Foundations</p><h1 class="text-heading-l" data-ds-title>Color</h1><p class="ds-item-description" data-ds-description>Choose a role, then let the theme choose its value.</p></div><ThemeToggle appearance="segmented" /></header>
   <DSFoundations inventory={inventory} />
-  {componentGroups.map(group => <div class="ds-component-group"><h2 class="ds-group-title">{group.label}</h2>{group.components.map(entry => <DSComponent component={inventory.components.find(component => component.file === entry.file)!} inventory={inventory} />)}</div>)}
-  <DSGuidelines />
-  <footer class="ds-footer"><TextLink href="/" compact>Back to portfolio</TextLink></footer>
+  {visibleComponents.map(entry=><DSComponent component={inventory.components.find(component=>component.file===entry.file)!} inventory={inventory} />)}
 </main>
-
-<style is:global set:html={statePreviewStyles()} />

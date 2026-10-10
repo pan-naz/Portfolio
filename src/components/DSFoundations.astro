@@ -1,42 +1,32 @@
 ---
-import { getIcon, type IconName } from '../data/icons';
-import { responsiveTokenOverrides } from '../data/system-responsive';
-import { systemTypography } from '../data/system-typography';
+import {foundations} from '../data/design-system';
+import {systemTypography} from '../data/system-typography';
+import {responsiveTokenOverrides} from '../data/system-responsive';
 import Icon from './Icon.astro';
-import Chip from './Chip.astro';
-import { profile, projects } from '../data/portfolio';
-interface Props { inventory: ReturnType<typeof import('../data/system-inventory').buildSystemInventory>; }
-const { inventory } = Astro.props;
-const categories = [['color','Color'],['typography','Typography'],['spacing','Spacing'],['shape','Radius & elevation'],['layout','Layout'],['motion','Motion'],['iconography','Iconography']] as const;
-const human = (name: string) => name.replace(/^color-/, '').replaceAll('-', ' ');
-const isCaseMotion = (name: string) => /-case-|^case-hero-fit$/.test(name);
-const rows = (category: string) => inventory.tokens.filter(token => token.category === category && !isCaseMotion(token.name));
-const roles = [
-  ['Text', /^(color-(?:inverse-)?text-)/],
-  ['Background', /^(color-(?:inverse-)?bg-|color-section-bg-)/],
-  ['Border', /^(color-(?:inverse-)?border-|control-border$|focus-ring$)/],
-  ['Accent', /^color-(interactive-accent|inverse-accent)$/],
-  ['Overlay', /^(color-overlay-|backdrop-)/],
-  ['Navigation', /^color-navigation-/],
-] as const;
-const colors = rows('color').filter(token => token.tier !== 'primitive');
-const shapes = rows('shape').filter(token => token.tier !== 'primitive');
-const scales = (prefix: string) => {
-  const groups = new Map<string, typeof inventory.tokens>();
-  for (const token of rows('motion').filter(token => token.name.startsWith(prefix))) groups.set(token.resolvedLight, [...(groups.get(token.resolvedLight) || []), token]);
-  return [...groups.entries()].sort(([a],[b]) => prefix === 'duration-' ? parseFloat(a) * (a.endsWith('ms') ? 1 : 1000) - parseFloat(b) * (b.endsWith('ms') ? 1 : 1000) : a.localeCompare(b));
-};
-const typography = systemTypography();
-const responsive = responsiveTokenOverrides();
+import DSTabs from './DSTabs.astro';
+import DSTokens from './DSTokens.astro';
+import type {IconName} from '../data/icons';
+interface Props {inventory:ReturnType<typeof import('../data/system-inventory').buildSystemInventory>;}
+const {inventory}=Astro.props;
+const isCase=(name:string)=>/-case-|^case-hero-fit$/.test(name);
+const categories:Record<string,string[]>={color:['color'],typography:['typography'],'spacing-layout':['spacing','shape','layout'],motion:['motion'],icons:['iconography']};
+const rows=(id:string)=>inventory.tokens.filter(token=>categories[id].includes(token.category)&&!isCase(token.name));
+const roles=[['Text',/^(color-(?:inverse-)?text-)/],['Background',/^(color-(?:inverse-)?bg-|color-section-bg-)/],['Border',/^(color-(?:inverse-)?border-|control-border$|focus-ring$)/],['Accent',/^color-(interactive-accent|inverse-accent)$/],['Overlay',/^(color-overlay-|backdrop-)/],['Navigation',/^color-navigation-/]] as const;
+const human=(name:string)=>name.replace(/^color-/,'').replaceAll('-',' ');
+const typography=systemTypography();
+const rules:Record<string,string[]>={color:['Use named roles instead of choosing a nearby raw colour.','Keep text and background roles paired for readable contrast.','Use accent for emphasis; check the text size and background.','Keep project-brand colours private to their case study.'],typography:['Use a shared text style for its intended role.','Keep the heading hierarchy in real page content.','Preserve the fluid sizes and proportional letter spacing.','Client fonts belong only to project specimens.'],'spacing-layout':['Use the spacing scale before adding a one-off gap.','Keep layout gutters responsive and media proportional.','Use shared radius and elevation roles.','Preserve readable content at phone widths.'],motion:['Use the existing duration and easing roles.','Keep feedback brief and decoration secondary.','Respect reduced motion and hidden-page pause behaviour.','Case-study travel values belong to Project card specs.'],icons:['Use named interface geometry through Icon.','Use IconButton for an icon-only control.','Name meaningful controls and hide decorative geometry.','Use SvgAsset for original project and tool vectors.']};
+const scales=(prefix:string)=>[...new Set(rows('motion').filter(token=>token.name.startsWith(prefix)).map(token=>token.resolvedLight))];
 ---
-{categories.map(([category, label]) => <section id={category} class="ds-section" aria-labelledby={`${category}-title`}>
-  <header class="ds-heading"><h2 id={`${category}-title`}>{label}</h2></header>
-  {category === 'color' && <><p>Choose a role, then let the theme choose its value.</p>{roles.map(([title,pattern]) => <div class="ds-foundation-group"><h3>{title}</h3><div class="ds-swatch-grid">{colors.filter(token => pattern.test(token.name)).map(token => <article class="ds-swatch-card" data-ds-swatch={token.name}><div class="ds-swatch" style={`background:var(--${token.name})`} aria-hidden="true" /><p>{human(token.name)}</p><code><span class="ds-value-light">{token.resolvedLight}</span><span class="ds-value-dark">{token.resolvedDark}</span></code></article>)}</div></div>)}</>}
-  {category === 'typography' && <div class="ds-type-list">{typography.map(style => <article class="ds-type-row"><div class="ds-type-specimen">{style.selector === 'h3' ? <h3>{profile.name}</h3> : style.selector === '.skill-tag' ? <Chip label={projects[0].tags[0]} /> : <p class={style.selector.slice(1)}>{profile.name}</p>}</div><div class="ds-type-caption"><h3>{style.name}</h3><p>{style.range} · {style.weight} · {style.lineHeight}</p></div><details><summary>Spec</summary><dl class="ds-spec"><dt>Family</dt><dd>{style.family}</dd><dt>Size token</dt><dd><code>{`--${style.sizeToken}`}</code></dd><dt>Tracking</dt><dd>{style.tracking}</dd><dt>CSS style</dt><dd><code>{style.selector}</code></dd></dl></details></article>)}</div>}
-  {category === 'spacing' && <div class="ds-spacing-scale">{rows(category).sort((a,b) => parseFloat(a.resolvedLight)-parseFloat(b.resolvedLight)).map(token => <div><code>{token.name}</code><div class="ds-spacing-bar" style={`width:var(--${token.name})`} aria-hidden="true" /><span>{token.resolvedLight}</span></div>)}</div>}
-  {category === 'shape' && <div class="ds-shape-grid">{shapes.map(token => <article><div class="ds-shape-tile" style={token.name.startsWith('radius-') ? `border-radius:var(--${token.name})` : `box-shadow:var(--${token.name})`} aria-hidden="true" /><p>{human(token.name)}</p><code><span class="ds-value-light">{token.resolvedLight}</span><span class="ds-value-dark">{token.resolvedDark}</span></code></article>)}</div>}
-  {category === 'layout' && <><div class="ds-layout-preview" aria-label="Twelve-column layout grid">{Array.from({length:12},(_,index) => <span aria-hidden="true">{index+1}</span>)}</div><p>Content follows the shared gutters and grid gap.</p><details><summary>Responsive values</summary><div class="ds-table-scroll"><table><thead><tr><th>Condition</th><th>Token</th><th>Value</th></tr></thead><tbody>{responsive.map(row => <tr><th>{row.query}</th><td><code>{row.name}</code></td><td>{row.value}</td></tr>)}</tbody></table></div></details></>}
-  {category === 'motion' && <div class="ds-motion-scales">{[['duration-', 'Durations'], ['ease-', 'Easings']].map(([prefix,title]) => <div><h3>{title}</h3><ul class="ds-motion-scale">{scales(prefix).map(([value,tokens]) => <li><strong>{value}</strong><details><summary>{tokens.length} {tokens.length===1 ? 'token' : 'tokens'}</summary>{tokens.map(token => <p><code>{token.name}</code></p>)}</details></li>)}</ul></div>)}</div>}
-  {category === 'iconography' && <ul class="ds-icon-grid">{inventory.iconNames.map(name => <li data-ds-icon={name}><Icon name={name as IconName} /><span>{name.replaceAll('-', ' ')}</span><details><summary>Spec</summary><code>{getIcon(name as IconName).weight === 'strong' ? 'icon-stroke-strong' : 'icon-stroke-regular'}</code></details></li>)}</ul>}
-  <details class="ds-all-tokens"><summary>All {category === 'color' ? 'colour' : category === 'shape' ? 'radius & elevation' : category} tokens</summary><div class="ds-table-scroll"><table><thead><tr><th>Token</th><th>Light</th><th>Dark</th></tr></thead><tbody>{rows(category).map(token => <tr id={`token-${token.name}`} data-ds-token={token.name}><th><code>{`--${token.name}`}</code></th><td>{token.resolvedLight}</td><td>{token.resolvedDark}</td></tr>)}</tbody></table></div></details>
-</section>)}
+{foundations.map(item=>{const preview=`${item.id}-canvas`,panel=`${item.id}-details`;return <section id={item.id} class="ds-view" data-ds-view data-title={item.title} data-description={item.description} data-group="Foundations" hidden={item.id!=='color'}>
+  <div class="ds-stage" data-ds-card><div class="ds-stage-bar"><DSTabs id={preview} labels={['Preview','Markup']} /><p class="ds-hint">Hover and click to try states</p></div>
+    <div class="ds-canvas" id={`${preview}-panel-0`} role="tabpanel" aria-labelledby={`${preview}-tab-0`}><div class="ds-specimens ds-foundation-preview">
+      {item.id==='color'&&roles.map(([title,pattern])=><div class="ds-swatch-group"><h3>{title}</h3><div class="ds-swatch-grid">{rows('color').filter(token=>token.tier!=='primitive'&&pattern.test(token.name)).map(token=><article data-ds-swatch={token.name}><div class="ds-swatch" style={`background:var(--${token.name})`} aria-hidden="true" /><p>{human(token.name)}</p><code><span class="ds-value-light">{token.resolvedLight}</span><span class="ds-value-dark">{token.resolvedDark}</span></code></article>)}</div></div>)}
+      {item.id==='typography'&&<div class="ds-type-list">{typography.map(style=><article class="ds-type-row"><div class="ds-type-sample">{style.selector==='h3'?<h3>Nazarii Pankiv</h3>:<p class={style.selector.slice(1)}>Nazarii Pankiv</p>}</div><div class="ds-type-caption"><strong>{style.name}</strong><span>{style.range} · {style.weight} · {style.lineHeight}</span></div></article>)}</div>}
+      {item.id==='spacing-layout'&&<div class="ds-foundation-stack"><div><h3>Spacing</h3><div class="ds-spacing-scale">{rows(item.id).filter(token=>token.category==='spacing').sort((a,b)=>parseFloat(a.resolvedLight)-parseFloat(b.resolvedLight)).map(token=><div><code>{token.name}</code><span class="ds-spacing-bar" style={`width:var(--${token.name})`} /><code>{token.resolvedLight}</code></div>)}</div></div><div><h3>Radius & elevation</h3><div class="ds-shape-grid">{rows(item.id).filter(token=>token.category==='shape'&&token.tier!=='primitive').map(token=><article><div class="ds-shape-tile" style={token.name.startsWith('radius-')?`border-radius:var(--${token.name})`:`box-shadow:var(--${token.name})`} /><p>{human(token.name)}</p></article>)}</div></div><div><h3>Grid</h3><div class="ds-layout-preview" aria-label="Twelve-column layout grid">{Array.from({length:12},(_,index)=><span aria-hidden="true">{index+1}</span>)}</div></div></div>}
+      {item.id==='motion'&&<div class="ds-motion-scales">{[['duration-','Durations'],['ease-','Easings']].map(([prefix,title])=><div><h3>{title}</h3><ul>{scales(prefix).map(value=><li><code>{value}</code></li>)}</ul></div>)}</div>}
+      {item.id==='icons'&&<ul class="ds-icon-grid">{inventory.iconNames.map(name=><li data-ds-icon={name}><Icon name={name as IconName} /><span>{name.replaceAll('-',' ')}</span></li>)}</ul>}
+    </div></div>
+    <div class="ds-markup" id={`${preview}-panel-1`} role="tabpanel" aria-labelledby={`${preview}-tab-1`} hidden><pre><code data-ds-markup>Generated from the rendered specimen.</code></pre></div>
+  </div>
+  <aside class="ds-panel"><DSTabs id={panel} labels={['Tokens','Rules']} /><div id={`${panel}-panel-0`} role="tabpanel" aria-labelledby={`${panel}-tab-0`}><DSTokens tokens={rows(item.id)} register />{item.id==='spacing-layout'&&<details><summary>Responsive values</summary><dl class="ds-key-values">{responsiveTokenOverrides().map(row=><div><dt>{row.query}</dt><dd><code>{row.name}: {row.value}</code></dd></div>)}</dl></details>}</div><div id={`${panel}-panel-1`} role="tabpanel" aria-labelledby={`${panel}-tab-1`} hidden><ul class="ds-rules">{rules[item.id].map(rule=><li>{rule}</li>)}</ul></div></aside>
+</section>})}

@@ -1,11 +1,13 @@
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { hiddenDocumentation } from '../src/data/system-hidden-docs.ts';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { icons } from '../src/data/icons.ts';
 import { buildSystemInventory } from '../src/data/system-inventory.ts';
 import { componentVariants } from '../src/data/system-variants.ts';
 import { componentManifest, isReusableComponent } from '../src/data/system-components.ts';
-import { dsComponents as registry } from '../src/data/ds-components.ts';
+import { dsComponents as registry, visibleComponents } from '../src/data/ds-components.ts';
 import { dsGroups } from '../src/data/design-system.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -53,8 +55,9 @@ export function validateComponentClassification(files, used, manifest, shown) {
     else if (!kinds.includes(entries[0].kind)) failures.push(`Invalid component kind: ${file}`);
   }
   for (const item of manifest) {
+    if(item.documentedHidden && item.file!=='src/components/Logo.astro') failures.push(`Unauthorized hidden component: ${item.file}`);
     if (!files.includes(item.file)) failures.push(`Stale classification: ${item.file}`);
-    if (item.kind === 'reusable-ui' && (!used.includes(item.file) || !shown.includes(item.file))) failures.push(`Missing or unused reusable UI: ${item.file}`);
+    if (item.kind === 'reusable-ui' && (!used.includes(item.file) || (!shown.includes(item.file) && !item.documentedHidden))) failures.push(`Missing or unused reusable UI: ${item.file}`);
   }
   for (const file of shown) if (!used.includes(file) || !manifest.some(item => item.file === file && item.kind === 'reusable-ui')) failures.push(`Non-reusable component shown: ${file}`);
   return failures;
@@ -68,7 +71,7 @@ function validate(entries) {
     names.add(item.name);
     const path = resolve(root, `src/components/${item.name}.astro`);
     if (!existsSync(path)) errors.push(`Missing component: ${item.name}`);
-    if (!sections.has(item.section)) errors.push(`Missing documentation section: ${item.name} → ${item.section}`);
+    if (!item.documentedHidden && !sections.has(item.section)) errors.push(`Missing documentation section: ${item.name} → ${item.section}`);
     if (!['direct', 'documentation'].includes(item.preview)) errors.push(`Unknown preview kind: ${item.name}`);
     if (item.preview === 'direct' && !specimens.has(path)) errors.push(`Catalog does not render ${item.name}`);
   }
@@ -128,15 +131,31 @@ function validate(entries) {
   }
   return errors;
 }
+export function validateHiddenDocumentation(records, text) {
+  const failures=[];
+  for(const section of ['Accessibility','Writing','Wordmark']){
+    const entries=records.filter(record=>record.section===section);
+    if(entries.length!==1 || !/^[a-f0-9]{64}$/.test(entries[0]?.sha256||'') || entries[0]?.characters<100){ failures.push(`Missing hidden documentation: ${section}`); continue; }
+    if(text!==undefined){
+      // Use the next section boundary rather than the end-of-line multiline dollar.
+      const start=text.indexOf('## '+section+'\n'), next=text.indexOf('\n## ',start+4);
+      const value=start<0?'':text.slice(start,next<0?undefined:next).trim();
+      if(!value || createHash('sha256').update(value).digest('hex')!==entries[0].sha256)failures.push(`Stale or missing hidden documentation: ${section}`);
+    }
+  }
+  return failures;
+}
 const errors = validate(registry);
-errors.push(...validateComponentClassification(filesUnder('src/components').filter(file => /\.(astro|tsx|jsx|ts|js|vue|svelte)$/.test(file)), [...new Set(websitePages.flatMap(page => [...componentsReachableFrom(page)]))].map(file => file.slice(root.length + 1)), componentManifest, registry.map(item => item.file)));
+const externalDocs=resolve(root,'../docs/design-system.md');
+errors.push(...validateHiddenDocumentation(hiddenDocumentation,existsSync(externalDocs)?readFileSync(externalDocs,'utf8'):undefined));
+errors.push(...validateComponentClassification(filesUnder('src/components').filter(file => /\.(astro|tsx|jsx|ts|js|vue|svelte)$/.test(file)), [...new Set(websitePages.flatMap(page => [...componentsReachableFrom(page)]))].map(file => file.slice(root.length + 1)), componentManifest, visibleComponents.map(item => item.file)));
 const inventory = buildSystemInventory(root);
 for (const entry of registry) if (!inventory.components.some(component => component.file === entry.file && component.usages.length)) errors.push(`Reusable UI has no rendered website consumer: ${entry.file}`);
 export function validateRenderedComponentNames(names, expected) {
   return [...names.filter(name => !expected.includes(name)).map(name => `Non-reusable rendered component: ${name}`), ...expected.filter(name => !names.includes(name)).map(name => `Missing rendered reusable UI: ${name}`)];
 }
 export function validateVariantCoverage(model, documented) {
-  const used = model.components.filter(component => isReusableComponent(component.file)).flatMap(component => componentVariants(component).map(variant => `${component.name}:${variant}`));
+  const used = model.components.filter(component => isReusableComponent(component.file) && !componentManifest.find(item=>item.file===component.file)?.documentedHidden).flatMap(component => componentVariants(component).map(variant => `${component.name}:${variant}`));
   return [...used.filter(value => !documented.includes(value)).map(value => `Undocumented website variant: ${value}`), ...documented.filter(value => !used.includes(value)).map(value => `Catalog-only variant: ${value}`)];
 }
 export function validateInventoryCoverage(model, documentedComponents, documentedTokens, documentedIcons, tokenSource, catalogSource) {

@@ -1,0 +1,6 @@
+---
+import type {SourceToken} from '../data/system-inventory';
+interface Props {tokens:SourceToken[]; register?:boolean;}
+const {tokens,register=false}=Astro.props;
+---
+<dl class="ds-token-list">{tokens.map(token=><div data-ds-token={register?token.name:undefined}><dt>{token.category==='color'&&<span class="ds-token-swatch" style={`background:var(--${token.name})`} aria-hidden="true" />}<code>{token.name}</code></dt><dd><code><span class="ds-value-light">{token.resolvedLight}</span><span class="ds-value-dark">{token.resolvedDark}</span></code></dd></div>)}</dl>

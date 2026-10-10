@@ -1,4 +1,4 @@
-import { isReusableComponent } from '../src/data/system-components.ts';
+import { isReusableComponent, componentManifest } from '../src/data/system-components.ts';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { systemGuidelines } from '../src/data/system-guidelines.ts';
@@ -6,7 +6,7 @@ import { buildSystemInventory } from '../src/data/system-inventory.ts';
 import { componentVariants } from '../src/data/system-variants.ts';
 import { validateVariantCoverage } from '../scripts/validate-design-system.mjs';
 const model = buildSystemInventory();
-const variants = model.components.filter(component => isReusableComponent(component.file)).flatMap(component => componentVariants(component).map(variant => `${component.name}:${variant}`));
+const variants = model.components.filter(component => isReusableComponent(component.file) && !componentManifest.find(item=>item.file===component.file)?.documentedHidden).flatMap(component => componentVariants(component).map(variant => `${component.name}:${variant}`));
 assert.deepEqual(validateVariantCoverage(model, variants), []);
 assert.ok(validateVariantCoverage(model, variants.slice(1)).some(error => error.includes('Undocumented website variant')));
 assert.ok(validateVariantCoverage(model, [...variants, 'Button:disabled=true']).some(error => error.includes('Catalog-only variant')));

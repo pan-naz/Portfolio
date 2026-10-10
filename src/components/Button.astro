@@ -1,12 +1,12 @@
 ---
 import Arrow from './Arrow.astro';
 import type { HTMLAttributes } from 'astro/types';
-interface Props extends Omit<HTMLAttributes<'button'>, 'disabled'>, Pick<HTMLAttributes<'a'>, 'target' | 'rel'> { href?: string; download?: boolean; size?: 'large' | 'small'; variant?: 'primary' | 'secondary'; appearance?: 'default' | 'comparison'; arrow?: 'up'; }
+interface Props extends Omit<HTMLAttributes<'button'>, 'disabled'>, Pick<HTMLAttributes<'a'>, 'target' | 'rel'> { href?: string; download?: boolean; size?: 'large' | 'small'; variant?: 'primary' | 'secondary'; appearance?: 'default' | 'comparison' | 'catalog'; arrow?: 'up'; }
 const { href, size = 'large', variant = 'primary', appearance = 'default', arrow, class: className, ...attributes } = Astro.props;
 const Tag = href ? 'a' : 'button';
 const hasArrowFill = variant === 'primary' && Boolean(arrow);
 ---
-<Tag {...attributes} class:list={['button', size === 'small' && !hasArrowFill && 'hit-area', size === 'small' ? 'text-body-s' : 'text-body-m-strong', `button--${variant}`, appearance === 'comparison' && 'button--comparison', `button--${size}`, arrow && `button--arrow-${arrow}`, hasArrowFill && 'button--arrow-fill', className]} href={href} type={Tag === 'button' ? (attributes.type ?? 'button') : undefined}>
+<Tag {...attributes} class:list={['button', size === 'small' && !hasArrowFill && 'hit-area', size === 'small' ? 'text-body-s' : 'text-body-m-strong', `button--${variant}`, appearance === 'comparison' && 'button--comparison', appearance === 'catalog' && 'button--catalog', `button--${size}`, arrow && `button--arrow-${arrow}`, hasArrowFill && 'button--arrow-fill', className]} href={href} type={Tag === 'button' ? (attributes.type ?? 'button') : undefined}>
   {hasArrowFill ? (
     <>
       <span class="button-fill-label"><slot /></span>
@@ -17,3 +17,15 @@ const hasArrowFill = variant === 'primary' && Boolean(arrow);
     </>
   ) : <><slot />{arrow && <Arrow direction={arrow} />}</>}
 </Tag>
+
+<style>
+@layer system, project;
+@layer system {
+  /* Explicit documentation chrome; the website keeps default/comparison. */
+  .button--catalog { min-height: var(--space-8); padding: var(--space-2) var(--space-3); border-color: transparent; background: transparent; color: var(--color-text-secondary); font-size: var(--text-label-s); line-height: 1.333333; font-weight: var(--font-weight-body-m-strong); }
+  .button--catalog:is(:hover, :active) { background: var(--color-bg-surface-subtle); color: var(--color-text-primary); transform: none; }
+  .button--catalog[aria-selected='true'] { background: var(--color-bg-surface-subtle); color: var(--color-text-primary); }
+  .button--catalog:focus-visible { outline: 1px solid var(--focus-ring); outline-offset: 2px; }
+  .button--catalog[aria-pressed='true'] { background: var(--color-text-primary); color: var(--color-bg-canvas); }
+}
+</style>
