@@ -1,29 +1,35 @@
+/* Project-only: Hooko brand styles, not part of the design system */
+@layer system, project;
+@layer project {
+.hooko-hero, .hooko-phone { --hooko-color-5a4f6a: #5a4f6a; --hooko-color-2a2238: #2a2238; --hooko-color-1a1228: #1a1228; --hooko-color-rgb-0-0-0-6: rgb(0 0 0 / .6); --hooko-color-110a1d: #110a1d; --hooko-color-3a3142: #3a3142; --hooko-color-1f1828: #1f1828; --hooko-color-000: #000; --hooko-color-1a1f3a: #1a1f3a; --hooko-color-3a4060: #3a4060; --hooko-color-rgb-254-254-254-6: rgb(254 254 254 / .6); --hooko-color-rgb-254-254-254-4: rgb(254 254 254 / .4); --hooko-color-rgb-158-42-111-24: rgb(158 42 111 / .24); --hooko-color-rgb-191-67-46-13: rgb(191 67 46 / .13); }
   /* Original hooko.app phone construction, proportionally scaled within the portfolio hero. */
   .hooko-phone { position: relative; width: calc(280 * var(--phone-unit)); aspect-ratio: 9 / 19.5; }
   .hooko-phone__rim, .hooko-phone__bezel, .hooko-phone__screen { width: 100%; height: 100%; }
-  .hooko-phone__rim { padding: calc(3 * var(--phone-unit)); border-radius: calc(44 * var(--phone-unit)); background: linear-gradient(135deg, #5a4f6a, #2a2238 50%, #1a1228); box-shadow: 0 calc(25 * var(--phone-unit)) calc(50 * var(--phone-unit)) calc(-12 * var(--phone-unit)) rgb(0 0 0 / .6); }
-  .hooko-phone__bezel { padding: calc(2 * var(--phone-unit)); border-radius: calc(42 * var(--phone-unit)); background: linear-gradient(135deg, #1a1228, #110a1d); }
-  .hooko-phone__screen { position: relative; overflow: hidden; border-radius: calc(40 * var(--phone-unit)); background: #110a1d; }
+  .hooko-phone__rim { padding: calc(3 * var(--phone-unit)); border-radius: calc(44 * var(--phone-unit)); background: linear-gradient(135deg, var(--hooko-color-5a4f6a), var(--hooko-color-2a2238) 50%, var(--hooko-color-1a1228)); box-shadow: 0 calc(25 * var(--phone-unit)) calc(50 * var(--phone-unit)) calc(-12 * var(--phone-unit)) var(--hooko-color-rgb-0-0-0-6); }
+  .hooko-phone__bezel { padding: calc(2 * var(--phone-unit)); border-radius: calc(42 * var(--phone-unit)); background: linear-gradient(135deg, var(--hooko-color-1a1228), var(--hooko-color-110a1d)); }
+  .hooko-phone__screen { position: relative; overflow: hidden; border-radius: calc(40 * var(--phone-unit)); background: var(--hooko-color-110a1d); }
   .hooko-phone--fitted { aspect-ratio: auto; }
   .hooko-phone--fitted :is(.hooko-phone__rim, .hooko-phone__bezel, .hooko-phone__screen) { height: auto; }
   .hooko-phone--fitted .hooko-phone__screen { aspect-ratio: var(--phone-screen-ratio); }
   .hooko-phone__key { position: absolute; width: calc(2 * var(--phone-unit)); border-radius: calc(2 * var(--phone-unit)); }
-  .hooko-phone__key--mute, .hooko-phone__key--up, .hooko-phone__key--down { left: calc(-2 * var(--phone-unit)); background: linear-gradient(90deg, #3a3142, #1f1828); }
+  .hooko-phone__key--mute, .hooko-phone__key--up, .hooko-phone__key--down { left: calc(-2 * var(--phone-unit)); background: linear-gradient(90deg, var(--hooko-color-3a3142), var(--hooko-color-1f1828)); }
   .hooko-phone__key--mute { top: 18%; height: calc(28 * var(--phone-unit)); }
   .hooko-phone__key--up { top: 26%; height: calc(40 * var(--phone-unit)); }
   .hooko-phone__key--down { top: 34%; height: calc(40 * var(--phone-unit)); }
-  .hooko-phone__key--power, .hooko-phone__key--camera { right: calc(-2 * var(--phone-unit)); background: linear-gradient(270deg, #3a3142, #1f1828); }
+  .hooko-phone__key--power, .hooko-phone__key--camera { right: calc(-2 * var(--phone-unit)); background: linear-gradient(270deg, var(--hooko-color-3a3142), var(--hooko-color-1f1828)); }
   .hooko-phone__key--power { top: 24%; height: calc(56 * var(--phone-unit)); }
   .hooko-phone__key--camera { top: 40%; height: calc(32 * var(--phone-unit)); }
-  .hooko-phone__island { position: absolute; z-index: 3; top: calc(8 * var(--phone-unit)); left: 50%; transform: translateX(-50%); width: 35%; height: calc(18 * var(--phone-unit)); border-radius: var(--radius-pill); background: #000; display: flex; align-items: center; justify-content: flex-end; padding-right: calc(8 * var(--phone-unit)); }
-  .hooko-phone__island span { width: calc(6 * var(--phone-unit)); height: calc(6 * var(--phone-unit)); border-radius: 50%; background: #1a1f3a; box-shadow: 0 0 0 calc(.5 * var(--phone-unit)) #3a4060; }
-  .hooko-phone__home { position: absolute; z-index: 3; bottom: calc(6 * var(--phone-unit)); left: 50%; transform: translateX(-50%); width: calc(96 * var(--phone-unit)); height: calc(4 * var(--phone-unit)); border-radius: var(--radius-pill); background: rgb(254 254 254 / .6); }
-  .hooko-phone--rear .hooko-phone__home { background: rgb(254 254 254 / .4); }
-  :is(.project-media, .case-study-artwork, .case-study-transition-artwork) .hooko-phone :is(img, video) { position: absolute; inset: 0; display: block; width: 100%; height: 100%; aspect-ratio: auto; object-fit: cover; background: #110a1d; pointer-events: none; }
+  .hooko-phone__island { position: absolute; z-index: 3; top: calc(8 * var(--phone-unit)); left: 50%; transform: translateX(-50%); width: 35%; height: calc(18 * var(--phone-unit)); border-radius: var(--radius-pill); background: var(--hooko-color-000); display: flex; align-items: center; justify-content: flex-end; padding-right: calc(8 * var(--phone-unit)); }
+  .hooko-phone__island span { width: calc(6 * var(--phone-unit)); height: calc(6 * var(--phone-unit)); border-radius: 50%; background: var(--hooko-color-1a1f3a); box-shadow: 0 0 0 calc(.5 * var(--phone-unit)) var(--hooko-color-3a4060); }
+  .hooko-phone__home { position: absolute; z-index: 3; bottom: calc(6 * var(--phone-unit)); left: 50%; transform: translateX(-50%); width: calc(96 * var(--phone-unit)); height: calc(4 * var(--phone-unit)); border-radius: var(--radius-pill); background: var(--hooko-color-rgb-254-254-254-6); }
+  .hooko-phone--rear .hooko-phone__home { background: var(--hooko-color-rgb-254-254-254-4); }
+  :is(.project-media, .case-study-artwork, .case-study-transition-artwork) .hooko-phone :is(img, video) { position: absolute; inset: 0; display: block; width: 100%; height: 100%; aspect-ratio: auto; object-fit: cover; background: var(--hooko-color-110a1d); pointer-events: none; }
   :is(.project-media, .case-study-artwork, .case-study-transition-artwork) .hooko-phone--rear img { object-position: center top; }
 
-  .hooko-hero { --phone-unit: calc(100cqw / 1750); position: relative; container-type: inline-size; aspect-ratio: var(--hooko-hero-ratio); overflow: hidden; background: #110a1d; }
-  .hooko-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 24% 48% at 50% 53%, rgb(158 42 111 / .24), transparent 95%), radial-gradient(ellipse 16% 38% at 50% 62%, rgb(191 67 46 / .13), transparent); }
+  .hooko-hero { --phone-unit: calc(100cqw / 1750); position: relative; container-type: inline-size; aspect-ratio: var(--hooko-hero-ratio); overflow: hidden; background: var(--hooko-color-110a1d); }
+  .hooko-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 24% 48% at 50% 53%, var(--hooko-color-rgb-158-42-111-24), transparent 95%), radial-gradient(ellipse 16% 38% at 50% 62%, var(--hooko-color-rgb-191-67-46-13), transparent); }
   .hooko-hero__phones { position: absolute; left: 50%; top: 49%; width: calc(280 * var(--phone-unit)); transform: translate(-50%, -50%); }
   .hooko-hero__front { position: relative; z-index: 2; transform: rotate(6deg); }
   .hooko-hero__back { position: absolute; z-index: 1; left: calc(-32 * var(--phone-unit)); top: calc(24 * var(--phone-unit)); transform: rotate(-6deg); }
+
+}

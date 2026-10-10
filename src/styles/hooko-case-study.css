@@ -1,3 +1,6 @@
+/* Project-only: Hooko brand styles, not part of the design system */
+@layer system, project;
+@layer project {
 .case-study-content--hooko { padding-bottom: 0; }
 .hk-pillrow, .hk-kw { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .hk-case figure, .hk-srows, .hk-pipeline { margin: 0; }
@@ -67,3 +70,5 @@
 @media (max-width: 900px) { .hk-col-3 { grid-template-columns: 1fr; } }
 @media (max-width: 767px) { .hk-band-inner { width: calc(100% - var(--gutter) * 2); gap: var(--case-content-gap); } .hk-stxt, .hk-diagram { padding: var(--space-4); } .hk-meta-row { grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-1); } .hk-meta-row .hk-k { grid-column: 1 / -1; } }
 @media (max-width: 560px) { .hk-stack, .hk-campaigns, .hk-pipeline, .hk-srows, .hk-architecture-mobile { grid-template-columns: 1fr; } }
+
+}

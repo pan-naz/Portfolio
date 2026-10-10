@@ -1,3 +1,5 @@
+@layer system, project;
+@layer system {
 /* Opt-in catalog mode. The public website never loads this stylesheet. */
 html[data-static] { scroll-behavior: auto; scroll-padding-top: 0; }
 html[data-static] *, html[data-static] *::before, html[data-static] *::after {
@@ -11,3 +13,5 @@ html[data-static] .button:active,
 html[data-static] .theme-toggle-glyph { transform: none !important; }
 html[data-static] .skill-marquee { mask-image: none; height: auto; }
 html[data-static] .skill-group[aria-hidden] { display: none; }
+
+}

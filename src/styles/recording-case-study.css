@@ -1,5 +1,10 @@
+/* Project-only: OFFF Conference, Professions in Digital and Quit University brand styles, not part of the design system */
+@layer system, project;
+@layer project {
 .case-study-content--recording { padding-bottom: 0; }
 .recording-case > .case-study-overview { padding-top: var(--case-section-space); }
 .recording-heading { align-items: end; margin-bottom: var(--case-content-gap); }
 .recording-heading > p { margin-top: 0; }
 .recording-muted { color: var(--muted); }
+
+}

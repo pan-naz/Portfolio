@@ -1,3 +1,5 @@
+@layer system, project;
+@layer system {
 /* Shared editorial roles for all full case studies. Project styles own composition only. */
 .case-study-narrative {
   --section-heading-stack-space: var(--space-6);
@@ -72,4 +74,6 @@
   .case-study-steps { gap: var(--space-4); }
   .case-study-steps > li { grid-template-columns: var(--space-6) minmax(0, 1fr); gap: var(--space-3); }
   .case-study-media-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
 }

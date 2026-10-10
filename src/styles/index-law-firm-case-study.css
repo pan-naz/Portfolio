@@ -1,3 +1,7 @@
+/* Project-only: Index Law Firm brand styles, not part of the design system */
+@layer system, project;
+@layer project {
+.case-study-content--index-law-firm { --index-font-index-lato-lato-arial-sans-serif: 'Index Lato', Lato, Arial, sans-serif; --index-color-222222: #222222; --index-color-ff9600: #FF9600; --index-color-f5f5f5: #F5F5F5; --index-color-6b6b6b: #6b6b6b; }
 .case-study-content--index-law-firm { padding-bottom: 0; }
 .index-case { display: grid; gap: var(--case-section-space); padding-top: var(--space-16); }
 .case-study-narrative.index-case > section:not(.case-study-chapter--inverse) { padding-block: 0; }
@@ -10,18 +14,18 @@
 .index-devices { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--grid-gap); align-items: start; }
 /* Original Index typography and palette stay inside its product and brand specimens. */
 @font-face { font-family: 'Index Lato'; font-style: normal; font-weight: 400; font-display: swap; src: url('/projects/peak-hotel-case-study/lato-regular.ttf') format('truetype'); }
-.index-lato { font-family: 'Index Lato', Lato, Arial, sans-serif; }
-.index-case .index-service-demo { --service-font: 'Index Lato', Lato, Arial, sans-serif; --service-ink: #222222; --service-subtle: #F5F5F5; --service-accent: #FF9600; --service-muted: #6b6b6b; --service-popover-radius: 0; }
+.index-lato { font-family:var(--index-font-index-lato-lato-arial-sans-serif); }
+.index-case .index-service-demo { --service-font: var(--index-font-index-lato-lato-arial-sans-serif); --service-ink: var(--index-color-222222); --service-subtle: var(--index-color-f5f5f5); --service-accent: var(--index-color-ff9600); --service-muted: var(--index-color-6b6b6b); --service-popover-radius: 0; }
 .index-palette { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); margin: 0; padding: 0; list-style: none; }
 .index-palette > li { overflow: hidden; background: var(--floating-surface); color: var(--floating-ink); border: 1px solid var(--inverse-divider); border-radius: var(--radius-medium); }
 .index-swatch { aspect-ratio: 4 / 3; background: var(--index-swatch); }
 .index-palette > li > div:last-child { display: grid; gap: 2px; padding: var(--space-3) var(--space-4) var(--space-4); font-size: var(--text-small); line-height: 1.428571; }
 .index-palette code { font-family: var(--font-body); font-size: var(--text-label-s); color: var(--floating-muted); }
 .index-specimens { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
-.index-specimen { display: grid; align-content: start; gap: var(--space-4); min-width: 0; padding: var(--space-6); border-radius: var(--radius-medium); background: var(--floating-surface); color: #222222; }
+.index-specimen { display: grid; align-content: start; gap: var(--space-4); min-width: 0; padding: var(--space-6); border-radius: var(--radius-medium); background: var(--floating-surface); color: var(--index-color-222222); }
 .index-specimen > .case-study-eyebrow { color: var(--floating-muted); }
 .index-case .index-specimen > p { margin-top: 0; }
-.index-specimen-size { color: #FF9600; font-weight: var(--font-weight-heading); }
+.index-specimen-size { color: var(--index-color-ff9600); font-weight: var(--font-weight-heading); }
 .index-display-sample { font-size: 26px; line-height: 34px; }
 .index-body-sample { font-size: 14px; line-height: 22px; }
 .index-caps-sample { padding-left: .9em; font-size: 20px; line-height: 40px; letter-spacing: .9em; text-transform: uppercase; text-align: center; }
@@ -46,4 +50,6 @@
   .index-palette, .index-grid-card { grid-template-columns: minmax(0, 1fr); }
   .index-swatch { aspect-ratio: 3 / 1; }
   .index-caps-sample { font-size: 16px; letter-spacing: .6em; padding-left: .6em; }
+}
+
 }

@@ -1,5 +1,7 @@
+@layer system, project;
 @import './fonts.css';
 @import './tokens.css';
+@layer system {
 :root { font-family: var(--font-body); letter-spacing: var(--letter-spacing-body-l); font-synthesis: none; color: var(--text-primary); background: var(--canvas); }
 *, *::before, *::after { box-sizing: border-box; }
 img[data-responsive-image] { aspect-ratio: var(--responsive-original-ratio); }
@@ -488,4 +490,6 @@ html.case-study-open { overflow: hidden; scrollbar-gutter: stable; }
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   :is(.project-cursor.is-case-control, .case-study-direct-close) svg > g { transition: transform 350ms var(--ease-toggle-rotation); }
   :is(.project-cursor.is-case-control, .case-study-direct-close) .icon-button:hover svg > g { transform: rotate(180deg); }
+}
+
 }

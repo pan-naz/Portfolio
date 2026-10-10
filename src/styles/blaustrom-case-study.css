@@ -1,3 +1,7 @@
+/* Project-only: Blaustrom brand styles, not part of the design system */
+@layer system, project;
+@layer project {
+.case-study-content--blaustrom { --blaustrom-font-blaustrom-open-sans-sans-serif: 'Blaustrom Open Sans', sans-serif; }
 /* Approved Blaustrom artwork colors; portfolio type, frames and controls stay shared. */
 .case-study-content--blaustrom { --blaustrom-blue: #0497C3; --blaustrom-teal: #04C1C1; --blaustrom-dark: #282828; padding-bottom: 0; }
 .blaustrom-lede { margin-top: var(--space-6); color: var(--muted); }
@@ -29,7 +33,7 @@
 @font-face { font-family: 'Blaustrom Open Sans'; font-style: normal; font-weight: 300; font-display: swap; src: url('/projects/blaustrom-case-study/open-sans-300.ttf') format('truetype'); }
 @font-face { font-family: 'Blaustrom Open Sans'; font-style: normal; font-weight: 400; font-display: swap; src: url('/projects/blaustrom-case-study/open-sans-400.ttf') format('truetype'); }
 @font-face { font-family: 'Blaustrom Open Sans'; font-style: normal; font-weight: 700; font-display: swap; src: url('/projects/blaustrom-case-study/open-sans-700.ttf') format('truetype'); }
-.blaustrom-open-sans { font-family: 'Blaustrom Open Sans', sans-serif; font-weight: 400; }
+.blaustrom-open-sans { font-family:var(--blaustrom-font-blaustrom-open-sans-sans-serif); font-weight: 400; }
 .blaustrom-open-sans.blaustrom-light, .blaustrom-open-sans .blaustrom-light { font-weight: 300; }
 .blaustrom-open-sans.blaustrom-bold, .blaustrom-open-sans .blaustrom-bold { font-weight: 700; }
 .blaustrom-case .blaustrom-type-heading { font-size: var(--text-heading-l); line-height: 1.142857; }
@@ -39,4 +43,6 @@
   .blaustrom-palette { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .blaustrom-controls { padding: var(--space-6); }
   .blaustrom-control-row { grid-template-columns: minmax(0, 1fr); padding-block: var(--space-6); }
+}
+
 }

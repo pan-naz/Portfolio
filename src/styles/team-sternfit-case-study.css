@@ -1,3 +1,6 @@
+/* Project-only: Team Sternfit brand styles, not part of the design system */
+@layer system, project;
+@layer project {
 /* Black and the palette specimens are Team Sternfit artwork, not portfolio colours. */
 .case-study-content--team-sternfit { --sternfit-black: #000000; padding-bottom: 0; }
 .sternfit-muted { color: var(--muted); }
@@ -42,4 +45,6 @@
   .sternfit-type-cards { grid-template-columns: minmax(0, 1fr); }
   .sternfit-type-plate { min-height: 0; }
   .sternfit-palette { grid-template-columns: minmax(0, 1fr); }
+}
+
 }

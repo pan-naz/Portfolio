@@ -1,3 +1,5 @@
+@layer system, project;
+@layer system {
 .case-study-decision-card { display: flex; flex-direction: column; padding: var(--space-4); border: 1px solid var(--divider); border-radius: var(--radius-medium); }
 .case-study-decision-card__header:has(.case-study-decision-card__icon) { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-4); }
 .case-study-decision-card__heading { min-width: 0; }
@@ -24,3 +26,5 @@
 .case-study-decision-card--figure .case-study-decision-card__media img { height: auto; object-fit: contain; }
 .case-study-decision-card--figure .case-study-decision-card__text { padding: var(--space-2); }
 @media (max-width: 560px) { .case-study-decision-card--media { grid-template-columns: 1fr; } .case-study-decision-card__media { min-height: 0; aspect-ratio: 4 / 3; } }
+
+}

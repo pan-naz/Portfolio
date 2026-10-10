@@ -1,3 +1,6 @@
+/* Project-only: DataGPT brand styles, not part of the design system */
+@layer system, project;
+@layer project {
 .case-study-content--datagpt { padding-bottom: 0; }
 .dg-case { --dg-bubble-cut: 4px; }
 .dg-lede { max-width: 720px; margin-top: var(--space-6); }
@@ -75,4 +78,6 @@
   .dg-research-stats { grid-template-columns: 1fr; gap: var(--space-6); }
   .dg-voice { grid-template-columns: 32px minmax(0, 1fr); }
   .dg-avatar { width: 32px; height: 32px; }
+}
+
 }

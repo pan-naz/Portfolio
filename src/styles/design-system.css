@@ -1,3 +1,5 @@
+@layer system, project;
+@layer system {
 /* Catalog layout follows the supplied Folio specimen sheet. Component styles
    come exclusively from global.css and their shared implementations. */
 .ds-sidebar { position: fixed; inset: 48px auto 32px 32px; width: 184px; overflow-y: auto; z-index: var(--layer-controls); }
@@ -118,3 +120,5 @@
 }
 
 .ds-return.hit-area { position: relative; }
+
+}
