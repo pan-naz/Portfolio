@@ -39,7 +39,7 @@ export function buildSystemInventory(root = process.cwd()) {
   const infrastructure = new Set(['SiteMetadata', 'PortfolioPage', 'CaseStudyPage', 'CaseStudyContent', 'CaseStudyLayer', 'StandaloneCaseStyles']);
   const projectOnly = new Set(['HookoHero', 'HookoPhoneFrame']);
   const componentFiles = [...reachable].filter(file => file.includes('/components/') && !infrastructure.has(basename(file, '.astro')) && !projectOnly.has(basename(file, '.astro')) && !(file.endsWith('CaseStudy.astro') && !basename(file).startsWith('CaseStudy'))).sort();
-  const sources = all.filter(file => !file.includes('/pages/design-system') && !/\/(?:DS[^/]*\.astro|(?:design-system(?:-[\w-]+)?|ds-components|system-inventory|system-documentation|system-preview-styles|system-typography|system-responsive)\.ts|(?:design-system|static-preview|tokens)\.css)$/.test(file));
+  const sources = all.filter(file => !file.includes('/pages/design-system') && !/\/(?:DS[^/]*\.astro|(?:design-system(?:-[\w-]+)?|ds-components|system-inventory|system-documentation|system-preview-styles|system-typography|system-responsive|system-guidelines|system-variants)\.ts|(?:design-system|static-preview|tokens)\.css)$/.test(file));
   const css = read('src/styles/tokens.css');
   const palettes = readSystemTokens(css);
   const definitions = new Set(Object.keys(palettes.light));

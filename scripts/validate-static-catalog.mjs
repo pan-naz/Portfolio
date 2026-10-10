@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { buildSystemInventory } from '../src/data/system-inventory.ts';
-import { validateInventoryCoverage } from './validate-design-system.mjs';
+import { validateInventoryCoverage, validateVariantCoverage } from './validate-design-system.mjs';
 const root = resolve(import.meta.dirname, '..');
 const read = path => readFileSync(resolve(root, path), 'utf8');
 const home = read('dist/index.html');
@@ -36,6 +36,9 @@ const variants = html => new Set([...html.matchAll(/\bclass="([^"]*)"/g)].flatMa
 }));
 const websiteHtml = readdirSync(resolve(root, 'dist'), { recursive: true }).filter(file => file.endsWith('.html') && file !== 'design-system/index.html').map(file => read('dist/' + file)).join('\n');
 const websiteVariants = variants(websiteHtml);
+const apiVariants = [...catalog.matchAll(/data-ds-variant="([^"]+)"/g)].map(([,value]) => value);
+assert.deepEqual(validateVariantCoverage(inventory, apiVariants), []);
+for (const variant of websiteVariants) assert.ok(variants(catalog).has(variant), `Undocumented website variant: ${variant}`);
 for (const variant of variants(catalog)) assert.ok(websiteVariants.has(variant), `Catalog-only variant: ${variant}`);
 assert.ok(!inventory.projectFonts.some(font => styles(catalog).includes(font)), 'No client specimen font may enter catalog CSS');
 console.log('Static catalog verified: no Website section or embedded preview, isolated motion CSS and unique IDs.');

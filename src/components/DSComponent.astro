@@ -1,5 +1,6 @@
 ---
 import type { SourceComponent } from '../data/system-inventory';
+import { componentVariants } from '../data/system-variants';
 import { documentationFor } from '../data/system-documentation';
 import Button from './Button.astro';
 import DSStates from './DSStates.astro';
@@ -19,8 +20,8 @@ interface Props { component: SourceComponent; inventory: ReturnType<typeof impor
 const { component, inventory } = Astro.props;
 const doc = documentationFor(component);
 const id = `component-${component.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()}`;
-const variantsHavePreview = ['Button','Chip','NavigationItem','IconButton'].includes(component.name);
-const inlinePreview = ['Icon','TextLink','Logo','Arrow','Stat','TimelineRow','ProjectIdentity','ProjectTags'].includes(component.name);
+const variantsHavePreview = ['Button','Chip','NavigationItem','IconButton','TextLink','Logo'].includes(component.name);
+const inlinePreview = ['Icon','Arrow','Stat','TimelineRow','ProjectIdentity','ProjectTags'].includes(component.name);
 const anatomyParts = [...new Set([...component.source.matchAll(/(?:class="|['"])([a-z][\w-]*(?:__|--|-)[\w-]+)['"]/g)].map(([, part]) => part))].filter(part => !part.startsWith('text-') && !part.startsWith('font-'));
 const tokens = inventory.tokens.filter(token => component.tokens.includes(token.name));
 const code = component.usages.find(usage => !inventory.privateNames.some(name => usage.code.includes(`--${name}`)))?.code ?? component.source.match(/interface Props[^\{]*\{[\s\S]*?\}/)?.[0] ?? component.file;
@@ -45,8 +46,9 @@ const code = component.usages.find(usage => !inventory.privateNames.some(name =>
   {component.name === 'ThemeToggle' && <p>Use the theme control in this page’s navigation to try both themes.</p>}
   <h3>Anatomy</h3>
   {component.props.length ? <div class="ds-table-scroll"><table><thead><tr><th>Part or input</th><th>Required</th></tr></thead><tbody>{component.props.map(prop => <tr><th>{prop.name}</th><td>{prop.optional ? 'Optional' : 'Required'}</td></tr>)}</tbody></table></div> : <p>Uses the supplied content and the shared layout for this role.</p>}
+  {component.source.includes('<slot') && <p>Content slot: {component.name === 'Button' || component.name === 'TextLink' ? 'required visible label' : 'supplied content'}.</p>}
   {anatomyParts.length > 0 && <details><summary>Named parts</summary><ul>{anatomyParts.map(part => <li><code>{part}</code></li>)}</ul></details>}
-  <h3>Variants</h3><p>The website uses this component in {component.usages.length} {component.usages.length === 1 ? 'place' : 'places'}. Its supported inputs are listed above.</p>
+  <h3>Variants</h3>{componentVariants(component).length ? <ul class="ds-token-links">{componentVariants(component).map(variant => <li data-ds-variant={`${component.name}:${variant}`}><code>{variant}</code></li>)}</ul> : <p>One shared form, with the supplied content.</p>}
   <h3>States</h3>{variantsHavePreview ? <DSStates component={component} /> : <p>Default. Shared motion and media behavior are described in the patterns below.</p>}
   <h3>Usage</h3><dl class="ds-usage"><dt>Use when</dt><dd>{doc.useWhen}</dd><dt>Don’t use when</dt><dd>{doc.avoidWhen}</dd></dl>
   <h3>Accessibility</h3><p>{doc.accessibility}</p>

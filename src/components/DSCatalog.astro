@@ -2,6 +2,7 @@
 import { statePreviewStyles } from '../data/system-preview-styles';
 import DSFoundations from './DSFoundations.astro';
 import DSComponent from './DSComponent.astro';
+import DSGuidelines from './DSGuidelines.astro';
 import DSPatterns from './DSPatterns.astro';
 import TextLink from './TextLink.astro';
 import { buildSystemInventory } from '../data/system-inventory';
@@ -17,8 +18,7 @@ const inventory = buildSystemInventory();
   <DSFoundations inventory={inventory} />
   {inventory.components.map(component => <DSComponent component={component} inventory={inventory} />)}
   <DSPatterns inventory={inventory} />
-  <section id="accessibility" class="ds-section"><header class="ds-heading"><h2>Accessibility</h2><p>Preserve text contrast, clear names, keyboard focus and the shared target area. Respect reduced motion.</p></header></section>
-  <section id="writing" class="ds-section"><header class="ds-heading"><h2>Writing</h2><p>Use short, clear labels. Put the purpose first. Keep project names and supplied claims unchanged, with their context.</p></header></section>
+  <DSGuidelines />
   <footer class="ds-footer"><TextLink href="/" compact>Back to portfolio</TextLink></footer>
 </main>
 

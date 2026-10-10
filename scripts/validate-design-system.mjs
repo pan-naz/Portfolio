@@ -2,6 +2,7 @@ import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildSystemInventory } from '../src/data/system-inventory.ts';
+import { componentVariants } from '../src/data/system-variants.ts';
 import { componentPurposes } from '../src/data/system-documentation.ts';
 import { dsComponents as registry } from '../src/data/ds-components.ts';
 import { dsGroups } from '../src/data/design-system.ts';
@@ -113,6 +114,10 @@ function validate(entries) {
 }
 const errors = validate(registry);
 const inventory = buildSystemInventory(root);
+export function validateVariantCoverage(model, documented) {
+  const used = model.components.flatMap(component => componentVariants(component).map(variant => `${component.name}:${variant}`));
+  return [...used.filter(value => !documented.includes(value)).map(value => `Undocumented website variant: ${value}`), ...documented.filter(value => !used.includes(value)).map(value => `Catalog-only variant: ${value}`)];
+}
 export function validateInventoryCoverage(model, documentedComponents, documentedTokens, documentedIcons, tokenSource, catalogSource) {
   const failures = [];
   const exact = (used, documented, kind) => {
