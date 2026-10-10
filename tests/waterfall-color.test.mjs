@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { accentBlendSteps, accentProgress, createAccentPalette, maximumTrailStrength, trailShadeIndex, trailShadeSteps, updateParticleAccent } from '../src/scripts/waterfall-color.ts';
+import { accentBlendSteps, accentProgress, createAccentPalette, maximumTrailStrength, trailShadeIndex, trailShadeSteps, updateParticleAccent } from '../src/scripts/waterfall/waterfall-color.ts';
 
 assert.equal(accentProgress(0), 0);
 assert.equal(accentProgress(1), .5);

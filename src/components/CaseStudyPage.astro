@@ -4,7 +4,7 @@ import CaseStudyContent from './CaseStudyContent.astro';
 import StandaloneCaseStyles from './StandaloneCaseStyles.astro';
 import IconButton from './IconButton.astro';
 import Icon from './Icon.astro';
-import { workFilterHash } from '../scripts/work-filter';
+import { workFilterHash } from '../scripts/work-filter/work-filter';
 interface Props { project: Project; }
 const { project } = Astro.props;
 const returnUrl = project.category === 'selected' ? '/#work' : `/${workFilterHash(project.category)}`;
@@ -17,9 +17,9 @@ const returnUrl = project.category === 'selected' ? '/#work' : `/${workFilterHas
 
 <script>
   import { initializeMotion } from '../scripts/motion';
-  import { initializeCaseStudyNavigation } from '../scripts/case-study-navigation';
+  import { initializeCaseStudyNavigation } from '../scripts/case-study/case-study-navigation';
   import { initializeControlMagnet } from '../scripts/control-magnet';
-  import { initializeCaseStudyVideos } from '../scripts/case-study-videos';
+  import { initializeCaseStudyVideos } from '../scripts/case-study/case-study-videos';
   initializeMotion();
   const videos = initializeCaseStudyVideos();
   window.addEventListener('pagehide', event => { if (!event.persisted) videos.destroy(); });

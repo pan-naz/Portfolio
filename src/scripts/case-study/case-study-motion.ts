@@ -1,4 +1,4 @@
-import { readMotionToken } from './native-motion.ts';
+import { readMotionToken } from '../native-motion.ts';
 
 /** The controller and static catalog share this token contract. Values live in tokens.css. */
 export const caseStudyMotionTokens = [

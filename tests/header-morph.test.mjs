@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { advancePill, advancePillExit, nextPillState, pillDockOffset, pillDuration, pillExitDuration, pillExitY, pillReturnViewportBuffer, pillShape, pillLabels, pillGeometry } from '../src/scripts/header-morph-model.ts';
-const source = readFileSync(new URL('../src/scripts/header-morph.ts', import.meta.url), 'utf8');
+import { advancePill, advancePillExit, nextPillState, pillDockOffset, pillDuration, pillExitDuration, pillExitY, pillReturnViewportBuffer, pillShape, pillLabels, pillGeometry } from '../src/scripts/header-morph/header-morph-model.ts';
+const source = readFileSync(new URL('../src/scripts/header-morph/header-morph.ts', import.meta.url), 'utf8');
 const trigger = 520;
 const desktopSpacing = pillGeometry(1280, 218, 172, false);
 assert.equal(desktopSpacing.logoWidth, 44, 'Preserve the desktop logo click area');

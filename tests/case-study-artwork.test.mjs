@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { borrowHeroImage, reserveHeroImage, restoreHeroImage } from '../src/scripts/case-study-artwork.ts';
+import { borrowHeroImage, reserveHeroImage, restoreHeroImage } from '../src/scripts/case-study/case-study-artwork.ts';
 
 class Node {
   constructor(tagName, properties = {}, children = []) {

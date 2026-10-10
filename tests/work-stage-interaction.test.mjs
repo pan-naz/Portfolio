@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import ts from 'typescript';
 import { createNativeMotion, readMotionToken } from '../src/scripts/native-motion.ts';
-import { canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent } from '../src/scripts/work-stage-model.ts';
+import { canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent } from '../src/scripts/work-stage/work-stage-model.ts';
 
 // Run the real stage controller and native-motion lifecycle with a controllable
 // browser clock. Glyph measurement is covered separately by the reveal tests.
@@ -46,7 +46,7 @@ globalThis.workStageTestImports = {
     }));
   },
 };
-let runtime = readFileSync(new URL('../src/scripts/work-stage.ts', import.meta.url), 'utf8');
+let runtime = readFileSync(new URL('../src/scripts/work-stage/work-stage.ts', import.meta.url), 'utf8');
 runtime = runtime.replace(/^import .*;\n/gm, '');
 runtime = 'const { createNativeMotion, readMotionToken, sectionRevealEffects, canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent } = globalThis.workStageTestImports;\n' + runtime;
 runtime = ts.transpileModule(runtime, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { initialWorkFilter, matchesWorkFilter, workFilterHash } from '../src/scripts/work-filter.ts';
+import { initialWorkFilter, matchesWorkFilter, workFilterHash } from '../src/scripts/work-filter/work-filter.ts';
 
 const read = path => readFileSync(new URL(path, import.meta.url), 'utf8');
 assert.equal(matchesWorkFilter('selected', 'selected'), true);
@@ -40,7 +40,7 @@ assert.ok(!/\[aria-current\][^}]*\[aria-pressed='true'\][^{]*\{[^}]*padding-inli
 assert.ok(!/\[aria-current\][^{]*\{[^}]*background:/.test(css));
 console.log('PASS: real project filters, pressed semantics, live status and one shared push-dot navigation item.');
 
-const { arrangeProjectCards } = await import('../src/scripts/work-filter-model.ts');
+const { arrangeProjectCards } = await import('../src/scripts/work-filter/work-filter-model.ts');
 const { projects, collectionProjects } = await import('../src/data/portfolio.ts');
 const allProjects = [...projects, ...collectionProjects];
 assert.equal(projects.length, 3);

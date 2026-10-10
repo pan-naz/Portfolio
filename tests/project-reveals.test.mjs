@@ -5,7 +5,7 @@ import { tooltipFollowStep } from '../src/scripts/tool-card-tooltips.ts';
 
 const read = path => readFileSync(new URL(path, import.meta.url), 'utf8');
 const sectionReveals = read('../src/scripts/section-reveals.ts');
-const workStage = read('../src/scripts/work-stage.ts');
+const workStage = read('../src/scripts/work-stage/work-stage.ts');
 const motion = read('../src/scripts/motion.ts');
 const card = read('../src/components/ProjectCard.astro');
 const impact = read('../src/components/ImpactSection.astro');

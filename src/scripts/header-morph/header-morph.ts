@@ -1,5 +1,5 @@
 import { advancePill, advancePillExit, mix, nextPillState, pillDockOffset, pillExitY, pillGeometry, pillLabels, pillReturnViewportBuffer, pillShape } from './header-morph-model';
-import { createNativeMotion, readMotionToken, revealEffects } from './native-motion';
+import { createNativeMotion, readMotionToken, revealEffects } from '../native-motion';
 
 export function initializeHeaderMorph() {
   const header = document.querySelector<HTMLElement>('.site-header')!;

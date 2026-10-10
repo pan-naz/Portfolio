@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
-import { WaterfallSymbols } from '../src/scripts/waterfall-symbols.ts';
-import { streamStates, stretchedIconY, trailOpacity } from '../src/scripts/waterfall-model.ts';
-import { waterfallIconNodes, waterfallIconManifest } from '../src/scripts/waterfall-icon-data.ts';
+import { WaterfallSymbols } from '../src/scripts/waterfall/waterfall-symbols.ts';
+import { streamStates, stretchedIconY, trailOpacity } from '../src/scripts/waterfall/waterfall-model.ts';
+import { waterfallIconNodes, waterfallIconManifest } from '../src/scripts/waterfall/waterfall-icon-data.ts';
 
 const count = waterfallIconNodes.length;
 assert.equal(count, 1044);

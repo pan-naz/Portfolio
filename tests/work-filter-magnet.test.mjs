@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import ts from 'typescript';
-import { trackWorkFilterScroll, calculateWorkFilterMagnet, resolveWorkFilterSpringSpeed, resolveWorkFilterScrollSpeed, stepSpring } from '../src/scripts/work-filter-magnet.ts';
+import { trackWorkFilterScroll, calculateWorkFilterMagnet, resolveWorkFilterSpringSpeed, resolveWorkFilterScrollSpeed, stepSpring } from '../src/scripts/work-filter/work-filter-magnet.ts';
 import { readMotionToken } from '../src/scripts/native-motion.ts';
 
 const bounds = { left: 100, right: 280, top: 100, bottom: 256 };
@@ -118,10 +118,10 @@ globalThis.refreshViewportPointer = () => {};
 globalThis.watchViewportPointer = () => () => {};
 globalThis.readMotionToken = readMotionToken;
 Object.defineProperty(globalThis, 'performance', { value: { now: () => clock }, configurable: true });
-let runtime = readFileSync('src/scripts/work-filter-magnet.ts', 'utf8')
-  .replace("import { refreshViewportPointer, watchViewportPointer } from './viewport-pointer.ts';",
+let runtime = readFileSync('src/scripts/work-filter/work-filter-magnet.ts', 'utf8')
+  .replace("import { refreshViewportPointer, watchViewportPointer } from '../viewport-pointer.ts';",
     'const { refreshViewportPointer, watchViewportPointer } = globalThis;')
-  .replace("import { readMotionToken } from './native-motion.ts';", 'const { readMotionToken } = globalThis;');
+  .replace("import { readMotionToken } from '../native-motion.ts';", 'const { readMotionToken } = globalThis;');
 runtime = ts.transpileModule(runtime, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
 const { initializeWorkFilterMagnet } = await import(`data:text/javascript;base64,${Buffer.from(runtime).toString('base64')}`);
 const controller = initializeWorkFilterMagnet();

@@ -1,5 +1,5 @@
-import { refreshViewportPointer, watchViewportPointer, type ViewportPointer } from './viewport-pointer';
-import { waterfallIconSize } from './waterfall-constants';
+import { refreshViewportPointer, watchViewportPointer, type ViewportPointer } from '../viewport-pointer';
+import { waterfallIconSize } from '../waterfall/waterfall-constants';
 import type { FooterPile } from './footer-pile-model';
 import { pileBleed, pileAbove, pileCursorRadius } from './footer-pile-constants';
 

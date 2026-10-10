@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import ts from 'typescript';
-import { calculateWorkFilterMagnet, stepSpring } from '../src/scripts/work-filter-magnet.ts';
+import { calculateWorkFilterMagnet, stepSpring } from '../src/scripts/work-filter/work-filter-magnet.ts';
 
 class Events {
   listeners = new Map();

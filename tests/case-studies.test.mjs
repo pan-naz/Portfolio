@@ -86,7 +86,7 @@ for (const project of all) {
       assert.ok(html.includes(`id="hk-${section}"`), `Hooko includes the ${section} chapter`);
     }
     assert.ok(!html.includes('Draft case study'), 'Hooko is a complete case study');
-    assert.ok(html.includes('/projects/hooko-logo.svg'), 'Hooko uses the supplied SVG logo');
+    assert.ok(html.includes('/projects/hooko-case-study/hooko-logo.svg'), 'Hooko uses the supplied SVG logo');
     const videoSources = [...html.matchAll(/<source[^>]+data-src="([^"]+)"/g)].map(match => match[1]);
     assert.equal(videoSources.length, 2, 'Hooko includes the new hero recording and the original product-flow demo');
     assert.equal(videoSources[0], hookoHero.video.src);

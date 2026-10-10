@@ -3,7 +3,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { readMotionToken, revealEffects, parallelRevealEffects, motionEndTime } from '../src/scripts/native-motion.ts';
 import { heroIntroTiming } from '../src/scripts/hero-intro.ts';
 import { impactGroups } from '../src/data/portfolio.ts';
-import { readCaseStudyMotion, caseStudyMotionTokens, caseStudyPresentationTokens } from '../src/scripts/case-study-motion.ts';
+import { readCaseStudyMotion, caseStudyMotionTokens, caseStudyPresentationTokens } from '../src/scripts/case-study/case-study-motion.ts';
 
 const style = values => ({ getPropertyValue: name => values[name] ?? '' });
 for (const [value, expected] of [

@@ -1,6 +1,6 @@
-import { workCategories } from '../data/work-categories.ts';
+import { workCategories } from '../../data/work-categories.ts';
 import { arrangeProjectCards } from './work-filter-model.ts';
-import { readMotionToken } from './native-motion.ts';
+import { readMotionToken } from '../native-motion.ts';
 
 export type WorkFilter = 'selected' | 'websites' | 'misc';
 export const matchesWorkFilter = (filter: WorkFilter, category: string) => filter === category;

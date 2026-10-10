@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { initializeWorkFilter } from '../src/scripts/work-filter.ts';
+import { initializeWorkFilter } from '../src/scripts/work-filter/work-filter.ts';
 
 // Exercise the real filter controller with a controllable animation clock.
 class FakeElement extends EventTarget {

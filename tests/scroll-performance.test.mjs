@@ -103,9 +103,9 @@ window.scrollY = 0; window.innerWidth = 1440;
 globalThis.matchMedia = () => ({ matches: false, addEventListener() {} });
 globalThis.getComputedStyle = () => ({ top: '32px', getPropertyValue: () => '900' });
 globalThis.ResizeObserver = class { observe() {} };
-source = readFileSync('src/scripts/header-morph.ts', 'utf8')
-  .replace("'./header-morph-model'", JSON.stringify(new URL('../src/scripts/header-morph-model.ts', import.meta.url).href))
-  .replace("'./native-motion'", JSON.stringify(new URL('../src/scripts/native-motion.ts', import.meta.url).href))
+source = readFileSync('src/scripts/header-morph/header-morph.ts', 'utf8')
+  .replace("'./header-morph-model'", JSON.stringify(new URL('../src/scripts/header-morph/header-morph-model.ts', import.meta.url).href))
+  .replace("'../native-motion'", JSON.stringify(new URL('../src/scripts/native-motion.ts', import.meta.url).href))
   .replaceAll('import.meta.hot', 'undefined');
 const headerJs = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
 const { initializeHeaderMorph } = await import(`data:text/javascript;base64,${Buffer.from(headerJs).toString('base64')}`);

@@ -55,7 +55,7 @@ const originals = mockedNames.map(name => [name, Object.hasOwn(globalThis, name)
 let ServiceTiles;
 globalThis.HTMLElement = HostMock;
 globalThis.customElements = { get() {}, define(name, constructor) { assert.equal(name, 'case-study-service-tiles'); ServiceTiles = constructor; } };
-const { servicePopoverPosition } = await import('../src/scripts/case-study-service-tiles.ts');
+const { servicePopoverPosition } = await import('../src/scripts/case-study/case-study-service-tiles.ts');
 const grid = { left: 64, right: 1216, top: 200, bottom: 1640, width: 1152 };
 const bottomTile = { left: 928, right: 1216, top: 450, bottom: 738, width: 288 };
 const above = servicePopoverPosition(bottomTile, grid, { width: 360, height: 350 }, { width: 1280, height: 720 });
