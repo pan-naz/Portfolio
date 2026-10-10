@@ -3,7 +3,7 @@ import { readdirSync } from 'node:fs';
 import { componentManifest } from '../src/data/system-components.ts';
 import { dsComponents } from '../src/data/ds-components.ts';
 import { buildSystemInventory } from '../src/data/system-inventory.ts';
-import { validateComponentClassification } from '../scripts/validate-design-system.mjs';
+import { validateComponentClassification, validateRenderedComponentNames } from '../scripts/validate-design-system.mjs';
 const files = readdirSync('src/components').filter(file => file.endsWith('.astro')).map(file => `src/components/${file}`);
 const used = buildSystemInventory().components.map(item => item.file).concat(componentManifest.filter(item => item.kind !== 'reusable-ui').map(item => item.file));
 const shown = dsComponents.map(item => item.file);
@@ -15,3 +15,8 @@ assert.ok(check(componentManifest, shown.slice(1)).some(error => error.includes(
 assert.ok(check(componentManifest, [...shown, 'src/components/Hero.astro']).some(error => error.includes('Non-reusable')));
 assert.ok(check(componentManifest, shown, used.filter(file => file !== shown[0])).some(error => error.includes('unused reusable')));
 console.log('Classification rejects unclassified, duplicate, unused, missing and non-reusable entries.');
+
+const names = dsComponents.map(item => item.name);
+assert.deepEqual(validateRenderedComponentNames(names, names), []);
+for (const extra of ['Hero', 'Arrow', 'HookoCaseStudy', 'UnknownFixture']) assert.ok(validateRenderedComponentNames([...names,extra],names).some(error => error.includes('Non-reusable')));
+assert.ok(validateRenderedComponentNames(names.slice(1),names).some(error => error.includes('Missing')));

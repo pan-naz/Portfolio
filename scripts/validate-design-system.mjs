@@ -129,8 +129,12 @@ function validate(entries) {
   return errors;
 }
 const errors = validate(registry);
-errors.push(...validateComponentClassification(filesUnder('src/components').filter(file => file.endsWith('.astro')), [...new Set(websitePages.flatMap(page => [...componentsReachableFrom(page)]))].map(file => file.slice(root.length + 1)), componentManifest, registry.map(item => item.file)));
+errors.push(...validateComponentClassification(filesUnder('src/components').filter(file => /\.(astro|tsx|jsx|ts|js|vue|svelte)$/.test(file)), [...new Set(websitePages.flatMap(page => [...componentsReachableFrom(page)]))].map(file => file.slice(root.length + 1)), componentManifest, registry.map(item => item.file)));
 const inventory = buildSystemInventory(root);
+for (const entry of registry) if (!inventory.components.some(component => component.file === entry.file && component.usages.length)) errors.push(`Reusable UI has no rendered website consumer: ${entry.file}`);
+export function validateRenderedComponentNames(names, expected) {
+  return [...names.filter(name => !expected.includes(name)).map(name => `Non-reusable rendered component: ${name}`), ...expected.filter(name => !names.includes(name)).map(name => `Missing rendered reusable UI: ${name}`)];
+}
 export function validateVariantCoverage(model, documented) {
   const used = model.components.filter(component => isReusableComponent(component.file)).flatMap(component => componentVariants(component).map(variant => `${component.name}:${variant}`));
   return [...used.filter(value => !documented.includes(value)).map(value => `Undocumented website variant: ${value}`), ...documented.filter(value => !used.includes(value)).map(value => `Catalog-only variant: ${value}`)];

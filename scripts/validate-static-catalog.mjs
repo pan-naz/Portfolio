@@ -3,7 +3,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { dsComponents } from '../src/data/ds-components.ts';
 import { buildSystemInventory } from '../src/data/system-inventory.ts';
-import { validateInventoryCoverage, validateVariantCoverage } from './validate-design-system.mjs';
+import { validateInventoryCoverage, validateVariantCoverage, validateRenderedComponentNames } from './validate-design-system.mjs';
 const root = resolve(import.meta.dirname, '..');
 const read = path => readFileSync(resolve(root, path), 'utf8');
 const home = read('dist/index.html');
@@ -23,10 +23,16 @@ assert.equal((catalog.match(/<[^>]+role="tablist"/g) || []).length, dsComponents
 assert.equal((catalog.match(/<[^>]+role="tabpanel"/g) || []).length, dsComponents.length * 4, 'Each card has four panels');
 assert.equal((catalog.match(/<[^>]+role="tab"/g) || []).length, dsComponents.length * 4, 'Each card has four tabs');
 assert.ok(!catalog.includes('Not used'), 'Preview must contain only used combinations');
+for (const component of dsComponents) for (let index = 0; index < 4; index++) {
+  const tab = `${component.section}-tab-${index}`, panel = `${component.section}-panel-${index}`;
+  assert.ok(new RegExp(`id="${tab}"[^>]*aria-controls="${panel}"`).test(catalog), `Tab must control its own panel: ${tab}`);
+  assert.ok(new RegExp(`id="${panel}"[^>]*aria-labelledby="${tab}"`).test(catalog), `Panel must name its own tab: ${panel}`);
+}
 const ids = [...catalog.matchAll(/\bid="([^"]+)"/g)].map(([,id]) => id);
 assert.equal(new Set(ids).size, ids.length, 'Catalog IDs must remain unique');
 const inventory = buildSystemInventory(root);
 const documentedNames = [...new Set([...catalog.matchAll(/data-ds-component="([^"]+)"/g)].map(([, name]) => name))];
+assert.deepEqual(validateRenderedComponentNames(documentedNames, dsComponents.map(component => component.name)), []);
 const documentedPaths = inventory.components.filter(component => documentedNames.includes(component.name)).map(component => component.file);
 const documentedTokens = [...new Set([...catalog.matchAll(/data-ds-token="([^"]+)"/g)].map(([, name]) => name))];
 const documentedIcons = [...new Set([...catalog.matchAll(/data-ds-icon="([^"]+)"/g)].map(([, name]) => name))];

@@ -1,6 +1,7 @@
 ---
 import type { SourceComponent } from '../data/system-inventory';
 import { caseStudyMotionTokens, caseStudyPresentationTokens } from '../scripts/case-study/case-study-motion';
+import { componentStyleSpecs } from '../data/system-specs';
 import { componentVariants } from '../data/system-variants';
 import { documentationFor } from '../data/system-documentation';
 import { componentManifest } from '../data/system-components';
@@ -13,7 +14,8 @@ const entry = componentManifest.find(item => item.file === component.file)!;
 const id = `component-${component.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()}`;
 const transition = [...caseStudyMotionTokens, ...caseStudyPresentationTokens];
 const tokens = inventory.tokens.filter(token => component.tokens.includes(token.name));
-const helpers = [...component.source.matchAll(/import\s+(\w+)\s+from\s+['"][^'"]+\.astro['"]/g)].map(([,name]) => name);
+const sizeRules = componentStyleSpecs(component);
+const helpers = [...component.source.matchAll(/import\s+(\w+)\s+from\s+['"][^'"]+\.astro['"]/g)].map(([,name]) => name).concat([...component.source.matchAll(/import\s+\{([^}]+)\}\s+from\s+['"][^'"]+['"]/g)].flatMap(([,names]) => names.split(',').map(name => name.trim()).filter(name => !name.startsWith('type '))));
 const tabs = ['Preview', 'Specs', 'Usage', 'Code'];
 const code = component.usages.find(usage => !inventory.privateNames.some(name => usage.code.includes(`--${name}`)))?.code ?? component.file;
 ---
@@ -25,6 +27,7 @@ const code = component.usages.find(usage => !inventory.privateNames.some(name =>
     </div>
     <div class="ds-card-panel ds-preview" id={`${id}-panel-0`} role="tabpanel" aria-labelledby={`${id}-tab-0`} tabindex="0"><DSPreview component={component} /></div>
     <div class="ds-card-panel" id={`${id}-panel-1`} role="tabpanel" aria-labelledby={`${id}-tab-1`} tabindex="0" hidden>
+      <details><summary>Exact size & spacing declarations</summary><p>Read from shared source styles; file locations retain responsive and state context.</p><div class="ds-table-scroll"><table><thead><tr><th>Selector / source</th><th>Property</th><th>CSS value</th></tr></thead><tbody>{sizeRules.map(rule => <tr><th><code>{rule.selector}</code><br /><code>{rule.location}</code></th><td>{rule.property}</td><td><code>{rule.value}</code></td></tr>)}</tbody></table></div></details>
       <h4>Sizes, spacing & tokens</h4>
       <p>Values come from the component’s shared styles and follow the page theme.</p>
       <div class="ds-table-scroll"><table><thead><tr><th>Token</th><th>Light</th><th>Dark</th></tr></thead><tbody>{tokens.map(token => <tr ><th><code>{`--${token.name}`}</code></th><td>{token.resolvedLight}</td><td>{token.resolvedDark}</td></tr>)}</tbody></table></div>
