@@ -1,5 +1,6 @@
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
+import { validateHoverSource } from './validate-hover.mjs';
 import { hiddenDocumentation } from '../src/data/system-hidden-docs.ts';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -146,6 +147,7 @@ export function validateHiddenDocumentation(records, text) {
   return failures;
 }
 const errors = validate(registry);
+errors.push(...validateHoverSource(root));
 const externalDocs=resolve(root,'../docs/design-system.md');
 errors.push(...validateHiddenDocumentation(hiddenDocumentation,existsSync(externalDocs)?readFileSync(externalDocs,'utf8'):undefined));
 errors.push(...validateComponentClassification(filesUnder('src/components').filter(file => /\.(astro|tsx|jsx|ts|js|vue|svelte)$/.test(file)), [...new Set(websitePages.flatMap(page => [...componentsReachableFrom(page)]))].map(file => file.slice(root.length + 1)), componentManifest, visibleComponents.map(item => item.file)));

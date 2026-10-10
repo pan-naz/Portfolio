@@ -3,7 +3,10 @@
 .case-video-controls { position: absolute; z-index: var(--layer-raised); inset: auto var(--space-4) var(--space-4); display: flex; align-items: center; gap: var(--space-2); padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1); border-radius: var(--radius-pill); color: var(--color-text-primary); background: var(--color-bg-surface); box-shadow: var(--shadow-floating); opacity: 0; pointer-events: none; transition: opacity var(--duration-fast) ease-out; }
 .case-video-player[data-audio-controls] .case-video-controls { padding-inline-end: var(--space-1); }
 .case-video-controls[hidden], .case-video-controls [hidden] { display: none; }
-.case-video-player:is(:hover, :has(:focus-visible), [data-seeking]) .case-video-controls { opacity: 1; pointer-events: auto; }
+@media (hover: hover) and (pointer: fine) {
+.case-video-player:is(:hover) .case-video-controls { opacity: 1; pointer-events: auto; }
+}
+.case-video-player:is(:has(:focus-visible), [data-seeking]) .case-video-controls { opacity: 1; pointer-events: auto; }
 .case-video-seek { position: relative; min-width: 0; flex: 1; }
 .case-video-seek input { display: block; appearance: none; -webkit-appearance: none; width: 100%; height: 44px; margin: 0; background: transparent; cursor: pointer; touch-action: none; }
 .case-video-seek input::-webkit-slider-runnable-track { height: 4px; border-radius: var(--radius-pill); background: linear-gradient(to right, var(--color-interactive-accent) var(--video-progress, 0%), var(--color-border-default) var(--video-progress, 0%)); }
@@ -24,5 +27,4 @@
 @media (max-width: 600px) { .case-video-controls { inset: auto var(--space-2) var(--space-2); gap: var(--space-2); } }
 @media (max-width: 600px) { .case-video-player[data-audio-controls] .case-video-time { display: none; } }
 @media (prefers-reduced-motion: reduce) { .case-video-controls { transition: none; } }
-
 }
