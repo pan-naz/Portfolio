@@ -1,0 +1,25 @@
+---
+import { getIcon, type IconName } from '../data/icons';
+import Icon from './Icon.astro';
+import { profile } from '../data/portfolio';
+interface Props { inventory: ReturnType<typeof import('../data/system-inventory').buildSystemInventory>; }
+const { inventory } = Astro.props;
+const categories = [['color','Color'],['typography','Typography'],['spacing','Spacing'],['shape','Radius & elevation'],['layout','Layout'],['motion','Motion'],['iconography','Iconography']] as const;
+const roleName = (name: string) => name.replace(/^color-/, '').replaceAll('-', '/');
+const rows = (category: string) => inventory.tokens.filter(token => token.category === category && !token.owner);
+const weight = (name: IconName) => getIcon(name).weight === 'strong' ? 'icon-stroke-strong' : 'icon-stroke-regular';
+const typeStyles = ['text-heading-xl','text-heading-l','text-body-l','text-body-m','text-body-m-strong','text-body-s'];
+---
+{categories.map(([category, label]) => <section id={category} class="ds-section" aria-labelledby={`${category}-title`}>
+  <header class="ds-heading"><h2 id={`${category}-title`}>{label}</h2></header>
+  {category === 'color' && <p>Use primary text for essential content and secondary text for supporting details. Canvas and surface roles define the page and its contained areas. Component-specific colours are listed with their component.</p>}
+  {category === 'typography' && <p>The website’s text styles share the same local font families and responsive sizes.</p>}
+  {category === 'typography' && <div class="ds-type-list">{typeStyles.map(style => <div><code>{style}</code><p class={style}>{profile.name}</p></div>)}</div>}
+  {category === 'spacing' && <p>Use the named spacing steps instead of adding a separate scale.</p>}
+  {category === 'shape' && <p>Use the existing radius and elevation for the role. Original artwork keeps its own appearance.</p>}
+  {category === 'layout' && <p>Follow the website’s content widths, gutters and stacking rules.</p>}
+  {category === 'motion' && <p>Motion shows a change or helps readers follow content. Reduced motion removes travel, delay and repeated movement.</p>}
+  {category === 'iconography' && <ul class="ds-icon-grid">{inventory.iconNames.map(name => <li data-ds-icon={name}><Icon name={name as IconName} /><span>{name}</span><code>{`--${weight(name as IconName)}`}</code><span>{inventory.palettes.light[weight(name as IconName)]}</span></li>)}</ul>}
+  <div class="ds-table-scroll"><table><thead><tr><th>Role</th><th>Token</th><th>Light</th><th>Dark</th><th>Tier</th></tr></thead><tbody>{rows(category).map(token => <tr id={`token-${token.name}`} data-ds-token={token.name}><th>{roleName(token.name)}</th><td><code>{`--${token.name}`}</code></td><td>{token.resolvedLight}</td><td>{token.resolvedDark}</td><td>{token.tier}</td></tr>)}</tbody></table></div>
+  {category === 'color' && <details class="ds-implementation"><summary>Surface hierarchy</summary><p>Canvas is the page background. Surface contains content. Subtle surface separates supporting areas. Inverse roles support chapters with a different background.</p></details>}
+</section>)}

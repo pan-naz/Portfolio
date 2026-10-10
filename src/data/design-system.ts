@@ -1,5 +1,8 @@
+import { dsComponents } from './ds-components.ts';
 export const dsGroups = [
-  { label: 'Foundations', links: [['colors', 'Color'], ['typography', 'Typography'], ['shape', 'Space & shape'], ['motion', 'Motion']] },
-  { label: 'Components', links: [['icons', 'Icon'], ['tags', 'Chip & label'], ['buttons', 'Button'], ['text-links', 'Text link'], ['project-identity', 'Logo'], ['cards', 'Project card'], ['navigation', 'Navigation'], ['section-heading', 'Section header'], ['stats', 'Stat'], ['timeline', 'Timeline row']] },
-  { label: 'Modes', links: [['dark-mode', 'Dark mode']] },
-] as const;
+  { label: 'Overview', links: [['overview', 'Overview']] },
+  { label: 'Foundations', links: [['color', 'Color'], ['typography', 'Typography'], ['spacing', 'Spacing'], ['shape', 'Radius & elevation'], ['layout', 'Layout'], ['motion', 'Motion'], ['iconography', 'Iconography']] },
+  { label: 'Components', links: dsComponents.map(component => [component.section, component.name]) },
+  { label: 'Patterns', links: [['case-study-transition', 'Case-study transition'], ['floating-header', 'Floating header'], ['work-filter', 'Work filter']] },
+  { label: 'Guidelines', links: [['accessibility', 'Accessibility'], ['writing', 'Writing']] },
+];

@@ -50,8 +50,8 @@ assert.ok(read('../src/components/TypewriterHeading.astro').includes('hero-title
 assert.ok(read('../src/components/TypewriterHeading.astro').includes('type-line type-line--display'), 'Permanent display line uses the shared optical-alignment hook');
 assert.ok(/\.type-line--display,\s*\.role-cycle\s*\{[^}]*translateX\(-\.06em\)/.test(global), 'Display and cycling lines share the same responsive optical edge');
 assert.ok(read('../src/components/TypewriterHeading.astro').includes('type-line text-heading-l role-cycle'), 'Cycling text uses the shared heading size and accent role');
-const ds = read('../src/components/DSCatalog.astro');
+const ds = read('../src/components/DSFoundations.astro');
 for (const role of ['text-heading-xl', 'text-heading-l', 'text-body-l', 'text-body-m', 'text-body-m-strong', 'text-body-s']) assert.ok(ds.includes(`'${role}'`), 'Catalog typography data uses shared type classes');
 assert.ok(!ds.includes('Body/S Strong') && !global.includes('text-body-s-strong'), 'Retired Body/S Strong naming cannot drift back into the shared system');
-assert.ok(ds.includes('class={style}'), 'Catalog renders the shared type class from its specimen data');
+assert.ok(ds.includes('class={style}'), 'Catalog renders the shared type class from its source-derived specimen data');
 console.log('PASS: shared 40/26 → 88/56 Figma scale, minimum 20% steps, 320–2560px and 100–200% font preferences.');

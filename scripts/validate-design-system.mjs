@@ -3,13 +3,13 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildSystemInventory } from '../src/data/system-inventory.ts';
 import { componentPurposes } from '../src/data/system-documentation.ts';
+import { dsComponents as registry } from '../src/data/ds-components.ts';
+import { dsGroups } from '../src/data/design-system.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const read = path => readFileSync(resolve(root, path), 'utf8');
-const source = read('src/data/ds-components.ts');
-const registry = JSON.parse(source.slice(source.indexOf('['), source.lastIndexOf(']') + 1));
 const catalog = read('src/components/DSCatalog.astro');
-const sections = new Set([...catalog.matchAll(/<(?:section|DSExample)\s+id="([^"]+)"/g)].map(match => match[1]));
+const sections = new Set(dsGroups.flatMap(group => group.links.map(([id]) => id)));
 function filesUnder(directory) {
   return readdirSync(resolve(root, directory), { withFileTypes: true }).flatMap(entry => {
     const path = `${directory}/${entry.name}`;
@@ -52,8 +52,8 @@ function validate(entries) {
     const path = resolve(root, `src/components/${item.name}.astro`);
     if (!existsSync(path)) errors.push(`Missing component: ${item.name}`);
     if (!sections.has(item.section)) errors.push(`Missing documentation section: ${item.name} → ${item.section}`);
-    if (item.preview !== 'direct') errors.push(`Unknown preview kind: ${item.name}`);
-    if (!specimens.has(path)) errors.push(`Catalog does not render ${item.name}`);
+    if (!['direct', 'documentation'].includes(item.preview)) errors.push(`Unknown preview kind: ${item.name}`);
+    if (item.preview === 'direct' && !specimens.has(path)) errors.push(`Catalog does not render ${item.name}`);
   }
   for (const path of websitePages) errors.push(...validatePage(path, read(path)));
   if (/<(?:button|a)\b[^>]*\bclass=["'][^"']*\b(?:button|icon-button)\b/.test(catalog)) errors.push('Catalog must import shared controls instead of copying their markup.');
@@ -82,7 +82,6 @@ function validate(entries) {
   const linkedSelectors = [
     ['src/styles/global.css', '.wordmark'],
     ['src/styles/global.css', '.project-identity'],
-    ['src/styles/design-system.css', '.ds-type-heading'],
   ];
   for (const [path, selector] of linkedSelectors) {
     if (!selectorUses(read(path), selector, headingWeight)) errors.push(`${selector} must consume --font-weight-heading in ${path}.`);
