@@ -7,6 +7,8 @@ const root = resolve(import.meta.dirname, '..');
 const read = path => readFileSync(resolve(root, path), 'utf8');
 const home = read('dist/index.html');
 const catalog = read('dist/design-system/index.html');
+assert.equal((catalog.match(/class="[^"]*\btheme-toggle(?=[\s"])/g) || []).length, 1, 'Catalog must use exactly one shared theme control');
+assert.equal((catalog.match(/\bdata-theme=/g) || []).length, 1, 'Every specimen must follow the page theme');
 assert.ok(/data-static/.test(catalog), 'The catalog opts into static styles');
 assert.ok(!/data-static/.test(home), 'Website must not enter static mode');
 const styles = html => [...html.matchAll(/<link[^>]*href="([^"]+\.css)"[^>]*>/g)].map(([,path]) => read('dist' + path)).concat([...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map(([,css]) => css)).join('\n');

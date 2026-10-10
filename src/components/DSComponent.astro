@@ -20,6 +20,7 @@ const { component, inventory } = Astro.props;
 const doc = documentationFor(component);
 const id = `component-${component.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()}`;
 const variantsHavePreview = ['Button','Chip','NavigationItem','IconButton'].includes(component.name);
+const inlinePreview = ['Icon','TextLink','Logo','Arrow','Stat','TimelineRow','ProjectIdentity','ProjectTags'].includes(component.name);
 const anatomyParts = [...new Set([...component.source.matchAll(/(?:class="|['"])([a-z][\w-]*(?:__|--|-)[\w-]+)['"]/g)].map(([, part]) => part))].filter(part => !part.startsWith('text-') && !part.startsWith('font-'));
 const tokens = inventory.tokens.filter(token => component.tokens.includes(token.name));
 const code = component.usages.find(usage => !inventory.privateNames.some(name => usage.code.includes(`--${name}`)))?.code ?? component.source.match(/interface Props[^\{]*\{[\s\S]*?\}/)?.[0] ?? component.file;
@@ -27,7 +28,7 @@ const code = component.usages.find(usage => !inventory.privateNames.some(name =>
 <section id={id} class="ds-section ds-component" data-ds-component={component.name} aria-labelledby={`${id}-title`}>
   <header class="ds-heading"><h2 id={`${id}-title`}>{component.name}</h2></header>
   <h3>Purpose</h3><p>{doc.purpose}</p>
-  <div class:list={['ds-example-preview', component.name === 'TimelineRow' && 'ds-context-inverse']} inert hidden={variantsHavePreview}>
+  {inlinePreview && <div class:list={['ds-example-preview', component.name === 'TimelineRow' && 'ds-context-inverse']} inert>
     {component.name === 'Button' && <Button arrow="up">{component.usages.find(use => use.props.arrow === 'up')?.label || profile.name}</Button>}
     {component.name === 'Chip' && <Chip label={projects[0].tags[0]} />}
     {component.name === 'Icon' && <Icon name="arrow" />}
@@ -40,7 +41,8 @@ const code = component.usages.find(usage => !inventory.privateNames.some(name =>
     {component.name === 'ProjectIdentity' && <ProjectIdentity title={projects[0].title} />}
     {component.name === 'ProjectTags' && <ProjectTags tags={projects[0].tags} />}
     {component.name === 'NavigationItem' && <NavigationItem label="Work" href="/#work" />}
-  </div>
+  </div>}
+  {component.name === 'ThemeToggle' && <p>Use the theme control in this page’s navigation to try both themes.</p>}
   <h3>Anatomy</h3>
   {component.props.length ? <div class="ds-table-scroll"><table><thead><tr><th>Part or input</th><th>Required</th></tr></thead><tbody>{component.props.map(prop => <tr><th>{prop.name}</th><td>{prop.optional ? 'Optional' : 'Required'}</td></tr>)}</tbody></table></div> : <p>Uses the supplied content and the shared layout for this role.</p>}
   {anatomyParts.length > 0 && <details><summary>Named parts</summary><ul>{anatomyParts.map(part => <li><code>{part}</code></li>)}</ul></details>}

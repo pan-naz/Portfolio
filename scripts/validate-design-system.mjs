@@ -57,7 +57,10 @@ function validate(entries) {
   }
   for (const path of websitePages) errors.push(...validatePage(path, read(path)));
   if (/<(?:button|a)\b[^>]*\bclass=["'][^"']*\b(?:button|icon-button)\b/.test(catalog)) errors.push('Catalog must import shared controls instead of copying their markup.');
-  if (read('src/layouts/DSLayout.astro').includes('<script')) errors.push('Static DS layout must not load website scripts.');
+  const layout = read('src/layouts/DSLayout.astro');
+  const modules = [...layout.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(([, body]) => body.trim());
+  if (modules.length !== 1 || modules[0] !== "import '../scripts/theme';") errors.push('Catalog layout may load only the shared theme controller.');
+  if (/scripts\/(?:home|hero|footer|work|case-study)/.test(layout)) errors.push('Catalog must not load website animation controllers.');
   errors.push(...validatePage('src/pages/design-system.astro', read('src/pages/design-system.astro')));
   const navigation = read('src/data/design-system.ts');
   for (const [,id] of navigation.matchAll(/\['([\w-]+)',\s*'[^']+'\]/g)) {

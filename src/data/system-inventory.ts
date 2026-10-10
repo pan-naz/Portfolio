@@ -77,7 +77,7 @@ export function buildSystemInventory(root = process.cwd()) {
         const tail = text.replace(/<style\b[^>]*>[\s\S]*?<\/style>/g, '').slice((match.index || 0) + match[0].length);
         const inner = match[0].endsWith('/>') ? '' : tail.slice(0, tail.indexOf(`</${local}>`)).trim();
         const label = inner && /^[^<{}]+$/.test(inner) ? inner : undefined;
-        usages.push({ file: relative(root, caller), props, code: match[0], label });
+        usages.push({ file: relative(root, caller), props, code: match[0].endsWith('/>') ? match[0] : `${match[0]}${inner}</${local}>`, label });
       }
     }
     const propsBlock = source.match(/interface Props[^\{]*\{([\s\S]*?)\}/)?.[1] || '';

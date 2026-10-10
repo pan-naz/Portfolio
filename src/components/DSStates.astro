@@ -11,7 +11,7 @@ const { component } = Astro.props;
 const states = component.name === 'NavigationItem' ? ['default','hover','active','focus'] : ['default','hover','focus','pressed'];
 const title = (value: string) => value[0].toUpperCase() + value.slice(1);
 const buttonUses = component.usages.map(({props}) => ({ size: props.size || 'large', variant: props.variant || 'primary', arrow: props.arrow || 'none', appearance: props.appearance || 'default' }));
-const buttonLabel = component.usages.find(use => use.props.arrow === 'up')?.label || component.usages.find(use => use.label)?.label || profile.name;
+const buttonLabel = component.usages.find(use => use.props.arrow === 'up' && use.label)?.label || component.usages.find(use => use.label)?.label || profile.name;
 const chipVariants = [...new Set(component.usages.map(({props}) => props.variant || 'tag'))];
 ---
 {component.name === 'Button' && <div class="ds-matrix-scroll"><table class="ds-matrix"><caption>Website combinations and states</caption><thead><tr><th>Variant</th>{states.map(state => <th>{title(state)}</th>)}</tr></thead><tbody>{(['primary','secondary'] as const).flatMap(variant => (['large','small'] as const).flatMap(size => (['none','up'] as const).map(arrow => {
