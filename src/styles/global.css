@@ -22,7 +22,7 @@ a[href] { cursor: pointer; }
 /* Low specificity preserves component pills and card radii, while otherwise
    unshaped controls still receive a rounded keyboard-focus outline. */
 :where(button, a, summary, input, select, textarea, [tabindex]:not([tabindex='-1'])) { border-radius: var(--radius-small); }
-:where(button, a, summary, input, select, textarea, [tabindex]):focus-visible, .hit-target--padded:focus-visible > .hit-target-content { outline: 2px solid var(--focus-ring); outline-offset: 4px; }
+:where(button, a, summary, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 4px; }
 /* Canvas separation keeps card focus visible over either Work background. */
 .project-surface:focus-visible { box-shadow: 0 0 0 calc(var(--space-1) + 2px) var(--color-bg-canvas); }
 /* Safari treats dialog autofocus/return as focus-visible even after a tap.

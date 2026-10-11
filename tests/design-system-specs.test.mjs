@@ -1,19 +1,42 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
-import { buildSystemInventory } from '../src/data/system-inventory.ts';
-import { componentStyleSpecs } from '../src/data/system-specs.ts';
-const button=buildSystemInventory().components.find(item=>item.name==='Button');
-const rows=componentStyleSpecs(button);
-assert.ok(rows.some(row=>row.selector.includes('.button--small')&&row.property==='min-height'&&row.value==='36px'), 'Literal small size must be documented along with tokens');
-assert.ok(rows.some(row=>row.value.includes('var(--control-height)')), 'Shared dimensions retain their source token');
-assert.ok(rows.every(row=>!row.location.includes('-case-study.css')), 'Project brand sheets cannot contribute UI specifications');
-const root=mkdtempSync(join(tmpdir(),'folio-ds-specs-'));
-try {
- mkdirSync(join(root,'src/styles'),{recursive:true});
- writeFileSync(join(root,'src/styles/global.css'),'.button { min-height: 48px; }');
- writeFileSync(join(root,'src/styles/brand.css'),'/* Project-only: Fixture brand styles, not part of the design system */\n.button { min-height: 999px; }');
- assert.deepEqual(componentStyleSpecs(button,root).map(row=>row.value),['48px']);
-} finally {rmSync(root,{recursive:true,force:true});}
-console.log('Size specs include shared literals and exclude project-owned declarations.');
+import { readFileSync } from 'node:fs';
+import vm from 'node:vm';
+import ts from 'typescript';
+import { componentPresentation } from '../src/data/system-presentation.ts';
+
+// Exercise the live catalog's computed-style reader, not the retired CSS table.
+const source = readFileSync('src/scripts/design-system.ts', 'utf8');
+const ast = ts.createSourceFile('design-system.ts', source, ts.ScriptTarget.Latest, true);
+const declarations = ast.statements.filter(ts.isVariableStatement).flatMap(statement => [...statement.declarationList.declarations]);
+const needed = ['hex', 'readable', 'refreshValues'].map(name => {
+  const declaration = declarations.find(declaration => declaration.name.getText(ast) === name);
+  assert.ok(declaration, `Live catalog reader ${name} exists`);
+  return `const ${declaration.getText(ast)};`;
+});
+const rows = componentPresentation.Button.columns.flatMap(column => column.rows).filter(row => row.selector);
+const nodes = rows.map(row => ({ dataset: { dsMeasure: row.selector, properties: row.properties }, textContent: '' }));
+const large = { values: { 'min-height': '88.125px', 'font-size': '15.666px', 'font-weight': '500' } };
+const small = { values: { 'min-height': '36.25px', 'font-size': '14px' } };
+const samples = new Map([['.ds-specimens .button--large', large], ['.ds-specimens .button--small', small]]);
+const queries = [];
+const view = {
+  hidden: false,
+  append() {},
+  querySelectorAll(selector) { return selector === '[data-ds-measure]' ? nodes : []; },
+  querySelector(selector) { queries.push(selector); return samples.get(selector); },
+};
+const context = vm.createContext({
+  views: [view],
+  document: { createElement: () => ({ style: {}, remove() {} }), querySelector: () => { throw Error('Specs must read their own specimen, never unrelated project artwork'); } },
+  getComputedStyle: sample => ({ getPropertyValue: property => sample.values[property] || '' }),
+});
+vm.runInContext(ts.transpileModule(needed.join('\n') + '\nglobalThis.refresh = refreshValues;', { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText, context);
+context.refresh();
+assert.deepEqual(nodes.map(node => node.textContent), ['88.13px · 15.67px · Medium', '36.25px · 14px']);
+assert.deepEqual(queries, [...samples.keys()], 'Spec sizes are read within the active component view');
+large.values['min-height'] = '64px'; small.values['font-size'] = '13.333px';
+context.refresh();
+assert.deepEqual(nodes.map(node => node.textContent), ['64px · 15.67px · Medium', '36.25px · 13.33px'], 'Responsive/theme refresh reads current values, not a frozen table');
+const catalog = readFileSync('dist/design-system/index.html', 'utf8');
+for (const row of rows) assert.ok(catalog.includes(`data-ds-measure="${row.selector}" data-properties="${row.properties}"`), 'The compiled catalog connects its specs to the live reader');
+console.log('Live catalog specs read scoped computed sizes, named weights and responsive updates from their actual specimens.');
