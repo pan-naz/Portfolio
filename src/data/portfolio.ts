@@ -19,15 +19,22 @@ import { sternfitHero, sternfitDescription, sternfitTags } from './team-sternfit
 
 // Profile contact details retained from the supplied resume; homepage copy from Figma.
 // See ../../../docs/copy.md for sources, editorial decisions and deliberately omitted claims.
+const profileLinks = [
+  'https://www.linkedin.com/in/nazariypankiv/',
+  'https://www.behance.net/NazariyPankiv',
+  'https://dribbble.com/NazariyPankiv',
+];
 export const profile = {
   name: 'Nazarii Pankiv',
+  alternateNames: ['Nazariy Pankiv', 'Nazar Pankiv'],
+  sameAs: profileLinks,
   brand: 'naz.wtf',
   title: 'Product Designer',
   email: 'nazariosnz@gmail.com',
-  linkedin: 'https://www.linkedin.com/in/nazariypankiv/',
+  linkedin: profileLinks[0],
   approach: 'Understand how people work. Map the problem, test the idea and refine the interaction. Then build the systems that help a product grow—from the first useful experience to the details people use every day.',
   biography: 'I’ve led design at DataGPT and Voximplant, working across web, mobile and enterprise SaaS. My practice brings together UX research, interaction design and design systems—from early discovery to delivery. Alongside hands-on design, I’ve hired designers, shaped teams and helped bring B2B products from idea to launch.',
-  description: 'Nazarii Pankiv — product designer in SaaS, UX research and design systems. Previously Design Lead at DataGPT and Head of Design at Voximplant.',
+  description: 'Product designer in SaaS, UX research and design systems. Lead Product Designer at DataGPT, previously at Voximplant.',
 };
 
 export interface Project {

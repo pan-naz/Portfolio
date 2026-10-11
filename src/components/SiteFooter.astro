@@ -1,5 +1,6 @@
 ---
 import Button from './Button.astro';
+import { profile } from '../data/portfolio';
 import Icon from './Icon.astro';
 import { waterfallIconNodes } from '../scripts/waterfall/waterfall-icon-data';
 import { waterfallIconSize } from '../scripts/waterfall/waterfall-constants';
@@ -18,7 +19,7 @@ const definitions = [...new Set([...desktop.icons, ...mobile.icons].map(icon => 
 const position = (icon: typeof desktop.icons[number], width: number) => ({ x: `calc(50% + ${icon.x - width / 2 - waterfallIconSize / 2}px)`, y: `${-icon.y - waterfallIconSize / 2}px`, angle: `${icon.angle}rad` });
 ---
 <footer class="footer container">
-  <p>© {new Date().getFullYear()} naz</p><p>Ivano-Frankivsk</p><Button href="/design-system/" variant="secondary" size="small" arrow="up">Design system</Button>
+  <p>© {new Date().getFullYear()} {profile.name}</p><p>Ivano-Frankivsk</p><Button href="/design-system/" variant="secondary" size="small" arrow="up">Design system</Button>
   <div class="footer-icon-pile-layer" aria-hidden="true" style={`--pile-icon-size:${waterfallIconSize}px;--pile-height:${pilePreviewHeight}px;--pile-bleed:${pileBleed}px;--pile-above:${pileAbove}px`}>
     <div class="footer-icon-pile" data-footer-pile>
       <Icon definitions={definitions} style="position:absolute;width:0;height:0;overflow:hidden" />
