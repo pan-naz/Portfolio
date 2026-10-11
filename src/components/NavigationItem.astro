@@ -20,12 +20,12 @@ const {
 const classes = ['navigation-item', 'text-body-m-strong', { 'navigation-item--mobile': layout === 'mobile' }];
 ---
 {href ? (
-  <a class:list={classes} href={href}>
+  <a class:list={classes} href={href} tabindex="0">
     <span class="navigation-item-indicator" aria-hidden="true"></span>
     <span class="navigation-item-label">{label}</span>
   </a>
 ) : (
-  <button class:list={classes} type="button" data-work-filter={filter} aria-controls={controls} aria-pressed={pressed ? 'true' : 'false'}>
+  <button class:list={classes} type="button" tabindex="0" data-work-filter={filter} aria-controls={controls} aria-pressed={pressed ? 'true' : 'false'}>
     <span class="navigation-item-indicator" aria-hidden="true"></span>
     <span class="navigation-item-label">{label}</span>
   </button>

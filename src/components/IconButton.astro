@@ -6,6 +6,6 @@ interface Props extends HTMLAttributes<'button'> { label: string; href?: string;
 const { label, href, icon, class: className, ...attributes } = Astro.props;
 const Tag = href ? 'a' : 'button';
 ---
-<Tag type={href ? undefined : "button"} href={href} {...attributes} class:list={['icon-button', className]} aria-label={label}>
+<Tag type={href ? undefined : "button"} href={href} {...attributes} tabindex={attributes.tabindex ?? 0} class:list={['icon-button', className]} aria-label={label}>
   {icon ? <Icon name={icon} /> : <slot />}
 </Tag>
