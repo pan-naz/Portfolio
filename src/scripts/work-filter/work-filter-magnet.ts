@@ -83,8 +83,9 @@ export function stepSpring(spring: Spring, seconds: number, speed: number) {
 
 export function initializeWorkFilterMagnet() {
   const menu = document.querySelector<HTMLElement>('.work-rail .section-navigation');
-  if (!menu || document.documentElement.dataset.workStageLayout !== 'true') return;
-  const capability = matchMedia('(min-width: 1024px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
+  if (!menu) return;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const enabled = () => document.documentElement.dataset.workStageLayout === 'true' && !reduced.matches;
   const controller = new AbortController();
   const signal = controller.signal;
   const x: Spring = { value: 0, velocity: 0, target: 0 };
@@ -144,7 +145,7 @@ export function initializeWorkFilterMagnet() {
   };
   menu.dataset.magnetReady = 'true';
   const unwatch = watchViewportPointer(pointer => {
-    if (!pointer.active || !capability.matches || paused || menu.closest('[hidden], [inert]')) {
+    if (!pointer.active || !enabled() || paused || menu.closest('[hidden], [inert]')) {
       pointerInside = false;
       returnHome();
       return;
@@ -168,7 +169,7 @@ export function initializeWorkFilterMagnet() {
     scrollFrame = 0;
     const delta = pendingScrollDelta;
     pendingScrollDelta = 0;
-    if (!delta || !capability.matches || paused) return;
+    if (!delta || !enabled() || paused) return;
     const nextTop = restingTop();
     if (trackWorkFilterScroll(followY, lastRestingTop, nextTop, delta, scrollLag, stickyTop)) {
       lastScrollTime = pendingScrollTime;
@@ -182,7 +183,7 @@ export function initializeWorkFilterMagnet() {
     const scrollY = window.scrollY;
     const delta = scrollY - lastScrollY;
     lastScrollY = scrollY;
-    if (!delta || !capability.matches || paused) return;
+    if (!delta || !enabled() || paused) return;
     pendingScrollTime = performance.now();
     pendingScrollDelta += delta;
     if (!scrollFrame) scrollFrame = requestAnimationFrame(updateFollow);
@@ -199,7 +200,8 @@ export function initializeWorkFilterMagnet() {
     lastScrollTime = -Infinity;
     refreshViewportPointer();
   };
-  capability.addEventListener('change', resetCapability, { signal });
+  reduced.addEventListener('change', resetCapability, { signal });
+  window.addEventListener('workstagelayoutchange', resetCapability, { signal });
   window.addEventListener('resize', resetCapability, { passive: true, signal });
   const destroy = () => {
     cancelAnimationFrame(scrollFrame);

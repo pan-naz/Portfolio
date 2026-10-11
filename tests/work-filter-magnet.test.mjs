@@ -109,7 +109,7 @@ globalThis.document = { documentElement: { dataset: { workStageLayout: 'true' } 
 globalThis.window = { scrollY: 1000,
   addEventListener: (name, callback) => events.set(name, callback) };
 let capabilityChanged;
-const capability = { matches: true, addEventListener: (name, callback) => { if (name === 'change') capabilityChanged = callback; } };
+const capability = { matches: false, addEventListener: (name, callback) => { if (name === 'change') capabilityChanged = callback; } };
 globalThis.matchMedia = () => capability;
 globalThis.getComputedStyle = () => ({ getPropertyValue: name => name === 'top' ? '300px' : '' });
 globalThis.requestAnimationFrame = callback => { jobs.set(++nextJob, callback); return nextJob; };
@@ -166,10 +166,25 @@ window.scrollY++; events.get('scroll')();
 clock += 16.667;
 const center = [...jobs.values()]; jobs.clear(); center.forEach(callback => callback(clock));
 assert.equal(translationY(), 0, 'Scrolling through the centered sticky region adds no spring movement');
-capability.matches = false;
+capability.matches = true;
 capabilityChanged();
 assert.equal(translationY(), 0, 'Reduced-motion or compact-layout changes immediately restore sticky alignment');
 assert.equal(jobs.size, 0, 'Disabling the desktop capability cancels pending follow frames');
 window.scrollY--; events.get('scroll')();
 assert.equal(jobs.size, 0, 'Native touch/compact/reduced-motion scrolling has no follower');
 controller.destroy();
+
+capability.matches = false;
+delete document.documentElement.dataset.workStageLayout;
+const compactController = initializeWorkFilterMagnet();
+assert.ok(compactController, 'A compact startup retains its responsive controller');
+window.scrollY--; events.get('scroll')();
+assert.equal(jobs.size, 0);
+document.documentElement.dataset.workStageLayout = 'true';
+events.get('workstagelayoutchange')();
+window.scrollY--; events.get('scroll')();
+assert.equal(jobs.size, 1, 'The shared layout change enables desktop physics after a compact startup');
+delete document.documentElement.dataset.workStageLayout;
+events.get('workstagelayoutchange')();
+assert.equal(jobs.size, 0, 'Leaving floating layout cancels physics immediately');
+compactController.destroy();

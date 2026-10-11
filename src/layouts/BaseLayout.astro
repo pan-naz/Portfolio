@@ -37,17 +37,34 @@ const searchDescription = Astro.url.pathname === '/'
             }
           }), { once: true });
         }
-        const desktopStage = matchMedia('(hover: hover)').matches
-          && matchMedia('(pointer: fine)').matches
-          && navigator.maxTouchPoints === 0;
-        if (!desktopStage) return;
-        document.documentElement.dataset.workStageLayout = 'true';
-        const canShift = !reduced;
-        if (!canShift) return;
-        document.documentElement.dataset.workStageMotion = 'true';
+        const root = document.documentElement;
+        const pointer = matchMedia('(hover: hover) and (pointer: fine)');
+        const wide = matchMedia('(min-width: 1024px)');
+        const motion = matchMedia('(prefers-reduced-motion: reduce)');
+        const updateWorkLayout = () => {
+          const precise = pointer.matches && navigator.maxTouchPoints === 0;
+          // Preserve existing copy/preview coordinates independently of the
+          // floating layout. Only the shared stage flag permits inset surfaces.
+          if (precise) root.dataset.workPreviewLayout = 'true';
+          else delete root.dataset.workPreviewLayout;
+          const floating = precise && wide.matches;
+          if (floating) root.dataset.workStageLayout = 'true';
+          else delete root.dataset.workStageLayout;
+          if (floating && !motion.matches) root.dataset.workStageMotion = 'true';
+          else delete root.dataset.workStageMotion;
+          dispatchEvent(new Event('workstagelayoutchange'));
+        };
+        updateWorkLayout();
+        const lifecycle = new AbortController();
+        for (const query of [pointer, wide, motion]) {
+          query.addEventListener('change', updateWorkLayout, { signal: lifecycle.signal });
+        }
+        addEventListener('pagehide', event => {
+          if (!event.persisted) lifecycle.abort();
+        }, { signal: lifecycle.signal });
         addEventListener('load', () => requestAnimationFrame(() => {
           if (!document.querySelector('[data-work-stage].work-stage-can-shift')) {
-            delete document.documentElement.dataset.workStageMotion;
+            delete root.dataset.workStageMotion;
           }
         }), { once: true });
       })();

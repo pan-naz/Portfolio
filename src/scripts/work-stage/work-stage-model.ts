@@ -1,8 +1,8 @@
 export const workStageExpandViewportRatio = 0.02;
 export const workStageCollapseScrollY = 1;
 
-export function canShiftWorkStage(hasHover: boolean, finePointer: boolean, touchPoints: number) {
-  return hasHover && finePointer && touchPoints === 0;
+export function canShiftWorkStage(floatingLayout: boolean, reducedMotion: boolean) {
+  return floatingLayout && !reducedMotion;
 }
 
 /**
