@@ -33,8 +33,11 @@ export function initializeControlMagnet(control: HTMLElement) {
       control.style.removeProperty('translate');
     } else if (x.value || x.velocity || y.value || y.velocity) schedule();
   };
+  // Safari's dialog autofocus stays focus-visible after pointer input. Use the
+  // same ownership marker as the ring, while genuine keyboard focus stays still.
+  const keyboardFocused = () => control.matches(':focus-visible') && !control.hasAttribute('data-case-pointer-focus');
   const unwatch = watchViewportPointer(pointer => {
-    const keyboard = control.matches(':focus-visible');
+    const keyboard = keyboardFocused();
     if (!pointer.active || !capability.matches || keyboard || !control.isConnected || control.closest('[hidden], [inert]')) {
       returnHome(keyboard || !capability.matches);
       return;
@@ -51,7 +54,7 @@ export function initializeControlMagnet(control: HTMLElement) {
     if (x.value !== x.target || x.velocity || y.value !== y.target || y.velocity) schedule();
   });
   control.dataset.magnetReady = 'true';
-  control.addEventListener('focusin', () => { if (control.matches(':focus-visible')) returnHome(true); }, { signal });
+  control.addEventListener('focusin', () => { if (keyboardFocused()) returnHome(true); }, { signal });
   capability.addEventListener('change', () => { returnHome(true); refreshViewportPointer(); }, { signal });
   const destroy = () => {
     returnHome(true);
