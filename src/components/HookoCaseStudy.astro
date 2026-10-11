@@ -1,6 +1,6 @@
 ---
 import ResponsiveImage from './ResponsiveImage.astro';
-import type { Project } from '../data/portfolio';
+import { hookoAppUrl, type Project } from '../data/portfolio';
 import { hookoTools, hookoDemo } from '../data/hooko-case-study';
 import HookoHero from './HookoHero.astro';
 import CaseStudyOverview from './CaseStudyOverview.astro';
@@ -22,7 +22,7 @@ const serviceLogo = (name: string) => {
 };
 const productLinks = [
   { href: 'https://hooko.app/', label: 'Website' },
-  { href: 'https://apps.apple.com/us/app/go-viral-hooko/id6758728094', label: 'App Store' },
+  { href: hookoAppUrl, label: 'App Store' },
 ];
 ---
 <article class="case-study-content case-study-content--hooko" data-case-content>

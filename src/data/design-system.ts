@@ -11,4 +11,3 @@ export const dsGroups = [
  {label:'Components',links:visibleComponents.map(item=>[item.section,item.title!])},
 ];
 export const dashboardDescription='The foundations and components behind this portfolio, taken from the live code.';
-export const catalogItems=[...foundations.map(item=>({...item,group:'Foundations'})),...visibleComponents.map(item=>({id:item.section,title:item.title!,description:item.description,group:'Components'}))];

@@ -15,7 +15,7 @@
 .hk-cell { display: grid; gap: var(--space-2); align-content: start; }
 .hk-cell > *, .hk-camp > * { margin-block: 0; }
 .hk-cell > :is(h3, h4, p) + :is(p, ul, ol), .hk-camp > :is(h4, p) + p { margin-top: 0; }
-.hk-muted, .hk-heading-description { color: var(--color-text-secondary); }
+.hk-heading-description { color: var(--color-text-secondary); }
 .hk-heading-description { max-width: 720px; }
 .hk-demo-layout { --thumb-width: 136px; display: grid; grid-template-columns: minmax(0, 320px) minmax(0, 1fr); gap: var(--grid-gap); align-items: stretch; }
 .hk-demo-stage { display: grid; place-items: center; }
