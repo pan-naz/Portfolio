@@ -22,6 +22,7 @@ export function initializeWorkStage(): WorkStageController | undefined {
   const surface = section?.querySelector<HTMLElement>('[data-work-stage-surface]');
   const panel = section?.querySelector<HTMLElement>('.work-panel');
   const rail = section?.querySelector<HTMLElement>('[data-work-rail]');
+  const compactFilter = section?.querySelector<HTMLElement>('.work-compact-filter');
   const heading = section?.querySelector<HTMLElement>('.section-heading');
   const title = heading?.querySelector<HTMLElement>('h2');
   if (!section || !surface || !panel || !rail || !heading || !title) return;
@@ -58,7 +59,16 @@ export function initializeWorkStage(): WorkStageController | undefined {
     element.style.opacity = '1';
     element.style.transform = 'translateY(0px)';
   });
-  const hideHeading = () => headingParts.forEach(element => { element.style.opacity = '0'; });
+  const syncCompactFilter = () => {
+    if (!compactFilter) return;
+    const hidden = root.dataset.workTouchPreview === 'true' && revealContent && !headingRevealed && !reduced.matches;
+    compactFilter.style.opacity = hidden ? '0' : '';
+    compactFilter.style.pointerEvents = hidden ? 'none' : '';
+  };
+  const hideHeading = () => {
+    headingParts.forEach(element => { element.style.opacity = '0'; });
+    syncCompactFilter();
+  };
   const settleHeadingAtTop = () => {
     // Only a fresh page has an empty preview. Once visited, retain the completed
     // reveal even when the background returns to its inset position.
@@ -134,6 +144,7 @@ export function initializeWorkStage(): WorkStageController | undefined {
       return;
     }
     headingRevealed = true;
+    syncCompactFilter();
     if (reduced.matches || typeof title.animate !== 'function') {
       showHeadingImmediately();
       return;
@@ -281,6 +292,7 @@ export function initializeWorkStage(): WorkStageController | undefined {
       showHeadingImmediately();
     }
     onScroll();
+    syncCompactFilter();
   };
   const lifecycle = new AbortController();
   const signal = lifecycle.signal;
@@ -298,6 +310,7 @@ export function initializeWorkStage(): WorkStageController | undefined {
   const finishHeading = () => {
     headingResolved = true;
     headingRevealed = true;
+    syncCompactFilter();
     headingMotion?.finish();
     showHeadingImmediately();
     move(true, reduced.matches);
@@ -313,6 +326,7 @@ export function initializeWorkStage(): WorkStageController | undefined {
   // Resolve its entrance before the scroll-restoration paint guard releases.
   if (document.documentElement.dataset.caseReturn === 'true') {
     headingResolved = headingRevealed = true;
+    syncCompactFilter();
     showHeadingImmediately();
     move(true, true);
     railMotion?.finish();
