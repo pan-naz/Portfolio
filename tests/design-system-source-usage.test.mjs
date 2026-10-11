@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import { buildSystemInventory } from '../src/data/system-inventory.ts';
+const inventory = buildSystemInventory();
+const component = name => inventory.components.find(item => item.name === name);
+assert.ok(component('TypewriterHeading').tokens.includes('text-heading-xl'), 'Home display usage is documented even with several classes in one attribute');
+assert.ok(component('TypewriterHeading').tokens.includes('text-heading-l'), 'Home rotating role keeps its shared heading usage');
+assert.ok(component('Button').tokens.includes('color-text-on-primary'), 'Actual modifier styles belong to their base component');
+assert.ok(component('Stat').props.some(prop => prop.name === 'value' && !prop.optional), 'Inherited result data is a required input');
+assert.ok(component('Icon').props.some(prop => prop.name === 'name' && prop.conditional), 'Icon documents its required alternative input forms');
+assert.ok(!component('Icon').props.some(prop => prop.name === 'id'), 'Internal geometry fields are not component inputs');
+console.log('Actual class lists, modifier families and source input forms are documented.');

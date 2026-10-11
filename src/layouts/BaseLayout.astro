@@ -2,17 +2,20 @@
 import '../styles/global.css';
 import SiteMetadata from '../components/SiteMetadata.astro';
 import { profile } from '../data/portfolio';
+import { siteTitle } from '../data/site-config';
 interface Props { title?: string; homeIntro?: boolean; description?: string; image?: string; }
-const { title = profile.name, homeIntro = false, description = profile.description, image } = Astro.props;
+const { title = siteTitle, homeIntro = false, description = profile.description, image } = Astro.props;
+const searchDescription = Astro.url.pathname === '/'
+  ? `${profile.name}, ${description[0].toLowerCase()}${description.slice(1)}`
+  : description;
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <SiteMetadata title={title} description={description} image={image} />
+    <SiteMetadata title={title} description={searchDescription} sharingDescription={description} image={image} />
     <meta name="theme-color" content="#FAF8F7" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=funnel-display" />
     <title>{title}</title>
     <script is:inline>
       (() => {
@@ -34,17 +37,34 @@ const { title = profile.name, homeIntro = false, description = profile.descripti
             }
           }), { once: true });
         }
-        const desktopStage = matchMedia('(hover: hover)').matches
-          && matchMedia('(pointer: fine)').matches
-          && navigator.maxTouchPoints === 0;
-        if (!desktopStage) return;
-        document.documentElement.dataset.workStageLayout = 'true';
-        const canShift = !reduced;
-        if (!canShift) return;
-        document.documentElement.dataset.workStageMotion = 'true';
+        const root = document.documentElement;
+        const pointer = matchMedia('(hover: hover) and (pointer: fine)');
+        const wide = matchMedia('(min-width: 1024px)');
+        const motion = matchMedia('(prefers-reduced-motion: reduce)');
+        const updateWorkLayout = () => {
+          const precise = pointer.matches && navigator.maxTouchPoints === 0;
+          // Preserve existing copy/preview coordinates independently of the
+          // floating layout. Only the shared stage flag permits inset surfaces.
+          if (precise) root.dataset.workPreviewLayout = 'true';
+          else delete root.dataset.workPreviewLayout;
+          const floating = precise && wide.matches;
+          if (floating) root.dataset.workStageLayout = 'true';
+          else delete root.dataset.workStageLayout;
+          if (floating && !motion.matches) root.dataset.workStageMotion = 'true';
+          else delete root.dataset.workStageMotion;
+          dispatchEvent(new Event('workstagelayoutchange'));
+        };
+        updateWorkLayout();
+        const lifecycle = new AbortController();
+        for (const query of [pointer, wide, motion]) {
+          query.addEventListener('change', updateWorkLayout, { signal: lifecycle.signal });
+        }
+        addEventListener('pagehide', event => {
+          if (!event.persisted) lifecycle.abort();
+        }, { signal: lifecycle.signal });
         addEventListener('load', () => requestAnimationFrame(() => {
           if (!document.querySelector('[data-work-stage].work-stage-can-shift')) {
-            delete document.documentElement.dataset.workStageMotion;
+            delete root.dataset.workStageMotion;
           }
         }), { once: true });
       })();
@@ -129,5 +149,5 @@ const { title = profile.name, homeIntro = false, description = profile.descripti
       })();
     </script>
   </head>
-  <body><a class="skip-link" href="#main">Skip to content</a><slot /><script>import '../scripts/theme';</script></body>
+  <body><slot /><script>import '../scripts/theme';</script></body>
 </html>

@@ -7,7 +7,7 @@ import CaseStudyDecisionCard from './CaseStudyDecisionCard.astro';
 import MetricValue from './MetricValue.astro';
 import ProjectIdentity from './ProjectIdentity.astro';
 import Icon from './Icon.astro';
-import SkillTag from './SkillTag.astro';
+import Chip from './Chip.astro';
 import { petCarePrizeIcons } from '../data/pet-care-prize-icons';
 interface Props { project: Project; }
 const { project } = Astro.props;
@@ -33,7 +33,7 @@ const { project } = Astro.props;
             <ol class="pc-prizes" role="list" aria-label="Competition prizes">{petCareCompetition.prizes.map(prize => <li class:list={['pc-prize', prize.won && 'pc-prize--won']}>
               <span class="pc-prize-icon"><Icon nodes={petCarePrizeIcons[prize.icon]} size={32} /></span>
               <div class="pc-prize-copy">
-                <div class="pc-prize-place"><p class="text-body-s">{prize.place}</p>{prize.won && <SkillTag label="I won" variant="accent" />}</div>
+                <div class="pc-prize-place"><p class="text-body-s">{prize.place}</p>{prize.won && <Chip label="I won" variant="accent" />}</div>
                 <h4>{prize.title}</h4>
               </div>
             </li>)}</ol>

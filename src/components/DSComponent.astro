@@ -1,0 +1,31 @@
+---
+import type {SourceComponent} from '../data/system-inventory';
+import {dsComponents} from '../data/ds-components';import {componentPresentation} from '../data/system-presentation';
+import {componentPropSpecs} from '../data/system-props';import {componentVariants} from '../data/system-variants';
+import {caseStudyMotionTokens,caseStudyPresentationTokens} from '../scripts/case-study/case-study-motion';
+import {tokenCode} from '../data/system-human';
+import DSPreview from './DSPreview.astro';import DSTabs from './DSTabs.astro';import DSTokenNames from './DSTokenNames.astro';
+interface Props {component:SourceComponent;inventory:ReturnType<typeof import('../data/system-inventory').buildSystemInventory>;}
+const {component,inventory}=Astro.props,entry=dsComponents.find(item=>item.file===component.file)!,id=entry.section,presentation=componentPresentation[component.name],tabs=`${id}-canvas`;
+const props=componentPropSpecs(component),helpers=[...component.source.matchAll(/import\s+(\w+)\s+from\s+['"][^'"]+\.astro['"]/g)].map(([,name])=>name);
+const compositionHelpers:Record<string,string[]>={Button:['CaseStudyComparison (real comparison controls)'],IconButton:['Icon (theme and media glyphs)'],NavigationItem:['NavLinks','Logo','Button','IconButton','SectionNavigation']};
+helpers.push(...(compositionHelpers[component.name]||[]));
+const extraTokens=component.name==='ProjectCard'?inventory.tokens.filter(token=>[...caseStudyMotionTokens,...caseStudyPresentationTokens].some(item=>item.name===`--${token.name}`)):[];
+---
+<section id={id} class="ds-view ds-component-view" data-ds-view data-ds-component={component.name} data-title={entry.title} data-group="Components" data-description={presentation.description} hidden>
+ <div class="ds-stage" data-ds-card>
+  <div class="ds-stage-bar"><DSTabs id={tabs} labels={['Preview','Code']}/><p class="ds-hint">{presentation.hint}</p></div>
+  <div class="ds-canvas" id={`${tabs}-panel-0`} role="tabpanel" aria-labelledby={`${tabs}-tab-0`}><div class="ds-specimens"><DSPreview component={component}/></div></div>
+  <div class="ds-code" id={`${tabs}-panel-1`} role="tabpanel" aria-labelledby={`${tabs}-tab-1`} hidden>
+   <pre><code data-ds-markup>Generated from the rendered specimen.</code></pre>
+   <p class="ds-code-label">{component.file}</p><div class="ds-props-table"><table><thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>{props.map(prop=><tr data-ds-prop={prop.name}><th scope="row"><code>{prop.name}</code></th><td><code>{prop.type}</code></td><td><code>{prop.default}</code></td><td>{prop.description}</td></tr>)}</tbody></table></div>
+   <details><summary>Helpers and website consumers</summary><p>{helpers.join(', ')||'No composed Astro helpers.'}</p><ul>{[...new Set(component.usages.map(usage=>usage.file))].map(file=><li><code>{file}</code></li>)}</ul></details>
+   <details><summary>Used source variants</summary>{componentVariants(component).map(value=><p data-ds-variant={`${component.name}:${value}`}><code>{value}</code></p>)}</details>
+   {extraTokens.length>0&&<details><summary>Case-study transition contract</summary><pre><code>{tokenCode(extraTokens)}</code></pre>{extraTokens.map(token=><span data-ds-token={token.name}/>)}</details>}
+  </div>
+ </div>
+ <div class="ds-specs-card">
+  <div class="ds-spec-columns">{presentation.columns.map(column=><div><p class="ds-column-title">{column.title}</p><ul class="ds-spec-list">{column.rows.map(row=><li><strong>{row.name}</strong>{row.token&&<><span class="ds-mini-swatch" data-ds-token-swatch={row.token} aria-hidden="true"/><span data-ds-human-token={row.token}></span><code class="ds-token-name">--{row.token}</code></>}{row.selector&&<span data-ds-measure={row.selector} data-properties={row.properties}></span>}{row.detail&&<span>{row.detail}</span>}</li>)}</ul></div>)}</div>
+  <div class="ds-spec-footer"><div><p class="ds-column-title">Rules</p><ul class="ds-rules">{presentation.rules.map(rule=><li>{rule}</li>)}</ul></div><DSTokenNames/></div>
+ </div>
+</section>

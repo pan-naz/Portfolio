@@ -1,5 +1,5 @@
 ---
-import SkillTag from './SkillTag.astro';
+import Chip from './Chip.astro';
 import '../styles/case-study-decision-card.css';
 interface Props { title: string; titleHidden?: boolean; label?: string; labelVariant?: 'text' | 'accent'; layout?: 'stack' | 'media' | 'figure'; }
 const { title, titleHidden = false, label, labelVariant = 'text', layout = 'stack' } = Astro.props;
@@ -10,7 +10,7 @@ const { title, titleHidden = false, label, labelVariant = 'text', layout = 'stac
   <div class="case-study-decision-card__text">
   <div class:list={['case-study-decision-card__header', titleHidden && 'sr-only']}>
     <div class="case-study-decision-card__heading">
-      {label && <p class:list={['case-study-decision-card__label', labelVariant === 'text' && 'eyebrow']}>{labelVariant === 'accent' ? <SkillTag label={label} variant="accent" /> : label}</p>}
+      {label && <p class:list={['case-study-decision-card__label', labelVariant === 'text' && 'eyebrow']}>{labelVariant === 'accent' ? <Chip label={label} variant="accent" /> : label}</p>}
       <h3>{title}</h3>
     </div>
     {Astro.slots.has('icon') && <span class="case-study-decision-card__icon" aria-hidden="true"><slot name="icon" /></span>}

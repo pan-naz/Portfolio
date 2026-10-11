@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {readFileSync,existsSync} from 'node:fs';
+import {validateHiddenDocumentation} from '../scripts/validate-design-system.mjs';
+import {hiddenDocumentation} from '../src/data/system-hidden-docs.ts';
+const doc=existsSync('../docs/design-system.md')?readFileSync('../docs/design-system.md','utf8'):undefined;
+assert.deepEqual(validateHiddenDocumentation(hiddenDocumentation,doc),[]);
+assert.deepEqual(validateHiddenDocumentation(hiddenDocumentation),[],'Deployment verifies reviewed receipts without shipping external docs');
+assert.ok(validateHiddenDocumentation(hiddenDocumentation.slice(1),doc).length);
+if(doc) assert.ok(validateHiddenDocumentation(hiddenDocumentation,doc.replace('## Wordmark','## Removed wordmark')).length);
+assert.ok(validateHiddenDocumentation(hiddenDocumentation.map(record=>({...record,sha256:'bad'})),doc).length);
+if(doc) assert.ok(validateHiddenDocumentation(hiddenDocumentation,doc.replace('## Writing','## Writing\nChanged contract.')).length);
+console.log('Hidden documentation guard rejects missing/invalid/stale records and sections.');

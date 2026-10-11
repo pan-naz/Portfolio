@@ -147,7 +147,7 @@ Object.defineProperty(globalThis, 'navigator', { configurable: true, value: { ma
 Object.defineProperty(globalThis, 'performance', { configurable: true, value: { now: () => clock } });
 globalThis.matchMedia = query => query.includes('reduced-motion') ? reduced : fine;
 globalThis.devicePixelRatio = 1;
-globalThis.getComputedStyle = () => ({ getPropertyValue: name => ({ '--footer-icon-ink': '#b8b8b8' }[name]) });
+globalThis.getComputedStyle = () => ({ getPropertyValue: name => ({ '--footer-pile-icon-color': '#b8b8b8' }[name]) });
 globalThis.requestAnimationFrame = fn => { frames.set(++nextFrame, fn); return nextFrame; };
 globalThis.cancelAnimationFrame = id => frames.delete(id);
 globalThis.ResizeObserver = class { observe() {} disconnect() {} };

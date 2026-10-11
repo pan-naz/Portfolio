@@ -36,7 +36,7 @@ export function initializeWorkStage(): WorkStageController | undefined {
   const sectionRevealRatio = number('--section-reveal-trigger-viewport-ratio');
   const expandViewportRatio = number('--work-stage-trigger-viewport-ratio');
   const collapseAtScrollY = number('--work-stage-collapse-scroll-y');
-  const previewRadius = getComputedStyle(panel).borderRadius;
+  let previewRadius = getComputedStyle(panel).borderRadius;
   let shiftMotion: ReturnType<typeof createNativeMotion> | undefined;
   let railMotion: ReturnType<typeof createNativeMotion> | undefined;
   let headingMotion: ReturnType<typeof createNativeMotion> | undefined;
@@ -45,12 +45,11 @@ export function initializeWorkStage(): WorkStageController | undefined {
   let headingResolved = false;
   let paused = document.hidden;
   let scrollFrame = 0;
-  const preciseDesktop = document.documentElement.dataset.workStageMotion === 'true'
-    && canShiftWorkStage(
-      matchMedia('(hover: hover)').matches,
-      matchMedia('(pointer: fine)').matches,
-      navigator.maxTouchPoints,
-    );
+  const root = document.documentElement;
+  const canAnimate = typeof panel.animate === 'function';
+  const floatingMotion = () => canAnimate && canShiftWorkStage(root.dataset.workStageLayout === 'true', reduced.matches);
+  let preciseDesktop = floatingMotion();
+  const revealContent = root.dataset.workPreviewLayout === 'true' && !reduced.matches && canAnimate;
 
   const headingParts = [index, title, description, ...content].filter((item): item is HTMLElement => Boolean(item));
   const railHiddenTransform = 'translate3d(0px, var(--distance-text-reveal), 0px)';
@@ -76,6 +75,7 @@ export function initializeWorkStage(): WorkStageController | undefined {
     rail.style.opacity = '1';
     rail.style.transform = railVisibleTransform;
   };
+  const finishRail = () => railMotion?.finish();
   const hideRailImmediately = () => {
     rail.style.opacity = '0';
     rail.style.transform = railHiddenTransform;
@@ -184,6 +184,7 @@ export function initializeWorkStage(): WorkStageController | undefined {
     } });
   };
   const move = (nextExpanded: boolean, immediate = false) => {
+    if (!preciseDesktop) return;
     if (expanded === nextExpanded && !immediate) return;
     const current = currentTransform();
     const currentRadius = getComputedStyle(panel).borderRadius;
@@ -225,33 +226,75 @@ export function initializeWorkStage(): WorkStageController | undefined {
       expandAt,
       collapseAtScrollY,
     );
-    if (next !== expanded) move(next);
+    if (preciseDesktop && next !== expanded) move(next);
   };
   const onScroll = () => {
     if (!scrollFrame) scrollFrame = requestAnimationFrame(updateFromScroll);
   };
 
-  if (!preciseDesktop || reduced.matches || typeof panel.animate !== 'function') {
-    panel.style.transform = expandedTransform;
-    showRailImmediately();
+  if (revealContent) {
+    section.classList.add('work-content-can-reveal');
+    hideHeading();
+  } else {
     showHeadingImmediately();
     headingRevealed = true;
-    return {
-      startIntro() {},
-      setPaused() {},
-    };
-  } else {
+  }
+  if (preciseDesktop) {
     section.classList.add('work-stage-can-shift');
     panel.style.transform = restingTransform;
     hideRailImmediately();
-    hideHeading();
+  } else {
+    panel.style.transform = expandedTransform;
+    showRailImmediately();
   }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', () => {
+
+  const syncLayout = () => {
+    const next = floatingMotion();
+    if (next !== preciseDesktop) {
+      shiftMotion?.cancel();
+      railMotion?.cancel();
+      shiftMotion = railMotion = undefined;
+      section.classList.remove('is-work-shifting', 'is-work-rail-moving');
+      preciseDesktop = next;
+      section.classList.toggle('work-stage-can-shift', next);
+      if (next) {
+        // Read the new viewport's radius without a stale inline override.
+        panel.style.borderRadius = '';
+        previewRadius = getComputedStyle(panel).borderRadius;
+        const target = nextWorkStageExpanded(section.getBoundingClientRect().top,
+          window.scrollY, expanded, window.innerHeight * expandViewportRatio, collapseAtScrollY);
+        move(target, true);
+        finishRail();
+      } else {
+        panel.style.transform = expandedTransform;
+        panel.style.borderRadius = '0px';
+        showRailImmediately();
+      }
+    } else if (next && !shiftMotion) {
+      panel.style.borderRadius = '';
+      previewRadius = getComputedStyle(panel).borderRadius;
+      panel.style.borderRadius = expanded ? '0px' : previewRadius;
+    }
+    if (reduced.matches) {
+      headingMotion?.finish();
+      headingRevealed = true;
+      showHeadingImmediately();
+    }
     onScroll();
-    // The compact filter can become a wide-screen rail after resizing.
-    if (expanded && !shiftMotion && getComputedStyle(rail).display !== 'none') showRailImmediately();
-  }, { passive: true });
+  };
+  const lifecycle = new AbortController();
+  const signal = lifecycle.signal;
+  window.addEventListener('scroll', onScroll, { passive: true, signal });
+  window.addEventListener('workstagelayoutchange', syncLayout, { signal });
+  window.addEventListener('resize', syncLayout, { passive: true, signal });
+  window.addEventListener('pagehide', event => {
+    if (event.persisted) return;
+    cancelAnimationFrame(scrollFrame);
+    shiftMotion?.cancel();
+    railMotion?.cancel();
+    headingMotion?.cancel();
+    lifecycle.abort();
+  }, { signal });
   const finishHeading = () => {
     headingResolved = true;
     headingRevealed = true;
@@ -259,25 +302,12 @@ export function initializeWorkStage(): WorkStageController | undefined {
     showHeadingImmediately();
     move(true, reduced.matches);
   };
-  section.addEventListener('focusin', finishHeading);
+  section.addEventListener('focusin', finishHeading, { signal });
   section.addEventListener('workfilterchange', () => {
     if (window.scrollY <= collapseAtScrollY) return;
     finishHeading();
-  });
-  reduced.addEventListener('change', () => {
-    shiftMotion?.cancel();
-    railMotion?.cancel();
-    shiftMotion = railMotion = undefined;
-    section.classList.remove('is-work-shifting', 'is-work-rail-moving');
-    headingMotion?.finish();
-    if (reduced.matches) {
-      panel.style.transform = expandedTransform;
-      panel.style.borderRadius = '0px';
-      headingRevealed = true;
-      showRailImmediately();
-      showHeadingImmediately();
-    }
-  });
+  }, { signal });
+  reduced.addEventListener('change', syncLayout, { signal });
 
   // Returning from a reloaded case resumes an already visited collection.
   // Resolve its entrance before the scroll-restoration paint guard releases.

@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {buildSystemInventory} from '../src/data/system-inventory.ts';
+import {componentPropSpecs} from '../src/data/system-props.ts';
+const model=buildSystemInventory(),props=name=>componentPropSpecs(model.components.find(item=>item.name===name));
+assert.equal(props('Button').find(prop=>prop.name==='size').default,"'large'");
+assert.equal(props('NavigationItem').find(prop=>prop.name==='pressed').default,'false');
+assert.equal(props('CaseStudyMedia').find(prop=>prop.name==='kind').default,"'video'");
+assert.equal(props('SectionHeading').find(prop=>prop.name==='reveal').default,'true');
+assert.equal(props('ProjectCard').find(prop=>prop.name==='project').default,'Required');
+assert.ok(['value','label','note','revealValue'].every(name=>props('Stat').some(prop=>prop.name===name)),'Inherited data props must survive an explicit local prop');
+assert.equal(props('Stat').find(prop=>prop.name==='value').default,'Required');
+assert.ok(props('CaseStudyMedia').find(prop=>prop.name==='segments').type.includes('height: number'),'Nested source types must not be truncated at a semicolon');
+assert.ok(props('Button').every(prop=>prop.type&&prop.description));
+console.log('Prop types, optional/required forms and real component defaults are source-derived.');

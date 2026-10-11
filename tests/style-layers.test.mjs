@@ -38,6 +38,6 @@ test('home popup and standalone pages use the same complete project stylesheet s
     assert.ok(direct.includes(`../styles/${name}?inline'`), name);
   }
   const catalog = fs.readFileSync(path.join(root, 'src/components/DSCatalog.astro'), 'utf8');
-  assert.match(catalog, /import tokenCSS from '\.\.\/styles\/tokens\.css\?raw'/);
+  assert.ok(catalog.includes('buildSystemInventory'), 'Catalog reads the real system inventory');
   assert.doesNotMatch(catalog, /import .+ from ['"][^'"]+(?:-case-study|hooko-artwork)\.css\?raw/);
 });

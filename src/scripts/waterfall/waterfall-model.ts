@@ -89,24 +89,6 @@ export function trailOpacity(distance: number, tail: number) {
   return .3 * fade * fade + .02 * Math.max(0, 1 - distance / 18);
 }
 
-export function changingIconIndex(id: number, time: number, count: number) {
-  if (count <= 1) return 0;
-  // Each glyph has its own clock: swaps never flash the whole field together.
-  const interval = .22 + variation(id, 7) * .32;
-  const step = Math.floor(time / interval + variation(id, 8));
-  const start = Math.floor(variation(id, 6) * count);
-  return (start + step) % count;
-}
-
-export function streamIconOrder(column: number, cycle: number, count: number) {
-  const order = Array.from({ length: count }, (_, i) => i);
-  for (let i = count - 1; i > 0; i--) {
-    const j = Math.floor(variation(column * 997 + cycle * 131 + i, 12) * (i + 1));
-    [order[i], order[j]] = [order[j], order[i]];
-  }
-  return order;
-}
-
 export function pointerRepulsion(x: number, y: number, pointerX: number, pointerY: number, id: number) {
   const dx = x - pointerX;
   const dy = y - pointerY;
@@ -117,8 +99,4 @@ export function pointerRepulsion(x: number, y: number, pointerX: number, pointer
   // Vary displacement per icon so the cursor breaks columns, not just bends them.
   const push = Math.pow(influence, 1.35) * (85 + variation(id, 10) * 45);
   return { x: Math.cos(angle) * push, y: Math.sin(angle) * push };
-}
-
-export function easeDisplacement(current: number, target: number, delta: number, active: boolean) {
-  return current + (target - current) * (1 - Math.exp(-delta * (active ? 18 : 6)));
 }

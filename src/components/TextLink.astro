@@ -8,4 +8,4 @@ const opensNewTab = target === '_blank' || (!target && /^https?:\/\//i.test(href
 const linkTarget = target ?? (opensNewTab ? '_blank' : undefined);
 const linkRel = opensNewTab ? [rel, 'noopener', 'noreferrer'].filter(Boolean).join(' ') : rel;
 ---
-<a {...attributes} href={href} target={linkTarget} rel={linkRel} class:list={['text-link', !inline && 'text-body-m-strong', inline && 'text-link--inline', accent && 'text-link--accent', compact && 'text-link--compact', className]}>{inline ? <slot /> : <><span><slot /></span><Arrow direction="up" /></>}</a>
+<a {...attributes} tabindex={attributes.tabindex ?? 0} href={href} target={linkTarget} rel={linkRel} class:list={['text-link', !inline && 'text-body-m-strong', inline && 'text-link--inline', accent && 'text-link--accent', compact && 'text-link--compact', className]}>{inline ? <slot /> : <><span><slot /></span><Arrow direction="up" /></>}</a>

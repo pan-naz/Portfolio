@@ -5,8 +5,8 @@
 /* Cravus artwork and brand specimens retain their original identity. */
 .case-study-content--cravus { --cravus-brown: #36210D; --cravus-cream: #F9E8BF; --cravus-screen: #FDECC4; padding-bottom: 0; }
 .cravus-block { margin-top: var(--space-16); }
-.cravus-number { color: var(--accent); font-variant-numeric: tabular-nums; }
-.cravus-muted { color: var(--muted); }
+.cravus-number { color: var(--color-interactive-accent); font-variant-numeric: tabular-nums; }
+.cravus-muted { color: var(--color-text-secondary); }
 .cravus-home-steps { margin-top: var(--space-8); }
 .cravus-chapter-heading { align-items: end; }
 .cravus-pages { display: grid; gap: var(--case-section-space); }
@@ -16,34 +16,32 @@
 .cravus-stack { display: grid; gap: var(--space-6); }
 .cravus-block > h3 + .cravus-stack { margin-top: var(--space-6); }
 .cravus-band { width: 100vw; margin-left: calc(50% - 50vw); }
-.cravus-mobile { --ink: var(--floating-ink); --muted: var(--floating-muted); --accent: var(--floating-accent); color: var(--ink); background: var(--cravus-cream); }
-.cravus-breakpoint { margin-top: var(--space-6); color: var(--muted); }
+.cravus-mobile { --color-text-primary: var(--color-overlay-text-primary); --color-text-secondary: var(--color-overlay-text-secondary); --color-interactive-accent: var(--color-overlay-accent); color: var(--color-text-primary); background: var(--cravus-cream); }
+.cravus-breakpoint { margin-top: var(--space-6); color: var(--color-text-secondary); }
 .cravus-style { background: var(--cravus-brown); }
 .cravus-palette { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--grid-gap); margin: var(--space-6) 0 0; padding: 0; list-style: none; }
-.cravus-palette > li { overflow: hidden; color: var(--floating-ink); background: var(--floating-surface); border: 1px solid var(--inverse-divider); border-radius: var(--radius-medium); }
+.cravus-palette > li { overflow: hidden; color: var(--color-overlay-text-primary); background: var(--color-overlay-bg-surface); border: 1px solid var(--color-inverse-border-default); border-radius: var(--radius-medium); }
 .cravus-swatch { aspect-ratio: 4 / 3; background: var(--cravus-swatch); }
 .cravus-palette > li > :last-child { display: grid; gap: var(--space-1); padding: var(--space-4); }
-.cravus-palette code { color: var(--floating-muted); font: inherit; }
+.cravus-palette code { color: var(--color-overlay-text-secondary); font: inherit; }
 .cravus-brand-card { padding: var(--space-6); border-radius: var(--radius-medium); background: var(--cravus-screen); color: var(--cravus-brown); }
-.cravus-brand-card > .case-study-eyebrow { color: var(--floating-muted); }
+.cravus-brand-card > .case-study-eyebrow { color: var(--color-overlay-text-secondary); }
 .cravus-specimens { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--grid-gap); margin-top: var(--space-6); }
 .cravus-specimens .cravus-brand-card { display: grid; gap: var(--space-4); align-content: start; min-width: 0; }
 .cravus-specimens .cravus-titillium { margin-top: 0; }
 .cravus-assets { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--grid-gap); }
 .cravus-assets > div { display: grid; grid-template-rows: auto 1fr; gap: var(--space-6); min-width: 0; }
-.cravus-assets-card { --ink: var(--floating-ink); --muted: var(--floating-muted); --surface: var(--cravus-screen); display: grid; align-items: center; gap: var(--grid-gap); padding: var(--space-6); border-radius: var(--radius-medium); color: var(--ink); background: var(--surface); }
+.cravus-assets-card { --color-text-primary: var(--color-overlay-text-primary); --color-text-secondary: var(--color-overlay-text-secondary); --color-bg-surface: var(--cravus-screen); display: grid; align-items: center; gap: var(--grid-gap); padding: var(--space-6); border-radius: var(--radius-medium); color: var(--color-text-primary); background: var(--color-bg-surface); }
 .cravus-assets-card .svg-asset { display: block; width: 100%; height: auto; border-radius: var(--radius-small); }
 .cravus-grid-card { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .cravus-grid-card dl { display: grid; gap: var(--space-4); margin: 0; }
-.cravus-grid-card dt { color: var(--muted); font-size: var(--text-label-s); line-height: 1.333333; font-weight: var(--font-weight-heading); text-transform: uppercase; }
+.cravus-grid-card dt { color: var(--color-text-secondary); font-size: var(--text-label-s); line-height: 1.333333; font-weight: var(--font-weight-heading); text-transform: uppercase; }
 .cravus-grid-card dd { margin: 0; font-family: var(--font-heading); font-size: var(--text-heading-m); line-height: 1.333333; font-weight: var(--font-weight-heading); font-variant-numeric: tabular-nums; }
 /* Only the supplied brand specimens use Titillium Web and its original sample sizes. */
 @font-face { font-family: 'Cravus Titillium Web'; font-style: normal; font-weight: 300; font-display: swap; src: url('/projects/cravus-case-study/titillium-web-300.ttf') format('truetype'); }
 @font-face { font-family: 'Cravus Titillium Web'; font-style: normal; font-weight: 400; font-display: swap; src: url('/projects/cravus-case-study/titillium-web-400.ttf') format('truetype'); }
 @font-face { font-family: 'Cravus Titillium Web'; font-style: normal; font-weight: 700; font-display: swap; src: url('/projects/cravus-case-study/titillium-web-700.ttf') format('truetype'); }
 .cravus-titillium { font-family:var(--cravus-font-cravus-titillium-web-sans-serif); font-weight: 400; }
-.cravus-titillium.cravus-light, .cravus-titillium .cravus-light { font-weight: 300; }
-.cravus-titillium.cravus-bold, .cravus-titillium .cravus-bold { font-weight: 700; }
 .cravus-s40 { font-size: 40px; line-height: 46px; font-weight: 700; }
 .cravus-s40 span { color: var(--cravus-color-d97e06); }
 .cravus-s26 { font-size: 26px; line-height: 32px; font-weight: 700; }

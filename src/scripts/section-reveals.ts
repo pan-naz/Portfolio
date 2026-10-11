@@ -167,7 +167,7 @@ export function initializeSectionReveals() {
   };
   document.querySelectorAll<HTMLElement>('[data-section-reveal]').forEach(element => {
     // Desktop Work retains its earlier, background-edge trigger and pause lifecycle.
-    if (element.closest('.work-stage-can-shift')) return;
+    if (element.closest('.work-content-can-reveal')) return;
     const title = element.querySelector<HTMLElement>('h2');
     if (!title) return;
     const chapter = element.closest<HTMLElement>('.chapter') ?? element;

@@ -52,9 +52,9 @@ runtime = 'const { createNativeMotion, readMotionToken, sectionRevealEffects, ca
 runtime = ts.transpileModule(runtime, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
 const { initializeWorkStage } = await import(`data:text/javascript;base64,${Buffer.from(runtime).toString('base64')}`);
 
-function fixture(fontsReady = Promise.resolve(), returningFromCase = false) {
+function fixture(fontsReady = Promise.resolve(), returningFromCase = false, floating = true) {
   created = []; revealCalls = 0;
-  globalThis.document = { hidden: false, documentElement: { dataset: { workStageMotion: 'true' } }, timeline: { currentTime: 0 }, fonts: { ready: fontsReady } };
+  globalThis.document = { hidden: false, documentElement: { dataset: { workStageMotion: floating ? 'true' : undefined, workStageLayout: floating ? 'true' : undefined, workPreviewLayout: 'true' } }, timeline: { currentTime: 0 }, fonts: { ready: fontsReady } };
   if (returningFromCase) document.documentElement.dataset.caseReturn = 'true';
   const section = new ElementDouble(), surface = new ElementDouble(), panel = new ElementDouble(), rail = new ElementDouble();
   const heading = new ElementDouble(), title = new ElementDouble(), index = new ElementDouble(), description = new ElementDouble(), card = new ElementDouble();
@@ -68,6 +68,7 @@ function fixture(fontsReady = Promise.resolve(), returningFromCase = false) {
   globalThis.window = new EventTarget(); window.scrollY = 0; window.innerHeight = 900;
   const frames = new Map(); let frameId = 0;
   globalThis.requestAnimationFrame = callback => { frames.set(++frameId, callback); return frameId; };
+  globalThis.cancelAnimationFrame = id => frames.delete(id);
   globalThis.getComputedStyle = element => {
     const sample = property => {
       const animation = created.findLast(a => a.active && a.element === element && a.keyframes[0][property] !== undefined);
@@ -75,7 +76,7 @@ function fixture(fontsReady = Promise.resolve(), returningFromCase = false) {
     };
     return {
       opacity: String(sample('opacity') ?? '1'), transform: sample('transform') ?? 'none',
-      borderRadius: sample('borderRadius') ?? '80px 0px 0px 80px', display: 'block',
+      borderRadius: sample('borderRadius') || (document.documentElement.dataset.workStageLayout === 'true' ? '80px 0px 0px 80px' : '0px'), display: 'block',
       getPropertyValue: name => tokens.match(new RegExp(`${name}:\\s*([^;]+);`))?.[1] ?? '',
     };
   };
@@ -88,7 +89,14 @@ function fixture(fontsReady = Promise.resolve(), returningFromCase = false) {
   const complete = () => {
     for (const animation of created) animation.complete();
   };
-  return { section, panel, rail, title, index, description, card, controller, reduced, scroll, complete };
+  const resize = async floating => {
+    document.documentElement.dataset.workStageLayout = floating ? 'true' : undefined;
+    window.dispatchEvent(new Event('workstagelayoutchange'));
+    window.dispatchEvent(new Event('resize'));
+    for (const [id, callback] of frames) { frames.delete(id); callback(); }
+    await Promise.resolve();
+  };
+  return { section, panel, rail, title, index, description, card, controller, reduced, scroll, complete, resize };
 }
 const resting = 'translate(var(--hero-visual-gutter), 0px)';
 const expanded = 'translate(0px, 0px)';
@@ -150,3 +158,25 @@ await refreshed.scroll(0, 700);
 assert.equal(refreshed.title.style.opacity, '0', 'A fresh page resets the reveal until the chapter is entered');
 assert.equal(revealCalls, 0);
 console.log('PASS: fresh-page reset, persistent reveal, category restoration, scroll return, interrupted reveal, delayed fonts, keyboard access and reduced-motion Work stage lifecycle.');
+
+const compact = fixture(Promise.resolve(), false, false);
+assert.equal(compact.panel.style.transform, expanded);
+await compact.scroll(700, 0); compact.complete();
+assert.equal(created.filter(a => a.element === compact.panel).length, 0, 'Narrow mouse scrolling never animates the background');
+assert.equal(compact.title.style.opacity, '1', 'Existing narrow mouse content reveal is preserved');
+await compact.resize(true); compact.complete();
+assert.equal(compact.panel.style.transform, expanded);
+assert.equal(compact.section.classList.contains('work-stage-can-shift'), true, 'Compact startup can become floating without a reload');
+await compact.scroll(0, 700);
+assert.ok(created.some(a => a.active && a.element === compact.panel), 'Desktop reverse motion starts with its original timeline');
+await compact.resize(false);
+assert.equal(compact.panel.style.transform, expanded);
+assert.equal(compact.panel.style.borderRadius, '0px');
+assert.equal(created.filter(a => a.active && a.element === compact.panel).length, 0, 'Leaving floating layout cancels in-flight effects');
+assert.equal(compact.section.classList.contains('is-work-shifting'), false);
+assert.equal(compact.title.style.opacity, '1', 'Resize cannot replay or hide visited content');
+await compact.resize(true);
+assert.equal(compact.panel.style.transform, resting, 'Returning at page top restores the desktop preview immediately');
+assert.equal(compact.panel.style.borderRadius, '80px 0px 0px 80px');
+assert.equal(compact.rail.style.opacity, '0');
+console.log('PASS: live compact/floating layout changes cancel background motion and preserve visited content.');

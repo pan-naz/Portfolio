@@ -1,13 +1,20 @@
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { validateHoverSource } from './validate-hover.mjs';
+import { hiddenDocumentation } from '../src/data/system-hidden-docs.ts';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { icons } from '../src/data/icons.ts';
+import { buildSystemInventory } from '../src/data/system-inventory.ts';
+import { componentVariants } from '../src/data/system-variants.ts';
+import { componentManifest, isReusableComponent } from '../src/data/system-components.ts';
+import { dsComponents as registry, visibleComponents } from '../src/data/ds-components.ts';
+import { dsGroups } from '../src/data/design-system.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const read = path => readFileSync(resolve(root, path), 'utf8');
-const source = read('src/data/ds-components.ts');
-const registry = JSON.parse(source.slice(source.indexOf('['), source.lastIndexOf(']') + 1));
 const catalog = read('src/components/DSCatalog.astro');
-const sections = new Set([...catalog.matchAll(/<(?:section|DSExample)\s+id="([^"]+)"/g)].map(match => match[1]));
+const sections = new Set(dsGroups.flatMap(group => group.links.map(([id]) => id)));
 function filesUnder(directory) {
   return readdirSync(resolve(root, directory), { withFileTypes: true }).flatMap(entry => {
     const path = `${directory}/${entry.name}`;
@@ -40,6 +47,27 @@ function componentsReachableFrom(entry, seen = new Set()) {
   }
   return seen;
 }
+const hiddenSections = {
+ 'Logo':'Wordmark','CaseStudyComparison':'Before and after','CaseStudyDecisionCard':'Decision card','CaseStudySteps':'Steps','CaseStudyMedia':'Media','ToolCard':'Tool card','ProjectIdentity':'Project identity','ProjectTags':'Project tags','SectionNavigation':'Project filter','ThemeToggle':'Theme switch','Icon':'Icon',
+};
+const hiddenKeys = Object.fromEntries(Object.entries(hiddenSections).map(([file,title])=>['src/components/'+file+'.astro',title.toLowerCase().replaceAll(' ','-')]));
+const expectedVisible = ['Button','Chip','IconButton','NavigationItem','ProjectCard','SectionHeading','Stat','TextLink','TimelineRow'];
+export function validateComponentClassification(files, used, manifest, shown) {
+  const failures = [];
+  const kinds = ['reusable-ui', 'page-section', 'case-study', 'internal-helper'];
+  for (const file of files) {
+    const entries = manifest.filter(item => item.file === file);
+    if (entries.length !== 1) failures.push(`Unclassified or duplicate component: ${file}`);
+    else if (!kinds.includes(entries[0].kind)) failures.push(`Invalid component kind: ${file}`);
+  }
+  for (const item of manifest) {
+    if(item.documentedHidden && (hiddenKeys[item.file]!==item.documentedHidden)) failures.push(`Unauthorized hidden component: ${item.file}`);
+    if (!files.includes(item.file)) failures.push(`Stale classification: ${item.file}`);
+    if (item.kind === 'reusable-ui' && (!used.includes(item.file) || (!shown.includes(item.file) && !item.documentedHidden))) failures.push(`Missing or unused reusable UI: ${item.file}`);
+  }
+  for (const file of shown) if (!used.includes(file) || !manifest.some(item => item.file === file && item.kind === 'reusable-ui')) failures.push(`Non-reusable component shown: ${file}`);
+  return failures;
+}
 const specimens = componentsReachableFrom('src/pages/design-system.astro');
 function validate(entries) {
   const errors = [];
@@ -49,13 +77,16 @@ function validate(entries) {
     names.add(item.name);
     const path = resolve(root, `src/components/${item.name}.astro`);
     if (!existsSync(path)) errors.push(`Missing component: ${item.name}`);
-    if (!sections.has(item.section)) errors.push(`Missing documentation section: ${item.name} → ${item.section}`);
-    if (item.preview !== 'direct') errors.push(`Unknown preview kind: ${item.name}`);
-    if (!specimens.has(path)) errors.push(`Catalog does not render ${item.name}`);
+    if (!item.documentedHidden && !sections.has(item.section)) errors.push(`Missing documentation section: ${item.name} → ${item.section}`);
+    if (!['direct', 'documentation'].includes(item.preview)) errors.push(`Unknown preview kind: ${item.name}`);
+    if (item.preview === 'direct' && !specimens.has(path)) errors.push(`Catalog does not render ${item.name}`);
   }
   for (const path of websitePages) errors.push(...validatePage(path, read(path)));
   if (/<(?:button|a)\b[^>]*\bclass=["'][^"']*\b(?:button|icon-button)\b/.test(catalog)) errors.push('Catalog must import shared controls instead of copying their markup.');
-  if (read('src/layouts/DSLayout.astro').includes('<script')) errors.push('Static DS layout must not load website scripts.');
+  const layout = read('src/layouts/DSLayout.astro');
+  const modules = [...layout.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(([, body]) => body.trim());
+  if (modules.length !== 1 || modules[0] !== "import '../scripts/theme';") errors.push('Catalog layout may load only the shared theme controller.');
+  if (/scripts\/(?:home|hero|footer|work|case-study)/.test(layout)) errors.push('Catalog must not load website animation controllers.');
   errors.push(...validatePage('src/pages/design-system.astro', read('src/pages/design-system.astro')));
   const navigation = read('src/data/design-system.ts');
   for (const [,id] of navigation.matchAll(/\['([\w-]+)',\s*'[^']+'\]/g)) {
@@ -80,7 +111,6 @@ function validate(entries) {
   const linkedSelectors = [
     ['src/styles/global.css', '.wordmark'],
     ['src/styles/global.css', '.project-identity'],
-    ['src/styles/design-system.css', '.ds-type-heading'],
   ];
   for (const [path, selector] of linkedSelectors) {
     if (!selectorUses(read(path), selector, headingWeight)) errors.push(`${selector} must consume --font-weight-heading in ${path}.`);
@@ -107,8 +137,68 @@ function validate(entries) {
   }
   return errors;
 }
+export function validateHiddenDocumentation(records, text) {
+  const failures=[];
+  for(const section of ['Accessibility','Writing',...Object.values(hiddenSections)]){
+    const entries=records.filter(record=>record.section===section);
+    if(entries.length!==1 || !/^[a-f0-9]{64}$/.test(entries[0]?.sha256||'') || entries[0]?.characters<100){ failures.push(`Missing hidden documentation: ${section}`); continue; }
+    if(text!==undefined){
+      // Use the next section boundary rather than the end-of-line multiline dollar.
+      const start=text.indexOf('## '+section+'\n'), next=text.indexOf('\n## ',start+4);
+      const value=start<0?'':text.slice(start,next<0?undefined:next).trim();
+      if(!value || !/Documented, hidden\./.test(value) || createHash('sha256').update(value).digest('hex')!==entries[0].sha256)failures.push(`Stale or missing hidden documentation: ${section}`);
+    }
+  }
+  return failures;
+}
 const errors = validate(registry);
+if(JSON.stringify(visibleComponents.map(item=>item.name).sort())!==JSON.stringify([...expectedVisible].sort()))errors.push('Visible catalog must contain exactly the approved nine components');
+for(const [file,key] of Object.entries(hiddenKeys))if(componentManifest.find(item=>item.file===file)?.documentedHidden!==key)errors.push('Missing documented-hidden classification: '+file);
+errors.push(...validateHoverSource(root));
+const externalDocs=resolve(root,'../docs/design-system.md');
+errors.push(...validateHiddenDocumentation(hiddenDocumentation,existsSync(externalDocs)?readFileSync(externalDocs,'utf8'):undefined));
+errors.push(...validateComponentClassification(filesUnder('src/components').filter(file => /\.(astro|tsx|jsx|ts|js|vue|svelte)$/.test(file)), [...new Set(websitePages.flatMap(page => [...componentsReachableFrom(page)]))].map(file => file.slice(root.length + 1)), componentManifest, visibleComponents.map(item => item.file)));
+const inventory = buildSystemInventory(root);
+for (const entry of registry) if (!inventory.components.some(component => component.file === entry.file && component.usages.length)) errors.push(`Reusable UI has no rendered website consumer: ${entry.file}`);
+export function validateRenderedComponentNames(names, expected) {
+  return [...names.filter(name => !expected.includes(name)).map(name => `Non-reusable rendered component: ${name}`), ...expected.filter(name => !names.includes(name)).map(name => `Missing rendered reusable UI: ${name}`)];
+}
+export function validateVariantCoverage(model, documented) {
+  const used = model.components.filter(component => isReusableComponent(component.file) && !componentManifest.find(item=>item.file===component.file)?.documentedHidden).flatMap(component => componentVariants(component).map(variant => `${component.name}:${variant}`));
+  return [...used.filter(value => !documented.includes(value)).map(value => `Undocumented website variant: ${value}`), ...documented.filter(value => !used.includes(value)).map(value => `Catalog-only variant: ${value}`)];
+}
+export function validateInventoryCoverage(model, documentedComponents, documentedTokens, documentedIcons, tokenSource, catalogSource) {
+  const failures = [];
+  for (const name of model.unusedTokens || []) failures.push(`Unused system token: ${name}`);
+  const literalValues = (text) => [...text.matchAll(/#[\da-f]{3,8}\b|rgba?\([^)]*\)/gi)].map(([value]) => value.toLowerCase().replace(/^#([\da-f])([\da-f])([\da-f])$/, '#$1$1$2$2$3$3'));
+  const literals = literalValues(tokenSource + catalogSource);
+  for (const value of model.projectValues || []) if (literals.includes(value)) failures.push(`Project-only literal entered the system: ${value}`);
+  for (const value of model.projectBackgroundImages || []) if (tokenSource.includes(value) || catalogSource.includes(value)) failures.push(`Project-only image entered the system: ${value}`);
+  const exact = (used, documented, kind) => {
+    for (const value of used) if (!documented.includes(value)) failures.push(`Undocumented website ${kind}: ${value}`);
+    for (const value of documented) if (!used.includes(value)) failures.push(`Catalog-only ${kind}: ${value}`);
+  };
+  exact(model.components.filter(component => isReusableComponent(component.file)).map(component => component.file), documentedComponents, 'component');
+  exact(model.tokens.map(token => token.name), documentedTokens, 'token');
+  exact(model.iconNames, documentedIcons, 'icon');
+  for (const name of model.privateNames) if (tokenSource.includes(`--${name}:`) || catalogSource.includes(`var(--${name})`)) failures.push(`Project-only value entered the system: --${name}`);
+  for (const font of model.projectFonts) if (tokenSource.includes(font) || catalogSource.includes(font)) failures.push(`Project-only font entered the system: ${font}`);
+  if (!/DSCoverage|DSFoundations|data-ds-component=/.test(catalogSource)) failures.push('Catalog must render the complete source-derived token/component inventory.');
+  return failures;
+}
+errors.push(...validateInventoryCoverage(inventory, registry.map(item => item.file), inventory.tokens.map(token => token.name), inventory.iconNames, read('src/styles/tokens.css'), catalog));
+for (const name of Object.keys(icons)) if (!inventory.iconNames.includes(name)) errors.push(`Unused system icon: ${name}`);
+if (read('src/layouts/DSLayout.astro').includes('hooko-artwork.css')) errors.push('Project artwork styles must not be imported by the catalog layout.');
 if (process.argv.includes('--self-test')) {
+  for (const kind of ['component', 'token', 'icon']) {
+    const components = registry.map(item => item.file), tokens = inventory.tokens.map(token => token.name), icons = [...inventory.iconNames];
+    if (kind === 'component') components.push('src/components/CatalogOnlyFixture.astro');
+    if (kind === 'token') tokens.push('catalog-only-fixture');
+    if (kind === 'icon') icons.push('catalog-only-fixture');
+    if (!validateInventoryCoverage(inventory, components, tokens, icons, read('src/styles/tokens.css'), catalog).some(error => error.includes(`Catalog-only ${kind}`))) throw Error(`Usage guard accepted an unused ${kind}`);
+  }
+  if (!validateInventoryCoverage(inventory, [], [], [], read('src/styles/tokens.css'), catalog).some(error => error.includes('Undocumented website token'))) throw Error('Usage guard accepted missing documentation');
+  if (!validateInventoryCoverage(inventory, registry.map(item => item.file), inventory.tokens.map(token => token.name), inventory.iconNames, read('src/styles/tokens.css') + `\n--${inventory.privateNames[0]}: red;`, catalog).some(error => error.includes('Project-only value'))) throw Error('Usage guard accepted a project-only token');
   const missing = validate([...registry, { name: 'MissingFixture', section: 'buttons', preview: 'direct', description: '' }]);
   const broken = validate(registry.map(item => item.name === 'Button' ? { ...item, section: 'missing-section' } : item));
   if (!missing.some(error => error.includes('Missing component: MissingFixture')) || !broken.some(error => error.includes('Missing documentation section: Button'))) {
@@ -121,4 +211,4 @@ if (process.argv.includes('--self-test')) {
   console.log('Design-system guard self-test passed (missing components, broken anchors and inline route designs rejected).');
 }
 if (errors.length) { console.error(errors.join('\n')); process.exit(1); }
-console.log(`Design-system contract verified: ${registry.length} documented components render direct specimens with stable section targets and no catalog style forks.`);
+console.log(`Design-system contract verified: ${registry.length} website components documented from source with stable section targets and no catalog style forks.`);

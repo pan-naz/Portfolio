@@ -5,7 +5,5 @@ interface Props { showDS?: boolean; layout?: 'desktop' | 'mobile'; }
 const { showDS = true, layout = 'desktop' } = Astro.props;
 ---
 <nav class:list={{ 'desktop-nav': layout === 'desktop' }} aria-label={layout === 'desktop' ? 'Main navigation' : 'Mobile navigation'}>
-  {siteLinks.filter(link => showDS || !('catalog' in link)).map(link => 'disabled' in link
-    ? <NavigationItem label={link.label} disabled layout={layout} />
-    : <NavigationItem label={link.label} href={link.href} layout={layout} />)}
+  {siteLinks.filter(link => showDS || !('catalog' in link)).map(link => <NavigationItem label={link.label} href={link.href} layout={layout} />)}
 </nav>

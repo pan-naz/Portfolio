@@ -81,7 +81,7 @@ const context = {
 globalThis.Path2D = class { addPath(_source, transform) { if (transform) scaledPaths++; } arc() {} roundRect() {} };
 globalThis.DOMMatrix = class { scale() { return this; } };
 globalThis.devicePixelRatio = 1.5;
-globalThis.getComputedStyle = () => ({ getPropertyValue: name => ({ '--text-primary':'#171716', '--canvas':'#FAF8F7', '--waterfall-ink':'#111111' })[name] });
+globalThis.getComputedStyle = () => ({ getPropertyValue: name => ({ '--color-text-primary':'#171716', '--color-bg-canvas':'#FAF8F7', '--waterfall-icon-color':'#111111' })[name] });
 const events = new Map();
 const handlers = {
   addEventListener(name, fn) {

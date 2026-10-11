@@ -1,5 +1,13 @@
+import { visibleComponents } from './ds-components.ts';
+export const foundations = [
+  {id:'color',title:'Color',description:'Each colour has a role. The theme chooses its value.'},
+  {id:'typography',title:'Typography',description:'Funnel Display for headings and Urbanist for reading, shown at their real sizes.'},
+  {id:'spacing-layout',title:'Spacing & layout',description:'One spacing scale, shared corners and a responsive grid.'},
+  {id:'motion',title:'Motion',description:'Shared durations and easing keep feedback consistent. Reduced motion skips decoration.'},
+  {id:'icons',title:'Icons',description:'The interface icons used on the portfolio, drawn from the live geometry.'},
+];
 export const dsGroups = [
-  { label: 'Foundations', links: [['colors', 'Color'], ['typography', 'Typography'], ['shape', 'Space & shape'], ['motion', 'Motion']] },
-  { label: 'Components', links: [['icons', 'Icon'], ['tags', 'Chip & label'], ['buttons', 'Button'], ['text-links', 'Text link'], ['project-identity', 'Logo'], ['cards', 'Project card'], ['navigation', 'Navigation'], ['section-heading', 'Section header'], ['stats', 'Stat'], ['timeline', 'Timeline row']] },
-  { label: 'Modes', links: [['dark-mode', 'Dark mode']] },
-] as const;
+ {label:'Foundations',links:foundations.map(item=>[item.id,item.title])},
+ {label:'Components',links:visibleComponents.map(item=>[item.section,item.title!])},
+];
+export const dashboardDescription='The foundations and components behind this portfolio, taken from the live code.';

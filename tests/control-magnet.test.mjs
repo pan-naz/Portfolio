@@ -35,7 +35,8 @@ let runtime = readFileSync('src/scripts/control-magnet.ts', 'utf8')
 runtime = ts.transpileModule(runtime, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
 const { initializeControlMagnet } = await import(`data:text/javascript;base64,${Buffer.from(runtime).toString('base64')}`);
 const control = Object.assign(new Events(), {
-  dataset: {}, style: { removeProperty(name) { delete this[name]; } }, isConnected: true, keyboard: false,
+  dataset: {}, style: { removeProperty(name) { delete this[name]; } }, isConnected: true, keyboard: false, pointerFocus: false,
+  hasAttribute(name) { return name === 'data-case-pointer-focus' && this.pointerFocus; },
   closest: () => null,
   matches() { return this.keyboard; },
   getBoundingClientRect() {
@@ -67,6 +68,15 @@ assert.equal(control.getBoundingClientRect().top, 8, 'The target stays inside th
 control.keyboard = true; control.emit('focusin');
 assert.equal(control.style.translate, undefined, 'Keyboard focus immediately resets the pointer offset');
 pointer(672, 38); assert.equal(frames.size, 0);
+control.pointerFocus = true;
+pointer(672, 38); settle();
+assert.equal(control.style.translate, '12px 0px', 'Safari autofocus marked as pointer-owned still attracts with the original falloff');
+control.emit('focusin');
+assert.equal(control.style.translate, '12px 0px', 'Pointer-owned native focus-visible cannot reset the spring on focusin');
+control.pointerFocus = false;
+pointer(672, 38, false);
+assert.equal(control.style.translate, undefined, 'Switching to keyboard removes the marker and parks the control immediately');
+pointer(672, 38); assert.equal(frames.size, 0, 'Genuine keyboard focus continues to block the magnet');
 control.keyboard = false;
 pointer(672, 38); settle();
 capability.matches = false; capability.emit('change');

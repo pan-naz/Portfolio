@@ -59,7 +59,7 @@ const videoStyle = [mediaStyle, crop.style].filter(Boolean).join(';') || undefin
       <span data-pause-icon hidden><Icon name="pause" /></span>
     </IconButton>
     <div class="case-video-seek">
-      <input data-video-seek type="range" min="0" max="100" value="0" step="0.1" aria-label="Video position" disabled />
+      <input data-video-seek type="range" tabindex="0" min="0" max="100" value="0" step="0.1" aria-label="Video position" disabled />
     </div>
     {preview && <div class="case-video-preview" style={preview.displayWidth ? `--video-preview-width:${preview.displayWidth}px` : undefined} data-video-preview aria-hidden="true" hidden>
       <div class="case-video-preview-frame" style={`aspect-ratio: ${preview.width} / ${preview.height}`} />

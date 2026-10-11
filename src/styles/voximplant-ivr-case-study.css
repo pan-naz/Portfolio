@@ -7,7 +7,7 @@
 .ivr-row { align-items: center; }
 .ivr-copy { display: grid; align-content: start; gap: var(--space-6); }
 .ivr-copy > p { margin-top: 0; }
-.ivr-muted { color: var(--muted); }
+.ivr-muted { color: var(--color-text-secondary); }
 /* Original artwork: continue the purple/white page canvas and soften only the clip's side edges. */
 @media (min-width: 768px) {
   img[src="/projects/voximplant-ivr-case-study/hero.webp"] {

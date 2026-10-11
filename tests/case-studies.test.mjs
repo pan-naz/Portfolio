@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { projects, collectionProjects } from '../src/data/portfolio.ts';
+import { projects, collectionProjects, hookoAppUrl } from '../src/data/portfolio.ts';
 import { hookoHero } from '../src/data/hooko-case-study.ts';
 import { caseVideoPreviews } from '../src/data/case-video-previews.ts';
 const all = [...projects, ...collectionProjects];
@@ -87,6 +87,12 @@ for (const project of all) {
     }
     assert.ok(!html.includes('Draft case study'), 'Hooko is a complete case study');
     assert.ok(html.includes('/projects/hooko-case-study/hooko-logo.svg'), 'Hooko uses the supplied SVG logo');
+    for (const [view, markup] of [['standalone', html], ['opened', template]]) {
+      const links = [...markup.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)]
+        .filter(([, , label]) => textFromMarkup(label) === 'App Store');
+      assert.equal(links.length, 2, `${view} Hooko overview and ending both expose the App Store destination`);
+      assert.ok(links.every(([, href]) => href === hookoAppUrl), `${view} Hooko links use the shared canonical destination`);
+    }
     const videoSources = [...html.matchAll(/<source[^>]+data-src="([^"]+)"/g)].map(match => match[1]);
     assert.equal(videoSources.length, 2, 'Hooko includes the new hero recording and the original product-flow demo');
     assert.equal(videoSources[0], hookoHero.video.src);
@@ -148,7 +154,7 @@ for (const project of all) {
     for (const src of [...imageSources, ...videoSources, '/projects/gutsul-made-case-study/logo.svg', ...['sketch','grid','frame','final'].map(name => `/projects/gutsul-made-case-study/logo-${name}.svg`)]) {
       assert.deepEqual(readFileSync(new URL(`../public${src}`, import.meta.url)), readFileSync(new URL(`../../reference-research/gutsul-made/source/${src.split('/').at(-1)}`, import.meta.url)), 'Gutsul artwork matches the reference bytes');
     }
-    assert.ok(html.includes('case-study-media--canvas') && card.includes('background:var(--floating-surface)'), 'The transparent hero retains the same white canvas in both presentations');
+    assert.ok(html.includes('case-study-media--canvas') && card.includes('background:var(--color-overlay-bg-surface)'), 'The transparent hero retains the same white canvas in both presentations');
     assert.ok(!html.includes('>Team</h2>') && !html.includes('Draft case study'), 'Only supplied project metadata is rendered');
   } else if (project.id === 'promshyna') {
     for (const section of ['path', 'responsive', 'other', 'branding']) assert.ok(html.includes(`id="ps-${section}"`), `PromShyna includes the ${section} chapter`);

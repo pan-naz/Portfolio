@@ -4,30 +4,30 @@
 .case-study-content--blaustrom { --blaustrom-font-blaustrom-open-sans-sans-serif: 'Blaustrom Open Sans', sans-serif; }
 /* Approved Blaustrom artwork colors; portfolio type, frames and controls stay shared. */
 .case-study-content--blaustrom { --blaustrom-blue: #0497C3; --blaustrom-teal: #04C1C1; --blaustrom-dark: #282828; padding-bottom: 0; }
-.blaustrom-lede { margin-top: var(--space-6); color: var(--muted); }
-.blaustrom-number { color: var(--accent); }
+.blaustrom-lede { margin-top: var(--space-6); color: var(--color-text-secondary); }
+.blaustrom-number { color: var(--color-interactive-accent); }
 .blaustrom-block { margin-top: var(--space-16); }
 .blaustrom-stack { display: grid; gap: var(--space-6); }
 .blaustrom-band { width: 100vw; margin-left: calc(50% - 50vw); }
-.blaustrom-configurator { --ink: var(--inverse-ink); --muted: var(--inverse-ink); --accent: var(--inverse-ink); background: linear-gradient(135deg, var(--blaustrom-blue), var(--blaustrom-teal)); color: var(--ink); }
+.blaustrom-configurator { --color-text-primary: var(--color-inverse-text-primary); --color-text-secondary: var(--color-inverse-text-primary); --color-interactive-accent: var(--color-inverse-text-primary); background: linear-gradient(135deg, var(--blaustrom-blue), var(--blaustrom-teal)); color: var(--color-text-primary); }
 .blaustrom-config-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: var(--grid-gap); }
-.blaustrom-responsive { background: var(--canvas); }
-.blaustrom-breakpoint { margin-top: var(--space-6); color: var(--muted); }
+.blaustrom-responsive { background: var(--color-bg-canvas); }
+.blaustrom-breakpoint { margin-top: var(--space-6); color: var(--color-text-secondary); }
 .blaustrom-style { background: var(--blaustrom-dark); }
 .blaustrom-palette { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--grid-gap); margin: var(--space-6) 0 0; padding: 0; list-style: none; }
-.blaustrom-palette > li { overflow: hidden; border: 1px solid var(--inverse-divider); border-radius: var(--radius-medium); }
+.blaustrom-palette > li { overflow: hidden; border: 1px solid var(--color-inverse-border-default); border-radius: var(--radius-medium); }
 .blaustrom-swatch { aspect-ratio: 2; background: var(--blaustrom-swatch); }
 .blaustrom-swatch--gradient { background: linear-gradient(135deg, var(--blaustrom-blue), var(--blaustrom-teal)); }
 .blaustrom-palette > li > :last-child { display: grid; gap: var(--space-1); padding: var(--space-4); }
-.blaustrom-palette code { color: var(--muted); font: inherit; }
-.blaustrom-brand-card { --ink: var(--floating-ink); --muted: var(--floating-muted); color: var(--ink); padding: var(--space-6); background: var(--floating-surface); border-radius: var(--radius-medium); box-shadow: var(--shadow-floating); }
-.blaustrom-brand-card > .case-study-eyebrow { color: var(--muted); }
+.blaustrom-palette code { color: var(--color-text-secondary); font: inherit; }
+.blaustrom-brand-card { --color-text-primary: var(--color-overlay-text-primary); --color-text-secondary: var(--color-overlay-text-secondary); color: var(--color-text-primary); padding: var(--space-6); background: var(--color-overlay-bg-surface); border-radius: var(--radius-medium); box-shadow: var(--shadow-floating); }
+.blaustrom-brand-card > .case-study-eyebrow { color: var(--color-text-secondary); }
 .blaustrom-brand-card > p + p { margin-top: var(--space-6); }
 .blaustrom-type-grid { margin-top: var(--grid-gap); gap: var(--grid-gap); align-items: stretch; }
 .blaustrom-controls { display: grid; margin-top: var(--space-6); padding-inline: var(--space-12); }
 .blaustrom-control-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); align-items: center; gap: var(--grid-gap); padding-block: var(--space-8); }
-.blaustrom-control-row + .blaustrom-control-row { border-top: 1px solid var(--floating-divider); }
-.blaustrom-control-row p { color: var(--muted); }
+.blaustrom-control-row + .blaustrom-control-row { border-top: 1px solid var(--color-overlay-border-default); }
+.blaustrom-control-row p { color: var(--color-text-secondary); }
 .blaustrom-control-row .svg-asset { width: 100%; height: auto; }
 /* Open Sans belongs only to the original brand specimens. */
 @font-face { font-family: 'Blaustrom Open Sans'; font-style: normal; font-weight: 300; font-display: swap; src: url('/projects/blaustrom-case-study/open-sans-300.ttf') format('truetype'); }

@@ -23,11 +23,11 @@ assert.match(css, /--line-height-body: 1\.5;/, 'Body line-height retains its exa
 assert.ok(/\.desktop-nav\s*\{[^}]*gap: var\(--space-3\)/.test(global) && /\.navigation-item\s*\{[^}]*--navigation-item-padding-inline: var\(--space-3\)[^}]*padding: 10px var\(--navigation-item-padding-inline\)/.test(global), 'Horizontal NavLinks use space/12 with shared 12px item padding');
 assert.ok(/\.header-controls\s*\{[^}]*gap: var\(--space-3\)/.test(global), 'Horizontal header components use space/12');
 assert.ok(/\.mobile-menu nav\s*\{[^}]*gap: 0/.test(global), 'Vertical navigation keeps zero inter-item gap');
-assert.ok(/body\s*\{[^}]*font-size: var\(--text-body\)[^}]*line-height: var\(--line-height-body\)[^}]*font-weight: 400/.test(global), 'Body/L is the shared 20/30 Regular default');
-assert.ok(/\.text-body-l\s*\{[^}]*font-size: var\(--text-body\)[^}]*line-height: var\(--line-height-body\)[^}]*letter-spacing: var\(--letter-spacing-body-l\)[^}]*font-weight: 400/.test(global), 'Body/L is one shared 20/30 Regular role');
+assert.ok(/body\s*\{[^}]*font-size: var\(--text-body-l\)[^}]*line-height: var\(--line-height-body\)[^}]*font-weight: 400/.test(global), 'Body/L is the shared 20/30 Regular default');
+assert.ok(/\.text-body-l\s*\{[^}]*font-size: var\(--text-body-l\)[^}]*line-height: var\(--line-height-body\)[^}]*letter-spacing: var\(--letter-spacing-body-l\)[^}]*font-weight: 400/.test(global), 'Body/L is one shared 20/30 Regular role');
 assert.ok(/\.text-body-m\s*\{[^}]*font-size: var\(--text-body-m\)[^}]*line-height: var\(--line-height-body\)[^}]*letter-spacing: var\(--letter-spacing-body-m\)[^}]*font-weight: 400/.test(global), 'Body/M is one shared 16/24 Regular role');
 assert.ok(/\.text-body-m-strong\s*\{[^}]*font-size: var\(--text-body-m\)[^}]*line-height: var\(--line-height-body\)[^}]*letter-spacing: var\(--letter-spacing-body-m-strong\)[^}]*font-weight: var\(--font-weight-body-m-strong\)/.test(global), 'Body/M Strong is one shared 16/24 Medium role');
-assert.ok(/\.text-body-s\s*\{[^}]*font-size: var\(--text-small\)[^}]*line-height: 1\.428571[^}]*letter-spacing: var\(--letter-spacing-body-s\)[^}]*font-weight: 400/.test(global), 'Body/S is one shared 14/20 Regular role');
+assert.ok(/\.text-body-s\s*\{[^}]*font-size: var\(--text-body-s\)[^}]*line-height: 1\.428571[^}]*letter-spacing: var\(--letter-spacing-body-s\)[^}]*font-weight: 400/.test(global), 'Body/S is one shared 14/20 Regular role');
 const button = read('../src/components/Button.astro');
 assert.ok(button.includes("size === 'small' ? 'text-body-s' : 'text-body-m-strong'"), 'Buttons consume Body/M Strong at default size and Body/S at small size');
 assert.ok(read('../src/components/NavLinks.astro').includes("import NavigationItem from './NavigationItem.astro'"), 'Desktop and floating-pill navigation consume the shared item');
@@ -35,7 +35,7 @@ assert.ok(read('../src/components/NavigationItem.astro').includes("'text-body-m-
 const sectionNavigation = read('../src/components/SectionNavigation.astro');
 assert.ok(sectionNavigation.includes('section-navigation') && sectionNavigation.includes('text-body-m-strong'), 'Left section menu consumes Body/M Strong');
 assert.ok(sectionNavigation.includes('floating-navigation-theme floating-navigation-surface'), 'Left section menu consumes the shared theme-aware floating-navigation treatment');
-const experienceRow = read('../src/components/ExperienceRow.astro');
+const experienceRow = read('../src/components/TimelineRow.astro');
 assert.match(experienceRow, /<h3 class="text-body-m-strong">/, 'Experience positions consume Body/M Strong');
 assert.match(experienceRow, /experience-summary text-body-m/, 'Experience descriptions consume Body/M');
 for (const metadataClass of ['experience-period text-body-s', 'experience-company text-body-s', 'experience-duration text-body-s']) {
@@ -50,8 +50,10 @@ assert.ok(read('../src/components/TypewriterHeading.astro').includes('hero-title
 assert.ok(read('../src/components/TypewriterHeading.astro').includes('type-line type-line--display'), 'Permanent display line uses the shared optical-alignment hook');
 assert.ok(/\.type-line--display,\s*\.role-cycle\s*\{[^}]*translateX\(-\.06em\)/.test(global), 'Display and cycling lines share the same responsive optical edge');
 assert.ok(read('../src/components/TypewriterHeading.astro').includes('type-line text-heading-l role-cycle'), 'Cycling text uses the shared heading size and accent role');
-const ds = read('../src/components/DSCatalog.astro');
-for (const role of ['text-heading-xl', 'text-heading-l', 'text-body-l', 'text-body-m', 'text-body-m-strong', 'text-body-s']) assert.ok(ds.includes(`'${role}'`), 'Catalog typography data uses shared type classes');
-assert.ok(!ds.includes('Body/S Strong') && !global.includes('text-body-s-strong'), 'Retired Body/S Strong naming cannot drift back into the shared system');
-assert.ok(ds.includes('class={style}'), 'Catalog renders the shared type class from its specimen data');
+const typography = (await import('../src/data/system-typography.ts')).systemTypography();
+assert.equal(typography.length, 9, 'All shared text roles are documented');
+for (const style of typography) assert.ok(style.sizeToken && style.family && style.weight && style.range && style.lineHeight && /^-?[\d.]+em$/.test(style.tracking), style.name);
+assert.equal(typography.find(style => style.name === 'Heading/XL').rawTracking, 'calc(-3.64 / 76.0048 * 1em)');
+assert.equal(typography.find(style => style.name === 'Heading/L').rawTracking, 'calc(-2.64 / 55.9952 * 1em)');
+assert.ok(!global.includes('text-body-s-strong'), 'Retired role cannot return');
 console.log('PASS: shared 40/26 → 88/56 Figma scale, minimum 20% steps, 320–2560px and 100–200% font preferences.');
