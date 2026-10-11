@@ -230,7 +230,9 @@ html[data-work-stage-layout='true']:not([data-work-stage-motion='true']) .work-p
 .section-navigation { position: sticky; top: 112px; display: grid; padding: var(--space-3); border-radius: var(--radius-medium); }
 .section-navigation[data-magnet-ready='true'] { will-change: transform; }
 .work-rail .section-navigation { top: calc(50vh - var(--work-filter-half-height)); }
-.section-navigation .navigation-item { width: 100%; }
+.section-navigation .navigation-item { width: 100%; transition: padding-inline-end var(--duration-navigation) var(--ease-entrance); }
+/* Reserve the active label's travel so it cannot consume the trailing inset. */
+.section-navigation .navigation-item[aria-pressed='true'] { padding-inline-end: calc(var(--navigation-item-padding-inline) + var(--navigation-item-shift)); }
 .projects { position: relative; overflow-anchor: none; }
 .project-collection { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--grid-gap); width: 100%; }
 .project-collection--bento { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
@@ -446,7 +448,7 @@ html[data-work-stage-layout='true'] .work-rail { display: block; left: max(16px,
 html[data-work-stage-layout='true'] .work-compact-filter { display: none; }
 html[data-work-stage-layout='true'] .work-content { width: calc(100% - max(220px, var(--gutter)) - var(--gutter)); margin-left: max(220px, var(--gutter)); margin-right: var(--gutter); }
 @media (max-width: 380px) {
-  .section-navigation--compact .navigation-item { --navigation-item-padding-inline: var(--space-2); font-size: var(--text-body-s); }
+  .section-navigation--compact .navigation-item { font-size: var(--text-body-s); }
 }
 @media (min-width: 768px) and (max-width: 1327px) {
   .experience-row { grid-template-columns: 120px minmax(0,1fr) minmax(0,1.3fr) 64px; gap: var(--space-4); }
