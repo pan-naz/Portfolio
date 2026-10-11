@@ -48,4 +48,46 @@ assert.equal(close.marked,false,'Document teardown removes all markers and liste
 focus.prepare(card);key('Tab');
 assert.equal(card.marked,true,'The key listener was removed at teardown');
 focus.destroy();
+
+// Native dialog.close() can restore focus before the animated return finishes.
+// Verify both preparations across repeated opens, including an intervening blur
+// before the final explicit return and a subsequent keyboard close.
+const returnDocument = new EventTarget();
+returnDocument.defaultView = new EventTarget();
+const returns = initializeCaseStudyFocus(returnDocument);
+const returnTarget = () => ({
+  ...element(), moves: [],
+  focus(options) { this.moves.push({ marked: this.marked, options }); },
+});
+const returnCard = returnTarget(), returnClose = returnTarget();
+const leave = target => {
+  const event = new Event('focusout');
+  Object.defineProperty(event, 'target', { value: target });
+  returnDocument.dispatchEvent(event);
+};
+for (const pointerType of ['mouse', 'touch']) {
+  returnDocument.dispatchEvent(Object.assign(new Event('pointerdown'), { pointerType }));
+  leave(returnCard);
+  returns.prepare(returnClose); returnClose.focus();
+  assert.equal(returnClose.moves.at(-1).marked, true, `${pointerType}: native autofocus is prepared`);
+  returns.prepare(returnCard); returnCard.focus();
+  leave(returnClose);
+  assert.equal(returnCard.moves.at(-1).marked, true, `${pointerType}: native close restores pointer-owned focus`);
+  leave(returnCard);
+  assert.equal(returnCard.marked, false, 'Intervening blur removes the temporary marker');
+  returns.focus(returnCard);
+  assert.deepEqual(returnCard.moves.at(-1), { marked: true, options: { preventScroll: true } }, `${pointerType}: final explicit return re-prepares the blurred target without scrolling`);
+
+  returnDocument.dispatchEvent(Object.assign(new Event('pointerdown'), { pointerType }));
+  leave(returnCard);
+  returns.prepare(returnClose); returnClose.focus();
+  returnDocument.dispatchEvent(Object.assign(new Event('keydown'), { key: 'Escape' }));
+  returns.prepare(returnCard); returnCard.focus();
+  leave(returnClose);
+  assert.equal(returnCard.moves.at(-1).marked, false, `${pointerType}: native Escape return permits the full keyboard ring`);
+  returns.focus(returnCard);
+  assert.deepEqual(returnCard.moves.at(-1), { marked: false, options: { preventScroll: true } }, 'Final Escape return keeps visible keyboard focus without scrolling');
+}
+returns.destroy();
+assert.equal(returnCard.marked, false);
 console.log('PASS: Case-study focus preserves keyboard rings, pointer/touch suppression, return position, blur cleanup and BFCache lifetime.');
