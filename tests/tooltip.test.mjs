@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {tooltipLocalX,tooltipFollowStep} from '../src/scripts/tooltip.ts';
+import {icons} from '../src/data/icons.ts';
+assert.equal(tooltipLocalX(300,200,120,1280),100,'Away from edges, preserve the exact old pointer-local position');
+assert.equal(tooltipLocalX(1275,1200,120,1280),12,'Expanded bubble stays 8px inside the right edge');
+assert.equal(tooltipLocalX(1,0,120,390),68,'Expanded bubble stays inside the left edge');
+assert.equal(tooltipFollowStep(0,100,-1),0);
+assert.equal(tooltipFollowStep(0,100,100),tooltipFollowStep(0,100,64));
+const follow=fps=>Array.from({length:fps/2}).reduce(x=>tooltipFollowStep(x,100,1000/fps),0);
+assert.ok(Math.abs(follow(30)-follow(120))<1e-10);
+assert.equal(icons.layers.nodes.length,3);
+assert.deepEqual(icons.layers.nodes.map(([,a])=>a['data-icon-layer']),['bottom','middle','top']);
+assert.equal(icons.layers.nodes[2][1].stroke,'none');
+assert.equal(icons.layers.nodes[2][1].fill,'var(--color-interactive-accent)');
+console.log('Shared tooltip preserves follow timing, clamps viewport edges, and layers retain independent semantic fills.');

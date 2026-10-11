@@ -4,8 +4,14 @@ interface IconDefinition {
   weight?: 'strong';
 }
 
+// Node attributes may opt into semantic fills; unfilled nodes inherit the regular stroke.
 // Approved UI geometry; every control and decorative SVG uses the same renderer.
 export const icons = {
+  layers: { nodes: [
+    ['path', { d: 'M3.5 16.1 12 11.8l8.5 4.3L12 20.4z', fill: 'var(--icon-layer-surface, var(--color-bg-canvas))', 'data-icon-layer': 'bottom' }],
+    ['path', { d: 'M3.5 12 12 7.7l8.5 4.3L12 16.3z', fill: 'var(--icon-layer-surface, var(--color-bg-canvas))', 'data-icon-layer': 'middle' }],
+    ['path', { d: 'M3.5 7.9 12 3.6l8.5 4.3L12 12.2z', fill: 'var(--color-interactive-accent)', stroke: 'none', 'data-icon-layer': 'top' }],
+  ] },
   menu: { nodes: [['path', { d: 'M4 6h16M4 12h16M4 18h16' }]] },
   close: { nodes: [['path', { d: 'm6 6 12 12M6 18 18 6' }]] },
   plus: { weight: 'strong', nodes: [['path', { d: 'M12 5v14M5 12h14' }]] },

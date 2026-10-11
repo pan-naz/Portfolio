@@ -1,0 +1,7 @@
+---
+import '../styles/tooltip.css';
+interface Props { id: string; label: string; anchor?: 'center' | 'top'; }
+const { id, label, anchor = 'center' } = Astro.props;
+---
+<span id={id} class="tooltip text-body-m" role="tooltip" data-tooltip-anchor={anchor}>{label}</span>
+<script>import '../scripts/tooltip';</script>

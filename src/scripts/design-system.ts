@@ -68,6 +68,7 @@ const refreshValues=()=>{
  for(const node of view.querySelectorAll<HTMLElement>('[data-ds-human-token]')){
   const name=node.dataset.dsHumanToken!,raw=getComputedStyle(document.documentElement).getPropertyValue('--'+name).trim();
   if(/^(color-|control-border|focus-ring|backdrop)/.test(name)){probe.style.backgroundColor=`var(--${name})`;node.textContent=hex(getComputedStyle(probe).backgroundColor);}
+  else if(/^(duration-|ease-|scale-)/.test(name))node.textContent=raw;
   else if(name.startsWith('icon-stroke-'))node.textContent=parseFloat(raw)+'px';
   else {probe.style.width=`var(--${name})`;node.textContent=getComputedStyle(probe).width;}
  }
@@ -82,3 +83,17 @@ const refreshValues=()=>{
  for(const row of view.querySelectorAll<HTMLElement>('[data-ds-type]')){const sample=row.querySelector<HTMLElement>('.ds-type-sample > *')!,computed=getComputedStyle(sample);row.querySelector('[data-ds-type-metrics]')!.textContent=`Line height ${readable(computed.lineHeight)} · tracking ${computed.letterSpacing==='normal'?'0px':readable(computed.letterSpacing)}`;}
 };
 window.addEventListener('resize',refreshValues);window.addEventListener('themechange',refreshValues);selectView();
+
+// Exercise the shared bubble itself; phone catalog previews show its focus anchor.
+const tooltipExample=document.querySelector<HTMLElement>('#tooltip [data-ds-example=tooltip-link] .tooltip');
+const showTooltipExample=(state:string)=>{
+ if(!tooltipExample)return;
+ tooltipExample.toggleAttribute('data-tooltip-visible',state!=='hidden');
+ tooltipExample.dataset.placement=state==='below'?'below':'above';
+ const target=tooltipExample.parentElement!;
+ target.style.setProperty('--tooltip-x','50%');
+ target.style.setProperty('--tooltip-y',state==='below'?'100%':'0px');
+ for(const button of document.querySelectorAll('[data-ds-tooltip-state]'))button.setAttribute('aria-pressed',String(button.getAttribute('data-ds-tooltip-state')===state));
+};
+for(const button of document.querySelectorAll<HTMLElement>('[data-ds-tooltip-state]'))button.addEventListener('click',()=>showTooltipExample(button.dataset.dsTooltipState!));
+if(matchMedia('(hover: none), (pointer: coarse)').matches)showTooltipExample('focus');

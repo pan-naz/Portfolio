@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { sectionHeadingTiming, sectionItemStart } from '../src/scripts/section-reveals.ts';
-import { tooltipFollowStep } from '../src/scripts/tool-card-tooltips.ts';
+import { tooltipFollowStep } from '../src/scripts/tooltip.ts';
 
 const read = path => readFileSync(new URL(path, import.meta.url), 'utf8');
 const sectionReveals = read('../src/scripts/section-reveals.ts');
@@ -14,7 +14,9 @@ const footer = read('../src/components/SiteFooter.astro');
 const about = read('../src/components/AboutSection.astro');
 const tools = read('../src/components/ToolsSection.astro');
 const toolCard = read('../src/components/ToolCard.astro');
-const toolTooltips = read('../src/scripts/tool-card-tooltips.ts');
+const tooltipMarkup = read('../src/components/Tooltip.astro');
+const tooltipCss = read('../src/styles/tooltip.css');
+const toolTooltips = read('../src/scripts/tooltip.ts');
 const layout = read('../src/layouts/BaseLayout.astro');
 const css = read('../src/styles/global.css');
 
@@ -62,15 +64,15 @@ assert.ok(css.includes(":is([data-section-item], [data-reveal]) { opacity: 0; }"
 assert.ok(!footer.includes('data-reveal'), 'Footer metadata and the design-system link render immediately without an entrance');
 assert.ok(about.includes('<ToolsSection />') && tools.includes('class="tools-section" aria-labelledby="tools-title" data-section-item'), 'The complete tools section follows the experience rows as one timeline item');
 assert.ok(!toolCard.includes('data-section-item'), 'Tool cards stay together rather than animating separately');
-assert.ok(toolCard.includes('role="group" tabindex="0"') && toolCard.includes('role="tooltip"'), 'Every tool card exposes its name on hover and keyboard focus without pretending to be a link or button');
-assert.ok(css.includes('.tool-card.is-pointer-hovered .svg-asset { transform: scale(1.08); }') && css.includes('.tool-card:focus-visible .tool-card-tooltip'), 'Tool hover and focus enlarge the mark and reveal the tooltip');
-assert.ok(toolCard.includes('tool-card-tooltip text-body-m'), 'Tool names use the Body/M type style');
+assert.ok(toolCard.includes('role="group" tabindex="0"') && tooltipMarkup.includes('role="tooltip"'), 'Every tool card exposes its name on hover and keyboard focus without pretending to be a link or button');
+assert.ok(css.includes('.tool-card.is-pointer-hovered .svg-asset { transform: scale(1.08); }') && tooltipCss.includes('[data-tooltip-target]:focus-visible > .tooltip'), 'Tool hover and focus enlarge the mark and reveal the tooltip');
+assert.ok(tooltipMarkup.includes('tooltip text-body-m'), 'Tool names use the Body/M type style');
 const simulateTooltipFollow = fps => Array.from({ length: fps / 2 }).reduce(position => tooltipFollowStep(position, 100, 1000 / fps), 0);
 assert.ok(Math.abs(simulateTooltipFollow(60) - simulateTooltipFollow(120)) < .001 && simulateTooltipFollow(60) > 99, 'Tooltip follow is smooth and frame-rate independent at 60/120Hz');
 assert.ok(toolTooltips.includes('watchViewportPointer(pointer =>') && toolTooltips.includes('tooltipFollowStep(currentX, targetX, elapsed)') && toolTooltips.includes('requestAnimationFrame(renderPointerPosition)'), 'The tooltip glides toward the latest pointer position on animation frames');
-assert.ok(toolTooltips.includes('event.clientX - cardRect.left') && toolTooltips.includes('event.clientY - cardRect.top') && css.includes('.tool-card-tooltip { --tool-tooltip-scale: .82; position: absolute;'), 'The cursor tooltip uses exact unclamped local coordinates and a perceptible collapsed scale');
+assert.ok(toolTooltips.includes('tooltipLocalX(event.clientX, cardRect.left, tooltip.offsetWidth, innerWidth)') && toolTooltips.includes('event.clientY - cardRect.top') && tooltipCss.includes('.tooltip { --tooltip-scale: var(--scale-tooltip-start); position: absolute;'), 'The cursor tooltip uses local coordinates clamped only at viewport edges and a perceptible collapsed scale');
 assert.ok(toolTooltips.includes("tooltip.dataset.placement = event.clientY < tooltipHeight + 32 ? 'below' : 'above'"), 'The cursor tooltip flips below near the viewport top edge instead of clipping');
-assert.ok(css.includes('--tool-tooltip-scale: 1; opacity: 1;') && css.includes('transition: opacity var(--duration-tooltip-opacity) var(--ease-entrance), transform var(--duration-tooltip-scale) var(--ease-entrance);'), 'Tooltip entrance and exit use only opacity and scale');
+assert.ok(tooltipCss.includes('--tooltip-scale: var(--scale-tooltip-end); opacity: 1;') && tooltipCss.includes('transition: opacity var(--duration-tooltip-opacity) var(--ease-entrance), transform var(--duration-tooltip-scale) var(--ease-entrance);'), 'Tooltip entrance and exit use only opacity and scale');
 assert.ok(toolTooltips.includes("if (!card.matches(':focus-visible')) return;"), 'Pointer focus cannot pull the cursor tooltip back to the keyboard-only centered anchor');
 assert.ok(sectionReveals.includes("document.addEventListener('focusin'") && sectionReveals.includes('record.finish()'), 'Keyboard focus resolves the complete waiting section');
 assert.ok(sectionReveals.includes("reduced.addEventListener('change'") && sectionReveals.includes('records.forEach(record => record.finish())'), 'Reduced motion resolves every waiting section');

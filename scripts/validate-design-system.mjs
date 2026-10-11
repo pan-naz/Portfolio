@@ -51,7 +51,7 @@ const hiddenSections = {
  'Logo':'Wordmark','CaseStudyComparison':'Before and after','CaseStudyDecisionCard':'Decision card','CaseStudySteps':'Steps','CaseStudyMedia':'Media','ToolCard':'Tool card','ProjectIdentity':'Project identity','ProjectTags':'Project tags','SectionNavigation':'Project filter','ThemeToggle':'Theme switch','Icon':'Icon',
 };
 const hiddenKeys = Object.fromEntries(Object.entries(hiddenSections).map(([file,title])=>['src/components/'+file+'.astro',title.toLowerCase().replaceAll(' ','-')]));
-const expectedVisible = ['Button','Chip','IconButton','NavigationItem','ProjectCard','SectionHeading','Stat','TextLink','TimelineRow'];
+const expectedVisible = ['Button','Chip','IconButton','NavigationItem','ProjectCard','SectionHeading','Stat','TextLink','TimelineRow','Tooltip'];
 export function validateComponentClassification(files, used, manifest, shown) {
   const failures = [];
   const kinds = ['reusable-ui', 'page-section', 'case-study', 'internal-helper'];
@@ -152,7 +152,7 @@ export function validateHiddenDocumentation(records, text) {
   return failures;
 }
 const errors = validate(registry);
-if(JSON.stringify(visibleComponents.map(item=>item.name).sort())!==JSON.stringify([...expectedVisible].sort()))errors.push('Visible catalog must contain exactly the approved nine components');
+if(JSON.stringify(visibleComponents.map(item=>item.name).sort())!==JSON.stringify([...expectedVisible].sort()))errors.push('Visible catalog must contain exactly the approved ten components');
 for(const [file,key] of Object.entries(hiddenKeys))if(componentManifest.find(item=>item.file===file)?.documentedHidden!==key)errors.push('Missing documented-hidden classification: '+file);
 errors.push(...validateHoverSource(root));
 const externalDocs=resolve(root,'../docs/design-system.md');
