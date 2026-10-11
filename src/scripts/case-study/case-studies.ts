@@ -9,6 +9,7 @@ import { readCaseStudyMotion } from './case-study-motion';
 import { suspendCaseStudyScrollRestoration } from './case-study-navigation';
 import { rescopeSvgAssets } from '../svg-asset';
 import { initializeControlMagnet } from '../control-magnet';
+import { initializeCaseStudyFocus } from './case-study-focus';
 
 type Cursor = NonNullable<ReturnType<typeof initializeProjectCursor>>;
 
@@ -17,6 +18,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
   const panel = dialog?.querySelector<HTMLElement>('[data-case-panel]');
   const scroll = dialog?.querySelector<HTMLElement>('[data-case-scroll]');
   if (!dialog || !panel || !scroll || !cursor) return;
+  const focus = initializeCaseStudyFocus();
   const motion = readCaseStudyMotion(getComputedStyle(document.documentElement));
   // A modal top layer keeps the page inert, including the floating site controls.
   document.body.append(dialog);
@@ -154,6 +156,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     dialog.append(control);
     const closeButton = control.querySelector<HTMLButtonElement>('button')!;
     closeButton.addEventListener('click', requestClose);
+    focus.prepare(closeButton);
     closeButton.autofocus = true;
     onChange(true);
     pauseScroll();
@@ -251,6 +254,8 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     // Release the modal and its dimmed backdrop immediately. Keep only a
     // pointer-transparent visual layer while the artwork returns to the page.
     dialog.classList.add('is-closing');
+    // Native close can restore focus before the animated return has finished.
+    focus.prepare(active);
     dialog.close();
     document.documentElement.classList.remove('case-study-open');
     resumeScroll();
@@ -320,7 +325,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     document.title = oldTitle;
     cursor.release();
     control = null;
-    active.focus({ preventScroll: true });
+    focus.focus(active);
     active = null;
     phase = 'closed';
     closeRequested = false;
