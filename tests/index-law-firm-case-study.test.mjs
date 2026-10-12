@@ -17,7 +17,7 @@ assert.ok(!/<button\b[^>]*data-service-tile/.test(content), 'The eight service t
 for (const marker of ['Task', 'Design', 'Responsive']) assert.ok(content.includes('<span>' + marker + '</span>'), 'Original vertical marker: ' + marker);
 assert.ok(content.includes('class="case-study-guides" aria-hidden="true"'), 'The original vertical guide treatment remains decorative');
 assert.equal([...content.matchAll(/data-case-video/g)].length, 3);
-assert.ok(!content.includes('data-video-controls') && !/<video\b[^>]*\bcontrols/.test(content));
+assert.ok(!content.includes('data-video-controls') && !/<video\b[^>]*\scontrols(?:\s|=|>)/.test(content), 'Index has no native or custom playback toolbar; controlslist is only the shared browser policy');
 assert.ok(!/<a\b/.test(content), 'No project links are invented');
 for (const [, src] of content.matchAll(/(?:src|data-src|data-svg-src)="(\/projects\/index-law-firm-case-study\/[^"]+)"/g)) assert.ok(existsSync(new URL('../public' + src, import.meta.url)), 'Original local asset exists: ' + src);
 

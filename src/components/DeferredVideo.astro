@@ -13,13 +13,19 @@ const sourceRatio = variant ? `${variant.originalWidth * sarWidth} / ${variant.o
 const saverPoster = src.split('?')[0] === '/projects/datagpt-case-study/data-setup.mp4'
   ? '/projects/datagpt-case-study/data-setup-data-saver-poster.jpg' : undefined;
 const saverControl = attributes['data-case-video'] !== undefined && !attributes.controls;
+// Shared native-overlay policy, including inert templates and no-JavaScript fallbacks.
+const browserVideoPolicy = {
+  disablepictureinpicture: true,
+  disableremoteplayback: true,
+  controlslist: 'nodownload noplaybackrate noremoteplayback',
+} as const;
 ---
-<video {...attributes} muted loop playsinline preload="none" poster={priority ? poster : undefined} data-poster={deferred ? poster : undefined} data-source-ratio={sourceRatio} data-saver-poster={saverPoster}>
+<video {...attributes} {...browserVideoPolicy} muted loop playsinline preload="none" poster={priority ? poster : undefined} data-poster={deferred ? poster : undefined} data-source-ratio={sourceRatio} data-saver-poster={saverPoster}>
   <source data-src={src} data-mobile-src={variant?.mobile?.src} type="video/mp4" />
   {poster && <img src={priority ? poster : undefined} data-src={deferred ? poster : undefined} alt={fallbackAlt} width={attributes.width} height={attributes.height} loading="lazy" decoding="async" />}
 </video>
 {saverControl && <IconButton label="Play video" icon="play" class="video-saver-control" data-video-saver-source={src} hidden />}
-{deferred && <noscript><video {...attributes} muted loop playsinline preload="none" poster={poster}>
+{deferred && <noscript><video {...attributes} {...browserVideoPolicy} muted loop playsinline preload="none" poster={poster}>
   <source data-src={src} type="video/mp4" />
   <img src={poster} alt={fallbackAlt} width={attributes.width} height={attributes.height} loading="lazy" decoding="async" />
 </video></noscript>}

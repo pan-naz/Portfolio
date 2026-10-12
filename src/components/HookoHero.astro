@@ -13,7 +13,7 @@ const { video, back } = hookoHero;
       <ResponsiveImage deferred={preview} sizes="16vw" src={back.src} alt="" width={back.width} height={back.height} loading={preview ? 'lazy' : 'eager'} decoding="async" />
     </HookoPhoneFrame></div>
     <div class="hooko-hero__front"><HookoPhoneFrame screenRatio={`${video.width} / ${video.height}`}>
-      <DeferredVideo src={video.src} poster={video.poster} priority={!preview && Astro.url.pathname.startsWith('/case-studies/')} data-project-video={preview ? '' : undefined} data-case-video={!preview ? '' : undefined} width={video.width} height={video.height} disablepictureinpicture disableRemotePlayback aria-label={!preview ? 'Hooko app introduction and onboarding recording' : undefined} />
+      <DeferredVideo src={video.src} poster={video.poster} priority={!preview && Astro.url.pathname.startsWith('/case-studies/')} data-project-video={preview ? '' : undefined} data-case-video={!preview ? '' : undefined} width={video.width} height={video.height} aria-label={!preview ? 'Hooko app introduction and onboarding recording' : undefined} />
     </HookoPhoneFrame></div>
   </div>
 </div>

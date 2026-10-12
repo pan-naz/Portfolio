@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { validateHoverSource } from './validate-hover.mjs';
+import { validateHoverSource, validateLogoWave } from './validate-hover.mjs';
 import { hiddenDocumentation } from '../src/data/system-hidden-docs.ts';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -158,6 +158,7 @@ export function validateHiddenDocumentation(records, text) {
   return failures;
 }
 const errors = validate(registry);
+errors.push(...validateLogoWave(read('src/styles/global.css'), read('src/components/Logo.astro'), read('src/styles/tokens.css'), filesUnder('src/scripts').filter(file=>file.endsWith('.ts')).map(read).join('\n')));
 if(JSON.stringify(visibleComponents.map(item=>item.name).sort())!==JSON.stringify([...expectedVisible].sort()))errors.push('Visible catalog must contain exactly the approved ten components');
 for(const [file,key] of Object.entries(hiddenKeys))if(componentManifest.find(item=>item.file===file)?.documentedHidden!==key)errors.push('Missing documented-hidden classification: '+file);
 errors.push(...validateHoverSource(root));
