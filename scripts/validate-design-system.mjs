@@ -51,7 +51,7 @@ const hiddenSections = {
  'Logo':'Wordmark','CaseStudyComparison':'Before and after','CaseStudyDecisionCard':'Decision card','CaseStudySteps':'Steps','CaseStudyMedia':'Media','ToolCard':'Tool card','ProjectIdentity':'Project identity','ProjectTags':'Project tags','SectionNavigation':'Project filter','ThemeToggle':'Theme switch','Icon':'Icon',
 };
 const hiddenKeys = Object.fromEntries(Object.entries(hiddenSections).map(([file,title])=>['src/components/'+file+'.astro',title.toLowerCase().replaceAll(' ','-')]));
-const expectedVisible = ['Button','Chip','IconButton','NavigationItem','ProjectCard','SectionHeading','Stat','TextLink','TimelineRow'];
+const expectedVisible = ['Button','Chip','IconButton','NavigationItem','ProjectCard','SectionHeading','Stat','TextLink','TimelineRow','Tooltip'];
 export function validateComponentClassification(files, used, manifest, shown) {
   const failures = [];
   const kinds = ['reusable-ui', 'page-section', 'case-study', 'internal-helper'];
@@ -92,6 +92,12 @@ function validate(entries) {
   for (const [,id] of navigation.matchAll(/\['([\w-]+)',\s*'[^']+'\]/g)) {
     if (!sections.has(id)) errors.push(`Navigation target missing: ${id}`);
   }
+  const footer = read('src/components/SiteFooter.astro');
+  if (/Tooltip|data-tooltip-target|aria-labelledby/.test(footer)) errors.push('Footer icon link must have only its accessible label, without a tooltip.');
+  if (!/label="Design system"/.test(footer)) errors.push('Footer icon link must retain its accessible name.');
+  const preview = read('src/components/DSPreview.astro');
+  if (/tooltip-link|<Tooltip/.test(preview) || !/data-ds-example="tooltip-tool"[\s\S]*?<ToolCard/.test(preview)) errors.push('Tooltip catalog must use the real tool-card specimen only.');
+  if (/tooltipAnchor|data-tooltip-anchor/.test(read('src/scripts/tooltip.ts') + read('src/components/Tooltip.astro'))) errors.push('Tooltip must not retain footer-only anchor positioning.');
   const css = read('src/styles/design-system.css');
   for (const match of css.matchAll(/([^{}]+)\{[^{}]*\}/g)) {
     const selector = match[1].trim();
@@ -152,7 +158,7 @@ export function validateHiddenDocumentation(records, text) {
   return failures;
 }
 const errors = validate(registry);
-if(JSON.stringify(visibleComponents.map(item=>item.name).sort())!==JSON.stringify([...expectedVisible].sort()))errors.push('Visible catalog must contain exactly the approved nine components');
+if(JSON.stringify(visibleComponents.map(item=>item.name).sort())!==JSON.stringify([...expectedVisible].sort()))errors.push('Visible catalog must contain exactly the approved ten components');
 for(const [file,key] of Object.entries(hiddenKeys))if(componentManifest.find(item=>item.file===file)?.documentedHidden!==key)errors.push('Missing documented-hidden classification: '+file);
 errors.push(...validateHoverSource(root));
 const externalDocs=resolve(root,'../docs/design-system.md');

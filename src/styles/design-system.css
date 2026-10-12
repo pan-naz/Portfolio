@@ -1,5 +1,8 @@
 @layer system, project;
 @layer system {
+.ds-tooltip-tool { width: 180px; }
+.ds-tooltip-composition { padding-block: var(--space-12); }
+.ds-tooltip-composition > .ds-inline-controls { flex-wrap: wrap; justify-content: center; }
 /* Catalog chrome only. Genuine specimens retain the website’s shared styles. */
 .ds-sidebar { position:fixed; inset:0 auto 0 0; width:240px; padding:var(--space-6); overflow-y:auto; border-right:1px solid var(--color-border-default); }
 .ds-home { display:inline-flex; align-items:center; min-height:var(--control-icon); margin-bottom:var(--space-6); }

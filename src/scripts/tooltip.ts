@@ -1,17 +1,23 @@
 import { watchViewportPointer, type ViewportPointer } from './viewport-pointer.ts';
 
+export const tooltipFollowTiming = { timeConstant: 72, maxElapsed: 64 };
+
 export const tooltipFollowStep = (current: number, target: number, elapsed: number) => {
-  const progress = 1 - Math.exp(-Math.min(Math.max(elapsed, 0), 64) / 72);
+  const progress = 1 - Math.exp(-Math.min(Math.max(elapsed, 0), tooltipFollowTiming.maxElapsed) / tooltipFollowTiming.timeConstant);
   return current + (target - current) * progress;
 };
 
-const initToolCardTooltips = () => {
+// Clamp the complete, expanded bubble, including while following near an edge.
+export const tooltipLocalX = (clientX: number, left: number, width: number, viewport: number) =>
+  Math.max(width / 2 + 8, Math.min(viewport - width / 2 - 8, clientX)) - left;
+
+const initTooltips = () => {
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
-  document.querySelectorAll<HTMLElement>('.tool-card').forEach(card => {
+  document.querySelectorAll<HTMLElement>('[data-tooltip-target]').forEach(card => {
     if (card.dataset.tooltipCursor === 'true') return;
 
-    const tooltip = card.querySelector<HTMLElement>('.tool-card-tooltip');
+    const tooltip = card.querySelector<HTMLElement>('.tooltip');
     if (!tooltip) return;
 
     card.dataset.tooltipCursor = 'true';
@@ -25,8 +31,8 @@ const initToolCardTooltips = () => {
     let tracking = false;
 
     const writePosition = () => {
-      card.style.setProperty('--tool-tooltip-x', `${currentX}px`);
-      card.style.setProperty('--tool-tooltip-y', `${currentY}px`);
+      card.style.setProperty('--tooltip-x', `${currentX}px`);
+      card.style.setProperty('--tooltip-y', `${currentY}px`);
     };
 
     const renderPointerPosition = (time: number) => {
@@ -56,7 +62,7 @@ const initToolCardTooltips = () => {
 
       const cardRect = card.getBoundingClientRect();
       const tooltipHeight = tooltip.offsetHeight;
-      targetX = event.clientX - cardRect.left;
+      targetX = tooltipLocalX(event.clientX, cardRect.left, tooltip.offsetWidth, innerWidth);
       targetY = event.clientY - cardRect.top;
       tracking = true;
 
@@ -82,29 +88,35 @@ const initToolCardTooltips = () => {
     };
     const fine = matchMedia('(hover: hover) and (pointer: fine)');
     const unwatch = watchViewportPointer(pointer => {
-      if (pointer.active && fine.matches && pointer.target?.closest('.tool-card') === card && !card.closest('[inert]')) {
+      if (pointer.active && fine.matches && pointer.target?.closest('[data-tooltip-target]') === card && !card.closest('[inert]')) {
         card.classList.add('is-pointer-hovered');
         followPointer(pointer);
       } else leave();
     });
-    window.addEventListener('pagehide', event => { if (!event.persisted) { leave(); unwatch(); } });
-    card.addEventListener('focusin', () => {
-      requestAnimationFrame(() => {
+    const positionFocus = () => {
         if (!card.matches(':focus-visible')) return;
-        card.style.setProperty('--tool-tooltip-x', '50%');
-        card.style.setProperty('--tool-tooltip-y', '50%');
+        leave();
+        const rect = card.getBoundingClientRect();
+        const center = rect.left + card.clientLeft + card.clientWidth / 2;
+        const clamped = tooltipLocalX(center, rect.left + card.clientLeft, tooltip.offsetWidth, innerWidth);
+        card.style.setProperty('--tooltip-x', clamped === card.clientWidth / 2 ? '50%' : `${clamped}px`);
+        card.style.setProperty('--tooltip-y', '50%');
         tooltip.dataset.placement = 'above';
-      });
+    };
+    card.addEventListener('focusin', () => requestAnimationFrame(positionFocus));
+    window.addEventListener('resize', positionFocus);
+    window.addEventListener('pagehide', event => {
+      if (!event.persisted) { leave(); unwatch(); window.removeEventListener('resize', positionFocus); }
     });
   });
 };
 
 if (typeof document !== 'undefined') {
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initToolCardTooltips, { once: true });
+    document.addEventListener('DOMContentLoaded', initTooltips, { once: true });
   } else {
-    initToolCardTooltips();
+    initTooltips();
   }
 
-  document.addEventListener('astro:page-load', initToolCardTooltips);
+  document.addEventListener('astro:page-load', initTooltips);
 }

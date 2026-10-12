@@ -29,6 +29,9 @@
   --text-stat-compact: 48px; --text-contact-compact: 64px;
   --line-height-body: 1.5; --line-height-heading-l: 1.142857;
   --duration-button-fill: 450ms;
+  --control-height-small: 36px;
+  --scale-tooltip-start: .82; --scale-tooltip-end: 1;
+  --distance-icon-shift: 3px; --ease-icon-shift: ease-out;
   --duration-tooltip-opacity: 320ms; --duration-tooltip-scale: 440ms;
   --layer-behind: -1; --layer-base: 0; --layer-content: 1; --layer-raised: 2;
   --layer-controls: 10; --layer-tooltip: 20; --layer-header: 30;

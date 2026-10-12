@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import ts from 'typescript';
-import { createNativeMotion, readMotionToken } from '../src/scripts/native-motion.ts';
+import { createNativeMotion, readMotionToken, revealEffects } from '../src/scripts/native-motion.ts';
 import { canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent } from '../src/scripts/work-stage/work-stage-model.ts';
 
 // Run the real stage controller and native-motion lifecycle with a controllable
@@ -36,7 +36,7 @@ class ElementDouble extends EventTarget {
   }
 }
 globalThis.workStageTestImports = {
-  createNativeMotion, readMotionToken, canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent,
+  createNativeMotion, readMotionToken, revealEffects, canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent,
   sectionRevealEffects(title, index, description, content) {
     revealCalls++;
     title.style.opacity = '1';
@@ -48,18 +48,21 @@ globalThis.workStageTestImports = {
 };
 let runtime = readFileSync(new URL('../src/scripts/work-stage/work-stage.ts', import.meta.url), 'utf8');
 runtime = runtime.replace(/^import .*;\n/gm, '');
-runtime = 'const { createNativeMotion, readMotionToken, sectionRevealEffects, canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent } = globalThis.workStageTestImports;\n' + runtime;
+runtime = 'const { createNativeMotion, readMotionToken, revealEffects, sectionRevealEffects, canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent } = globalThis.workStageTestImports;\n' + runtime;
 runtime = ts.transpileModule(runtime, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
 const { initializeWorkStage } = await import(`data:text/javascript;base64,${Buffer.from(runtime).toString('base64')}`);
 
-function fixture(fontsReady = Promise.resolve(), returningFromCase = false, floating = true) {
+function fixture(fontsReady = Promise.resolve(), returningFromCase = false, floating = true, touch = false) {
   created = []; revealCalls = 0;
   globalThis.document = { hidden: false, documentElement: { dataset: { workStageMotion: floating ? 'true' : undefined, workStageLayout: floating ? 'true' : undefined, workPreviewLayout: 'true' } }, timeline: { currentTime: 0 }, fonts: { ready: fontsReady } };
   if (returningFromCase) document.documentElement.dataset.caseReturn = 'true';
+  if (touch) document.documentElement.dataset.workTouchPreview = 'true';
   const section = new ElementDouble(), surface = new ElementDouble(), panel = new ElementDouble(), rail = new ElementDouble();
   const heading = new ElementDouble(), title = new ElementDouble(), index = new ElementDouble(), description = new ElementDouble(), card = new ElementDouble();
+  const compactFilter = new ElementDouble();
   title.glyph = new ElementDouble();
   section.selectors = { '[data-work-stage-surface]': [surface], '.work-panel': [panel], '[data-work-rail]': [rail], '.section-heading': [heading], '[data-section-item]': [card] };
+  section.selectors['.work-compact-filter'] = [compactFilter];
   heading.selectors = { h2: [title], '.section-index > *': [index], '.section-description': [description] };
   document.querySelector = () => section;
   const reduced = new EventTarget(); reduced.matches = false;
@@ -96,7 +99,7 @@ function fixture(fontsReady = Promise.resolve(), returningFromCase = false, floa
     for (const [id, callback] of frames) { frames.delete(id); callback(); }
     await Promise.resolve();
   };
-  return { section, panel, rail, title, index, description, card, controller, reduced, scroll, complete, resize };
+  return { section, panel, rail, compactFilter, title, index, description, card, controller, reduced, scroll, complete, resize };
 }
 const resting = 'translate(var(--hero-visual-gutter), 0px)';
 const expanded = 'translate(0px, 0px)';
@@ -161,6 +164,10 @@ console.log('PASS: fresh-page reset, persistent reveal, category restoration, sc
 
 const compact = fixture(Promise.resolve(), false, false);
 assert.equal(compact.panel.style.transform, expanded);
+assert.notEqual(compact.compactFilter.style.opacity, '0', 'Narrow mouse filter visibility remains unchanged');
+assert.equal(compact.title.style.opacity, '0', 'Every non-floating input starts with an empty first-screen Work preview');
+await compact.scroll(1, 680);
+assert.equal(compact.title.style.opacity, '0', 'One pixel of scrolling cannot bypass the shared reveal threshold');
 await compact.scroll(700, 0); compact.complete();
 assert.equal(created.filter(a => a.element === compact.panel).length, 0, 'Narrow mouse scrolling never animates the background');
 assert.equal(compact.title.style.opacity, '1', 'Existing narrow mouse content reveal is preserved');
@@ -180,3 +187,44 @@ assert.equal(compact.panel.style.transform, resting, 'Returning at page top rest
 assert.equal(compact.panel.style.borderRadius, '80px 0px 0px 80px');
 assert.equal(compact.rail.style.opacity, '0');
 console.log('PASS: live compact/floating layout changes cancel background motion and preserve visited content.');
+
+const touch = fixture(Promise.resolve(), false, false, true);
+assert.equal(touch.compactFilter.style.opacity, '0', 'Fresh touch previews hide the filter and its shadow');
+assert.equal(touch.compactFilter.style.pointerEvents, 'none', 'The blank touch preview has no invisible filter hit targets');
+await touch.scroll(1, 680);
+assert.equal(touch.compactFilter.style.opacity, '0');
+await touch.scroll(20, 660);
+const filterMotion = created.find(a => a.element === touch.compactFilter);
+assert.ok(filterMotion, 'The touch filter joins the shared heading timeline');
+assert.equal(filterMotion.timing.duration, 900);
+assert.equal(filterMotion.timing.delay, 0, 'The filter starts with the heading reveal');
+assert.equal(filterMotion.keyframes[0].opacity, 0);
+assert.equal(filterMotion.keyframes[0].transform, 'translateY(8px)');
+assert.equal(touch.compactFilter.style.opacity, '0', 'The underlying filter stays hidden until native effects paint');
+touch.controller.setPaused(true);
+assert.equal(filterMotion.paused, true, 'Dialog/hidden-page pause also pauses the filter');
+touch.controller.setPaused(false);
+assert.equal(filterMotion.paused, false);
+touch.complete();
+assert.equal(touch.compactFilter.style.opacity, '1', 'The native endpoint keeps the completed filter visible');
+assert.equal(touch.compactFilter.style.pointerEvents, '');
+await touch.scroll(0, 680);
+assert.equal(touch.compactFilter.style.opacity, '1', 'Returning after a reveal retains the visited filter');
+const touchReturn = fixture(Promise.resolve(), true, false, true);
+assert.equal(touchReturn.compactFilter.style.opacity, '1', 'Case return exposes the already visited filter');
+const reducedTouch = fixture(Promise.resolve(), false, false, true);
+reducedTouch.reduced.matches = true;
+reducedTouch.reduced.dispatchEvent(new Event('change'));
+assert.equal(reducedTouch.compactFilter.style.opacity, '', 'Reduced motion clears the hiding override for immediate display');
+let resolveTouchFonts;
+const pendingTouch = fixture(new Promise(resolve => { resolveTouchFonts = resolve; }), false, false, true);
+await pendingTouch.scroll(20, 660);
+assert.equal(pendingTouch.compactFilter.style.opacity, '0', 'Pending fonts cannot flash the filter before the heading starts');
+await pendingTouch.scroll(0, 700);
+assert.equal(pendingTouch.compactFilter.style.opacity, '1', 'Returning to the top resolves even a pending filter entrance');
+resolveTouchFonts(); await Promise.resolve();
+assert.ok(!created.some(a => a.element === pendingTouch.compactFilter), 'Resolved pending entrances cannot restart');
+const keyboardTouch = fixture(Promise.resolve(), false, false, true);
+keyboardTouch.section.dispatchEvent(new Event('focusin'));
+assert.equal(keyboardTouch.compactFilter.style.opacity, '1', 'Keyboard access immediately reveals the filter');
+console.log('PASS: touch filter shared motion, pause/resume, font waits, keyboard access, visit/case return and reduced motion.');

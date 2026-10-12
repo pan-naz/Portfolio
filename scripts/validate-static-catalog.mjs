@@ -35,4 +35,4 @@ const paths=dsComponents.map(item=>item.file),tokens=[...new Set([...catalog.mat
 assert.deepEqual(validateInventoryCoverage(model,paths,tokens,icons,read('src/styles/tokens.css'),catalog+styles(catalog)),[]);
 const variantValues=[...catalog.matchAll(/data-ds-variant="([^"]+)"/g)].map(([,value])=>value);assert.deepEqual(validateVariantCoverage(model,variantValues),[]);
 assert.ok(!model.projectFonts.some(font=>styles(catalog).includes(font)));
-console.log(`Final catalog verified: ${views.length} views, nine reusable entries plus eleven documented-hidden components, linked panels and live shared styles.`);
+console.log(`Final catalog verified: ${views.length} views, ten reusable entries plus eleven documented-hidden components, linked panels and live shared styles.`);

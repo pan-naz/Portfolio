@@ -37,8 +37,8 @@ export const hiddenDocumentation = [
   },
   {
     "section": "Tool card",
-    "sha256": "edcd3bb6624995d0a5f510103df79d6be2cfe0f474472cd86b2ef30a510f8121",
-    "characters": 332
+    "sha256": "1cf9b1066f427713636fc88e3115797a8cea092c568d56bc8a7a8eb2a43b8009",
+    "characters": 762
   },
   {
     "section": "Project identity",
