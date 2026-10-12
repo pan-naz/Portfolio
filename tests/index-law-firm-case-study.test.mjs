@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 const read = path => readFileSync(new URL(path, import.meta.url), 'utf8');
-const html = read('../dist/case-studies/index-law-firm/index.html');
+const html = read('../dist/case-studies/index-law-firm/index.html').replace(/<noscript\b[^>]*>[\s\S]*?<\/noscript>/g, '');
 const content = html.match(/<article\b[^>]*data-case-content[^>]*>([\s\S]*?)<\/article>/)?.[1];
 assert.ok(content, 'The full case uses the shared article composition');
 const text = content.replace(/<[^>]*>/g, ' ').replace(/&#(?:x([\da-f]+)|(\d+));/gi, (_, hex, dec) => String.fromCodePoint(parseInt(hex ?? dec, hex ? 16 : 10))).replace(/&(amp|quot|apos|nbsp|lt|gt);/g, (_, entity) => ({ amp: '&', quot: '"', apos: "'", nbsp: ' ', lt: '<', gt: '>' }[entity])).replace(/\s+/g, ' ').toLowerCase();

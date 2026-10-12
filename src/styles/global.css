@@ -36,6 +36,9 @@ h1,h2,h3,h4,h5,h6 { text-wrap: balance; font-weight: var(--font-weight-heading);
 h2, .text-heading-l { letter-spacing: var(--letter-spacing-heading-l); font-size: var(--text-heading-l); font-weight: var(--font-weight-heading-large); line-height: var(--line-height-heading-l); text-wrap: balance; }
 h3 { letter-spacing: var(--letter-spacing-heading-m); margin: 0; font-size: var(--text-heading-m); line-height: 1.333333; font-weight: var(--font-weight-heading); }
 img, svg { display: block; max-width: 100%; }
+/* Noscript keeps the native poster and controls; inert fallback markup makes no request. */
+video[data-poster]:has(+ noscript > video) { display: none !important; }
+picture:has(+ noscript > picture) > img[data-deferred-image], img[data-deferred-image]:has(+ noscript > img) { display: none !important; }
 [hidden] { display: none !important; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 .container { width: calc(100% - var(--gutter) * 2); margin-inline: auto; }

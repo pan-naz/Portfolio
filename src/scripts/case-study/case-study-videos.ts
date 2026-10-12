@@ -1,3 +1,5 @@
+import { cancelVideoPoster, hasVideoPoster, loadVideoPoster } from './video-posters.ts';
+
 interface VideoController {
   setPaused(value: boolean): void;
   refresh(): void;
@@ -23,7 +25,7 @@ export function setCaseVideoPlaying(video: HTMLVideoElement, playing: boolean) {
   owners.get(video)?.sync(video);
 }
 
-/** Posters render immediately; video bytes are requested only while in view. */
+/** Decode nearby active posters; video bytes are requested only while in view. */
 export function initializeCaseStudyVideos(root: ParentNode = document): VideoController {
   const existing = controllers.get(root);
   if (existing) return existing;
@@ -37,12 +39,39 @@ export function initializeCaseStudyVideos(root: ParentNode = document): VideoCon
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let paused = false;
   let destroyed = false;
+  const lazyVideos = videos.filter(video => Boolean(video.dataset?.poster));
+  const nearby = new Set<HTMLVideoElement>();
+  const homeAtRest = () => typeof location !== 'undefined' && location.pathname === '/' && window.scrollY === 0;
+  const loadNearby = () => {
+    if (destroyed || paused || document.hidden || homeAtRest()) return;
+    nearby.forEach(video => {
+      if (owners.get(video) === owner && !video.closest('[hidden]')) void loadVideoPoster(video);
+    });
+  };
+  let posterObserver: IntersectionObserver | undefined;
+  const observePosters = () => {
+    if (!lazyVideos.length) return;
+    posterObserver?.disconnect();
+    const scrollRoot = typeof HTMLElement !== 'undefined' && root instanceof HTMLElement ? root.closest<HTMLElement>('[data-case-scroll]') : null;
+    posterObserver = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        const video = entry.target as HTMLVideoElement;
+        if (entry.isIntersecting) nearby.add(video); else nearby.delete(video);
+      }
+      loadNearby();
+    }, { root: scrollRoot, rootMargin: `${window.innerHeight}px 0px`, threshold: 0 });
+    lazyVideos.forEach(video => posterObserver!.observe(video));
+  };
   const syncVideo = (video: HTMLVideoElement) => {
     if (destroyed || owners.get(video) !== owner) return;
     const intent = playbackIntent.get(video);
     if (paused || intent === false || (reduced.matches && intent !== true) || document.hidden || !visible.has(video)) {
       video.pause();
       if (reduced.matches && intent === undefined && video.readyState > 0) video.currentTime = 0;
+      return;
+    }
+    if (!hasVideoPoster(video)) {
+      void loadVideoPoster(video).then(() => syncVideo(video));
       return;
     }
     let loaded = false;
@@ -56,7 +85,7 @@ export function initializeCaseStudyVideos(root: ParentNode = document): VideoCon
     if (loaded) video.load();
     void video.play().catch(() => {});
   };
-  const sync = () => videos.forEach(syncVideo);
+  const sync = () => { videos.forEach(syncVideo); loadNearby(); };
   const observer = new IntersectionObserver(entries => {
     for (const entry of entries) {
       const video = entry.target as HTMLVideoElement;
@@ -66,6 +95,11 @@ export function initializeCaseStudyVideos(root: ParentNode = document): VideoCon
     }
   }, { threshold: 0 });
   videos.forEach(video => observer.observe(video));
+  observePosters();
+  if (lazyVideos.length) {
+    window.addEventListener('scroll', loadNearby, { passive: true });
+    window.addEventListener('resize', observePosters, { passive: true });
+  }
   reduced.addEventListener('change', sync);
   document.addEventListener('visibilitychange', sync);
   const controller: VideoController = {
@@ -75,6 +109,11 @@ export function initializeCaseStudyVideos(root: ParentNode = document): VideoCon
       destroyed = true;
       owner.active = false;
       observer.disconnect();
+      posterObserver?.disconnect();
+      if (lazyVideos.length) {
+        window.removeEventListener('scroll', loadNearby);
+        window.removeEventListener('resize', observePosters);
+      }
       reduced.removeEventListener('change', sync);
       document.removeEventListener('visibilitychange', sync);
       videos.forEach(video => {
@@ -85,6 +124,7 @@ export function initializeCaseStudyVideos(root: ParentNode = document): VideoCon
           return; // Preserve playback position and buffered frames for the card.
         }
         owners.delete(video);
+        cancelVideoPoster(video);
         video.pause();
         const sources = [...video.querySelectorAll('source[src]')];
         sources.forEach(source => source.removeAttribute('src'));

@@ -4,6 +4,7 @@ import SvgAsset from './SvgAsset.astro';
 import type { Project } from '../data/portfolio';
 import CaseStudyDecisionCard from './CaseStudyDecisionCard.astro';
 import CaseStudyMedia from './CaseStudyMedia.astro';
+import DeferredVideo from './DeferredVideo.astro';
 import CaseStudyOverview from './CaseStudyOverview.astro';
 import Stat from './Stat.astro';
 import MetricValue from './MetricValue.astro';
@@ -84,10 +85,7 @@ const impactMetrics = [
 ---
 <article class="case-study-content case-study-content--voximplant" data-case-content>
   <div class="case-study-artwork">
-    <video data-case-video muted loop playsinline preload="none" poster={project.video?.poster ?? project.image} width="1272" height="720" style="aspect-ratio: 1272 / 720" aria-label={project.imageAlt}>
-      <source data-src={asset('promo-voxkit', 'mp4')} type="video/mp4" />
-      <img src={project.video?.poster ?? project.image} alt={project.imageAlt} width="1272" height="720" decoding="async" />
-    </video>
+    <DeferredVideo src={asset('promo-voxkit', 'mp4')} priority={Astro.url.pathname.startsWith('/case-studies/')} fallbackAlt={project.imageAlt} data-case-video poster={project.video?.poster ?? project.image} width="1272" height="720" style="aspect-ratio: 1272 / 720" aria-label={project.imageAlt} />
   </div>
 
   <div class="case-study-body case-study-narrative vox-case">

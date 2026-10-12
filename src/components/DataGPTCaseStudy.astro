@@ -5,6 +5,7 @@ import CaseStudyOverview from './CaseStudyOverview.astro';
 import Stat from './Stat.astro';
 import SvgAsset from './SvgAsset.astro';
 import CaseStudyMedia from './CaseStudyMedia.astro';
+import DeferredVideo from './DeferredVideo.astro';
 import CaseStudyComparison from './CaseStudyComparison.astro';
 interface Props { project: Project; }
 const { project } = Astro.props;
@@ -16,10 +17,7 @@ const researchMetrics = [
 ---
 <article class="case-study-content case-study-content--datagpt" data-case-content>
   <div class="case-study-artwork">
-    <video data-case-video muted loop playsinline preload="none" poster={media.heroVideo.poster} width={media.heroVideo.width} height={media.heroVideo.height} style={`aspect-ratio: ${media.heroVideo.width} / ${media.heroVideo.height}`} aria-label={media.hero.alt}>
-      <source data-src={media.heroVideo.src} type="video/mp4" />
-      <img src={media.heroVideo.poster} width={media.heroVideo.width} height={media.heroVideo.height} alt={media.hero.alt} decoding="async" />
-    </video>
+    <DeferredVideo src={media.heroVideo.src} priority={Astro.url.pathname.startsWith('/case-studies/')} fallbackAlt={media.hero.alt} data-case-video poster={media.heroVideo.poster} width={media.heroVideo.width} height={media.heroVideo.height} style={`aspect-ratio: ${media.heroVideo.width} / ${media.heroVideo.height}`} aria-label={media.hero.alt} />
   </div>
   <div class="case-study-body case-study-narrative dg-case">
     <CaseStudyOverview project={project} titleId="dg-title">
