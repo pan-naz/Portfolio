@@ -292,6 +292,29 @@ html[data-work-stage-layout='true']:not([data-work-stage-motion='true']) .work-p
 .work-compact-filter { display: flex; margin-bottom: var(--space-8); }
 .section-navigation--compact { position: static; display: flex; flex-wrap: wrap; max-width: 100%; padding: var(--space-2); }
 .section-navigation--compact .navigation-item { width: auto; }
+.section-navigation-theme { display: none; margin-inline: calc(var(--space-3) - (var(--control-icon) - var(--icon-size)) / 2); }
+/* Keep the existing in-flow reservation while the same bar sticks within Work. */
+html:not([data-work-stage-layout='true']) .work-compact-filter {
+  position: sticky;
+  top: calc(var(--header-inset) / 2);
+  height: calc(var(--control-icon) + var(--space-2) * 2);
+  z-index: var(--layer-header);
+  align-items: flex-start;
+}
+.section-navigation--compact.is-filter-docked {
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+  width: max-content;
+  max-width: calc(100vw - var(--space-4) * 2);
+  min-height: var(--space-16);
+  padding-block: calc((var(--space-16) - var(--control-icon)) / 2);
+  border-radius: var(--radius-pill);
+  position: relative;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.section-navigation--compact.is-filter-docked:not([data-theme-fit='false']) .section-navigation-theme { display: flex; }
 .project { --color-bg-surface: var(--project-card-bg-surface); color-scheme: inherit; min-width: 0; color: var(--color-text-primary); background: transparent; border-radius: calc(var(--radius-media) + 2px); }
 .project-surface { display: block; }
 .project-cursor { position: fixed; left: 0; top: 0; z-index: var(--layer-cursor); pointer-events: none; visibility: hidden; }

@@ -208,7 +208,29 @@ export function initializeWorkFilter(onChange?: () => void, onReposition?: (top:
 
   const click = (event: Event) => {
     const button = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('[data-work-filter]') : null;
-    if (button && section.contains(button)) select(button.dataset.workFilter as WorkFilter);
+    if (!button || !section.contains(button)) return;
+    const nav = button.closest<HTMLElement>('.section-navigation');
+    const fromDock = nav?.classList.contains('is-filter-docked');
+    select(button.dataset.workFilter as WorkFilter);
+    if (fromDock && nav && onReposition) {
+      const align = () => {
+        const styles = getComputedStyle(nav);
+        const reservation = nav.parentElement!.getBoundingClientRect().height;
+        const clearance = parseFloat(styles.getPropertyValue('--header-inset')) / 2
+          + reservation + parseFloat(styles.getPropertyValue('--space-8'));
+        // A subpixel scroll must not leave the original anchor just below the
+        // sticky threshold and immediately undo the dock.
+        const top = Math.ceil(window.scrollY + list.getBoundingClientRect().top - clearance);
+        onReposition(Math.max(0, top));
+        return Math.max(0, top);
+      };
+      const expected = align(), ticket = generation;
+      // Reconcile the heading's completed layout without pulling back a reader
+      // who deliberately scrolled during the filter transition.
+      void Promise.all(motions.map(motion => motion.finished.catch(() => {}))).then(() => {
+        if (!destroyed && ticket === generation && Math.abs(window.scrollY - expected) < 1) align();
+      });
+    }
   };
   section.addEventListener('click', click);
   const refreshLayout = () => {

@@ -5,6 +5,7 @@ import { initializeFooterPile } from './footer-pile/footer-pile';
 import { initializeHeroIntro } from './hero-intro';
 import { initializeHeaderMorph } from './header-morph/header-morph';
 import { initializeWorkFilter } from './work-filter/work-filter';
+import { initializeWorkFilterDock } from './work-filter/work-filter-dock';
 import { initializeWorkStage } from './work-stage/work-stage';
 import { initializeSectionReveals } from './section-reveals';
 import { initializeProjectTilt } from './project-tilt';
@@ -87,6 +88,7 @@ const siteMotion = initializeMotion();
 sectionReveals = initializeSectionReveals();
 const workFilter = initializeWorkFilter(() => { requestAnimationFrame(siteMotion.refresh); refreshViewportPointer(); }, repositionWork);
 initializeHeaderMorph();
+initializeWorkFilterDock();
 updateHeader();
 
 initializeCaseStudies(projectCursor, open => {

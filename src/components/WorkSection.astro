@@ -13,7 +13,8 @@ import CaseStudyLayer from './CaseStudyLayer.astro';
     <div class="work-rail" data-work-rail><SectionNavigation /></div>
     <div class="container work-content">
       <SectionHeading id="work-title" label={workCategories.selected.label}>{workCategories.selected.title}<p slot="description" class="section-description text-body-l">{workCategories.selected.description}</p></SectionHeading>
-      <div class="work-compact-filter"><SectionNavigation compact /></div>
+      <div data-work-filter-anchor aria-hidden="true"></div>
+      <div class="work-compact-filter"><SectionNavigation compact theme /></div>
       <div id="project-list" class="projects" data-active-filter="selected">
         <div class="project-collection" data-project-collection="selected">{projects.map((project, index) => <ProjectCard project={project} lead={index === 0} />)}</div>
         {(['websites', 'misc'] as const).map(category => <div class="project-collection project-collection--bento" data-project-collection={category} hidden>
