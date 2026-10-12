@@ -140,6 +140,37 @@ picture:has(+ noscript > picture) > img[data-deferred-image], img[data-deferred-
 }
 .wordmark { letter-spacing: var(--letter-spacing-heading-m); display: inline-flex; align-items: baseline; font-size: var(--text-heading-m); font-weight: var(--font-weight-heading); line-height: 1; white-space: nowrap; }
 .wordmark-dot { color: var(--color-interactive-accent); }
+/* Paint the original union at rest: separate antialiased glyph edges otherwise
+   change resting pixels. Animated glyphs use that same geometry source. */
+.wordmark [data-logo-glyphs] { visibility: hidden; }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .wordmark { transition: overflow calc(var(--duration-logo-wave) * 0) var(--duration-logo-wave) allow-discrete; }
+  .wordmark [data-logo-letter] {
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: translateY(0) scale(1);
+    transition: transform var(--duration-logo-wave) var(--ease-spring-wave);
+    transition-delay: calc(var(--stagger-title-reveal) * 0);
+  }
+  .wordmark :is([data-logo-rest], [data-logo-glyphs]) {
+    transition: visibility calc(var(--duration-logo-wave) * 0) var(--duration-logo-wave);
+  }
+  /* Re-entry immediately swaps paint, then each glyph follows the spring. */
+  a:is(:hover, :focus-visible) .wordmark { overflow: visible; transition-delay: calc(var(--stagger-title-reveal) * 0); }
+  a:is(:hover, :focus-visible) .wordmark [data-logo-rest] { visibility: hidden; transition-delay: calc(var(--stagger-title-reveal) * 0); }
+  a:is(:hover, :focus-visible) .wordmark [data-logo-glyphs] { visibility: visible; transition-delay: calc(var(--stagger-title-reveal) * 0); }
+  a:is(:hover, :focus-visible) .wordmark [data-logo-letter] {
+    transform: translateY(calc(var(--distance-icon-shift) * -1)) scale(var(--scale-logo-wave));
+    transition-delay: calc(var(--stagger-title-reveal) * var(--logo-letter-index));
+  }
+  /* Hidden/swapping marks and the prepaint/header fade always retain rest. */
+  :is(html[data-home-intro], .site-header[data-pill-state='expanding'], .site-header[data-pill-state='hiding']) .wordmark { overflow: hidden; transition: none; }
+  :is(html[data-home-intro], .site-header[data-pill-state='expanding'], .site-header[data-pill-state='hiding']) .wordmark :is([data-logo-rest], [data-logo-glyphs], [data-logo-letter]) { transition: none; }
+  :is(html[data-home-intro], .site-header[data-pill-state='expanding'], .site-header[data-pill-state='hiding']) .wordmark [data-logo-rest] { visibility: visible; }
+  :is(html[data-home-intro], .site-header[data-pill-state='expanding'], .site-header[data-pill-state='hiding']) .wordmark [data-logo-glyphs] { visibility: hidden; }
+  :is(html[data-home-intro], .site-header[data-pill-state='expanding'], .site-header[data-pill-state='hiding']) .wordmark [data-logo-letter] { transform: translateY(0) scale(1); }
+}
+
 .skip-link { position: fixed; top: -100px; left: 24px; padding: var(--space-3) var(--space-6); z-index: var(--layer-overlay); border-radius: var(--radius-pill); color: var(--color-text-on-primary); background: var(--color-text-primary); }
 .skip-link:focus { top: 12px; }
 #page-content { position: relative; }

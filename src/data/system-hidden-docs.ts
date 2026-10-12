@@ -12,8 +12,8 @@ export const hiddenDocumentation = [
   },
   {
     "section": "Wordmark",
-    "sha256": "96157bb7a1a5884a4150842504301179abadde05816e7745ecd13b6ffb6fa36c",
-    "characters": 865
+    "sha256": "b599be266c41ef1fcb2eaf16dda22afe863efa80eeb6d8b70fde0ad7aee2acb0",
+    "characters": 2237
   },
   {
     "section": "Before and after",

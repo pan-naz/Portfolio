@@ -3,8 +3,12 @@ import { wordmarks } from '../data/wordmark';
 interface Props { compact?: boolean; }
 const { compact = false } = Astro.props;
 const mark = wordmarks[compact ? 'compact' : 'full'];
+// Adjacent glyph contours overlap. Paint their union once at rest, exactly as
+// before; separate paths during replay are derived from these same glyphs.
+const ink = mark.letters.filter(letter => !letter.accent).map(letter => letter.path).join('');
+const accent = mark.letters.find(letter => letter.accent)?.path;
 ---
 <svg class="wordmark" width={mark.width} height={mark.height} viewBox={`0 ${mark.viewBoxY} ${mark.width} ${mark.height}`} style={`width:${mark.width / mark.height}em;height:1em`} fill="currentColor" role="img" aria-label={compact ? 'naz' : 'naz.wtf'}>
-  <path d={mark.ink} />
-  {mark.accent && <path class="wordmark-dot" d={mark.accent} />}
+  <g data-logo-rest><path d={ink} />{accent && <path class="wordmark-dot" d={accent} />}</g>
+  <g data-logo-glyphs>{mark.letters.map((letter, index) => <path style={`--logo-letter-index:${index}`} data-logo-letter={letter.glyph} class:list={{ 'wordmark-dot': letter.accent }} d={letter.path} />)}</g>
 </svg>
