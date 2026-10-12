@@ -5,7 +5,6 @@ import Button from './Button.astro';import TextLink from './TextLink.astro';impo
 import Chip from './Chip.astro';import Stat from './Stat.astro';import TimelineRow from './TimelineRow.astro';import ProjectCard from './ProjectCard.astro';
 import SectionHeading from './SectionHeading.astro';import SectionNavigation from './SectionNavigation.astro';import NavLinks from './NavLinks.astro';import Logo from './Logo.astro';
 import CaseStudyComparison from './CaseStudyComparison.astro';
-import Tooltip from './Tooltip.astro';
 import ToolCard from './ToolCard.astro';
 import {projects,impactGroups,experience,profile,cvUrl,hookoSiteUrl,tools} from '../data/portfolio';
 import {dataGPTMedia} from '../data/datagpt-case-study';import {workCategories} from '../data/work-categories';
@@ -31,7 +30,7 @@ const prefix=miniature?'tile-':'example-';
  <div class="case-study-direct-close ds-close-holder" data-ds-example="icon-close" data-ds-target=".icon-button"><IconButton href="/#work" label="Close case study" class="floating-control-theme floating-control-surface"><Icon name="plus" style="transform:rotate(45deg)" /></IconButton></div>
  </div></div>
  {!miniature&&<><div class="ds-labelled-specimen"><span>Plain</span><div data-ds-example="icon-theme" data-ds-target=".icon-button"><IconButton class="theme-toggle" label="Switch theme"><span class="theme-toggle-glyph" aria-hidden="true"><Icon name="sun" class="theme-sun"/><Icon name="moon" class="theme-moon"/></span></IconButton></div></div>
- <div class="ds-labelled-specimen"><span>Secondary · Small</span><div data-ds-example="icon-layers" data-ds-target=".icon-button"><IconButton href="/design-system/" label="Design system" variant="secondary" size="small" icon="layers" data-tooltip-target aria-labelledby={`${prefix}layers-tooltip`}><Tooltip id={`${prefix}layers-tooltip`} label="Design system" anchor="top" /></IconButton></div></div>
+ <div class="ds-labelled-specimen"><span>Secondary · Small</span><div data-ds-example="icon-layers" data-ds-target=".icon-button"><IconButton href="/design-system/" label="Design system" variant="secondary" size="small" icon="layers" /></div></div>
  <div class="ds-labelled-specimen"><span>Media</span><div class="case-video-controls ds-media-controls" data-theme="dark">
  <div data-ds-example="icon-play" data-ds-target=".icon-button"><IconButton label="Play video" data-video-toggle><span data-play-icon><Icon name="play" /></span><span data-pause-icon hidden><Icon name="pause" /></span></IconButton></div>
  <div data-ds-example="icon-sound" data-ds-target=".icon-button"><IconButton label="Sound off. Turn sound on" data-video-mute aria-pressed="false"><span data-muted-icon><Icon name="volume-muted" /></span><span data-sound-icon hidden><Icon name="volume" /></span></IconButton></div>
@@ -57,6 +56,5 @@ const prefix=miniature?'tile-':'example-';
 
 {name==='Tooltip'&&<div class="ds-specimen-composition ds-tooltip-composition">
  {!miniature&&<div class="ds-inline-controls">{['Hidden','Visible above','Flipped below','Keyboard focus'].map((state,index)=><Button size="small" variant="secondary" appearance="catalog" data-ds-tooltip-state={['hidden','above','below','focus'][index]} aria-pressed={index===0?'true':'false'}>{state}</Button>)}</div>}
- <div class="ds-labelled-specimen"><span>Design system</span><div data-ds-example="tooltip-link" data-ds-target=".icon-button"><IconButton href="/design-system/" label="Design system" variant="secondary" size="small" icon="layers" data-tooltip-target aria-labelledby={`${prefix}name-tooltip`}><Tooltip id={`${prefix}name-tooltip`} label="Design system" anchor="top" /></IconButton></div></div>
- {!miniature&&<div class="ds-labelled-specimen"><span>{tools[0].name}</span><div class="about-details ds-context-about ds-tooltip-tool" data-ds-example="tooltip-tool" data-ds-target=".tool-card"><ToolCard tool={tools[0]} /></div></div>}
+ <div class="ds-labelled-specimen"><span>{tools[0].name}</span><div class="about-details ds-context-about ds-tooltip-tool" data-ds-example="tooltip-tool" data-ds-target=".tool-card"><ToolCard tool={tools[0]} tooltipId={`${prefix}tool-tooltip`} /></div></div>
 </div>}

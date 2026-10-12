@@ -100,7 +100,7 @@ const initTooltips = () => {
         const center = rect.left + card.clientLeft + card.clientWidth / 2;
         const clamped = tooltipLocalX(center, rect.left + card.clientLeft, tooltip.offsetWidth, innerWidth);
         card.style.setProperty('--tooltip-x', clamped === card.clientWidth / 2 ? '50%' : `${clamped}px`);
-        card.style.setProperty('--tooltip-y', tooltip.dataset.tooltipAnchor === 'top' ? '0px' : '50%');
+        card.style.setProperty('--tooltip-y', '50%');
         tooltip.dataset.placement = 'above';
     };
     card.addEventListener('focusin', () => requestAnimationFrame(positionFocus));

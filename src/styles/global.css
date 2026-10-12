@@ -104,7 +104,7 @@ img, svg { display: block; max-width: 100%; }
 .button--arrow-fill.button--small { --button-orb: 26px; --button-orb-inset: 4px; padding: var(--button-orb-inset) var(--button-orb-inset) var(--button-orb-inset) 14px; }
 .icon-button { display: inline-grid; place-items: center; width: var(--control-icon); height: var(--control-icon); flex-shrink: 0; padding: calc((var(--control-icon) - var(--icon-size)) / 2); border: 0; border-radius: var(--radius-pill); background: transparent; }
 /* Convert the 24-unit viewBox motion to 3 screen pixels at the 20px compact size. */
-.icon-button--small { --icon-layer-shift: calc(var(--distance-icon-shift) * 1.2); width: var(--control-height-small); height: var(--control-height-small); padding: calc((var(--control-height-small) - var(--icon-size-compact)) / 2); }
+.icon-button--small { position: relative; --icon-layer-shift: calc(var(--distance-icon-shift) * 1.2); width: var(--control-height-small); height: var(--control-height-small); padding: calc((var(--control-height-small) - var(--icon-size-compact)) / 2); }
 .icon-button--small > .icon { width: var(--icon-size-compact); height: var(--icon-size-compact); }
 .icon-button--secondary { border: 1px solid var(--control-border); }
 .icon-button--secondary.icon-button--small { padding: calc((var(--control-height-small) - var(--icon-size-compact)) / 2 - 1px); }

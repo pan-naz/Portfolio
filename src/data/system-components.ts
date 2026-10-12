@@ -74,7 +74,7 @@ export const componentManifest: ComponentClassification[] = [
   { file: 'src/components/TextLink.astro', kind: 'reusable-ui', group: 'Actions', title: 'Text link', reason: 'Website-used building block with shared UI styling.' },
   { file: 'src/components/ThemeToggle.astro', documentedHidden: 'theme-switch', kind: 'reusable-ui', group: 'Actions', title: 'Theme switch', reason: 'Website-used building block with shared UI styling.' },
   { file: 'src/components/TimelineRow.astro', kind: 'reusable-ui', group: 'Content', title: 'Timeline row', reason: 'Website-used building block with shared UI styling.' },
-  { file: 'src/components/Tooltip.astro', kind: 'reusable-ui', group: 'Content', title: 'Tooltip', reason: 'Shared tool-card and footer accessible names with pointer tracking.' },
+  { file: 'src/components/Tooltip.astro', kind: 'reusable-ui', group: 'Content', title: 'Tooltip', reason: 'Shared tool-card accessible names with pointer tracking.' },
   { file: 'src/components/ToolCard.astro', documentedHidden: 'tool-card', kind: 'reusable-ui', group: 'Content', title: 'Tool card', reason: 'Website-used building block with shared UI styling.' },
   { file: 'src/components/ToolsSection.astro', kind: 'page-section', reason: 'Composes a page or a narrative chapter; not a catalog building block.' },
   { file: 'src/components/TypewriterHeading.astro', kind: 'internal-helper', reason: 'Implementation or documentation helper; described by its consumer.' },

@@ -3,9 +3,8 @@ import type { Tool } from '../data/portfolio';
 import SvgAsset from './SvgAsset.astro';
 import Tooltip from './Tooltip.astro';
 import '../styles/tool-card.css';
-interface Props { tool: Tool; variant?: 'logo' | 'detail'; label?: string; description?: string; iconColor?: string; }
-const { tool, variant = 'logo', label, description, iconColor } = Astro.props;
-const tooltipId = `tool-${tool.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-tooltip`;
+interface Props { tool: Tool; variant?: 'logo' | 'detail'; label?: string; description?: string; iconColor?: string; tooltipId?: string; }
+const { tool, variant = 'logo', label, description, iconColor, tooltipId = `tool-${tool.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-tooltip` } = Astro.props;
 ---
 {variant === 'detail' ? <article class="tool-detail-card">
   <span class="tool-detail-card__icon" style={iconColor ? `--tool-icon-color:${iconColor}` : undefined}><SvgAsset src={tool.logo} width={tool.width} height={tool.height} /></span>

@@ -8,7 +8,7 @@ import DSPreview from './DSPreview.astro';import DSTabs from './DSTabs.astro';im
 interface Props {component:SourceComponent;inventory:ReturnType<typeof import('../data/system-inventory').buildSystemInventory>;}
 const {component,inventory}=Astro.props,entry=dsComponents.find(item=>item.file===component.file)!,id=entry.section,presentation=componentPresentation[component.name],tabs=`${id}-canvas`;
 const props=componentPropSpecs(component),helpers=[...component.source.matchAll(/import\s+(\w+)\s+from\s+['"][^'"]+\.astro['"]/g)].map(([,name])=>name);
-const compositionHelpers:Record<string,string[]>={Button:['CaseStudyComparison (real comparison controls)'],IconButton:['Icon (theme and media glyphs)','Tooltip (secondary destination name)'],Tooltip:['ToolCard','IconButton (live website targets)'],NavigationItem:['NavLinks','Logo','Button','IconButton','SectionNavigation']};
+const compositionHelpers:Record<string,string[]>={Button:['CaseStudyComparison (real comparison controls)'],IconButton:['Icon (theme and media glyphs)'],Tooltip:['ToolCard (live website target)'],NavigationItem:['NavLinks','Logo','Button','IconButton','SectionNavigation']};
 helpers.push(...(compositionHelpers[component.name]||[]));
 const extraTokens=component.name==='ProjectCard'?inventory.tokens.filter(token=>[...caseStudyMotionTokens,...caseStudyPresentationTokens].some(item=>item.name===`--${token.name}`)):[];
 ---

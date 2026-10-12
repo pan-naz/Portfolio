@@ -92,6 +92,12 @@ function validate(entries) {
   for (const [,id] of navigation.matchAll(/\['([\w-]+)',\s*'[^']+'\]/g)) {
     if (!sections.has(id)) errors.push(`Navigation target missing: ${id}`);
   }
+  const footer = read('src/components/SiteFooter.astro');
+  if (/Tooltip|data-tooltip-target|aria-labelledby/.test(footer)) errors.push('Footer icon link must have only its accessible label, without a tooltip.');
+  if (!/label="Design system"/.test(footer)) errors.push('Footer icon link must retain its accessible name.');
+  const preview = read('src/components/DSPreview.astro');
+  if (/tooltip-link|<Tooltip/.test(preview) || !/data-ds-example="tooltip-tool"[\s\S]*?<ToolCard/.test(preview)) errors.push('Tooltip catalog must use the real tool-card specimen only.');
+  if (/tooltipAnchor|data-tooltip-anchor/.test(read('src/scripts/tooltip.ts') + read('src/components/Tooltip.astro'))) errors.push('Tooltip must not retain footer-only anchor positioning.');
   const css = read('src/styles/design-system.css');
   for (const match of css.matchAll(/([^{}]+)\{[^{}]*\}/g)) {
     const selector = match[1].trim();

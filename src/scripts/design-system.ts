@@ -85,14 +85,14 @@ const refreshValues=()=>{
 window.addEventListener('resize',refreshValues);window.addEventListener('themechange',refreshValues);selectView();
 
 // Exercise the shared bubble itself; phone catalog previews show its focus anchor.
-const tooltipExample=document.querySelector<HTMLElement>('#tooltip [data-ds-example=tooltip-link] .tooltip');
+const tooltipExample=document.querySelector<HTMLElement>('#tooltip [data-ds-example=tooltip-tool] .tooltip');
 const showTooltipExample=(state:string)=>{
  if(!tooltipExample)return;
  tooltipExample.toggleAttribute('data-tooltip-visible',state!=='hidden');
  tooltipExample.dataset.placement=state==='below'?'below':'above';
  const target=tooltipExample.parentElement!;
  target.style.setProperty('--tooltip-x','50%');
- target.style.setProperty('--tooltip-y',state==='below'?'100%':'0px');
+ target.style.setProperty('--tooltip-y','50%');
  for(const button of document.querySelectorAll('[data-ds-tooltip-state]'))button.setAttribute('aria-pressed',String(button.getAttribute('data-ds-tooltip-state')===state));
 };
 for(const button of document.querySelectorAll<HTMLElement>('[data-ds-tooltip-state]'))button.addEventListener('click',()=>showTooltipExample(button.dataset.dsTooltipState!));
