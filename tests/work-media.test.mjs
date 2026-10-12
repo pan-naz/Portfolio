@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+globalThis.matchMedia = () => ({ matches: false });
 import { initializeWorkMedia } from '../src/scripts/work-filter/work-media.ts';
 import { preloadCaseVideo } from '../src/scripts/case-study/case-study-videos.ts';
 const tasks=[],images=[],events=[];

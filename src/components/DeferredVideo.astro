@@ -1,13 +1,24 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
+import { getVideoVariant } from '../data/video-variants';
+import IconButton from './IconButton.astro';
 type Props = HTMLAttributes<'video'> & { src: string; poster?: string; priority?: boolean; fallbackAlt?: string; };
 const { src, poster, priority = false, fallbackAlt = '', ...attributes } = Astro.props;
 const deferred = Boolean(poster && !priority);
+const variant = getVideoVariant(src);
+const ratio = variant ? ('sampleAspectRatio' in variant ? variant.sampleAspectRatio : '1:1') : '1:1';
+const [sarWidth, sarHeight] = ratio.split(':').map(Number);
+const sourceRatio = variant ? `${variant.originalWidth * sarWidth} / ${variant.originalHeight * sarHeight}` : undefined;
+// Approved fallback only for this otherwise poster-free recording in data saver.
+const saverPoster = src.split('?')[0] === '/projects/datagpt-case-study/data-setup.mp4'
+  ? '/projects/datagpt-case-study/data-setup-data-saver-poster.jpg' : undefined;
+const saverControl = attributes['data-case-video'] !== undefined && !attributes.controls;
 ---
-<video {...attributes} muted loop playsinline preload="none" poster={priority ? poster : undefined} data-poster={deferred ? poster : undefined}>
-  <source data-src={src} type="video/mp4" />
+<video {...attributes} muted loop playsinline preload="none" poster={priority ? poster : undefined} data-poster={deferred ? poster : undefined} data-source-ratio={sourceRatio} data-saver-poster={saverPoster}>
+  <source data-src={src} data-mobile-src={variant?.mobile?.src} type="video/mp4" />
   {poster && <img src={priority ? poster : undefined} data-src={deferred ? poster : undefined} alt={fallbackAlt} width={attributes.width} height={attributes.height} loading="lazy" decoding="async" />}
 </video>
+{saverControl && <IconButton label="Play video" icon="play" class="video-saver-control" data-video-saver-source={src} hidden />}
 {deferred && <noscript><video {...attributes} muted loop playsinline preload="none" poster={poster}>
   <source data-src={src} type="video/mp4" />
   <img src={poster} alt={fallbackAlt} width={attributes.width} height={attributes.height} loading="lazy" decoding="async" />

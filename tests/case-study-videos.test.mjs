@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { initializeCaseStudyVideos, setCaseVideoPlaying, setCaseVideoMuted } from '../src/scripts/case-study/case-study-videos.ts';
+import { initializeCaseStudyVideos, setCaseVideoPlaying, setCaseVideoMuted, preloadCaseVideo } from '../src/scripts/case-study/case-study-videos.ts';
 
 class Events {
   listeners = new Map();
@@ -12,7 +12,7 @@ class Events {
     listeners?.delete(fn);
     if (!listeners?.size) this.listeners.delete(name);
   }
-  emit(name) { this.listeners.get(name)?.forEach(fn => fn()); }
+  emit(name) { this.listeners.get(name)?.forEach(fn => fn({ currentTarget: this })); }
 }
 const reduced = Object.assign(new Events(), { matches: false });
 globalThis.matchMedia = () => reduced;
@@ -30,13 +30,14 @@ const makeVideo = () => {
     hasAttribute(name) { return name === 'src' && this.src !== undefined; },
     removeAttribute(name) { delete this[name]; },
   };
-  return {
+  return Object.assign(new Events(), {
+    dataset: {}, style: { setProperty(name, value) { this[name] = value; } },
     source, readyState: 0, currentTime: 0, loads: 0, plays: 0, pauses: 0,
     querySelectorAll(selector) { return selector === 'source[data-src]' || source.hasAttribute('src') ? [source] : []; },
     load() { this.loads++; },
     play() { this.plays++; return Promise.resolve(); },
     pause() { this.pauses++; },
-  };
+  });
 };
 const hero = makeVideo(), belowFold = makeVideo();
 const root = { querySelectorAll: () => [hero, belowFold] };
@@ -227,3 +228,37 @@ caseOwner.destroy();assert.equal(borrowedImage.src, '/poster.jpg', 'Returning a 
 borrowedImage.resolve();await tick();cardPlayback.enter(borrowed);assert.equal(borrowed.plays, 1);
 cardOwner.destroy();
 console.log('PASS: deferred posters honor active filters, decode before playback, preserve borrowing and cancel closed-case transfers.');
+
+const ratioVideo = makeVideo();ratioVideo.dataset.sourceRatio = '1920 / 1124';
+const ratioController = initializeCaseStudyVideos({ querySelectorAll: () => [ratioVideo] });
+assert.equal(ratioVideo.style['--video-source-ratio'], undefined, 'Poster geometry stays native before metadata');
+ratioVideo.emit('loadedmetadata');
+assert.equal(ratioVideo.style['--video-source-ratio'], '1920 / 1124', 'Decoded web media retains its original layout ratio');
+ratioController.destroy();
+assert.equal(ratioVideo.listeners.size, 0, 'Metadata listener is removed on destroy');
+
+let viewport = 767;
+const savedMatchMedia = globalThis.matchMedia;
+globalThis.matchMedia = query => query === '(max-width: 767px)' ? { matches: viewport <= 767 } : reduced;
+const phoneVideo = makeVideo();phoneVideo.source.dataset.mobileSrc = '/clip-mobile.mp4';
+const phoneController = initializeCaseStudyVideos({ querySelectorAll: () => [phoneVideo] });
+const phoneObserver = observers.at(-1);phoneObserver.enter(phoneVideo);
+assert.equal(phoneVideo.source.src, '/clip-mobile.mp4', '767px chooses the phone variant at attachment');
+viewport = 768;phoneObserver.enter(phoneVideo, false);phoneObserver.enter(phoneVideo);
+assert.equal(phoneVideo.source.src, '/clip-mobile.mp4', 'Resizing does not switch an attached/playing source');
+assert.equal(phoneVideo.loads, 1, 'No second download on resize or reentry');
+phoneController.destroy();
+const desktopController = initializeCaseStudyVideos({ querySelectorAll: () => [phoneVideo] });
+observers.at(-1).enter(phoneVideo);
+assert.equal(phoneVideo.source.src, '/clip.mp4', 'A fresh attachment at 768px chooses desktop');
+desktopController.destroy();
+viewport = 390;
+const smallOriginal = makeVideo();preloadCaseVideo(smallOriginal, 'metadata');
+assert.equal(smallOriginal.source.src, '/clip.mp4', 'A small case without a phone variant uses its desktop file');
+const warmedPhone = makeVideo();warmedPhone.source.dataset.mobileSrc = '/clip-mobile.mp4';
+preloadCaseVideo(warmedPhone, 'auto');viewport = 1440;preloadCaseVideo(warmedPhone, 'metadata');
+assert.equal(warmedPhone.source.src, '/clip-mobile.mp4', 'Intro warming uses the same one-time phone selection');
+assert.equal(warmedPhone.loads, 1);assert.equal(warmedPhone.plays, 0);
+globalThis.matchMedia = savedMatchMedia;
+console.log('PASS: phone/desktop selection occurs once at attachment and respects resize, reentry, fallback and intro buffering.');
+

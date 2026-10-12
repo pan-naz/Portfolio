@@ -1,7 +1,7 @@
 import { preloadCaseVideo } from '../case-study/case-study-videos.ts';
 import { loadVideoPoster } from '../case-study/video-posters.ts';
+import { isDataSaving, mediaConnection } from '../case-study/video-policy.ts';
 
-type Connection = { saveData?: boolean; effectiveType?: string };
 type BackgroundScheduler = { postTask(task: () => void, options: { priority: 'background'; signal: AbortSignal }): Promise<void> };
 
 function scheduleBackground(task: () => void, signal: AbortSignal) {
@@ -27,9 +27,8 @@ export function initializeWorkMedia(started: Promise<void>) {
   let introStarted = false, destroyed = false, generation = 0;
   let queued: AbortController | undefined;
   const eligible = () => {
-    const connection = (navigator as Navigator & { connection?: Connection }).connection;
     return introStarted && !destroyed && !document.hidden && location.pathname === '/'
-      && !connection?.saveData && !['2g', 'slow-2g'].includes(connection?.effectiveType ?? '');
+      && !isDataSaving();
   };
   const prepare = async (ticket: number) => {
     const filter = list.dataset.activeFilter;
@@ -58,6 +57,7 @@ export function initializeWorkMedia(started: Promise<void>) {
   const destroy = () => { destroyed = true; generation++; queued?.abort(); lifecycle.abort(); };
   work.addEventListener('workfilterchange', queue, { signal: lifecycle.signal });
   document.addEventListener('visibilitychange', queue, { signal: lifecycle.signal });
+  mediaConnection()?.addEventListener?.('change', queue, { signal: lifecycle.signal });
   window.addEventListener('pagehide', event => { if (!event.persisted) destroy(); }, { signal: lifecycle.signal });
   // Reduced-motion/readable fallbacks also keep the first-screen fonts first.
   void started.then(() => document.fonts.ready).then(() => { introStarted = true; queue(); }).catch(() => {});
