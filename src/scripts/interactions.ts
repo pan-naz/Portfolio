@@ -12,6 +12,7 @@ import { initializeProjectCursor } from './project-cursor';
 import { initializeWorkFilterMagnet } from './work-filter/work-filter-magnet';
 import { initializeCaseStudies } from './case-study/case-studies';
 import { initializeCaseStudyVideos } from './case-study/case-study-videos';
+import { initializeWorkMedia } from './work-filter/work-media';
 
 document.documentElement.classList.add('enhanced');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -30,6 +31,7 @@ const projectTilt = initializeProjectTilt();
 const projectCursor = initializeProjectCursor();
 const workFilterMagnet = initializeWorkFilterMagnet();
 const projectVideos = initializeCaseStudyVideos();
+if (heroIntro) initializeWorkMedia(heroIntro.started);
 let sectionReveals: ReturnType<typeof initializeSectionReveals> | undefined;
 let closeTimer: ReturnType<typeof setTimeout> | undefined;
 let afterClose: (() => void) | undefined;

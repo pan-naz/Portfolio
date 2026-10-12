@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import urbanistFont from '@fontsource-variable/urbanist/files/urbanist-latin-wght-normal.woff2?url';
+import funnelDisplayFont from '@fontsource-variable/funnel-display/files/funnel-display-latin-wght-normal.woff2?url';
 import SiteMetadata from '../components/SiteMetadata.astro';
 import { profile } from '../data/portfolio';
 import { siteTitle } from '../data/site-config';
@@ -14,6 +16,8 @@ const searchDescription = Astro.url.pathname === '/'
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" href={urbanistFont} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={funnelDisplayFont} as="font" type="font/woff2" crossorigin />
     <SiteMetadata title={title} description={searchDescription} sharingDescription={description} image={image} />
     <meta name="theme-color" content="#FAF8F7" />
     <title>{title}</title>

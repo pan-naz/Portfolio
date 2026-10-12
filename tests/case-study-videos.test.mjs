@@ -177,3 +177,53 @@ setCaseVideoPlaying(audible, true);
 assert.equal(audible.muted, true, 'A later play action keeps an explicitly muted entry silent');
 audioController.destroy();
 console.log('PASS: opt-in sound survives reentry without bypassing offscreen, hidden-page or manual-pause controls.');
+
+// Posters use an independent near-viewport observer and must not start a hidden
+// filter, play before decode, or revive a destroyed case after its fetch resolves.
+globalThis.window = Object.assign(new Events(), { scrollY: 0, innerHeight: 900 });
+globalThis.location = { pathname: '/' };
+const posterImages = [];
+globalThis.Image = class {
+  constructor() { this.pending = new Promise(resolve => { this.resolve = resolve; }); posterImages.push(this); }
+  decode() { return this.pending; }
+};
+const deferredVideo = () => {
+  const v = makeVideo();v.dataset = { poster: '/poster.jpg' };v.poster = '';
+  v.closest = selector => selector === '[hidden]' && v.hiddenFilter ? {} : null;
+  v.querySelectorAll = selector => selector === 'source[data-src]' || selector === 'source[src]' && v.source.hasAttribute('src') ? [v.source] : [];
+  return v;
+};
+const tick = async () => { for (let i=0;i<8;i++) await Promise.resolve(); };
+const lazy = deferredVideo(), lazyController = initializeCaseStudyVideos({ querySelectorAll: () => [lazy] });
+const lazyPlayback = observers.at(-2), lazyPosters = observers.at(-1);
+lazyPosters.enter(lazy);
+assert.equal(posterImages.length, 0, 'Resting home requests no below-screen poster');
+window.scrollY = 100;lazy.hiddenFilter = true;window.emit('scroll');
+assert.equal(posterImages.length, 0, 'A hidden filter never starts its poster');
+lazy.hiddenFilter = false;window.emit('scroll');
+assert.equal(posterImages.length, 1);
+assert.equal(lazy.source.src, undefined, 'Near-viewport posters never start video bytes');
+lazyPlayback.enter(lazy);
+assert.equal(lazy.plays, 0, 'A visible video waits for its poster decode');
+lazyPlayback.enter(lazy, false);posterImages[0].resolve();await tick();
+assert.equal(lazy.poster, '/poster.jpg');
+assert.equal(lazy.source.src, undefined, 'Leaving during decode cannot start offscreen playback');
+lazyPlayback.enter(lazy);
+assert.equal(lazy.plays, 1);assert.equal(lazy.loads, 1);
+window.emit('scroll');assert.equal(posterImages.length, 1, 'Decoded posters are reused');
+lazyController.destroy();assert.equal(lazyPosters.disconnected, true);
+
+location.pathname = '/case-studies/hooko/';
+const closing = deferredVideo(), closingController = initializeCaseStudyVideos({ querySelectorAll: () => [closing] });
+observers.at(-1).enter(closing);const closingImage = posterImages.at(-1);
+closingController.destroy();assert.equal(closingImage.src, '', 'Closing cancels a case-only poster transfer');
+closingImage.resolve();await tick();assert.equal(closing.poster, '');assert.equal(closing.plays, 0);
+observers.at(-1).enter(closing);assert.equal(posterImages.at(-1), closingImage, 'Queued callbacks cannot revive a destroyed loader');
+
+const borrowed = deferredVideo(), cardOwner = initializeCaseStudyVideos({ querySelectorAll: () => [borrowed] });
+const cardPlayback = observers.at(-2);observers.at(-1).enter(borrowed);const borrowedImage = posterImages.at(-1);
+const caseOwner = initializeCaseStudyVideos({ querySelectorAll: () => [borrowed] });
+caseOwner.destroy();assert.equal(borrowedImage.src, '/poster.jpg', 'Returning a live card preserves its pending poster');
+borrowedImage.resolve();await tick();cardPlayback.enter(borrowed);assert.equal(borrowed.plays, 1);
+cardOwner.destroy();
+console.log('PASS: deferred posters honor active filters, decode before playback, preserve borrowing and cancel closed-case transfers.');

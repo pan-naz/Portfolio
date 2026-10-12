@@ -7,7 +7,9 @@ import { caseVideoPreviews } from '../src/data/case-video-previews.ts';
 const all = [...projects, ...collectionProjects];
 const controlledRecordings = new Set();
 assert.equal(all.length, 20);
-const home = readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8');
+// The browser treats noscript fallback markup as inert when scripts are enabled.
+const activeMarkup = html => html.replace(/<noscript\b[^>]*>[\s\S]*?<\/noscript>/g, '');
+const home = activeMarkup(readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8'));
 for (const id of ['afterlight', 'still-life', 'soft-focus', 'slow-sunday', 'desk-notes', 'drift', 'open-water']) {
   assert.ok(!home.includes(`data-case-link="${id}"`), 'Fictional cards are removed');
   assert.ok(!existsSync(new URL(`../dist/case-studies/${id}/index.html`, import.meta.url)), 'Fictional routes are removed');
@@ -38,7 +40,7 @@ const projectMetadata = (markup, card = false) => {
 for (const project of all) {
   const path = `/case-studies/${project.id}/`;
   assert.ok(home.includes(`href="${path}"`), `Real link for ${project.id}, including keyboard/new-tab fallback`);
-  const html = readFileSync(new URL(`../dist${path}index.html`, import.meta.url), 'utf8');
+  const html = activeMarkup(readFileSync(new URL(`../dist${path}index.html`, import.meta.url), 'utf8'));
   assert.ok(html.includes('data-case-home'), 'Direct visits have a return control');
   const closeLink = html.match(/<a\b[^>]*data-case-home[^>]*>/)?.[0];
   const returnUrl = project.category === 'selected' ? '/#work' : `/#${project.category}`;

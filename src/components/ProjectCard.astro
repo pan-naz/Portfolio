@@ -1,5 +1,6 @@
 ---
 import ResponsiveImage from './ResponsiveImage.astro';
+import DeferredVideo from './DeferredVideo.astro';
 import type { Project } from '../data/portfolio';
 import Arrow from './Arrow.astro';
 import ProjectIdentity from './ProjectIdentity.astro';
@@ -29,10 +30,7 @@ const canvasColor = project.video?.canvasColor ?? project.imageCanvasColor;
       <div class="project-copy"><p class="project-outcome text-body-l">{project.outcome ?? project.description}</p>{project.outcome && <p class="project-description text-body-m">{project.description}</p>}</div>
     </div>
     <div class="project-media" style={`--media-ratio:${crop.width} / ${crop.height}${canvasColor ? `;background:${canvasColor}` : ''}`}>
-      {project.id === 'hooko' ? <HookoHero preview /> : project.video ? <div class:list={['case-media-frame', project.video.cropPixels && 'media-crop']} style={project.video.cropPixels ? `--media-ratio:${crop.width} / ${crop.height}` : undefined}><video class:list={[project.video.canvasFade && 'media-canvas-fade', project.video.cropPixels && 'media-crop-content']} data-project-video muted loop playsinline preload="none" poster={project.video.poster ?? project.image} width={mediaWidth} height={mediaHeight} style={videoStyle} aria-hidden="true">
-        <source data-src={project.video.src} type="video/mp4" />
-        <img src={project.video.poster ?? project.image} alt="" width={mediaWidth} height={mediaHeight} loading="lazy" decoding="async" />
-      </video></div> : project.imageReducedMotionSrc ? <picture><source media="(prefers-reduced-motion: reduce)" srcset={project.imageReducedMotionSrc} /><img class:list={[project.imageCanvasFade && 'media-canvas-fade']} src={project.image} srcset={imageSrcSet} sizes={imageSizes} alt={project.imageAlt} width={imageWidth} height={project.imageHeight} loading="lazy" decoding="async" style={imageStyle} /></picture> : <ResponsiveImage class:list={[project.imageCanvasFade && 'media-canvas-fade']} src={project.image} srcset={imageSrcSet} sizes={imageSizes} alt={project.imageAlt} width={imageWidth} height={project.imageHeight} loading="lazy" decoding="async" style={imageStyle} />}
+      {project.id === 'hooko' ? <HookoHero preview /> : project.video ? <div class:list={['case-media-frame', project.video.cropPixels && 'media-crop']} style={project.video.cropPixels ? `--media-ratio:${crop.width} / ${crop.height}` : undefined}><DeferredVideo src={project.video.src} fallbackAlt="" class:list={[project.video.canvasFade && 'media-canvas-fade', project.video.cropPixels && 'media-crop-content']} data-project-video poster={project.video.poster ?? project.image} width={mediaWidth} height={mediaHeight} style={videoStyle} aria-hidden="true" /></div> : project.imageReducedMotionSrc ? <picture><source media="(prefers-reduced-motion: reduce)" srcset={project.imageReducedMotionSrc} /><img class:list={[project.imageCanvasFade && 'media-canvas-fade']} src={project.image} srcset={imageSrcSet} sizes={imageSizes} alt={project.imageAlt} width={imageWidth} height={project.imageHeight} loading="lazy" decoding="async" style={imageStyle} /></picture> : <ResponsiveImage class:list={[project.imageCanvasFade && 'media-canvas-fade']} src={project.image} srcset={imageSrcSet} sizes={imageSizes} alt={project.imageAlt} width={imageWidth} height={project.imageHeight} loading="lazy" decoding="async" style={imageStyle} />}
     </div>
   </a>
 </article>
