@@ -53,6 +53,17 @@ export function initializeCaseStudyVideos(root: ParentNode = document): VideoCon
   const visible = new Set(videos.filter(video => previousOwners.get(video)?.visible.has(video)));
   const owner: VideoOwner = { active: true, visible, sync: video => syncVideo(video) };
   videos.forEach(video => owners.set(video, owner));
+  // Even-sized web encodes can round their native ratio by a fraction of a
+  // pixel. Keep the original recording's layout once metadata is available;
+  // poster-only geometry and the existing canvas/crop ratios remain unchanged.
+  const preserveSourceRatio = (event: Event) => {
+    const video = event.currentTarget as HTMLVideoElement;
+    if (video.dataset.sourceRatio) {
+      video.style.setProperty('--video-source-ratio', video.dataset.sourceRatio);
+      video.dataset.sourceRatioReady = '';
+    }
+  };
+  videos.forEach(video => video.addEventListener('loadedmetadata', preserveSourceRatio));
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let paused = false;
   let destroyed = false;
@@ -129,6 +140,7 @@ export function initializeCaseStudyVideos(root: ParentNode = document): VideoCon
       reduced.removeEventListener('change', sync);
       document.removeEventListener('visibilitychange', sync);
       videos.forEach(video => {
+        video.removeEventListener('loadedmetadata', preserveSourceRatio);
         if (owners.get(video) !== owner) return;
         const previous = previousOwners.get(video);
         if (previous?.active) {

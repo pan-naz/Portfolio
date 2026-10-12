@@ -12,7 +12,7 @@ class Events {
     listeners?.delete(fn);
     if (!listeners?.size) this.listeners.delete(name);
   }
-  emit(name) { this.listeners.get(name)?.forEach(fn => fn()); }
+  emit(name) { this.listeners.get(name)?.forEach(fn => fn({ currentTarget: this })); }
 }
 const reduced = Object.assign(new Events(), { matches: false });
 globalThis.matchMedia = () => reduced;
@@ -30,13 +30,14 @@ const makeVideo = () => {
     hasAttribute(name) { return name === 'src' && this.src !== undefined; },
     removeAttribute(name) { delete this[name]; },
   };
-  return {
+  return Object.assign(new Events(), {
+    dataset: {}, style: { setProperty(name, value) { this[name] = value; } },
     source, readyState: 0, currentTime: 0, loads: 0, plays: 0, pauses: 0,
     querySelectorAll(selector) { return selector === 'source[data-src]' || source.hasAttribute('src') ? [source] : []; },
     load() { this.loads++; },
     play() { this.plays++; return Promise.resolve(); },
     pause() { this.pauses++; },
-  };
+  });
 };
 const hero = makeVideo(), belowFold = makeVideo();
 const root = { querySelectorAll: () => [hero, belowFold] };
@@ -227,3 +228,11 @@ caseOwner.destroy();assert.equal(borrowedImage.src, '/poster.jpg', 'Returning a 
 borrowedImage.resolve();await tick();cardPlayback.enter(borrowed);assert.equal(borrowed.plays, 1);
 cardOwner.destroy();
 console.log('PASS: deferred posters honor active filters, decode before playback, preserve borrowing and cancel closed-case transfers.');
+
+const ratioVideo = makeVideo();ratioVideo.dataset.sourceRatio = '1920 / 1124';
+const ratioController = initializeCaseStudyVideos({ querySelectorAll: () => [ratioVideo] });
+assert.equal(ratioVideo.style['--video-source-ratio'], undefined, 'Poster geometry stays native before metadata');
+ratioVideo.emit('loadedmetadata');
+assert.equal(ratioVideo.style['--video-source-ratio'], '1920 / 1124', 'Decoded web media retains its original layout ratio');
+ratioController.destroy();
+assert.equal(ratioVideo.listeners.size, 0, 'Metadata listener is removed on destroy');

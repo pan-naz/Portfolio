@@ -493,6 +493,7 @@ html.case-study-open { overflow: hidden; scrollbar-gutter: stable; }
 .case-study-media { margin: 0; min-width: 0; }
 .case-study-media picture { display: block; }
 .case-study-media :is(img, video) { display: block; width: 100%; height: auto; object-fit: contain; border-radius: var(--case-media-radius, var(--radius-medium)); }
+.case-study-media video[data-source-ratio-ready] { aspect-ratio: var(--media-ratio, var(--video-source-ratio, auto)); }
 .case-study-media--bare :is(img, video) { border-radius: 0; }
 .case-study-media__sequence { overflow: hidden; border-radius: var(--case-media-radius, var(--radius-medium)); }
 .case-study-media--canvas :is(img, video) { aspect-ratio: var(--media-ratio); background: var(--media-canvas); }
