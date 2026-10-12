@@ -16,7 +16,10 @@ function attachVideoSources(video: HTMLVideoElement): boolean {
   let loaded = false;
   video.querySelectorAll<HTMLSourceElement>('source[data-src]').forEach(source => {
     if (source.hasAttribute('src')) return;
-    source.src = source.dataset.src!;
+    // Choose once, when attaching. Resizing or borrowing a playing card keeps
+    // its existing source and decoded/buffered frames.
+    source.src = matchMedia('(max-width: 767px)').matches && source.dataset.mobileSrc
+      ? source.dataset.mobileSrc : source.dataset.src!;
     loaded = true;
   });
   return loaded;

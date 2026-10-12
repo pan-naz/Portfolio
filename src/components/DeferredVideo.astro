@@ -10,7 +10,7 @@ const [sarWidth, sarHeight] = ratio.split(':').map(Number);
 const sourceRatio = variant ? `${variant.originalWidth * sarWidth} / ${variant.originalHeight * sarHeight}` : undefined;
 ---
 <video {...attributes} muted loop playsinline preload="none" poster={priority ? poster : undefined} data-poster={deferred ? poster : undefined} data-source-ratio={sourceRatio}>
-  <source data-src={src} type="video/mp4" />
+  <source data-src={src} data-mobile-src={variant?.mobile?.src} type="video/mp4" />
   {poster && <img src={priority ? poster : undefined} data-src={deferred ? poster : undefined} alt={fallbackAlt} width={attributes.width} height={attributes.height} loading="lazy" decoding="async" />}
 </video>
 {deferred && <noscript><video {...attributes} muted loop playsinline preload="none" poster={poster}>
