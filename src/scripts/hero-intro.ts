@@ -27,10 +27,12 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
   if (!hero || !heading) return;
   let resolveFinished!: () => void;
   const finished = new Promise<void>(resolve => { resolveFinished = resolve; });
+  let resolveStarted!: () => void;
+  const started = new Promise<void>(resolve => { resolveStarted = resolve; });
   const header = document.querySelector<HTMLElement>('.site-header');
   const root = document.documentElement;
   const returningFromCase = root.dataset.caseReturn === 'true';
-  const releaseGate = () => { delete root.dataset.homeIntro; };
+  const releaseGate = () => { delete root.dataset.homeIntro; resolveStarted(); };
   const permanent = heading.querySelector<HTMLElement>('[data-permanent]')!;
   const cycling = heading.querySelector<HTMLElement>('[data-cycling]')!;
   const paragraph = hero.querySelector<HTMLElement>('.hero-description')!;
@@ -221,7 +223,7 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
   reduced.addEventListener('change', reset);
   reset();
   root.classList.add('hero-intro-ready');
-  return { finished, setPaused(value: boolean) {
+  return { started, finished, setPaused(value: boolean) {
     paused = value;
     if (introStarted) intro?.setPaused(value);
     // The header remains usable when the hero scrolls away or a menu opens.

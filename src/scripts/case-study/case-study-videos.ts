@@ -12,6 +12,23 @@ const owners = new WeakMap<HTMLVideoElement, VideoOwner>();
 const playbackIntent = new WeakMap<HTMLVideoElement, boolean>();
 const soundEnabled = new WeakSet<HTMLVideoElement>();
 
+function attachVideoSources(video: HTMLVideoElement): boolean {
+  let loaded = false;
+  video.querySelectorAll<HTMLSourceElement>('source[data-src]').forEach(source => {
+    if (source.hasAttribute('src')) return;
+    source.src = source.dataset.src!;
+    loaded = true;
+  });
+  return loaded;
+}
+
+/** Warm an existing source without replaying, seeking or changing sound/intent. */
+export function preloadCaseVideo(video: HTMLVideoElement, preload: 'auto' | 'metadata') {
+  if (video.preload === 'auto' && preload === 'metadata') return;
+  video.preload = preload;
+  if (attachVideoSources(video)) video.load();
+}
+
 /** Sound is enabled only by an explicit player action, and survives reentry. */
 export function setCaseVideoMuted(video: HTMLVideoElement, muted: boolean) {
   if (muted) soundEnabled.delete(video);
@@ -25,7 +42,7 @@ export function setCaseVideoPlaying(video: HTMLVideoElement, playing: boolean) {
   owners.get(video)?.sync(video);
 }
 
-/** Decode nearby active posters; video bytes are requested only while in view. */
+/** Decode nearby active posters; normal autoplay starts only while in view. */
 export function initializeCaseStudyVideos(root: ParentNode = document): VideoController {
   const existing = controllers.get(root);
   if (existing) return existing;
@@ -74,12 +91,7 @@ export function initializeCaseStudyVideos(root: ParentNode = document): VideoCon
       void loadVideoPoster(video).then(() => syncVideo(video));
       return;
     }
-    let loaded = false;
-    video.querySelectorAll<HTMLSourceElement>('source[data-src]').forEach(source => {
-      if (source.hasAttribute('src')) return;
-      source.src = source.dataset.src!;
-      loaded = true;
-    });
+    const loaded = attachVideoSources(video);
     // All autoplay begins muted; only an explicit sound choice enables audio.
     video.muted = !soundEnabled.has(video);
     if (loaded) video.load();
