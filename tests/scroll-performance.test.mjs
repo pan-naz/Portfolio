@@ -105,7 +105,7 @@ document.querySelector = selector => selector === '.site-header' ? header : sele
 document.activeElement = null;
 window.scrollY = 0; window.innerWidth = 1440;
 globalThis.matchMedia = () => ({ matches: false, addEventListener() {} });
-globalThis.getComputedStyle = () => ({ top: '32px', getPropertyValue: () => '900' });
+globalThis.getComputedStyle = () => ({ top: '32px', getPropertyValue: name => name === '--duration-header-enter' ? '560ms' : name === '--duration-header-exit' ? '240ms' : '900' });
 globalThis.ResizeObserver = class { observe() {} };
 source = readFileSync('src/scripts/header-morph/header-morph.ts', 'utf8')
   .replace("'./header-morph-model'", JSON.stringify(new URL('../src/scripts/header-morph/header-morph-model.ts', import.meta.url).href))

@@ -119,6 +119,9 @@
   --scale-logo-wave: 1.05;
   --duration-skills-loop: 13.075s;
   --duration-toggle-enter: 600ms;
+  /* Existing desktop header clock and smooth(t) = t*t*(3-2*t), now shared. */
+  --duration-header-enter: 560ms; --duration-header-exit: 240ms;
+  --ease-header-pill: cubic-bezier(.3333333333333333, 0, .6666666666666666, 1);
   --duration-toggle-return: 600ms;
   --ease-toggle-rotation: cubic-bezier(.4, 0, .2, 1);
   --duration-fast: 160ms; --duration-navigation: 420ms; --duration-layout: 500ms; --duration-work-stage: 800ms;

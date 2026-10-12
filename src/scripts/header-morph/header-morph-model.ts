@@ -21,16 +21,16 @@ export function nextPillState(
   }
   return { expanded: expanded || scroll >= trigger, releasing: false };
 }
-export function advancePill(progress: number, expanded: boolean, elapsed: number, reduced = false) {
+export function advancePill(progress: number, expanded: boolean, elapsed: number, reduced = false, duration = pillDuration) {
   // Exiting never reverses the capsule's geometry.
   if (!expanded) return progress;
   if (reduced) return 1;
-  const step = Math.max(0, elapsed) / pillDuration;
+  const step = Math.max(0, elapsed) / duration;
   return Math.min(1, progress + step);
 }
-export function advancePillExit(exit: number, expanded: boolean, elapsed: number, reduced = false) {
+export function advancePillExit(exit: number, expanded: boolean, elapsed: number, reduced = false, duration = pillExitDuration) {
   if (reduced) return expanded ? 0 : 1;
-  const step = Math.max(0, elapsed) / pillExitDuration;
+  const step = Math.max(0, elapsed) / duration;
   return expanded ? Math.max(0, exit - step) : Math.min(1, exit + step);
 }
 const smooth = (value: number) => {

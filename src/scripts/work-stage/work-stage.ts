@@ -22,7 +22,6 @@ export function initializeWorkStage(): WorkStageController | undefined {
   const surface = section?.querySelector<HTMLElement>('[data-work-stage-surface]');
   const panel = section?.querySelector<HTMLElement>('.work-panel');
   const rail = section?.querySelector<HTMLElement>('[data-work-rail]');
-  const compactFilter = section?.querySelector<HTMLElement>('.work-compact-filter');
   const heading = section?.querySelector<HTMLElement>('.section-heading');
   const title = heading?.querySelector<HTMLElement>('h2');
   if (!section || !surface || !panel || !rail || !heading || !title) return;
@@ -52,27 +51,15 @@ export function initializeWorkStage(): WorkStageController | undefined {
   let preciseDesktop = floatingMotion();
   const revealContent = root.dataset.workPreviewLayout === 'true' && !reduced.matches && canAnimate;
 
-  const touchFilter = root.dataset.workTouchPreview === 'true' ? compactFilter : undefined;
-  const headingParts = [index, title, description, ...content, touchFilter].filter((item): item is HTMLElement => Boolean(item));
+  const headingParts = [index, title, description, ...content].filter((item): item is HTMLElement => Boolean(item));
   const railHiddenTransform = 'translate3d(0px, var(--distance-text-reveal), 0px)';
   const railVisibleTransform = 'translate3d(0px, 0px, 0px)';
   const showHeadingImmediately = () => headingParts.forEach(element => {
     element.style.opacity = '1';
     element.style.transform = 'translateY(0px)';
   });
-  const syncCompactFilter = () => {
-    if (!compactFilter) return;
-    const hidden = root.dataset.workTouchPreview === 'true' && revealContent && !headingRevealed && !reduced.matches;
-    if (hidden) compactFilter.style.opacity = '0';
-    else if (!touchFilter || headingResolved || reduced.matches || !revealContent) {
-      compactFilter.style.opacity = '';
-      compactFilter.style.transform = '';
-    }
-    compactFilter.style.pointerEvents = hidden ? 'none' : '';
-  };
   const hideHeading = () => {
     headingParts.forEach(element => { element.style.opacity = '0'; });
-    syncCompactFilter();
   };
   const settleHeadingAtTop = () => {
     // Only a fresh page has an empty preview. Once visited, retain the completed
@@ -149,7 +136,6 @@ export function initializeWorkStage(): WorkStageController | undefined {
       return;
     }
     headingRevealed = true;
-    syncCompactFilter();
     if (reduced.matches || typeof title.animate !== 'function') {
       showHeadingImmediately();
       return;
@@ -158,12 +144,6 @@ export function initializeWorkStage(): WorkStageController | undefined {
       if (reduced.matches || headingResolved) return;
       const effects = [
         ...sectionRevealEffects(title, index, description, content),
-        // Touch controls start with the heading, using its shared copy recipe.
-        ...revealEffects(touchFilter ? [touchFilter] : [], {
-          duration: number('--duration-copy-reveal'),
-          distance: number('--distance-text-reveal'),
-          easing: entranceEase(),
-        }),
       ];
       headingMotion = createNativeMotion(effects, { paused });
     });
@@ -305,7 +285,6 @@ export function initializeWorkStage(): WorkStageController | undefined {
       showHeadingImmediately();
     }
     onScroll();
-    syncCompactFilter();
   };
   const lifecycle = new AbortController();
   const signal = lifecycle.signal;
@@ -323,7 +302,6 @@ export function initializeWorkStage(): WorkStageController | undefined {
   const finishHeading = () => {
     headingResolved = true;
     headingRevealed = true;
-    syncCompactFilter();
     headingMotion?.finish();
     showHeadingImmediately();
     move(true, reduced.matches);
@@ -339,7 +317,6 @@ export function initializeWorkStage(): WorkStageController | undefined {
   // Resolve its entrance before the scroll-restoration paint guard releases.
   if (document.documentElement.dataset.caseReturn === 'true') {
     headingResolved = headingRevealed = true;
-    syncCompactFilter();
     showHeadingImmediately();
     move(true, true);
     railMotion?.finish();

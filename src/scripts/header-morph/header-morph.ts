@@ -21,7 +21,7 @@ export function initializeHeaderMorph() {
   // The same live decision owns the side filter, section surfaces and header.
   const floatingLayout = () => document.documentElement.dataset.workStageLayout === 'true';
   let metrics: { inset: number; buttonTop: number; buttonX: number; buttonWidth: number; buttonHeight: number;
-    controlsWidth: number; viewport: number } | undefined;
+    controlsWidth: number; viewport: number; enterDuration: number; exitDuration: number } | undefined;
   let queued = 0, previousTime = 0, previousScroll = window.scrollY, progress = 0;
   let expanded = false, releasing = false, disposed = false;
   let exit = 0;
@@ -123,8 +123,8 @@ export function initializeHeaderMorph() {
   }
   function frame(time: number) {
     queued = 0;
-    progress = advancePill(progress, expanded, time - previousTime, reduced.matches);
-    exit = advancePillExit(exit, expanded, time - previousTime, reduced.matches);
+    progress = advancePill(progress, expanded, time - previousTime, reduced.matches, metrics?.enterDuration);
+    exit = advancePillExit(exit, expanded, time - previousTime, reduced.matches, metrics?.exitDuration);
     if (!expanded && exit === 1) progress = 0;
     previousTime = time;
     paint();
@@ -185,6 +185,8 @@ export function initializeHeaderMorph() {
       inset: parseFloat(getComputedStyle(header).top), buttonTop: slotRect.top + window.scrollY,
       buttonX: slotRect.left, buttonWidth: width, buttonHeight: height,
       controlsWidth: controls.offsetWidth, viewport: window.innerWidth,
+      enterDuration: readMotionToken(headerTokens, '--duration-header-enter'),
+      exitDuration: readMotionToken(headerTokens, '--duration-header-exit'),
     };
     updateTarget();
     paint();

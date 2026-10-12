@@ -6,7 +6,7 @@ const wide=matchMedia('(min-width:1100px)');
 const syncMenu=()=>{if(contents)contents.open=wide.matches;};syncMenu();wide.addEventListener('change',syncMenu);
 document.documentElement.dataset.docNavigationReady='true';
 
-// Show the actual website dock state, and pin its real phone typography when
+// Show the actual website pill state, and pin its real phone typography when
 // the small specimen is viewed in a desktop catalog. No private size value.
 const phoneFilterFont=(rules:CSSRuleList,phone=false):string=>{
  for(const rule of rules){
@@ -16,9 +16,8 @@ const phoneFilterFont=(rules:CSSRuleList,phone=false):string=>{
  return '';
 };
 const smallFilterFont=[...document.styleSheets].map(sheet=>{try{return phoneFilterFont(sheet.cssRules);}catch{return '';}}).find(Boolean);
-for(const specimen of document.querySelectorAll<HTMLElement>('[data-ds-docked-filter]')){
+for(const specimen of document.querySelectorAll<HTMLElement>('[data-ds-pill]')){
  const nav=specimen.querySelector<HTMLElement>('.section-navigation')!;
- nav.classList.add('is-filter-docked');
  if(specimen.hasAttribute('data-ds-phone-filter')){
   if(!smallFilterFont)throw Error('Missing shared phone-filter typography rule');
   nav.dataset.themeFit='false';

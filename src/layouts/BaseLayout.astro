@@ -52,8 +52,6 @@ const searchDescription = Astro.url.pathname === '/'
           // every input type. Only the floating flag permits inset surfaces.
           if (precise || homeWork) root.dataset.workPreviewLayout = 'true';
           else delete root.dataset.workPreviewLayout;
-          if (homeWork && !precise) root.dataset.workTouchPreview = 'true';
-          else delete root.dataset.workTouchPreview;
           const floating = precise && wide.matches;
           if (floating) root.dataset.workStageLayout = 'true';
           else delete root.dataset.workStageLayout;
