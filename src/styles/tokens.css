@@ -49,7 +49,7 @@
   --color-navigation-text-on-primary: var(--color-overlay-text-on-primary); --color-navigation-focus-ring: var(--color-overlay-focus-ring);
   --shadow-floating-navigation: var(--shadow-overlay);
   --control-border: var(--color-text-primary);
-  --backdrop-menu: rgb(0 0 0 / .4); --backdrop-case: rgb(0 0 0 / .18);
+  --backdrop-case: rgb(0 0 0 / .18);
   --color-section-bg-surface: var(--color-neutral-950); --waterfall-icon-color: #111111;
   --color-inverse-text-primary: var(--color-canvas-light); --color-inverse-text-secondary: var(--color-ink-alpha-64-dark); --color-inverse-text-copy: rgb(250 248 247 / .72);
   --color-inverse-accent: var(--color-accent-dark); --color-inverse-border-default: var(--color-ink-alpha-10-dark);
@@ -87,7 +87,6 @@
   --font-weight-body-m-strong: 500;
   --font-weight-label-m: 500;
   --shadow-floating: var(--shadow-overlay-light);
-  --ease-out: cubic-bezier(.16, 1, .3, 1);
   --ease-entrance: var(--ease-stage-entrance);
   --ease-work-stage: var(--ease-stage-entrance);
   /* One card/case/hero transition contract across all project collections. */

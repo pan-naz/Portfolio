@@ -45,12 +45,12 @@ export const pillDockOffset = (progress: number, inset: number) => {
 };
 export const pillExitY = (exit: number, inset: number) => exit <= 0 ? 0 : -(inset + 64 + 40) * smooth(exit);
 export const mix = (from: number, to: number, progress: number) => from + (to - from) * progress;
-export function pillGeometry(viewport: number, controlsWidth: number, buttonWidth: number, mobile: boolean) {
-  const paddingLeft = mobile ? 12 : 20;
+export function pillGeometry(viewport: number, controlsWidth: number, buttonWidth: number) {
+  const paddingLeft = 20;
   const paddingRight = 8;
   const logoGap = 12;
   const buttonGap = 12;
-  const logoWidth = mobile ? 24 : 44;
+  const logoWidth = 44;
   const width = paddingLeft + paddingRight + logoWidth + logoGap + buttonGap + controlsWidth + buttonWidth;
   const left = (viewport - width) / 2;
   return { left, width, logoWidth, paddingLeft, paddingRight, logoGap,

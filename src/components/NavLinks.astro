@@ -1,9 +1,9 @@
 ---
 import { siteLinks } from '../data/navigation';
 import NavigationItem from './NavigationItem.astro';
-interface Props { showDS?: boolean; layout?: 'desktop' | 'mobile'; }
-const { showDS = true, layout = 'desktop' } = Astro.props;
+interface Props { showDS?: boolean; }
+const { showDS = true } = Astro.props;
 ---
-<nav class:list={{ 'desktop-nav': layout === 'desktop' }} aria-label={layout === 'desktop' ? 'Main navigation' : 'Mobile navigation'}>
-  {siteLinks.filter(link => showDS || !('catalog' in link)).map(link => <NavigationItem label={link.label} href={link.href} layout={layout} />)}
+<nav class="desktop-nav" aria-label="Main navigation">
+  {siteLinks.filter(link => showDS || !('catalog' in link)).map(link => <NavigationItem label={link.label} href={link.href} />)}
 </nav>

@@ -82,9 +82,10 @@ globalThis.performance = { now: () => clock };
 globalThis.requestAnimationFrame = fn => { jobs.set(++sequence, fn); return sequence; };
 globalThis.cancelAnimationFrame = id => jobs.delete(id);
 function element(width = 172) {
+  const classes = new Set();
   return {
     style: new Proxy({ setProperty() { writes++; }, removeProperty() { writes++; } }, { set(obj, key, value) { writes++; obj[key] = value; return true; } }),
-    dataset: {}, classList: { add() {}, remove() {}, toggle() {} },
+    dataset: {}, classList: { add: (...values) => values.forEach(value => classes.add(value)), remove: (...values) => values.forEach(value => classes.delete(value)), contains: value => classes.has(value), toggle(value, force) { const add = force ?? !classes.has(value); if (add) classes.add(value); else classes.delete(value); return add; } },
     offsetWidth: width, offsetHeight: 48, inert: false,
     getBoundingClientRect: () => ({ top: 550 - window.scrollY, left: 180 }),
     append(child) { child.parentElement = this; }, contains: () => false,
@@ -95,7 +96,10 @@ const identity = element(), full = element(), compact = element(), controls = el
 const surface = element(), slot = element(), home = element(), button = element(), hero = element();
 const header = element(); home.append(button);
 const nodes = { '.identity': identity, '.header-full-logo': full, '.header-compact-logo': compact, '.header-controls': controls, '.header-pill-surface': surface };
-header.querySelector = selector => nodes[selector]; controls.querySelector = () => theme;
+const navigation = element();
+header.querySelector = selector => nodes[selector]; controls.querySelector = selector => selector === '.desktop-nav' ? navigation : theme;
+full.querySelector = () => ({ width: { baseVal: { value: 79.5 } } });
+document.documentElement.dataset.workStageLayout = 'true';
 slot.querySelector = selector => selector === '.button' ? button : home; slot.closest = () => hero;
 document.querySelector = selector => selector === '.site-header' ? header : selector === '[data-hero-cta]' ? slot : hero;
 document.activeElement = null;
@@ -132,3 +136,14 @@ scroll(540); settle();
 assert.equal(header.dataset.pillState, 'hero'); assert.equal(button.parentElement, home);
 scroll(600); settle(); assert.equal(header.dataset.pillState, 'expanded', 'Scrolling down restores the pill');
 console.log('PASS: settled header sleeps across 1,899 scroll events; docking, return and reversal still complete.');
+
+document.documentElement.dataset.workStageLayout = undefined;
+listeners.get('workstagelayoutchange')();
+assert.equal(header.classList.contains('is-docking'), false);
+assert.equal(button.parentElement, home, 'Leaving floating layout restores the genuine hero CTA');
+for (let y = 600; y < 900; y++) scroll(y);
+assert.equal(jobs.size, 0, 'The compact layout does not run header morph frames');
+document.documentElement.dataset.workStageLayout = 'true';
+listeners.get('workstagelayoutchange')();
+settle();
+assert.equal(header.dataset.pillState, 'expanded', 'Returning to floating layout resumes the desktop header');

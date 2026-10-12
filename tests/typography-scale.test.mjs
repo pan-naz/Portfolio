@@ -22,7 +22,6 @@ const global = read('../src/styles/global.css');
 assert.match(css, /--line-height-body: 1\.5;/, 'Body line-height retains its exact ratio');
 assert.ok(/\.desktop-nav\s*\{[^}]*gap: var\(--space-3\)/.test(global) && /\.navigation-item\s*\{[^}]*--navigation-item-padding-inline: var\(--space-3\)[^}]*padding: 10px var\(--navigation-item-padding-inline\)/.test(global), 'Horizontal NavLinks use space/12 with shared 12px item padding');
 assert.ok(/\.header-controls\s*\{[^}]*gap: var\(--space-3\)/.test(global), 'Horizontal header components use space/12');
-assert.ok(/\.mobile-menu nav\s*\{[^}]*gap: 0/.test(global), 'Vertical navigation keeps zero inter-item gap');
 assert.ok(/body\s*\{[^}]*font-size: var\(--text-body-l\)[^}]*line-height: var\(--line-height-body\)[^}]*font-weight: 400/.test(global), 'Body/L is the shared 20/30 Regular default');
 assert.ok(/\.text-body-l\s*\{[^}]*font-size: var\(--text-body-l\)[^}]*line-height: var\(--line-height-body\)[^}]*letter-spacing: var\(--letter-spacing-body-l\)[^}]*font-weight: 400/.test(global), 'Body/L is one shared 20/30 Regular role');
 assert.ok(/\.text-body-m\s*\{[^}]*font-size: var\(--text-body-m\)[^}]*line-height: var\(--line-height-body\)[^}]*letter-spacing: var\(--letter-spacing-body-m\)[^}]*font-weight: 400/.test(global), 'Body/M is one shared 16/24 Regular role');

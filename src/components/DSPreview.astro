@@ -5,7 +5,7 @@ import Button from './Button.astro';import TextLink from './TextLink.astro';impo
 import Chip from './Chip.astro';import Stat from './Stat.astro';import TimelineRow from './TimelineRow.astro';import ProjectCard from './ProjectCard.astro';
 import SectionHeading from './SectionHeading.astro';import SectionNavigation from './SectionNavigation.astro';import NavLinks from './NavLinks.astro';import Logo from './Logo.astro';
 import CaseStudyComparison from './CaseStudyComparison.astro';
-import ToolCard from './ToolCard.astro';
+import ToolCard from './ToolCard.astro';import ThemeToggle from './ThemeToggle.astro';
 import {projects,impactGroups,experience,profile,cvUrl,hookoSiteUrl,tools} from '../data/portfolio';
 import {dataGPTMedia} from '../data/datagpt-case-study';import {workCategories} from '../data/work-categories';
 interface Props {component:SourceComponent;miniature?:boolean;}
@@ -26,7 +26,7 @@ const prefix=miniature?'tile-':'example-';
 </div>}
 {name==='IconButton'&&<div class="ds-specimen-composition">
  <div class="ds-labelled-specimen"><span>Raised</span><div class="ds-inline-controls">
- <div class="floating-navigation-theme floating-navigation-surface ds-icon-surface" data-ds-example="icon-menu" data-ds-target=".icon-button"><IconButton icon="menu" label="Open navigation" /></div>
+ <div class="floating-navigation-theme floating-navigation-surface ds-icon-surface" data-ds-example="icon-raised-theme" data-ds-target=".icon-button"><ThemeToggle /></div>
  <div class="case-study-direct-close ds-close-holder" data-ds-example="icon-close" data-ds-target=".icon-button"><IconButton href="/#work" label="Close case study" class="floating-control-theme floating-control-surface"><Icon name="plus" style="transform:rotate(45deg)" /></IconButton></div>
  </div></div>
  {!miniature&&<><div class="ds-labelled-specimen"><span>Plain</span><div data-ds-example="icon-theme" data-ds-target=".icon-button"><IconButton class="theme-toggle" label="Switch theme"><span class="theme-toggle-glyph" aria-hidden="true"><Icon name="sun" class="theme-sun"/><Icon name="moon" class="theme-moon"/></span></IconButton></div></div>

@@ -69,8 +69,18 @@ export function validateComponentClassification(files, used, manifest, shown) {
   return failures;
 }
 const specimens = componentsReachableFrom('src/pages/design-system.astro');
+export function validateNoMobileMenu(sources, iconRegistry) {
+  const errors = [];
+  for (const [file, source] of Object.entries(sources)) {
+    if (/menu-toggle|mobile-menu|menu-close|menu-open|backdrop-menu|drawer-(?:in|out)|Open navigation/.test(source)) errors.push(`Removed mobile navigation remains in ${file}`);
+  }
+  if ('menu' in iconRegistry) errors.push('Removed menu icon must not remain in the system registry.');
+  return errors;
+}
 function validate(entries) {
   const errors = [];
+  const menuFiles = ['src/components/SiteHeader.astro', 'src/components/NavLinks.astro', 'src/components/NavigationItem.astro', 'src/components/DSPreview.astro', 'src/components/DSDashboard.astro', 'src/scripts/interactions.ts', 'src/scripts/motion.ts', 'src/scripts/scroll-engine.ts', 'src/styles/global.css', 'src/styles/tokens.css'];
+  errors.push(...validateNoMobileMenu(Object.fromEntries(menuFiles.map(file => [file, read(file)])), icons));
   const names = new Set();
   for (const item of entries) {
     if (names.has(item.name)) errors.push(`Duplicate component: ${item.name}`);

@@ -1,5 +1,4 @@
 ---
-import IconButton from './IconButton.astro';
 import Logo from './Logo.astro';
 import ThemeToggle from './ThemeToggle.astro';
 import NavLinks from './NavLinks.astro';
@@ -10,10 +9,5 @@ import NavLinks from './NavLinks.astro';
   <div class="header-controls">
     <NavLinks showDS={false} />
     <ThemeToggle />
-    <IconButton class="menu-toggle" icon="menu" label="Open navigation" aria-controls="mobile-menu" aria-expanded="false" />
   </div>
 </header>
-<dialog id="mobile-menu" class="mobile-menu" aria-label="Navigation">
-  <div class="drawer-top"><Logo /><ThemeToggle /><IconButton class="menu-close" icon="close" label="Close navigation" /></div>
-  <NavLinks layout="mobile" showDS={false} />
-</dialog>

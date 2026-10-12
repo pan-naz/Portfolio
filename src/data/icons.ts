@@ -12,8 +12,6 @@ export const icons = {
     ['path', { d: 'M3.5 12 12 7.7l8.5 4.3L12 16.3z', fill: 'var(--icon-layer-surface, var(--color-bg-canvas))', 'data-icon-layer': 'middle' }],
     ['path', { d: 'M3.5 7.9 12 3.6l8.5 4.3L12 12.2z', fill: 'var(--color-interactive-accent)', stroke: 'none', 'data-icon-layer': 'top' }],
   ] },
-  menu: { nodes: [['path', { d: 'M4 6h16M4 12h16M4 18h16' }]] },
-  close: { nodes: [['path', { d: 'm6 6 12 12M6 18 18 6' }]] },
   plus: { weight: 'strong', nodes: [['path', { d: 'M12 5v14M5 12h14' }]] },
   equals: { nodes: [['path', { d: 'M5 9h14M5 15h14' }]] },
   arrow: { nodes: [['path', { d: 'M4 12h15M13 5l7 7-7 7' }]] },

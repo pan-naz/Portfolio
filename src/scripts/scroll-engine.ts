@@ -7,7 +7,7 @@ export function createScrollEngine(wrapper: Window | HTMLElement, content: HTMLE
   const isDocument = wrapper === window;
   const lenis = new Lenis({
     wrapper, content, lerp: .18, smoothWheel: true, syncTouch: false, anchors: false,
-    prevent: node => isDocument && node.closest('#mobile-menu, [data-case-dialog]') !== null,
+    prevent: node => isDocument && node.closest('[data-case-dialog]') !== null,
   });
   if (isDocument && document.querySelector('dialog[open]')) lenis.stop();
   const tick = (time: number) => lenis.raf(time * 1000);
