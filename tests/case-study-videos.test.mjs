@@ -261,3 +261,4 @@ assert.equal(warmedPhone.source.src, '/clip-mobile.mp4', 'Intro warming uses the
 assert.equal(warmedPhone.loads, 1);assert.equal(warmedPhone.plays, 0);
 globalThis.matchMedia = savedMatchMedia;
 console.log('PASS: phone/desktop selection occurs once at attachment and respects resize, reentry, fallback and intro buffering.');
+

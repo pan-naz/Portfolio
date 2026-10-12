@@ -523,6 +523,8 @@ html.case-study-open { overflow: hidden; scrollbar-gutter: stable; }
 }
 .case-study-artwork.case-study-media :is(img, video) { border-radius: 0; }
 .case-media-frame { display: contents; }
+[data-video-saver-frame] { position: relative; }
+.video-saver-control { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: var(--layer-controls); }
 .case-media-frame.media-crop { display: block; overflow: hidden; aspect-ratio: var(--media-ratio); border-radius: var(--case-media-radius, 0px); }
 .case-study-artwork .media-crop { border-radius: 0; }
 :is(.project-media, .case-study-media, .case-study-transition-artwork) :is(img, video).media-crop-content { width: var(--media-crop-width); height: auto; max-width: none; aspect-ratio: var(--media-source-ratio); margin: var(--media-crop-offset) 0 0 var(--media-crop-offset); border-radius: 0; }

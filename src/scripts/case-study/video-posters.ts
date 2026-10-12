@@ -50,3 +50,9 @@ export function cancelVideoPoster(video: HTMLVideoElement) {
   pending.delete(video);
   if (loading) loading.image.src = '';
 }
+
+/** Forget only a mode-specific fallback when data saving is turned off. */
+export function resetVideoPoster(video: HTMLVideoElement) {
+  cancelVideoPoster(video);
+  ready.delete(video);
+}
