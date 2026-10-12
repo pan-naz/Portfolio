@@ -77,6 +77,22 @@ export function validateNoMobileMenu(sources, iconRegistry) {
   if ('menu' in iconRegistry) errors.push('Removed menu icon must not remain in the system registry.');
   return errors;
 }
+export function validateNavigationExamples(preview, controller) {
+  const errors = [];
+  const start = preview.indexOf("{name==='NavigationItem'");
+  const navigation = preview.slice(start, preview.indexOf("{name==='Stat'", start));
+  for (const example of ['nav-top-logo', 'nav-top', 'nav-top-theme', 'nav-compact-logo', 'nav-compact-theme', 'nav-docked-filter', 'nav-small-filter', 'nav-floating', 'nav-action', 'nav-filter']) {
+    if (!navigation.includes(`data-ds-example="${example}"`)) errors.push(`Navigation specimen missing: ${example}`);
+  }
+  if (navigation.includes('<IconButton') || !navigation.includes('<ThemeToggle')) errors.push('Navigation must compose the shared ThemeToggle.');
+  for (const example of ['nav-docked-filter', 'nav-small-filter']) {
+    const block = navigation.match(new RegExp(`data-ds-example="${example}"[^>]*>([\\s\\S]*?)</div>`))?.[1];
+    if (!block?.includes('<SectionNavigation compact theme')) errors.push(`Navigation must use the real compact filter: ${example}`);
+  }
+  if (!/const phoneFilterFont\s*=/.test(controller) || !controller.includes('sheet.cssRules') || !controller.includes("nav.dataset.themeFit='false'")) errors.push('Small filter must derive its real responsive typography and dock state from source.');
+  if (/fontSize\s*=\s*['"][\d.]/.test(controller)) errors.push('Catalog must not invent a small-filter font size.');
+  return errors;
+}
 function validate(entries) {
   const errors = [];
   const menuFiles = ['src/components/SiteHeader.astro', 'src/components/NavLinks.astro', 'src/components/NavigationItem.astro', 'src/components/DSPreview.astro', 'src/components/DSDashboard.astro', 'src/scripts/interactions.ts', 'src/scripts/motion.ts', 'src/scripts/scroll-engine.ts', 'src/styles/global.css', 'src/styles/tokens.css'];
@@ -106,6 +122,7 @@ function validate(entries) {
   if (/Tooltip|data-tooltip-target|aria-labelledby/.test(footer)) errors.push('Footer icon link must have only its accessible label, without a tooltip.');
   if (!/label="Design system"/.test(footer)) errors.push('Footer icon link must retain its accessible name.');
   const preview = read('src/components/DSPreview.astro');
+  errors.push(...validateNavigationExamples(preview, read('src/scripts/design-system.ts')));
   if (/tooltip-link|<Tooltip/.test(preview) || !/data-ds-example="tooltip-tool"[\s\S]*?<ToolCard/.test(preview)) errors.push('Tooltip catalog must use the real tool-card specimen only.');
   if (/tooltipAnchor|data-tooltip-anchor/.test(read('src/scripts/tooltip.ts') + read('src/components/Tooltip.astro'))) errors.push('Tooltip must not retain footer-only anchor positioning.');
   const css = read('src/styles/design-system.css');
