@@ -36,10 +36,11 @@ const easePath=(value:string)=>{const n=value.match(/cubic-bezier\(([^)]+)\)/)?.
    {item.id==='color'&&<div class="ds-colors">
     <div class="ds-color-strip" aria-label="Shared palette">{paletteColors.map(color=><div style={`background:var(--${color.token});color:var(--${color.stripText||stripText(color.token)})`}><span>{color.name}</span></div>)}</div>
     <div class="ds-color-legend">{['light','dark','both'].map(mode=><span class="ds-icon-text-row"><span class="ds-color-mode">{mode!=='dark'&&<Icon name="sun"/>}{mode!=='light'&&<Icon name="moon"/>}</span><span class="ds-mode-text">{mode==='light'?'Light mode':mode==='dark'?'Dark mode':'Both'}</span></span>)}</div>
-    <p class="ds-color-note">Popups use the Light colours. Work and About use the Dark colours.</p>
     <div class="ds-color-cards">{paletteColors.map(color=><article class="ds-color-card" data-ds-palette={color.token}>
-     <div class="ds-color-card-heading"><div class="ds-color-square" style={`background:var(--${color.token})`} aria-hidden="true"/><div><strong><DSTokenNames label={color.name} token={'--'+color.token}/></strong><span>{colorValue(color.token)}</span></div></div>
+     <div class="ds-color-square" style={`background:var(--${color.token})`} aria-hidden="true"/>
+     <div class="ds-color-copy"><div class="ds-color-card-heading"><strong><DSTokenNames label={color.name} token={'--'+color.token}/></strong><span>{colorValue(color.token)}</span></div>
      <div class="ds-color-uses">{color.uses.map(use=><div class="ds-icon-text-row" data-ds-color-use={`${color.token}:${use.mode}`}><span class="ds-color-mode" aria-label={use.mode==='both'?'Both modes':`${use.mode} mode`}>{use.mode!=='dark'&&<Icon name="sun"/>}{use.mode!=='light'&&<Icon name="moon"/>}</span><span class="ds-mode-text">{use.label}</span></div>)}</div>
+     </div>
     </article>)}</div>
     <div class="ds-stroke-cards">{strokeCards.map(stroke=><article class="ds-stroke-card" data-ds-stroke={stroke.role}>
      <div class="ds-stroke-sample" inert aria-hidden="true" data-ds-static-demo>
