@@ -77,9 +77,9 @@ const { project } = Astro.props;
           <div><p class="case-study-eyebrow">Style guide</p><h2 class="case-study-heading" id="index-style">Colour, type and grid</h2></div>
           <div class="index-block"><h3>Colour</h3><CaseStudyPalette items={indexLawFirmPalette} class="index-palette" swatchClass="index-swatch" swatchProperty="--index-swatch" /></div>
           <div class="index-block"><h3>Typography</h3><div class="index-specimens">
-            <div class="index-specimen"><p class="case-study-eyebrow">Lato Regular · display</p><p class="index-specimen-size text-body-s">26px</p><p class="index-lato index-display-sample">Representation in court</p></div>
-            <div class="index-specimen"><p class="case-study-eyebrow">Lato Regular · UI and copy</p><p class="index-specimen-size text-body-s">14px</p><p class="index-lato index-body-sample">Consultation and clarification of legal issues, with written notes on the current law.</p></div>
-            <div class="index-specimen"><p class="case-study-eyebrow">Section titles</p><p class="index-specimen-size text-body-s">Uppercase, wide spacing</p><p class="index-lato index-caps-sample" aria-label="Law firm Index">Law<br />firm<br />Index</p></div>
+            <div class="index-specimen"><p class="case-study-eyebrow">Lato Regular · display</p><p class="index-specimen-size text-body-s">26px</p><p class="index-lato index-display-sample" data-typography-exclusion="project-font-specimen">Representation in court</p></div>
+            <div class="index-specimen"><p class="case-study-eyebrow">Lato Regular · UI and copy</p><p class="index-specimen-size text-body-s">14px</p><p class="index-lato index-body-sample" data-typography-exclusion="project-font-specimen">Consultation and clarification of legal issues, with written notes on the current law.</p></div>
+            <div class="index-specimen"><p class="case-study-eyebrow">Section titles</p><p class="index-specimen-size text-body-s">Uppercase, wide spacing</p><p class="index-lato index-caps-sample" aria-label="Law firm Index" data-typography-exclusion="project-font-specimen">Law<br />firm<br />Index</p></div>
           </div></div>
           <div class="index-brand-row">
             <h3>Logo</h3><div class="index-logo-card"><SvgAsset src="/projects/index-law-firm-case-study/logo-mark.svg" aria-hidden="false" role="img" aria-label="Index logo: three rising building shapes over the name in Cyrillic" /></div>

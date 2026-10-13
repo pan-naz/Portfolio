@@ -29,12 +29,6 @@
   --shadow-overlay-light: 0 8px 24px rgb(22 23 21 / .10);
   --ease-stage-entrance: cubic-bezier(.22, .61, .36, 1);
   /* Canonical semantic roles used directly by website consumers. */
-  /* One compact body role, with aliases preserving each consumer's px/rem contract. */
-  --type-body-compact: 1.125;
-  --text-body-compact: calc(var(--type-body-compact) * 16px);
-  --text-body-compact-relative: calc(var(--type-body-compact) * 1rem);
-  --text-stat-compact: 48px; --text-contact-compact: 64px;
-  --line-height-body: 1.5; --line-height-heading-l: 1.142857;
   --duration-button-fill: 450ms;
   --control-height-small: 36px;
   --scale-tooltip-start: .82; --scale-tooltip-end: 1;
@@ -61,28 +55,28 @@
   --section-reveal-trigger-viewport-ratio: .9; --work-stage-trigger-viewport-ratio: .02; --work-stage-collapse-scroll-y: 1;
   --radius-pill: var(--radius-999); --radius-medium: var(--radius-24); --radius-media: var(--radius-40); --radius-chapter: clamp(40px, 5.8vw, 100px);
   --radius-project-logo: 25%;
-  /* Figma desktop ramp; mobile sizes are a responsive adaptation. */
+  /* Fixed text system: phone defaults; only 768px and 1024px switch values. */
   --font-body: 'Urbanist Variable', Urbanist, Arial, sans-serif;
   --font-heading: 'Funnel Display Variable', 'Funnel Display', Arial, sans-serif;
-  /* Exact 1440px clamp sizes keep desktop tracking unchanged as smaller text scales. */
-  --letter-spacing-heading-xl: calc(-3.64 / 76.0048 * 1em);
-  --letter-spacing-heading-l: calc(-2.64 / 55.9952 * 1em);
-  --letter-spacing-heading-m: -1px;
-  --letter-spacing-body-l: 0px;
-  --letter-spacing-body-m: 0px;
-  --letter-spacing-body-m-strong: 0px;
-  --letter-spacing-body-s: 0px;
-  --letter-spacing-label-m: -0.5px;
-  --letter-spacing-label-s: 0px;
+  --font-heading-xl: var(--font-heading); --font-weight-heading-xl: 400;
+  --text-heading-xl: 2.5rem; --line-height-heading-xl: .909091; --letter-spacing-heading-xl: -.045em;
+  --font-heading-l: var(--font-heading); --font-weight-heading-l: 400;
+  --text-heading-l: 1.625rem; --line-height-heading-l: 1.142857; --letter-spacing-heading-l: -.042em;
+  --font-heading-m: var(--font-heading); --font-weight-heading-m: 500;
+  --text-heading-m: 1.375rem; --line-height-heading-m: 1.333333; --letter-spacing-heading-m: -.038em;
+  --font-body-l: var(--font-body); --font-weight-body-l: 400;
+  --text-body-l: 1.125rem; --line-height-body-l: 1.5; --letter-spacing-body-l: 0em;
+  --font-body-m: var(--font-body); --font-weight-body-m: 400;
+  --text-body-m: 1rem; --line-height-body-m: 1.5; --letter-spacing-body-m: 0em;
+  --font-body-m-strong: var(--font-body); --font-weight-body-m-strong: 500;
+  --text-body-m-strong: 1rem; --line-height-body-m-strong: 1.5; --letter-spacing-body-m-strong: 0em;
+  --font-body-s: var(--font-body); --font-weight-body-s: 400;
+  --text-body-s: .875rem; --line-height-body-s: 1.428571; --letter-spacing-body-s: 0em;
+  --font-label-m: var(--font-heading); --font-weight-label-m: 500;
+  --text-label-m: .875rem; --line-height-label-m: 1.428571; --letter-spacing-label-m: -.036em;
+  --font-label-s: var(--font-body); --font-weight-label-s: 500;
+  --text-label-s: .75rem; --line-height-label-s: 1.333333; --letter-spacing-label-s: 0em;
   --project-identity-tags-gap: var(--space-6);
-  --text-heading-xl: clamp(2.5rem, calc(1rem + 4.167vw), 5.5rem);
-  --text-heading-l: clamp(1.625rem, calc(.5rem + 3.333vw), 3.5rem);
-  --text-body-l: 1.25rem; --text-body-s: .875rem;
-  --text-body-m: 1rem; --text-label-s: .75rem; --text-heading-m: 1.5rem;
-  --font-weight-heading: 500;
-  --font-weight-heading-large: 400;
-  --font-weight-body-m-strong: 500;
-  --font-weight-label-m: 500;
   --shadow-floating: var(--shadow-overlay-light);
   --ease-entrance: var(--ease-stage-entrance);
   --ease-work-stage: var(--ease-stage-entrance);
@@ -129,6 +123,22 @@
   --project-tilt-angle: 6; --project-tilt-perspective: 1000px;
   --ease-filter-enter: cubic-bezier(.25, .46, .45, 1);
   --delay-filter-enter: 140ms; --scale-filter: .9; --scale-filter-exit: .97; --distance-filter-enter: 24px;
+}
+
+/* Text alone switches at these two boundaries; layout breakpoints stay local. */
+@media (min-width: 768px) {
+  :root {
+    --text-heading-xl: 3rem; --letter-spacing-heading-xl: -.046em;
+    --text-heading-l: 2.25rem; --letter-spacing-heading-l: -.044em;
+  }
+}
+@media (min-width: 1024px) {
+  :root {
+    --text-heading-xl: 4.75rem; --letter-spacing-heading-xl: -.048em;
+    --text-heading-l: 3.5rem; --letter-spacing-heading-l: -.047em;
+    --text-heading-m: 1.5rem; --letter-spacing-heading-m: -.040em;
+    --text-body-l: 1.25rem;
+  }
 }
 /* One role family; scoped themes use these same Light/Dark values. */
 :root, [data-theme='light'], [data-color-zone='light'], .floating-control-theme:not(.floating-navigation-theme), .case-study-direct-close, .tooltip, .case-study-decision-card--figure, .case-study-service-demo {

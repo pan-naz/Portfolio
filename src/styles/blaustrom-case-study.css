@@ -1,7 +1,7 @@
 /* Project-only: Blaustrom brand styles, not part of the design system */
 @layer system, project;
 @layer project {
-.case-study-content--blaustrom { --blaustrom-font-blaustrom-open-sans-sans-serif: 'Blaustrom Open Sans', sans-serif; }
+.case-study-content--blaustrom { --blaustrom-specimen-display-size: clamp(1.625rem, calc(.5rem + 3.333vw), 3.5rem); --blaustrom-specimen-copy-size: 1.25rem; --blaustrom-font-blaustrom-open-sans-sans-serif: 'Blaustrom Open Sans', sans-serif; }
 /* Approved Blaustrom artwork colors; portfolio type, frames and controls stay shared. */
 .case-study-content--blaustrom { --blaustrom-blue: #0497C3; --blaustrom-teal: #04C1C1; --blaustrom-dark: #282828; padding-bottom: 0; }
 .blaustrom-lede { margin-top: var(--space-6); color: var(--color-text-secondary); }
@@ -36,7 +36,7 @@
 .blaustrom-open-sans { font-family:var(--blaustrom-font-blaustrom-open-sans-sans-serif); font-weight: 400; }
 .blaustrom-open-sans.blaustrom-light, .blaustrom-open-sans .blaustrom-light { font-weight: 300; }
 .blaustrom-open-sans.blaustrom-bold, .blaustrom-open-sans .blaustrom-bold { font-weight: 700; }
-.blaustrom-case .blaustrom-type-heading { font-size: var(--text-heading-l); line-height: 1.142857; }
+.blaustrom-case .blaustrom-type-heading { font-size: var(--blaustrom-specimen-display-size); line-height: 1.142857; }
 @media (max-width: 767px) {
   .blaustrom-block { margin-top: var(--case-content-gap); }
   .blaustrom-config-grid { grid-template-columns: minmax(0, 1fr); }

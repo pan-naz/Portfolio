@@ -9,7 +9,7 @@ for (const example of ['nav-top-logo', 'nav-compact-theme', 'nav-work-pill', 'na
 }
 assert.ok(validateNavigationExamples(preview.replaceAll('<ThemeToggle', '<IconButton'), controller).length, 'Reject a local copy of the theme control');
 assert.ok(validateNavigationExamples(preview.replaceAll('<SectionNavigation compact theme pill', '<div'), controller).length, 'Reject a drawn filter copy');
-assert.ok(validateNavigationExamples(preview, controller.replace('phoneFilterFont', 'inventedSize')).length, 'Require source-derived phone typography');
+assert.ok(validateNavigationExamples(preview, controller.replace('data-small-work-type', 'inventedSize')).length, 'Require source-derived phone typography');
 assert.ok(validateNavigationExamples(preview, `${controller}\nitem.style.fontSize='14px';`).length, 'Reject a private literal font size');
 console.log('PASS: actual header/pill variants, shared theme/filter compositions and source-derived small typography');
 const read = file => readFileSync(new URL(`../${file}`, import.meta.url), 'utf8');

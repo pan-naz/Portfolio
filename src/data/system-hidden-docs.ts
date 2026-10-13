@@ -52,8 +52,8 @@ export const hiddenDocumentation = [
   },
   {
     "section": "Project filter",
-    "sha256": "7cb404fcdf3f3a42d67c16f7ddf2881bbb7198c1853973d2a3abef987a045478",
-    "characters": 1535
+    "sha256": "a299f25003a79a59e2f2f70a75462ebd02b9ad8c1e90b2ac674e753c7c6a7712",
+    "characters": 1745
   },
   {
     "section": "Theme switch",
@@ -65,4 +65,4 @@ export const hiddenDocumentation = [
     "sha256": "211ce549480eaf857bb74dbecb38dd04a57652cb471bdbdff5ee2eda14e8ffab",
     "characters": 849
   }
-];
+] as const;

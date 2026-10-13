@@ -7,6 +7,9 @@ interface IconDefinition {
 // Node attributes may opt into semantic fills; unfilled nodes inherit the regular stroke.
 // Approved UI geometry; every control and decorative SVG uses the same renderer.
 export const icons = {
+  monitor: { nodes: [['rect', { x:'3', y:'4', width:'18', height:'13', rx:'2' }], ['path', { d:'M8 21h8M12 17v4' }]] },
+  tablet: { nodes: [['rect', { x:'5', y:'2', width:'14', height:'20', rx:'2' }], ['circle', { cx:'12', cy:'18.5', r:'.5' }]] },
+  phone: { nodes: [['rect', { x:'7', y:'2', width:'10', height:'20', rx:'2' }], ['circle', { cx:'12', cy:'18.5', r:'.5' }]] },
   layers: { nodes: [
     ['path', { d: 'M3.5 16.1 12 11.8l8.5 4.3L12 20.4z', fill: 'var(--icon-layer-surface, var(--color-bg-canvas))', 'data-icon-layer': 'bottom' }],
     ['path', { d: 'M3.5 12 12 7.7l8.5 4.3L12 16.3z', fill: 'var(--icon-layer-surface, var(--color-bg-canvas))', 'data-icon-layer': 'middle' }],

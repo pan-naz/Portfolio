@@ -1,3 +1,5 @@
+import {validateTypographySystem,validateStaticTypography} from './validate-typography.mjs';
+import {typographyCssExclusions} from '../src/data/typography-exclusions.ts';
 import {validateColors} from './validate-colors.mjs';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -33,11 +35,6 @@ function validatePage(path, source) {
     }
   }
   return errors;
-}
-function selectorUses(source, selector, declaration) {
-  return [...source.matchAll(/([^{}]+)\{([^{}]*)\}/g)].some(([, selectors, body]) =>
-    selectors.split(',').map(value => value.trim()).includes(selector) && body.includes(declaration)
-  );
 }
 function componentsReachableFrom(entry, seen = new Set()) {
   const path = resolve(root, entry);
@@ -90,8 +87,8 @@ export function validateNavigationExamples(preview, controller) {
     const block = navigation.match(new RegExp(`data-ds-example="${example}"[^>]*>([\\s\\S]*?)</div>`))?.[1];
     if (!block?.includes('<SectionNavigation compact theme pill')) errors.push(`Navigation must use the real compact filter: ${example}`);
   }
-  if (!/const phoneFilterFont\s*=/.test(controller) || !controller.includes('sheet.cssRules') || !controller.includes("nav.dataset.themeFit='false'")) errors.push('Small filter must derive its real responsive typography and pill state from source.');
-  if (/fontSize\s*=\s*['"][\d.]/.test(controller)) errors.push('Catalog must not invent a small-filter font size.');
+  if (!controller.includes("nav.toggleAttribute('data-small-work-type',true)") || !controller.includes("nav.dataset.themeFit='false'")) errors.push('Small filter must derive its real responsive typography and pill state from source.');
+  if (/\.style\.(?:fontSize|fontWeight|fontFamily|lineHeight|letterSpacing)\s*=/.test(controller)) errors.push('Catalog must not invent a small-filter font size.');
   return errors;
 }
 export function validateWorkPill(work, controller, css, presentation) {
@@ -146,38 +143,8 @@ function validate(entries) {
     }
   }
   const tokens = read('src/styles/tokens.css');
-  if (!/--font-weight-heading:\s*500\s*;/.test(tokens)) errors.push('Shared Heading/M weight token must resolve to 500.');
-  if (!/--font-weight-body-m-strong:\s*500\s*;/.test(tokens)) errors.push('Shared Body/M Strong weight token must resolve to 500.');
-  if (!/--font-weight-heading-large:\s*400\s*;/.test(tokens)) errors.push('Shared large-heading weight token must resolve to 400.');
-  if (!/--font-weight-label-m:\s*500\s*;/.test(tokens)) errors.push('Shared Label/M weight token must resolve to 500.');
-  const headingWeight = 'font-weight: var(--font-weight-heading)';
-  const linkedSelectors = [
-    ['src/styles/global.css', '.wordmark'],
-    ['src/styles/global.css', '.project-identity'],
-  ];
-  for (const [path, selector] of linkedSelectors) {
-    if (!selectorUses(read(path), selector, headingWeight)) errors.push(`${selector} must consume --font-weight-heading in ${path}.`);
-  }
-  const largeHeadingWeight = 'font-weight: var(--font-weight-heading-large)';
-  const largeHeadingSelectors = [
-    ['src/styles/global.css', '.text-heading-xl'],
-    ['src/styles/global.css', '.text-heading-l'],
-    ['src/styles/global.css', '.stat-value'],
-    ['src/styles/case-study-narrative.css', '.case-study-heading'],
-    ['src/styles/voximplant-case-study.css', '.vox-solution-stats strong'],
-  ];
-  for (const [path, selector] of largeHeadingSelectors) {
-    if (!selectorUses(read(path), selector, largeHeadingWeight)) errors.push(`${selector} must consume --font-weight-heading-large in ${path}.`);
-  }
-  const labelWeight = 'font-weight: var(--font-weight-label-m)';
-  const labelSelectors = [
-    ['src/styles/global.css', '.eyebrow'],
-    ['src/styles/global.css', '.hero-eyebrow'],
-    ['src/styles/case-study-narrative.css', '.case-study-eyebrow'],
-  ];
-  for (const [path, selector] of labelSelectors) {
-    if (!selectorUses(read(path), selector, labelWeight)) errors.push(`${selector} must consume --font-weight-label-m in ${path}.`);
-  }
+  errors.push(...validateTypographySystem(tokens, read('src/styles/typography.css'), read('src/components/DSFoundations.astro')));
+  errors.push(...validateStaticTypography(Object.fromEntries(filesUnder('src/styles').filter(file=>file.endsWith('.css')).map(file=>[file,read(file)])),typographyCssExclusions));
   return errors;
 }
 export function validateHiddenDocumentation(records, text) {

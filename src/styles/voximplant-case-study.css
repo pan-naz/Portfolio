@@ -2,9 +2,9 @@
 @layer system, project;
 @layer project {
 .case-study-content--voximplant { padding-bottom: 0; }
-.vox-accent { color: var(--color-interactive-accent); font-size: var(--text-body-m); line-height: 1.5; font-weight: var(--font-weight-body-m-strong); }
-.vox-subhead { margin: var(--space-8) 0 var(--space-4); font-weight: var(--font-weight-body-m-strong); }
-.vox-section-title { letter-spacing: var(--letter-spacing-heading-m); margin-top: var(--space-16); font-size: var(--text-heading-m); line-height: 1.333333; font-weight: var(--font-weight-heading); }
+.vox-accent { color: var(--color-interactive-accent); }
+.vox-subhead { margin: var(--space-8) 0 var(--space-4); }
+.vox-section-title { margin-top: var(--space-16); }
 .vox-copy-stack { display: grid; gap: var(--space-6); }
 .vox-copy-stack > div { display: grid; gap: var(--space-2); }
 .vox-copy-stack > div > :is(h3, h4, p) + :is(p, ul, ol), .vox-audience-intro > :is(h3, p) + :is(p, ul, ol) { margin-top: 0; }
@@ -18,10 +18,10 @@
 
 .vox-problem .case-study-heading { margin-bottom: var(--case-content-gap); }
 .vox-problem-grid { align-items: stretch; }
-.vox-problem blockquote { margin: 0; font-style: italic; font-weight: var(--font-weight-body-m-strong); }
+.vox-problem blockquote { margin: 0; font-style: italic; }
 .vox-goal { display: grid; place-content: center; min-height: 360px; padding: var(--space-12); border: 1px solid var(--color-border-default); border-radius: var(--radius-medium); text-align: center; }
-.vox-goal p:first-child { margin-bottom: var(--space-3); font-weight: var(--font-weight-body-m-strong); }
-.vox-goal p:last-child { max-width: 420px; font-family: var(--font-heading); font-size: var(--text-heading-m); line-height: 1.333333; font-weight: var(--font-weight-heading); }
+.vox-goal p:first-child { margin-bottom: var(--space-3); }
+.vox-goal p:last-child { max-width: 420px; }
 
 .vox-two-column { align-items: center; margin-top: var(--case-content-gap); }
 .vox-case > section > img,
@@ -40,7 +40,7 @@
 .vox-persona-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4); }
 .vox-persona-icon { display: block; flex: 0 0 56px; width: 56px; height: 56px; color: var(--color-text-primary); }
 .vox-persona-icon svg { display: block; width: 56px; height: 56px; }
-.vox-persona-group { padding: 8px 16px; border-radius: var(--radius-pill); background: var(--color-bg-surface); box-shadow: var(--shadow-floating); font-size: var(--text-label-s); line-height: 1.333333; white-space: nowrap; }
+.vox-persona-group { padding: 8px 16px; border-radius: var(--radius-pill); background: var(--color-bg-surface); box-shadow: var(--shadow-floating); white-space: nowrap; }
 .vox-persona > h3 { margin-top: var(--space-4); }
 .vox-persona > p { margin-top: var(--space-2); }
 .vox-persona-needs { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--color-border-default); }
@@ -54,9 +54,9 @@
 
 .vox-hypotheses { display: grid; gap: var(--space-3); padding: 0 !important; margin-top: var(--space-8) !important; list-style: none; }
 .vox-hypotheses li { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: var(--space-3); padding: var(--space-4); border: 1px solid var(--color-border-default); border-radius: var(--radius-medium); }
-.vox-hypotheses li > span { color: var(--color-text-secondary); font-family: var(--font-heading); font-size: var(--text-heading-m); line-height: 1.333333; font-weight: var(--font-weight-heading); }
+.vox-hypotheses li > span { color: var(--color-text-secondary); }
 .vox-hypotheses p { margin-top: var(--space-1); }
-.vox-hypotheses p strong { color: var(--color-interactive-accent); font-weight: var(--font-weight-body-m-strong); }
+.vox-hypotheses p strong { color: var(--color-interactive-accent); }
 .vox-section > img, .vox-section > picture > img { margin-top: var(--space-6); }
 .vox-stats { display: grid; gap: var(--space-8); margin: var(--space-12) 0 0; }
 .vox-stats--four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -65,8 +65,8 @@
 .vox-solution .case-study-eyebrow { color: var(--color-text-primary); }
 .vox-solution-stats { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); }
 .vox-solution-stats > div { display: grid; grid-template-columns: 1fr; gap: var(--space-2); align-items: start; }
-.vox-solution-stats strong { letter-spacing: var(--letter-spacing-heading-l); color: var(--color-interactive-accent); font-size: var(--text-heading-l); line-height: 1; font-weight: var(--font-weight-heading-large); }
-.vox-solution-stats span { max-width: 230px; color: var(--color-text-secondary); font-family: var(--font-heading); font-size: var(--text-heading-m); line-height: 1.333333; font-weight: var(--font-weight-heading); }
+.vox-solution-stats strong { color: var(--color-interactive-accent); }
+.vox-solution-stats span { max-width: 230px; color: var(--color-text-secondary); }
 .vox-product-feature { margin-top: var(--case-section-space); }
 .vox-product-feature > :is(p, ul) { max-width: 620px; margin-top: var(--space-2); }
 .vox-product-feature > :is(.case-study-media, img), .vox-product-feature > picture > img { margin-top: var(--space-6); }
@@ -98,7 +98,6 @@
 @media (max-width: 767px) {
   .case-study-content--voximplant { padding-bottom: 0; }
   .vox-goal { min-height: 260px; padding: var(--space-8); }
-  .vox-goal p:last-child { font-size: 1.25rem; }
   .vox-audience-intro { position: static; }
   .vox-persona { padding: var(--space-4); }
   .vox-persona-group { white-space: normal; text-align: right; }
@@ -106,14 +105,11 @@
   .vox-outcomes { gap: var(--space-4); }
   .vox-outcomes article { padding: var(--space-4); }
   .vox-hypotheses li { grid-template-columns: 36px minmax(0, 1fr); }
-  .vox-hypotheses li > span { font-size: var(--text-body-compact-relative); }
   .vox-stats--four, .vox-stats--impact { grid-template-columns: 1fr; gap: var(--space-6); }
   .vox-stats .stat { border-top: 1px solid var(--color-border-default); padding-top: var(--space-4); }
   .vox-decisions { gap: var(--space-4); }
   .vox-solution-stats { grid-template-columns: 1fr; }
   .vox-solution-stats > div { grid-template-columns: 72px minmax(0, 1fr); }
-  .vox-solution-stats strong { font-size: 2.5rem; }
-  .vox-solution-stats span { font-size: 1rem; }
   .vox-product-feature--design-system, .vox-final-cards { grid-template-columns: 1fr; }
   .vox-final-cards { margin-top: var(--space-16); }
   .vox-final-cards article { padding: var(--space-6); }

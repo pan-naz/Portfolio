@@ -27,6 +27,7 @@ export function initializeWorkFilterPill() {
     if (disposed) return;
     if (frame) cancelAnimationFrame(frame);
     frame = 0;
+    nav.toggleAttribute('data-small-work-type', innerWidth < 381);
     if (compact()) {
       const maximum = nav.style.maxWidth;
       nav.style.maxWidth = 'none';
