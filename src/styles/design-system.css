@@ -106,7 +106,7 @@
 .ds-dashboard-title { font-family:var(--font-heading); font-size:var(--text-heading-m); font-weight:var(--font-weight-heading); line-height:var(--space-8); letter-spacing:var(--letter-spacing-heading-m); margin-bottom:var(--space-4); }
 .ds-tile-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:var(--space-4); }
 .ds-tile-frame { position:relative; min-width:0; border-radius:var(--radius-medium); }
-.ds-tile { position:relative; min-width:0; height:100%; overflow:hidden; background:var(--color-bg-surface); box-shadow:var(--shadow-floating); border-radius:var(--radius-medium); }
+.ds-tile { position:relative; min-width:0; height:100%; overflow:hidden; background:var(--project-card-bg-surface); box-shadow:var(--shadow-floating); border-radius:var(--radius-medium); }
 .ds-tile-link::after { content:''; position:absolute; inset:0; border-radius:inherit; }
 .ds-tile-link:focus-visible { outline:none; }
 .ds-tile:has(.ds-tile-link:focus-visible) { outline:2px solid var(--focus-ring); outline-offset:4px; }
@@ -114,7 +114,7 @@
  .ds-tile-frame.is-tilting { z-index:var(--layer-content); }
  .ds-tile-frame.is-tilting[data-tilt-ready] > .ds-tile { transform:perspective(var(--project-tilt-perspective)) rotateX(var(--project-rotate-x,0deg)) rotateY(var(--project-rotate-y,0deg)); }
 }
-.ds-exclusions-box { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-8); padding:var(--space-6); background:var(--color-bg-surface); box-shadow:var(--shadow-floating); border-radius:var(--radius-medium); }
+.ds-exclusions-box { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-8); padding:var(--space-6); background:var(--project-card-bg-surface); box-shadow:var(--shadow-floating); border-radius:var(--radius-medium); }
 .ds-exclusions-box .ds-spec-list li { border:0; }
 @media (max-width:767px) { .ds-exclusions-box { grid-template-columns:minmax(0,1fr); } }
 .ds-tile-visual { position:relative; display:grid; place-items:center; height:104px; padding:var(--space-3); overflow:hidden; background-color:var(--color-bg-surface-subtle); }

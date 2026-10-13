@@ -170,8 +170,6 @@ picture:has(+ noscript > picture) > img[data-deferred-image], img[data-deferred-
   :is(html[data-home-intro], .site-header[data-pill-state='expanding'], .site-header[data-pill-state='hiding']) .wordmark [data-logo-letter] { transform: translateY(0) scale(1); }
 }
 
-.skip-link { position: fixed; top: -100px; left: calc(var(--space-6) + var(--safe-left)); padding: var(--space-3) var(--space-6); z-index: var(--layer-overlay); border-radius: var(--radius-pill); color: var(--color-text-on-primary); background: var(--color-text-primary); }
-.skip-link:focus { top: calc(var(--space-3) + var(--safe-top)); }
 #page-content { position: relative; }
 .hero-backdrop { position: absolute; inset: 0 0 auto; height: var(--waterfall-height, 800px); pointer-events: none; overflow: hidden; }
 .hero-waterfall { position: absolute; top: 0; left: 50%; translate: -50% 0; width: min(800px, 100%); height: 100%; }

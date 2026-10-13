@@ -24,9 +24,28 @@ assert.equal((catalog.match(/data-ds-hidden-component=/g)||[]).length,(dashboard
 const overviewCards=[...catalog.matchAll(/<article class="ds-tile-frame"[^>]*>([\s\S]*?)<\/article>/g)].map(([,html])=>html);
 assert.equal(overviewCards.length,visibleComponents.length+5);
 for(const card of overviewCards){
- assert.equal((card.match(/<a\b/g)||[]).length,1,'One actual anchor per Overview card');
- assert.match(card,/<div[^>]*class="ds-tile-visual"[^>]*inert[^>]*aria-hidden="true"/);
- assert.match(card,/<a[^>]*tabindex="0"[^>]*class="ds-tile-link"[^>]*data-ds-nav/);
+ // Specimens keep their real links. Only links outside the inert preview are reachable.
+ let divDepth=0,previewDepth=null,previews=0;
+ const reachableLinks=[];
+ for(const [,closing,tag,attributes] of card.matchAll(/<(\/?)([a-z][\w-]*)\b((?:"[^"]*"|'[^']*'|[^'">])*)>/gi)){
+  if(tag==='div'){
+   if(closing){if(divDepth===previewDepth)previewDepth=null;divDepth--;}
+   else{
+    divDepth++;
+    if(/\bclass="ds-tile-visual"/.test(attributes)){
+     previews++;previewDepth=divDepth;
+     assert.match(attributes,/\sinert(?:\s|=|$)/,'Overview preview is inert');
+     assert.match(attributes,/\baria-hidden="true"/,'Overview preview is hidden from assistive technology');
+    }
+   }
+  }
+  if(tag==='a'&&!closing&&previewDepth===null)reachableLinks.push(attributes);
+ }
+ assert.equal(previews,1,'Each Overview card has one inert preview');
+ assert.equal(reachableLinks.length,1,'One link outside the Overview preview');
+ assert.match(reachableLinks[0],/\bclass="ds-tile-link"/,'The reachable link is the stretched title');
+ assert.match(reachableLinks[0],/\btabindex="0"/);
+ assert.match(reachableLinks[0],/\bdata-ds-nav(?:\s|=|$)/);
 }
 for(const attribute of ['property="og:title"','property="og:image:alt"'])assert.ok(new RegExp(attribute+'[^>]*content="Design system"').test(catalog),'Catalog metadata uses its short title');
 assert.ok(catalog.includes('<title>Design system</title>'));

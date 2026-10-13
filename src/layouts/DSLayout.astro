@@ -20,5 +20,5 @@ const { title = 'Design system' } = Astro.props;
     <meta name="theme-color" content="#FAF8F7" />
     <title>{title}</title>
   </head>
-  <body><a class="skip-link" href="#main" tabindex="-1">Skip to content</a><slot /><script>import '../scripts/theme';</script></body>
+  <body><slot /><script>import '../scripts/theme';</script></body>
 </html>
