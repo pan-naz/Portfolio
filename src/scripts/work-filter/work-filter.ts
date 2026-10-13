@@ -99,7 +99,7 @@ export function initializeWorkFilter(onChange?: () => void, onReposition?: (top:
     onChange?.();
   };
 
-  const select = (filter: WorkFilter, animate = true, updateHash = true, resolveEntrance = true) => {
+  const select = (filter: WorkFilter, animate = true, updateHash = true, resolveEntrance = true, reposition = true) => {
     const target = collections.find(collection => collection.dataset.projectCollection === filter);
     if (!target) return;
     if (filter === active) { if (updateHash) saveFilter(); return; }
@@ -107,7 +107,7 @@ export function initializeWorkFilter(onChange?: () => void, onReposition?: (top:
     if (resolveEntrance) section.dispatchEvent(new Event('workfilterchange'));
     const listTop = list.getBoundingClientRect().top;
     // Deep in a long collection, bring the replacement into view without losing focus.
-    if (animate && listTop < -window.innerHeight * .5) onReposition?.(window.scrollY + listTop - 112);
+    if (reposition && animate && listTop < -window.innerHeight * .5) onReposition?.(window.scrollY + listTop - 112);
     // Capture the rendered layout before changing copy, including an interrupted switch.
     const headingBounds = heading?.getBoundingClientRect();
     const descriptionTop = description && headingBounds
@@ -208,7 +208,26 @@ export function initializeWorkFilter(onChange?: () => void, onReposition?: (top:
 
   const click = (event: Event) => {
     const button = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('[data-work-filter]') : null;
-    if (button && section.contains(button)) select(button.dataset.workFilter as WorkFilter);
+    if (!button || !section.contains(button)) return;
+    const nav = button.closest<HTMLElement>('.section-navigation');
+    const fromPill = nav?.classList.contains('section-navigation--pill');
+    const clearance = nav ? parseFloat(getComputedStyle(nav).getPropertyValue('--header-inset')) / 2
+      + nav.offsetHeight + parseFloat(getComputedStyle(nav).getPropertyValue('--space-4')) : 0;
+    const belowListTop = list.getBoundingClientRect().top < clearance;
+    select(button.dataset.workFilter as WorkFilter, true, true, true, !fromPill);
+    if (fromPill && belowListTop && nav && onReposition) {
+      const align = () => {
+        const top = Math.ceil(window.scrollY + list.getBoundingClientRect().top - clearance);
+        onReposition(Math.max(0, top));
+        return Math.max(0, top);
+      };
+      const expected = align(), ticket = generation;
+      // Reconcile the heading's completed layout without pulling back a reader
+      // who deliberately scrolled during the filter transition.
+      void Promise.all(motions.map(motion => motion.finished.catch(() => {}))).then(() => {
+        if (!destroyed && ticket === generation && Math.abs(window.scrollY - expected) < 1) align();
+      });
+    }
   };
   section.addEventListener('click', click);
   const refreshLayout = () => {

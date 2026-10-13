@@ -35,7 +35,6 @@ for (const width of [320, 768, 975, 1023, 1024, 1280, 1920]) {
     assert.equal(f.root.dataset.workStageLayout, width >= 1024 && touch === 0 ? 'true' : undefined);
     assert.equal(f.root.dataset.workStageMotion, f.root.dataset.workStageLayout);
     assert.equal(f.root.dataset.workPreviewLayout, 'true', 'Home preview coordinates and reveal do not depend on input type or width');
-    assert.equal(f.root.dataset.workTouchPreview, touch ? 'true' : undefined, 'Only touch previews gate the compact filter shadow');
   }
 }
 assert.equal(fixture(1440, 0, false).root.dataset.workStageLayout, undefined);
@@ -55,13 +54,11 @@ assert.equal(f.root.dataset.workStageMotion, 'true');
 f.change('hover', false);
 assert.equal(f.root.dataset.workStageLayout, undefined);
 assert.equal(f.root.dataset.workPreviewLayout, 'true', 'Switching input keeps the home heading aligned with its visible background');
-assert.equal(f.root.dataset.workTouchPreview, 'true');
 assert.equal(changes, 5);
 f.window.dispatchEvent(new Event('pagehide'));
 f.change('hover', true);
 assert.equal(changes, 5, 'Discarded documents remove capability listeners');
 assert.equal(fixture(390, 5, false, false, '/design-system/').root.dataset.workPreviewLayout, undefined, 'Touch catalog specimens retain their existing context');
-assert.equal(fixture(390, 5, false, false, '/design-system/').root.dataset.workTouchPreview, undefined);
 assert.equal(fixture(1280, 0, true, false, '/design-system/').root.dataset.workPreviewLayout, 'true', 'Mouse catalog specimens retain their existing context');
 const popup = fixture(834, 5, false);
 popup.location.pathname = '/case-studies/hooko/';

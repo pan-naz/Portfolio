@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { advancePill, advancePillExit, nextPillState, pillDockOffset, pillDuration, pillExitDuration, pillExitY, pillReturnViewportBuffer, pillShape, pillLabels, pillGeometry } from '../src/scripts/header-morph/header-morph-model.ts';
 const source = readFileSync(new URL('../src/scripts/header-morph/header-morph.ts', import.meta.url), 'utf8');
 const trigger = 520;
-const desktopSpacing = pillGeometry(1280, 218, 172, false);
+const desktopSpacing = pillGeometry(1280, 218, 172);
 assert.equal(desktopSpacing.logoWidth, 44, 'Preserve the desktop logo click area');
 assert.equal(desktopSpacing.logoX - desktopSpacing.left, 20, 'Compact logo wrapper has a comfortable pill-edge inset');
 assert.equal(desktopSpacing.controlsX - (desktopSpacing.logoX + desktopSpacing.logoWidth), 12, 'Use space/12 between horizontal pill components');
@@ -58,19 +58,16 @@ assert.equal(pillExitY(0,32),0);
 assert.ok(pillExitY(.5,32)<0);
 assert.equal(pillDockOffset(0,32),0,'Pill starts from the CTA trigger position without a jump');
 assert.equal(pillDockOffset(1,32),-16,'Desktop pill settles 50% closer to the viewport top');
-assert.equal(pillDockOffset(1,24),-12,'Mobile pill settles 50% closer to the viewport top');
 assert.ok(advancePillExit(.5,true,16)<.5,'Direction changes can resume visibility without a jump');
 assert.equal(pillShape(1),1); assert.equal(pillLabels(1),1);
-for (const width of [320,390,768,1280,1600]) {
-  const mobile=width<768, controls=mobile?44:218;
-  const geometry=pillGeometry(width,controls,172,mobile);
-  assert.ok(geometry.left>=(mobile?16:24));
+for (const width of [1024,1280,1600]) {
+  const controls=218;
+  const geometry=pillGeometry(width,controls,172);
+  assert.ok(geometry.left>=24);
   assert.equal(geometry.left+geometry.width/2,width/2);
   assert.ok(geometry.logoX+geometry.logoWidth<=geometry.controlsX);
   assert.ok(geometry.controlsX+controls<=geometry.buttonX);
 }
-const mobileSpacing = pillGeometry(320,44,172,true);
-assert.equal(mobileSpacing.logoX-mobileSpacing.left,12);
-assert.equal(mobileSpacing.controlsX-(mobileSpacing.logoX+mobileSpacing.logoWidth),12);
-assert.equal(mobileSpacing.buttonX-(mobileSpacing.controlsX+44),12);
+assert.ok(source.includes("dataset.workStageLayout === 'true'"), 'The header uses the same live layout flag as the side filter');
+assert.ok(source.includes("workstagelayoutchange"), 'Resizing across the shared boundary updates the header');
 console.log('PASS: responsive 560ms entry at 30–144Hz, single CTA with viewport-edge return release, independent 240ms upward exit, no reverse morph, no overshoot, late labels, reduced motion, responsive geometry.');

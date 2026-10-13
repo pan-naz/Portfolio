@@ -19,7 +19,7 @@ const typography=systemTypography(),weights:Record<string,string>={'400':'Regula
 const spacing=inventory.tokens.filter(token=>token.category==='spacing').sort((a,b)=>parseFloat(a.resolvedLight)-parseFloat(b.resolvedLight));
 const durationNames=['duration-fast','duration-navigation','duration-button-fill','duration-work-stage','duration-copy-reveal'];
 const durations=durationNames.map(name=>inventory.tokens.find(token=>token.name===name)).filter(Boolean);
-const easings=['ease-out','ease-entrance','ease-close'].map(name=>inventory.tokens.find(token=>token.name===name)).filter(Boolean);
+const easings=['ease-icon-shift','ease-entrance','ease-close'].map(name=>inventory.tokens.find(token=>token.name===name)).filter(Boolean);
 const easePath=(value:string)=>{const n=value.match(/cubic-bezier\(([^)]+)\)/)?.[1].split(',').map(Number)||[0,0,1,1];return `M 2 78 C ${2+n[0]*156} ${78-n[1]*76}, ${2+n[2]*156} ${78-n[3]*76}, 158 2`;};
 ---
 {foundations.map(item=>{const tabs=`${item.id}-canvas`,tokens=tokensFor(item.id);return <section id={item.id} class="ds-view ds-foundation-view" data-ds-view data-title={item.title} data-description={item.description} data-group="Foundations" hidden>

@@ -61,7 +61,7 @@ export function initializeMotion() {
   }, { passive: true });
   document.addEventListener('touchmove', event => {
     if (!event.cancelable || event.touches.length !== 1 || window.scrollY > 0) return;
-    if (event.target instanceof Element && event.target.closest('#mobile-menu, [data-case-dialog], .case-study-scroll')) return;
+    if (event.target instanceof Element && event.target.closest('[data-case-dialog], .case-study-scroll')) return;
     const deltaX = event.touches[0].clientX - touchStartX;
     const deltaY = event.touches[0].clientY - touchStartY;
     if (deltaY > 0 && deltaY > Math.abs(deltaX)) event.preventDefault();

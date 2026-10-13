@@ -5,7 +5,6 @@ interface Props {
   filter?: string;
   controls?: string;
   pressed?: boolean;
-  layout?: 'desktop' | 'mobile';
 }
 
 const {
@@ -14,10 +13,9 @@ const {
   filter,
   controls,
   pressed = false,
-  layout = 'desktop',
 } = Astro.props;
 
-const classes = ['navigation-item', 'text-body-m-strong', { 'navigation-item--mobile': layout === 'mobile' }];
+const classes = ['navigation-item', 'text-body-m-strong'];
 ---
 {href ? (
   <a class:list={classes} href={href} tabindex="0">

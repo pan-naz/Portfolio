@@ -1,7 +1,8 @@
 ---
 import NavigationItem from './NavigationItem.astro';
-interface Props { compact?: boolean; }
-const { compact = false } = Astro.props;
+import ThemeToggle from './ThemeToggle.astro';
+interface Props { compact?: boolean; theme?: boolean; pill?: boolean; }
+const { compact = false, theme = false, pill = false } = Astro.props;
 
 const filters = [
   { value: 'selected', label: 'Selected work' },
@@ -9,7 +10,8 @@ const filters = [
   { value: 'misc', label: 'Misc' },
 ] as const;
 ---
-<nav class:list={['section-navigation floating-control-theme floating-control-surface floating-navigation-theme floating-navigation-surface text-body-m-strong', { 'section-navigation--compact': compact }]} aria-label="Filter projects">
+<nav class:list={['section-navigation floating-control-theme floating-control-surface floating-navigation-theme floating-navigation-surface text-body-m-strong', { 'section-navigation--compact': compact, 'section-navigation--pill': pill }]} aria-label="Filter projects">
   {filters.map(({ value, label }, index) => <NavigationItem label={label} filter={value} controls="project-list" pressed={index === 0} />)}
+  {theme && <span class="section-navigation-theme"><ThemeToggle /></span>}
   <span class="sr-only" data-work-filter-status aria-live="polite"></span>
 </nav>

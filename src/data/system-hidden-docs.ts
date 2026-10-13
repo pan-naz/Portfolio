@@ -52,8 +52,8 @@ export const hiddenDocumentation = [
   },
   {
     "section": "Project filter",
-    "sha256": "6912a897df1efddfc53058425dff4db76c020137ef3eec7fb354141fa87f3467",
-    "characters": 418
+    "sha256": "7cb404fcdf3f3a42d67c16f7ddf2881bbb7198c1853973d2a3abef987a045478",
+    "characters": 1535
   },
   {
     "section": "Theme switch",
@@ -62,7 +62,7 @@ export const hiddenDocumentation = [
   },
   {
     "section": "Icon",
-    "sha256": "07dcc15d3a6aad89057ffa58a8f786e89dd7060b283ce2019f07c15bad6ac101",
-    "characters": 388
+    "sha256": "211ce549480eaf857bb74dbecb38dd04a57652cb471bdbdff5ee2eda14e8ffab",
+    "characters": 849
   }
 ];

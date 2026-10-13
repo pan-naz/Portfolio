@@ -7,6 +7,7 @@ export function initializeHeaderMorph() {
   const fullLogo = header.querySelector<HTMLElement>('.header-full-logo')!;
   const compactLogo = header.querySelector<HTMLElement>('.header-compact-logo')!;
   const controls = header.querySelector<HTMLElement>('.header-controls')!;
+  const navigation = controls.querySelector<HTMLElement>('.desktop-nav')!;
   const theme = controls.querySelector<HTMLButtonElement>('.theme-toggle')!;
   const surface = header.querySelector<HTMLElement>('.header-pill-surface')!;
   const slot = document.querySelector<HTMLElement>('[data-hero-cta]')!;
@@ -17,9 +18,10 @@ export function initializeHeaderMorph() {
   // transition can interpolate from the header origin during the DOM handoff.
   button.classList.add('cta-morph-managed');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  const mobile = matchMedia('(max-width: 767px)');
+  // The same live decision owns the side filter, section surfaces and header.
+  const floatingLayout = () => document.documentElement.dataset.workStageLayout === 'true';
   let metrics: { inset: number; buttonTop: number; buttonX: number; buttonWidth: number; buttonHeight: number;
-    controlsWidth: number; viewport: number } | undefined;
+    controlsWidth: number; viewport: number; enterDuration: number; exitDuration: number } | undefined;
   let queued = 0, previousTime = 0, previousScroll = window.scrollY, progress = 0;
   let expanded = false, releasing = false, disposed = false;
   let exit = 0;
@@ -57,7 +59,7 @@ export function initializeHeaderMorph() {
     if (!docked) {
       button.style.removeProperty('transform');
       button.style.removeProperty('width');
-      revealReturnedButton(focused);
+      revealReturnedButton(focused || !floatingLayout());
     }
     if (focused) button.focus({ preventScroll: true });
   }
@@ -87,8 +89,8 @@ export function initializeHeaderMorph() {
       return;
     }
     const shape = pillShape(progress), labels = pillLabels(progress);
-    const targetControlsWidth = mobile.matches ? 44 : m.controlsWidth;
-    const target = pillGeometry(m.viewport, targetControlsWidth, m.buttonWidth, mobile.matches);
+    const targetControlsWidth = m.controlsWidth;
+    const target = pillGeometry(m.viewport, targetControlsWidth, m.buttonWidth);
     const width = Math.min(m.viewport - 48, mix(m.buttonWidth, target.width, shape));
     const center = Math.max(width / 2 + 24, Math.min(m.viewport - width / 2 - 24,
       mix(m.buttonX + m.buttonWidth / 2, m.viewport / 2, shape)));
@@ -117,12 +119,12 @@ export function initializeHeaderMorph() {
     const hideControls = labels < .1 || !expanded;
     if (hideControls && (identity.contains(document.activeElement) || controls.contains(document.activeElement))) button.focus({ preventScroll: true });
     identity.inert = controls.inert = hideControls;
-    theme.inert = mobile.matches;
+    theme.inert = false;
   }
   function frame(time: number) {
     queued = 0;
-    progress = advancePill(progress, expanded, time - previousTime, reduced.matches);
-    exit = advancePillExit(exit, expanded, time - previousTime, reduced.matches);
+    progress = advancePill(progress, expanded, time - previousTime, reduced.matches, metrics?.enterDuration);
+    exit = advancePillExit(exit, expanded, time - previousTime, reduced.matches, metrics?.exitDuration);
     if (!expanded && exit === 1) progress = 0;
     previousTime = time;
     paint();
@@ -134,6 +136,17 @@ export function initializeHeaderMorph() {
   function updateTarget() {
     if (!metrics || disposed) return;
     const scroll = window.scrollY;
+    if (!floatingLayout()) {
+      previousScroll = scroll;
+      if (expanded || releasing || progress || header.classList.contains('is-docking')) {
+        expanded = releasing = false;
+        progress = exit = 0;
+        if (queued) cancelAnimationFrame(queued);
+        queued = 0;
+        paint();
+      }
+      return;
+    }
     const state = nextPillState(
       scroll,
       previousScroll,
@@ -154,6 +167,16 @@ export function initializeHeaderMorph() {
   function measure() {
     if (disposed) return;
     header.style.setProperty('--pill-progress', '0');
+    // Measure the genuine controls at their normal size even after a narrower
+    // window hid the links. Both reads/writes finish before the next paint.
+    navigation.hidden = false;
+    const headerTokens = getComputedStyle(header);
+    const fullWidth = fullLogo.querySelector<SVGSVGElement>('svg')!.width.baseVal.value;
+    const inset = parseFloat(headerTokens.top);
+    const gap = parseFloat(headerTokens.getPropertyValue('--space-3'));
+    const hideLinks = !floatingLayout() && fullWidth + controls.offsetWidth + gap > window.innerWidth - inset * 2;
+    navigation.hidden = hideLinks;
+    if (hideLinks && navigation.contains(document.activeElement)) theme.focus({ preventScroll: true });
     const slotRect = slot.getBoundingClientRect();
     const width = button.offsetWidth, height = button.offsetHeight;
     slot.style.setProperty('--cta-width', `${width}px`);
@@ -162,6 +185,8 @@ export function initializeHeaderMorph() {
       inset: parseFloat(getComputedStyle(header).top), buttonTop: slotRect.top + window.scrollY,
       buttonX: slotRect.left, buttonWidth: width, buttonHeight: height,
       controlsWidth: controls.offsetWidth, viewport: window.innerWidth,
+      enterDuration: readMotionToken(headerTokens, '--duration-header-enter'),
+      exitDuration: readMotionToken(headerTokens, '--duration-header-exit'),
     };
     updateTarget();
     paint();
@@ -169,7 +194,7 @@ export function initializeHeaderMorph() {
   window.addEventListener('scroll', updateTarget, { passive: true });
   window.addEventListener('resize', measure);
   reduced.addEventListener('change', updateTarget);
-  mobile.addEventListener('change', measure);
+  window.addEventListener('workstagelayoutchange', measure);
   document.fonts.ready.then(measure);
   const observer = new ResizeObserver(measure);
   observer.observe(document.querySelector('.hero-content')!);
@@ -180,7 +205,7 @@ export function initializeHeaderMorph() {
     window.removeEventListener('scroll', updateTarget);
     window.removeEventListener('resize', measure);
     reduced.removeEventListener('change', updateTarget);
-    mobile.removeEventListener('change', measure);
+    window.removeEventListener('workstagelayoutchange', measure);
     observer.disconnect();
     returnMotion?.cancel();
     header.classList.remove('is-docking');
