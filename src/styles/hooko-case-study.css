@@ -30,7 +30,7 @@
 .hk-stxt p { grid-column: 1 / -1; margin: 0; color: var(--color-text-secondary); }
 .hk-band { width: 100vw; margin-left: calc(50% - 50vw + (var(--safe-right) - var(--safe-left)) / 2); color: var(--color-text-primary); background: var(--color-bg-canvas); }
 .hk-band-inner { width: min(1200px, calc(100% - var(--gutter-left) - var(--gutter-right))); margin-inline: var(--gutter-left) var(--gutter-right); gap: var(--case-content-gap); }
-.hk-decisions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--grid-gap); --color-bg-surface: var(--color-white); --color-bg-canvas: var(--color-mist); --color-text-secondary: var(--hk-page-secondary); --color-border-default: var(--color-ink-6); }
+.hk-decisions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--grid-gap); --color-bg-surface: var(--color-white); --color-bg-canvas: var(--color-mist); --color-text-secondary: var(--hk-page-secondary); --color-border-default: var(--color-ink-8); }
 .hk-pillrow { margin-top: var(--space-3); }
 .hk-stack { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
 .hk-diagram { display: grid; gap: var(--space-4); padding: var(--space-6); border-radius: var(--radius-medium); background: var(--color-bg-surface); box-shadow: var(--shadow-floating); }

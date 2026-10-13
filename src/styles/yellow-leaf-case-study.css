@@ -20,12 +20,12 @@
 .yellow-equation > svg { margin-bottom: var(--space-8); }
 .yellow-construction { display: block; width: 100%; max-width: 300px; height: auto; margin-inline: auto; }
 .yellow-palette { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--grid-gap); margin: var(--space-6) 0 0; padding: 0; list-style: none; }
-.yellow-palette > li { overflow: hidden; border: 1px solid var(--color-paper-6); border-radius: var(--radius-small); }
+.yellow-palette > li { overflow: hidden; border: 1px solid var(--color-paper-8); border-radius: var(--radius-small); }
 .yellow-swatch { aspect-ratio: 4 / 3; background: var(--yellow-swatch); }
 .yellow-colour-label { display: grid; gap: var(--space-1); padding: var(--space-4); font-size: var(--text-body-s); line-height: 1.428571; }
 .yellow-colour-label code { color: var(--color-text-secondary); font-family: var(--font-body); }
 .yellow-type-grid { margin-top: var(--space-6); }
-.yellow-type-card { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-6); padding: var(--space-8); border: 1px solid var(--color-paper-6); border-radius: var(--radius-medium); height: 100%; }
+.yellow-type-card { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-6); padding: var(--space-8); border: 1px solid var(--color-paper-8); border-radius: var(--radius-medium); height: 100%; }
 .yellow-type-display { font-size: var(--text-heading-l); line-height: 1.142857; }
 .yellow-type-card > div > .case-study-eyebrow { margin-top: 0; }
 .yellow-type-example { margin-top: var(--space-6); }

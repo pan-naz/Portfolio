@@ -14,7 +14,7 @@
 .sternfit-row { align-items: center; }
 .sternfit-copy { display: grid; gap: var(--space-6); }
 .sternfit-copy > p { margin-top: 0; }
-.sternfit-brand { padding-block: var(--space-16); border-top: 1px solid var(--color-paper-6); }
+.sternfit-brand { padding-block: var(--space-16); border-top: 1px solid var(--color-paper-8); }
 .sternfit-brand:last-child { padding-bottom: 0; }
 .sternfit-brand-name, .sternfit-quote { font-size: var(--text-heading-m); line-height: 1.333333; letter-spacing: var(--letter-spacing-heading-m); font-weight: var(--font-weight-heading); }
 .sternfit-tagline { font-style: italic; }
@@ -29,12 +29,12 @@
 .sternfit-story-row--reverse > .sternfit-copy { order: 2; margin-inline: var(--grid-gap) 0; }
 .sternfit-story-row--reverse > .sternfit-shot { order: 1; margin-inline-end: var(--grid-gap); }
 .sternfit-type-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
-.sternfit-type-plate { display: grid; place-items: center; min-height: calc(var(--space-24) * 2 + var(--space-12)); padding: var(--space-4); border: 1px solid var(--color-ink-6); border-radius: var(--radius-small); background: var(--color-white); }
+.sternfit-type-plate { display: grid; place-items: center; min-height: calc(var(--space-24) * 2 + var(--space-12)); padding: var(--space-4); border: 1px solid var(--color-ink-8); border-radius: var(--radius-small); background: var(--color-white); }
 .sternfit-type-plate .case-study-media { width: 100%; }
 .sternfit-colours { margin-top: var(--space-12); }
 .sternfit-palette { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); margin: var(--space-6) 0 0; padding: 0; list-style: none; }
 .sternfit-palette > li { display: grid; }
-.sternfit-swatch { aspect-ratio: 2 / 1; border: 1px solid var(--color-ink-6); border-radius: var(--radius-small); }
+.sternfit-swatch { aspect-ratio: 2 / 1; border: 1px solid var(--color-ink-8); border-radius: var(--radius-small); }
 .sternfit-palette code { font: inherit; color: var(--color-ink-64); }
 @media (max-width: 767px) {
   .sternfit-section-heading { margin-bottom: var(--space-8); }
