@@ -25,7 +25,7 @@ const extraTokens=component.name==='ProjectCard'?inventory.tokens.filter(token=>
   </div>
  </div>
  <div class="ds-specs-card">
-  <div class="ds-spec-columns">{presentation.columns.map(column=><div><p class="ds-column-title">{column.title}</p><ul class="ds-spec-list">{column.rows.map(row=><li><strong>{row.name}</strong>{row.token&&<><span class="ds-mini-swatch" data-ds-token-swatch={row.token} aria-hidden="true"/><span data-ds-human-token={row.token}></span><code class="ds-token-name">--{row.token}</code></>}{row.selector&&<span data-ds-measure={row.selector} data-properties={row.properties}></span>}{row.detail&&<span>{row.detail}</span>}</li>)}</ul></div>)}</div>
+  <div class="ds-spec-columns">{presentation.columns.map(column=><div><p class="ds-column-title">{column.title}</p><ul class="ds-spec-list">{column.rows.map(row=><li><strong>{row.name}</strong>{row.token&&<><span class="ds-mini-swatch" data-ds-token-swatch={row.token} data-ds-token-context={row.context} aria-hidden="true"/><span data-ds-human-token={row.token} data-ds-token-context={row.context}></span><code class="ds-token-name">--{row.token}</code></>}{row.selector&&<span data-ds-measure={row.selector} data-properties={row.properties}></span>}{row.detail&&<span>{row.detail}</span>}</li>)}</ul></div>)}</div>
   <div class="ds-spec-footer"><div><p class="ds-column-title">Rules</p><ul class="ds-rules">{presentation.rules.map(rule=><li>{rule}</li>)}</ul></div><DSTokenNames/></div>
  </div>
 </section>

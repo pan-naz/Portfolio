@@ -10,7 +10,7 @@
   letter-spacing: var(--letter-spacing-body-m);
 }
 .case-study-narrative > :where(section:not(.case-study-overview)) { padding-block: var(--case-section-space); }
-.case-study-chapter--inverse { --color-text-primary: var(--color-inverse-text-primary); --color-text-secondary: var(--color-inverse-text-secondary); --color-interactive-accent: var(--color-inverse-accent); width: 100vw; margin-left: calc(50% - 50vw + (var(--safe-right) - var(--safe-left)) / 2); color: var(--color-text-primary); background: var(--color-inverse-bg-surface); }
+.case-study-chapter--inverse { width: 100vw; margin-left: calc(50% - 50vw + (var(--safe-right) - var(--safe-left)) / 2); color: var(--color-text-primary); background: var(--color-section-bg-surface); }
 .case-study-chapter__inner { width: min(1200px, calc(100% - var(--gutter-left) - var(--gutter-right))); margin-inline: var(--gutter-left) var(--gutter-right); }
 .case-study-narrative :where(p, li) { text-wrap: pretty; }
 .case-study-narrative :where(h3, h4) { margin: 0; font-size: var(--text-body-m); line-height: var(--line-height-body); letter-spacing: var(--letter-spacing-body-m-strong); font-weight: var(--font-weight-body-m-strong); }

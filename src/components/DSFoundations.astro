@@ -1,4 +1,6 @@
 ---
+import {paletteColors,pageColorRoles,componentColorRoles,paletteTokenNames} from '../data/system-colors';
+import {contrastRatio} from '../../scripts/text-contrast';
 import {foundations} from '../data/design-system';import {systemTypography} from '../data/system-typography';
 import {typeSamples,humanToken,px,tokenCode,sourceGrids} from '../data/system-human';
 import {caseStudyMotionTokens,caseStudyPresentationTokens} from '../scripts/case-study/case-study-motion';
@@ -14,7 +16,8 @@ const springSource=readFileSync('src/styles/tokens.css','utf8').match(/stiffness
 const caseNames=[...caseStudyMotionTokens,...caseStudyPresentationTokens].map(item=>item.name.slice(2));
 const categories:Record<string,string[]>={color:['color'],typography:['typography'],'spacing-layout':['spacing','shape','layout'],motion:['motion'],icons:['iconography']};
 const tokensFor=(id:string)=>inventory.tokens.filter(token=>categories[id].includes(token.category)&&!caseNames.includes(token.name));
-const colors=[['Text','color-text-primary','Main copy and primary buttons.'],['Text secondary','color-text-secondary','Supporting information.'],['Page background','color-bg-canvas','The page canvas.'],['Surface','color-bg-surface','Cards and contained content.'],['Surface subtle','color-bg-surface-subtle','Hover fills and soft panels.'],['Border','color-border-default','Dividers and outlines.'],['Accent','color-interactive-accent','Emphasis and destination arrows.'],['About background','color-section-bg-surface','The experience section.'],['Floating navigation','color-navigation-bg-surface','The docked header and project filter.'],['Overlay','color-overlay-bg-surface','Close controls over project content.']] as const;
+const colorValue=(name:string)=>inventory.tokens.find(token=>token.name===name)!.resolvedLight;
+const stripText=(token:string)=>contrastRatio(colorValue('color-ink'),colorValue(token))>=contrastRatio(colorValue('color-paper'),colorValue(token))?'color-ink':'color-paper';
 const typography=systemTypography(),weights:Record<string,string>={'400':'Regular','500':'Medium','600':'Semibold'};
 const spacing=inventory.tokens.filter(token=>token.category==='spacing').sort((a,b)=>parseFloat(a.resolvedLight)-parseFloat(b.resolvedLight));
 const durationNames=['duration-fast','duration-navigation','duration-button-fill','duration-work-stage','duration-copy-reveal'];
@@ -22,10 +25,19 @@ const durations=durationNames.map(name=>inventory.tokens.find(token=>token.name=
 const easings=['ease-icon-shift','ease-entrance','ease-close'].map(name=>inventory.tokens.find(token=>token.name===name)).filter(Boolean);
 const easePath=(value:string)=>{const n=value.match(/cubic-bezier\(([^)]+)\)/)?.[1].split(',').map(Number)||[0,0,1,1];return `M 2 78 C ${2+n[0]*156} ${78-n[1]*76}, ${2+n[2]*156} ${78-n[3]*76}, 158 2`;};
 ---
-{foundations.map(item=>{const tabs=`${item.id}-canvas`,tokens=tokensFor(item.id);return <section id={item.id} class="ds-view ds-foundation-view" data-ds-view data-title={item.title} data-description={item.description} data-group="Foundations" hidden>
+{foundations.map(item=>{const tabs=`${item.id}-canvas`,tokens=item.id==='color'?[...new Map([...paletteTokenNames,...pageColorRoles,...componentColorRoles,...tokensFor(item.id).map(token=>token.name)].map(name=>[name,inventory.tokens.find(token=>token.name===name)!])).values()].filter(Boolean):tokensFor(item.id);return <section id={item.id} class="ds-view ds-foundation-view" data-ds-view data-title={item.title} data-description={item.description} data-group="Foundations" hidden>
  <div class="ds-stage" data-ds-card><div class="ds-stage-bar"><DSTabs id={tabs} labels={[item.id==='color'?'Colours':'Styles','Code']}/><DSTokenNames/></div>
   <div class="ds-foundation-rows" id={`${tabs}-panel-0`} role="tabpanel" aria-labelledby={`${tabs}-tab-0`}>
-   {item.id==='color'&&colors.map(([name,token,use])=><article class="ds-foundation-row" data-ds-swatch={token}><div class="ds-color-specimen"><div style={`background:var(--${token})`} aria-hidden="true"/></div><div class="ds-meta"><strong>{name}</strong><span data-ds-human-token={token}></span><span>{use}</span><code class="ds-token-name">--{token}</code></div></article>)}
+   {item.id==='color'&&<div class="ds-colors">
+    <div class="ds-color-strip" aria-label="Shared palette">{paletteColors.map(color=><div style={`background:var(--${color.token});color:var(--${color.stripText||stripText(color.token)})`}><span>{color.name}</span></div>)}</div>
+    <div class="ds-color-legend">{['light','dark','both'].map(mode=><span>{mode!=='dark'&&<Icon name="sun"/>}{mode!=='light'&&<Icon name="moon"/>}{mode==='light'?'Light mode':mode==='dark'?'Dark mode':'Both'}</span>)}</div>
+    <p class="ds-color-note">Popups use the Light colours. Work and About use the Dark colours.</p>
+    <div class="ds-color-cards">{paletteColors.map(color=><article class="ds-color-card" data-ds-palette={color.token}>
+     <div class="ds-color-card-heading"><div class="ds-color-square" style={`background:var(--${color.token})`} aria-hidden="true"/><div><strong>{color.name}</strong><span>{colorValue(color.token)}</span><code class="ds-token-name">--{color.token}</code></div></div>
+     <div class="ds-color-uses">{color.uses.map(use=><div data-ds-color-use={`${color.token}:${use.mode}`}><span class="ds-color-mode" aria-label={use.mode==='both'?'Both modes':`${use.mode} mode`}>{use.mode!=='dark'&&<Icon name="sun"/>}{use.mode!=='light'&&<Icon name="moon"/>}</span><span>{use.label}<code class="ds-token-name">{use.roles.map(role=>'--'+role).join(' · ')}</code></span></div>)}</div>
+     {color.shades&&<div class="ds-color-shades">{color.shades.map(shade=><span class="ds-color-shade" data-ds-shade={shade.token}><span style={`--ds-swatch-shade:var(--${shade.token});--ds-swatch-base:var(--${shade.use.mode==='dark'?'color-ink':'color-white'})`} aria-hidden="true"/><strong>{shade.percent}%</strong><span>{shade.use.label}</span><code class="ds-token-name">--{shade.token} · {shade.use.roles.map(role=>'--'+role).join(' · ')}</code></span>)}</div>}
+    </article>)}</div>
+   </div>}
    {item.id==='typography'&&typography.map((style,index)=>{const sample=typeSamples[index];return <article class="ds-foundation-row ds-type-row" data-ds-type={style.name}><div class="ds-specimens ds-type-sample">{index===2?<h3 class={sample.className}>{sample.text}</h3>:<p class={sample.className}>{sample.html?<Fragment set:html={sample.html}/>:sample.text}</p>}</div><div class="ds-meta"><strong>{style.name}</strong><span>{style.family.includes('Funnel')?'Funnel Display':'Urbanist'} · {weights[style.weight]||style.weight}</span><span>{px(style.range)}</span><span data-ds-type-metrics></span><span>{sample.use}</span><code class="ds-token-name">--{style.sizeToken}</code></div></article>;})}
    {item.id==='spacing-layout'&&<>
     <article class="ds-foundation-row"><div class="ds-spacing-scale">{spacing.map(token=><div><span>{parseFloat(token.resolvedLight)}</span><span class="ds-spacing-bar" style={`width:var(--${token.name})`}/><code class="ds-token-name">--{token.name}</code></div>)}</div><div class="ds-meta"><strong>Spacing</strong><span>{spacing.map(token=>parseFloat(token.resolvedLight)).join(' · ')}px</span><span>Gaps, padding and section rhythm.</span></div></article>

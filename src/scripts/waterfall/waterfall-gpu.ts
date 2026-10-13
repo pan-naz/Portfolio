@@ -120,6 +120,7 @@ export class WaterfallGPU {
     const atlas = document.createElement('canvas');
     atlas.width = this.columns * tile; atlas.height = rows * tile;
     const ctx = atlas.getContext('2d')!;
+    // Atlas white stroke is coverage data, not the displayed icon colour.
     ctx.lineWidth = 1; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#ffffff';
     for (let icon = 0; icon < this.icons.length; icon++) {
       ctx.setTransform(ratio, 0, 0, ratio,

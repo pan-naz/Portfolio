@@ -10,8 +10,8 @@
 .case-video-player[data-video-saving] .case-video-controls { opacity: 1; pointer-events: auto; }
 .case-video-seek { position: relative; min-width: 0; flex: 1; }
 .case-video-seek input { display: block; appearance: none; -webkit-appearance: none; width: 100%; height: 44px; margin: 0; background: transparent; cursor: pointer; touch-action: none; }
-.case-video-seek input::-webkit-slider-runnable-track { height: 4px; border-radius: var(--radius-pill); background: linear-gradient(to right, var(--color-interactive-accent) var(--video-progress, 0%), var(--color-border-default) var(--video-progress, 0%)); }
-.case-video-seek input::-moz-range-track { height: 4px; border-radius: var(--radius-pill); background: var(--color-border-default); }
+.case-video-seek input::-webkit-slider-runnable-track { height: 4px; border-radius: var(--radius-pill); background: linear-gradient(to right, var(--color-interactive-accent) var(--video-progress, 0%), var(--color-video-track) var(--video-progress, 0%)); }
+.case-video-seek input::-moz-range-track { height: 4px; border-radius: var(--radius-pill); background: var(--color-video-track); }
 .case-video-seek input::-moz-range-progress { height: 4px; border-radius: var(--radius-pill); background: var(--color-interactive-accent); }
 .case-video-seek input::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 16px; height: 16px; margin-top: -6px; border: 0; border-radius: 50%; background: var(--color-text-primary); }
 .case-video-seek input::-moz-range-thumb { width: 16px; height: 16px; border: 0; border-radius: 50%; background: var(--color-text-primary); }

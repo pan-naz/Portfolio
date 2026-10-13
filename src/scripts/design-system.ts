@@ -89,14 +89,15 @@ const readable=(value:string)=>value.replace(/-?[\d.]+px/g,number=>`${+parseFloa
 const refreshValues=()=>{
  const view=views.find(view=>!view.hidden);if(!view)return;
  const probe=document.createElement('span');probe.style.cssText='position:absolute;visibility:hidden;';view.append(probe);
+ const tokenSource=(node:HTMLElement)=>node.dataset.dsTokenContext?view.querySelector<HTMLElement>('.ds-specimens '+node.dataset.dsTokenContext)||node:document.documentElement;
  for(const node of view.querySelectorAll<HTMLElement>('[data-ds-human-token]')){
-  const name=node.dataset.dsHumanToken!,raw=getComputedStyle(document.documentElement).getPropertyValue('--'+name).trim();
-  if(/^(color-|control-border|focus-ring|backdrop)/.test(name)){probe.style.backgroundColor=`var(--${name})`;node.textContent=hex(getComputedStyle(probe).backgroundColor);}
+  const name=node.dataset.dsHumanToken!,raw=getComputedStyle(tokenSource(node)).getPropertyValue('--'+name).trim();
+  if(/^(color-|control-border|focus-ring|backdrop)/.test(name)){probe.style.backgroundColor=raw;node.textContent=hex(getComputedStyle(probe).backgroundColor);}
   else if(/^(duration-|ease-|scale-)/.test(name))node.textContent=raw;
   else if(name.startsWith('icon-stroke-'))node.textContent=parseFloat(raw)+'px';
   else {probe.style.width=`var(--${name})`;node.textContent=getComputedStyle(probe).width;}
  }
- for(const node of view.querySelectorAll<HTMLElement>('[data-ds-token-swatch]')){const name=node.dataset.dsTokenSwatch!;if(name.startsWith('color-')){node.style.backgroundColor=`var(--${name})`;node.dataset.color='';}}
+ for(const node of view.querySelectorAll<HTMLElement>('[data-ds-token-swatch]')){const name=node.dataset.dsTokenSwatch!;if(name.startsWith('color-')){node.style.backgroundColor=getComputedStyle(tokenSource(node)).getPropertyValue('--'+name).trim();node.dataset.color='';}}
  probe.remove();
  for(const grid of view.querySelectorAll<HTMLElement>('[data-ds-grid]')){const computed=getComputedStyle(grid),count=computed.gridTemplateColumns.split(' ').length;view.querySelector('[data-ds-grid-spec="'+grid.dataset.dsGrid+'"]')!.textContent=`${count} columns here · ${computed.gap} gap`;}
  const namedWeights:Record<string,string>={'400':'Regular','500':'Medium','600':'Semibold'};

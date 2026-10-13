@@ -1,6 +1,6 @@
 import { visibleComponents } from './ds-components.ts';
 export const foundations = [
-  {id:'color',title:'Color',description:'Each colour has a role. The theme chooses its value.'},
+  {id:'color',title:'Color',description:'Each colour once, and where it is used.'},
   {id:'typography',title:'Typography',description:'Funnel Display for headings and Urbanist for reading, shown at their real sizes.'},
   {id:'spacing-layout',title:'Spacing & layout',description:'One spacing scale, shared corners and a responsive grid.'},
   {id:'motion',title:'Motion',description:'Shared durations and easing keep feedback consistent. Reduced motion skips decoration.'},
