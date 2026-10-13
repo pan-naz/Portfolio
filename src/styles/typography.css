@@ -1,42 +1,174 @@
 @layer system, project;
 @layer system {
-/* Native defaults inherit the selected role; HTML tags never choose the font. */
+/* Reset browser defaults without choosing a font from an HTML tag. */
 :where(h1,h2,h3,h4,h5,h6,strong,b,small,button,input,select,textarea) { font: inherit; letter-spacing: inherit; }
-/* Each role owns all five properties; tag names never choose the font family. */
+
+/* heading-xl: canonical role and actual website consumers. */
 .text-heading-xl {
   font-family: var(--font-heading-xl); font-size: var(--text-heading-xl); font-weight: var(--font-weight-heading-xl);
   line-height: var(--line-height-heading-xl); letter-spacing: var(--letter-spacing-heading-xl);
 }
-.text-heading-l, .case-study-heading, .stat-value {
+
+/* heading-l: canonical role and actual website consumers. */
+.text-heading-l,
+.case-study-heading,
+:where(.case-study-narrative .stat-value),
+:where(.ds-item-header h1),
+.stat-value,
+.vox-solution-stats strong {
   font-family: var(--font-heading-l); font-size: var(--text-heading-l); font-weight: var(--font-weight-heading-l);
   line-height: var(--line-height-heading-l); letter-spacing: var(--letter-spacing-heading-l);
 }
-.text-heading-m, .project-identity {
+
+/* heading-m: canonical role and actual website consumers. */
+.text-heading-m,
+.cravus-case .cravus-page-title,
+:where(.cravus-grid-card dd),
+:where(.dc-copy > .text-heading-m),
+:where(.ds-dashboard-title),
+.project-identity,
+:where(.index-grid-card dd),
+.sternfit-brand-name, .sternfit-quote,
+.vox-section-title,
+.vox-goal p:last-child,
+.vox-hypotheses li > span,
+:where(.vox-solution-stats span) {
   font-family: var(--font-heading-m); font-size: var(--text-heading-m); font-weight: var(--font-weight-heading-m);
   line-height: var(--line-height-heading-m); letter-spacing: var(--letter-spacing-heading-m);
 }
-.text-body-l, .hero-description, .section-description, .project-outcome, .contact-description, .case-study-intro {
+
+/* body-l: canonical role and actual website consumers. */
+.text-body-l,
+:where(.ds-specimens),
+.hero-description,
+.accent-stat,
+.section-description,
+.project-outcome,
+:where(.project--compact .project-outcome),
+body,
+.case-study-intro,
+.dg-lede,
+.contact-description,
+.text-body-l :where(strong,b),
+.case-study-intro :where(strong,b) {
   font-family: var(--font-body-l); font-size: var(--text-body-l); font-weight: var(--font-weight-body-l);
   line-height: var(--line-height-body-l); letter-spacing: var(--letter-spacing-body-l);
 }
-.text-body-m, .case-study-narrative {
+
+/* body-m: canonical role and actual website consumers. */
+.text-body-m,
+:where(.case-study-decision-card--media h3),
+:where(.case-study-decision-card__copy),
+:where(.case-study-narrative),
+:where(.case-study-narrative :where(ul:not([class]), ol:not([class]), .case-study-list)),
+:where(.dg-testimonials blockquote::before),
+:where(.ds-media-controls),
+:where(.project-description),
+:where(.stat dd),
+:where(.contact-links),
+:where(.hk-pipeline li),
+:where(.hk-camp),
+:where(.hk-camp h4),
+:where(.hk-flowline) {
   font-family: var(--font-body-m); font-size: var(--text-body-m); font-weight: var(--font-weight-body-m);
   line-height: var(--line-height-body-m); letter-spacing: var(--letter-spacing-body-m);
 }
-.text-body-m-strong, .case-study-narrative :where(h3, h4), .case-study-narrative :where(strong, b):not(:where([data-typography-exclusion], [data-typography-exclusion] *)) {
+
+/* body-m-strong: canonical role and actual website consumers. */
+.text-body-m-strong,
+:where(.case-study-narrative) :where(th),
+:where(.case-study-narrative .stat-label),
+:where(.ds-tile-link strong),
+:where(.ds-color-card-heading strong),
+:where(.ds-stroke-card > strong),
+:where(.skill-tag--plain),
+:where(.stat-label),
+:where(.hk-stxt :is(h3, .hk-n)),
+:where(.hk-v),
+:where(.kc-dish),
+:where(.promshyna-specs dd),
+:where(.promshyna-badge),
+:where(.vox-accent),
+:where(.vox-subhead),
+:where(.vox-problem blockquote),
+:where(.vox-goal p:first-child),
+:where(.vox-hypotheses p strong),
+:where(:where(.case-study-narrative) :where(h3,h4):not(:where(.case-study-heading,.text-heading-m,[data-typography-exclusion],[data-typography-exclusion] *))),
+:where(:where(.case-study-narrative) :where(strong,b):not(:where([data-typography-exclusion],[data-typography-exclusion] *))) {
   font-family: var(--font-body-m-strong); font-size: var(--text-body-m-strong); font-weight: var(--font-weight-body-m-strong);
   line-height: var(--line-height-body-m-strong); letter-spacing: var(--letter-spacing-body-m-strong);
 }
-.text-body-s {
+
+/* body-s: canonical role and actual website consumers. */
+.text-body-s,
+:where(.case-study-narrative .stat dd),
+:where(.dg-testimonials figcaption),
+:where(.ds-sidebar summary),
+:where(.ds-navigation a),
+:where(.ds-main),
+:where(.ds-item-description),
+:where(.ds-spec-list li),
+:where(.ds-spec-list strong),
+:where(.ds-rules),
+:where(.ds-meta strong),
+:where(.ds-colors),
+:where(.ds-stroke-values),
+:where(.project--compact .project-description),
+:where(.index-palette > li > div:last-child),
+:where(.index-specimen-size),
+:where(.peak-color-label),
+:where(.promshyna-palette p),
+:where(.yellow-brand-card figcaption),
+:where(.yellow-equation span),
+:where(.yellow-colour-label),
+:where(figcaption),
+.text-body-s :where(strong,b),
+[data-small-work-type] .navigation-item {
   font-family: var(--font-body-s); font-size: var(--text-body-s); font-weight: var(--font-weight-body-s);
   line-height: var(--line-height-body-s); letter-spacing: var(--letter-spacing-body-s);
 }
-.text-label-m, .eyebrow, .hero-eyebrow, .case-study-eyebrow {
+
+/* label-m: canonical role and actual website consumers. */
+.text-label-m,
+:where(.case-study-eyebrow, .case-study-narrative .eyebrow),
+.hero-eyebrow,
+.eyebrow,
+.case-study-eyebrow {
   font-family: var(--font-label-m); font-size: var(--text-label-m); font-weight: var(--font-weight-label-m);
   line-height: var(--line-height-label-m); letter-spacing: var(--letter-spacing-label-m);
   text-transform: uppercase;
 }
-.text-label-s, .skill-tag {
+
+/* label-s: canonical role and actual website consumers. */
+.text-label-s,
+:where(.hk-code,.hk-c),
+:where(.case-study-marker > span),
+.case-video-time,
+:where(.case-video-preview),
+:where(.cravus-grid-card dt),
+:where(.ds-nav-group > p, .ds-column-title),
+:where(.ds-breadcrumb),
+:where(.ds-hint),
+:where(.ds-labelled-specimen > span),
+:where(.ds-props-table table),
+:where(.ds-props-table th,.ds-props-table td),
+:where(.ds-props-table th),
+:where(.ds-meta),
+:where(.ds-spacing-scale,.ds-duration-scale),
+:where(.ds-shape-grid),
+:where(.ds-icon-grid li),
+:where(.ds-tile-link > span),
+:where(.button.button--catalog),
+:where(.ds-color-strip > div),
+:where(.ds-stroke-card > p),
+.skill-tag,
+:where(.footer > p),
+:where(.hk-svc),
+:where(.hk-k),
+:where(.hk-match),
+:where(.index-grid-card dt),
+:where(.kc-note),
+:where(.vox-persona-group) {
   font-family: var(--font-label-s); font-size: var(--text-label-s); font-weight: var(--font-weight-label-s);
   line-height: var(--line-height-label-s); letter-spacing: var(--letter-spacing-label-s);
 }

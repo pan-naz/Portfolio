@@ -60,7 +60,7 @@ const easePath=(value:string)=>{const n=value.match(/cubic-bezier\(([^)]+)\)/)?.
     </article>)}</div>
    </div>}
    {item.id==='typography'&&<div class="ds-type-table">
-    <div class="ds-type-device-headers" aria-hidden="true"><span/>{typeDevices.map(device=><div class="ds-type-device-header">{device==='desktop'?<Icon name="monitor"/>:device==='tablet'?<Icon name="tablet"/>:<Icon name="phone"/>}<div><p class="text-body-m-strong">{deviceNames[device]}</p><p class="text-body-s">{typeSystem.ranges[device]}</p></div></div>)}</div>
+    <div class="ds-type-device-headers"><span/>{typeDevices.map(device=><div class="ds-type-device-header">{device==='desktop'?<Icon name="monitor"/>:device==='tablet'?<Icon name="tablet"/>:<Icon name="phone"/>}<div><p class="text-body-m-strong">{deviceNames[device]}</p><p class="text-body-s">{typeSystem.ranges[device]}</p></div></div>)}</div>
     {typography.map((style,index)=><article class="ds-type-style" data-ds-type-style={style.id}>
      <div class="ds-type-info"><strong class="text-body-m-strong"><DSTokenNames label={style.name} token={'--'+style.sizeToken}/></strong><p class="text-body-s">{style.fontName}{style.id==='label-m'?' · Uppercase':''}</p><p class="text-body-s">Weight {style.weight} · {style.weight==='400'?'Regular':'Medium'}</p><p class="text-body-s">Line height {Number(style.lineHeight).toFixed(2)}</p><p class="text-body-s ds-type-use">{style.use}</p></div>
      {typeDevices.map(device=><div class:list={['ds-type-device',index===0&&'ds-type-device-first',index===typography.length-1&&'ds-type-device-last']} data-type-device={device} style={deviceScope(style,device)}>

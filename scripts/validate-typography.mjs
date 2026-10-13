@@ -21,11 +21,29 @@ export function validateTypographySystem(tokens,styles,catalog){
    const v=style.devices[device],pair=expected[index+3];
    if(!v.family.includes(expected[0])||Number(v.weight)!==expected[1]||Number(v.lineHeight)!==expected[2]||v.sizeRem!==pair[0]||v.spacingEm!==pair[1]||!/^\.?[\d.]+rem$/.test(v.size)||! /^-?\.?[\d.]+em$/.test(v.spacing))errors.push(`${style.id}/${device} differs from approved type table.`);
   }
-  const matches=[...styles.matchAll(/([^{}]+)\{([^{}]+)\}/g)].filter(([,selector])=>selector.split(',').some(s=>s.trim()==='.text-'+style.id));
+  const matches=[...styles.matchAll(/([^{}]+)\{([^{}]+)\}/g)].filter(([,selector])=>new RegExp('^\\.text-'+style.id+'(?:,|$)').test(selector.trim()));
   if(matches.length!==1)errors.push(`${style.id} requires one canonical rule.`);
   for(const [property,token] of [['font-family','font'],['font-size','text'],['font-weight','font-weight'],['line-height','line-height'],['letter-spacing','letter-spacing']])if(!matches[0]?.[2].includes(`${property}: var(--${token}-${style.id})`))errors.push(`${style.id} must own ${property}.`);
  }
  if(/--text-(?:body-compact|body-compact-relative|stat-compact|contact-compact)|--(?:text|letter-spacing)-[\w-]+:\s*(?:clamp|calc)/.test(tokens))errors.push('Retired/fluid typography tokens found.');
  for(const marker of ['typographySystem()','data-type-device','data-type-sample','style.devices[device].sizeRem','style.devices[device].spacingEm','data-type-size','data-type-spacing','deviceCode(device)'])if(!catalog.includes(marker))errors.push(`Catalog must read source values: ${marker}.`);
+ return errors;
+}
+
+// Additional static entry point appended after the site-wide migration.
+export function validateStaticTypography(files, exemptions){
+ const errors=[];
+ for(const [file,source] of Object.entries(files)){
+  if(file.endsWith('/tokens.css')||file.endsWith('/typography.css')||file.endsWith('/static-preview.css'))continue;
+  const css=source.replace(/\/\*[\s\S]*?\*\//g,'');
+  for(const [,rawSelector,body] of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)){
+   const selector=rawSelector.trim().replace(/\s+/g,' ');
+   if(selector==='@font-face')continue;
+   const properties=[...body.matchAll(/(?:^|;)\s*(font|font-size|font-weight|font-family|line-height|letter-spacing)\s*:/g)].map(([,p])=>p);
+   if(!properties.length)continue;
+   const exemption=exemptions.find(row=>row.file===file&&row.selector===selector);
+   if(!exemption?.reason)errors.push(`${file}: ${selector} defines ${properties.join(', ')} outside the nine roles.`);
+  }
+ }
  return errors;
 }

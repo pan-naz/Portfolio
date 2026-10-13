@@ -6,7 +6,7 @@ const { href, size = 'large', variant = 'primary', appearance = 'default', arrow
 const Tag = href ? 'a' : 'button';
 const hasArrowFill = variant === 'primary' && Boolean(arrow);
 ---
-<Tag {...attributes} tabindex={attributes.tabindex ?? 0} class:list={['button', size === 'small' && !hasArrowFill && 'hit-area', size === 'small' ? 'text-body-s' : 'text-body-m-strong', `button--${variant}`, appearance === 'comparison' && 'button--comparison', appearance === 'catalog' && 'button--catalog', `button--${size}`, arrow && `button--arrow-${arrow}`, hasArrowFill && 'button--arrow-fill', className]} href={href} type={Tag === 'button' ? (attributes.type ?? 'button') : undefined}>
+<Tag {...attributes} tabindex={attributes.tabindex ?? 0} class:list={['button', size === 'small' && !hasArrowFill && 'hit-area', appearance === 'catalog' ? 'text-label-s' : size === 'small' ? 'text-body-s' : 'text-body-m-strong', `button--${variant}`, appearance === 'comparison' && 'button--comparison', appearance === 'catalog' && 'button--catalog', `button--${size}`, arrow && `button--arrow-${arrow}`, hasArrowFill && 'button--arrow-fill', className]} href={href} type={Tag === 'button' ? (attributes.type ?? 'button') : undefined}>
   {hasArrowFill ? (
     <>
       <span class="button-fill-label"><slot /></span>

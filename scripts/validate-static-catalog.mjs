@@ -12,7 +12,16 @@ assert.equal((catalog.match(/\bdata-theme-control/g)||[]).length,1,'Only the hea
 assert.equal((catalog.match(/<[a-z][^>]*\sdata-theme=/g)||[]).length,2,'Page theme plus the shared fixed-dark media control specimen');
 assert.ok(catalog.includes('data-catalog')&&!home.includes('data-catalog'));
 assert.ok(!styles(catalog).includes('html[data-static]'),'Live specimens must keep genuine transitions and states');
-assert.ok(!styles(home).includes('.ds-sidebar')&&!styles(home).includes('.button--catalog')&&!styles(home).includes('.theme-toggle-group'),'Catalog layout and control appearances must not enter the website');
+// The nine shared type rules may name catalog consumers; they carry no layout,
+// colour or interaction appearance. Everything else remains catalog-only.
+const withoutTypeRoles=styles(home).replace(/([^{}]+)\{([^{}]*)\}/g,(rule,selector,body)=>{
+ const id=selector.match(/\.text-(heading-xl|heading-l|heading-m|body-l|body-m-strong|body-m|body-s|label-m|label-s)(?=,|\s|$)/)?.[1];
+ if(!id)return rule;
+ const expected={'font-family':'font','font-size':'text','font-weight':'font-weight','line-height':'line-height','letter-spacing':'letter-spacing'};
+ let rest=body;for(const [property,prefix] of Object.entries(expected)){const declaration=`${property}:var(--${prefix}-${id})`;if(!rest.includes(declaration))return rule;rest=rest.replace(declaration,'');}
+ rest=rest.replace('text-transform:uppercase','').replaceAll(';','').trim();return rest?rule:'';
+});
+assert.ok(!withoutTypeRoles.includes('.ds-sidebar')&&!withoutTypeRoles.includes('.button--catalog')&&!withoutTypeRoles.includes('.theme-toggle-group'),'Catalog layout and control appearances must not enter the website');
 for(const retired of ['overview','accessibility','writing','wordmark','patterns','case-study-transition'])assert.ok(!catalog.includes(`id="${retired}"`),`Hidden or retired view: ${retired}`);
 assert.equal((catalog.match(/<h1\b/g)||[]).length,1,'One global item heading');
 const views=[...catalog.matchAll(/<section\b[^>]*\bid="([^"]+)"[^>]*\bdata-ds-view/g)].map(([,id])=>id);

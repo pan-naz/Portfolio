@@ -1,4 +1,5 @@
-import {validateTypographySystem} from './validate-typography.mjs';
+import {validateTypographySystem,validateStaticTypography} from './validate-typography.mjs';
+import {typographyCssExclusions} from '../src/data/typography-exclusions.ts';
 import {validateColors} from './validate-colors.mjs';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -86,8 +87,8 @@ export function validateNavigationExamples(preview, controller) {
     const block = navigation.match(new RegExp(`data-ds-example="${example}"[^>]*>([\\s\\S]*?)</div>`))?.[1];
     if (!block?.includes('<SectionNavigation compact theme pill')) errors.push(`Navigation must use the real compact filter: ${example}`);
   }
-  if (!/const phoneFilterFont\s*=/.test(controller) || !controller.includes('sheet.cssRules') || !controller.includes("nav.dataset.themeFit='false'")) errors.push('Small filter must derive its real responsive typography and pill state from source.');
-  if (/fontSize\s*=\s*['"][\d.]/.test(controller)) errors.push('Catalog must not invent a small-filter font size.');
+  if (!controller.includes("nav.toggleAttribute('data-small-work-type',true)") || !controller.includes("nav.dataset.themeFit='false'")) errors.push('Small filter must derive its real responsive typography and pill state from source.');
+  if (/\.style\.(?:fontSize|fontWeight|fontFamily|lineHeight|letterSpacing)\s*=/.test(controller)) errors.push('Catalog must not invent a small-filter font size.');
   return errors;
 }
 export function validateWorkPill(work, controller, css, presentation) {
@@ -143,6 +144,7 @@ function validate(entries) {
   }
   const tokens = read('src/styles/tokens.css');
   errors.push(...validateTypographySystem(tokens, read('src/styles/typography.css'), read('src/components/DSFoundations.astro')));
+  errors.push(...validateStaticTypography(Object.fromEntries(filesUnder('src/styles').filter(file=>file.endsWith('.css')).map(file=>[file,read(file)])),typographyCssExclusions));
   return errors;
 }
 export function validateHiddenDocumentation(records, text) {

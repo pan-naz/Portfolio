@@ -29,7 +29,6 @@
   --shadow-overlay-light: 0 8px 24px rgb(22 23 21 / .10);
   --ease-stage-entrance: cubic-bezier(.22, .61, .36, 1);
   /* Canonical semantic roles used directly by website consumers. */
-  --line-height-body: 1.5;
   --duration-button-fill: 450ms;
   --control-height-small: 36px;
   --scale-tooltip-start: .82; --scale-tooltip-end: 1;

@@ -16,12 +16,12 @@
 .case-video-seek input::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 16px; height: 16px; margin-top: -6px; border: 0; border-radius: 50%; background: var(--color-text-primary); }
 .case-video-seek input::-moz-range-thumb { width: 16px; height: 16px; border: 0; border-radius: 50%; background: var(--color-text-primary); }
 .case-video-seek input:disabled { opacity: var(--opacity-disabled); cursor: default; }
-.case-video-time { display: inline-flex; align-items: center; gap: var(--space-1); flex: 0 0 auto; font-size: var(--text-label-s); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.case-video-time { display: inline-flex; align-items: center; gap: var(--space-1); flex: 0 0 auto; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .case-video-time__part { position: relative; }
 .case-video-time__reserve { visibility: hidden; }
 .case-video-time__part [data-video-time] { position: absolute; inset-inline-end: 0; }
 .case-video-time__part [data-video-duration] { position: absolute; inset-inline-start: 0; }
-.case-video-preview { position: absolute; bottom: calc(100% + var(--space-2)); width: var(--video-preview-width, 200px); max-width: 100%; padding: var(--space-1); border-radius: var(--space-2); background: var(--color-bg-surface); box-shadow: var(--shadow-floating); transform: translateX(-50%); pointer-events: none; text-align: center; font-size: var(--text-label-s); font-variant-numeric: tabular-nums; }
+.case-video-preview { position: absolute; bottom: calc(100% + var(--space-2)); width: var(--video-preview-width, 200px); max-width: 100%; padding: var(--space-1); border-radius: var(--space-2); background: var(--color-bg-surface); box-shadow: var(--shadow-floating); transform: translateX(-50%); pointer-events: none; text-align: center; font-variant-numeric: tabular-nums; }
 .case-video-preview-frame { width: 100%; border-radius: var(--space-1); background-repeat: no-repeat; }
 .case-video-preview span { display: block; padding-top: var(--space-1); }
 @media (hover: none), (any-pointer: coarse) { .case-video-player .case-video-controls { opacity: 1; pointer-events: auto; } }

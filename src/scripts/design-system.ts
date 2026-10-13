@@ -12,21 +12,10 @@ document.documentElement.dataset.docNavigationReady='true';
 
 // Show the actual website pill state, and pin its real phone typography when
 // the small specimen is viewed in a desktop catalog. No private size value.
-const phoneFilterFont=(rules:CSSRuleList,phone=false):string=>{
- for(const rule of rules){
-  if(rule instanceof CSSStyleRule&&phone&&rule.selectorText.includes('.section-navigation--compact .navigation-item'))return rule.style.getPropertyValue('font-size');
-  if('cssRules' in rule){const value=phoneFilterFont((rule as CSSGroupingRule).cssRules,phone||(rule instanceof CSSMediaRule&&/(?:max-width[^)]*|width\s*<=\s*)380px/.test(rule.conditionText)));if(value)return value;}
- }
- return '';
-};
-const smallFilterFont=[...document.styleSheets].map(sheet=>{try{return phoneFilterFont(sheet.cssRules);}catch{return '';}}).find(Boolean);
-for(const specimen of document.querySelectorAll<HTMLElement>('[data-ds-pill]')){
+for(const specimen of document.querySelectorAll<HTMLElement>('[data-ds-pill][data-ds-phone-filter]')){
  const nav=specimen.querySelector<HTMLElement>('.section-navigation')!;
- if(specimen.hasAttribute('data-ds-phone-filter')){
-  if(!smallFilterFont)throw Error('Missing shared phone-filter typography rule');
-  nav.dataset.themeFit='false';
-  nav.querySelectorAll<HTMLElement>('.navigation-item').forEach(item=>item.style.fontSize=smallFilterFont);
- }
+ nav.dataset.themeFit='false';
+ nav.toggleAttribute('data-small-work-type',true);
 }
 
 // Preserve genuine shared typography while removing specimen heading semantics.
