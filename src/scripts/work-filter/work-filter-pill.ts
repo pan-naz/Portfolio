@@ -1,3 +1,5 @@
+import { readSafeAreaInsets } from '../safe-area.ts';
+
 /** A single fixed filter in Work's DOM order, available only while Work is active. */
 export function initializeWorkFilterPill() {
   const section = document.querySelector<HTMLElement>('#work');
@@ -32,7 +34,8 @@ export function initializeWorkFilterPill() {
       const required = nav.getBoundingClientRect().width;
       const margin = parseFloat(getComputedStyle(root).getPropertyValue('--space-4'));
       nav.style.maxWidth = maximum;
-      nav.dataset.themeFit = String(required <= innerWidth - margin * 2);
+      const safe = readSafeAreaInsets();
+      nav.dataset.themeFit = String(required <= innerWidth - margin * 2 - safe.left - safe.right);
     }
     update();
   };

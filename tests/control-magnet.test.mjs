@@ -18,9 +18,11 @@ const subscribers = new Set(), frames = new Map();
 let sequence = 0, clock = 0;
 const capability = Object.assign(new Events(), { matches: true });
 globalThis.window = new Events();
+globalThis.document = { createElement: () => ({ style: {}, remove() {} }), documentElement: { append() {} } };
+let safe = { left: 0, right: 0, top: 0, bottom: 0 };
 globalThis.innerWidth = 1200; globalThis.innerHeight = 800;
 globalThis.matchMedia = () => capability;
-globalThis.getComputedStyle = () => ({ getPropertyValue: name => ({ '--work-filter-magnet-spring-speed': '14', '--work-filter-magnet-inside-spring-speed': '2', '--space-2': '8px' }[name] || '') });
+globalThis.getComputedStyle = () => ({ paddingLeft: `${safe.left}px`, paddingRight: `${safe.right}px`, paddingTop: `${safe.top}px`, paddingBottom: `${safe.bottom}px`, getPropertyValue: name => ({ '--work-filter-magnet-spring-speed': '14', '--work-filter-magnet-inside-spring-speed': '2', '--space-2': '8px' }[name] || '') });
 globalThis.requestAnimationFrame = callback => { frames.set(++sequence, callback); return sequence; };
 globalThis.cancelAnimationFrame = id => frames.delete(id);
 globalThis.magnetTestDependencies = {
@@ -30,6 +32,7 @@ globalThis.magnetTestDependencies = {
   watchViewportPointer(callback) { subscribers.add(callback); return () => subscribers.delete(callback); },
 };
 let runtime = readFileSync('src/scripts/control-magnet.ts', 'utf8')
+  .replace("'./safe-area.ts'", JSON.stringify(new URL('../src/scripts/safe-area.ts', import.meta.url).href))
   .replace(/^import .*work-filter-magnet\.ts';$/m, 'const { calculateMagnet, resolveWorkFilterSpringSpeed, stepSpring } = globalThis.magnetTestDependencies;')
   .replace(/^import .*viewport-pointer\.ts';$/m, 'const { refreshViewportPointer, watchViewportPointer } = globalThis.magnetTestDependencies;');
 runtime = ts.transpileModule(runtime, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;

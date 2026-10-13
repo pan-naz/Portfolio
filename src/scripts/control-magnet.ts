@@ -1,3 +1,4 @@
+import { readSafeAreaInsets } from './safe-area.ts';
 import { calculateWorkFilterMagnet as calculateMagnet, resolveWorkFilterSpringSpeed, stepSpring, type Spring } from './work-filter/work-filter-magnet.ts';
 import { refreshViewportPointer, watchViewportPointer } from './viewport-pointer.ts';
 
@@ -10,6 +11,8 @@ export function initializeControlMagnet(control: HTMLElement) {
   const regularSpeed = Number.parseFloat(tokens.getPropertyValue('--work-filter-magnet-spring-speed')) || 14;
   const insideSpeed = Number.parseFloat(tokens.getPropertyValue('--work-filter-magnet-inside-spring-speed')) || 2;
   const edge = Number.parseFloat(tokens.getPropertyValue('--space-2')) || 8;
+  let safe = readSafeAreaInsets();
+  window.addEventListener('resize', () => { safe = readSafeAreaInsets(); }, { signal });
   const x: Spring = { value: 0, velocity: 0, target: 0 };
   const y: Spring = { value: 0, velocity: 0, target: 0 };
   let frame = 0, lastTime = 0, pointerInside = false;
@@ -49,8 +52,8 @@ export function initializeControlMagnet(control: HTMLElement) {
     const distance = Math.hypot(pointer.clientX - (bounds.left + bounds.right) / 2, pointer.clientY - (bounds.top + bounds.bottom) / 2);
     // A small target lands under the pointer rather than moving past it.
     const limit = Math.min(1, distance / (Math.hypot(target.x, target.y) || 1));
-    x.target = Math.max(edge - bounds.left, Math.min(target.x * limit, innerWidth - edge - bounds.right));
-    y.target = Math.max(edge - bounds.top, Math.min(target.y * limit, innerHeight - edge - bounds.bottom));
+    x.target = Math.max(safe.left + edge - bounds.left, Math.min(target.x * limit, innerWidth - safe.right - edge - bounds.right));
+    y.target = Math.max(safe.top + edge - bounds.top, Math.min(target.y * limit, innerHeight - safe.bottom - edge - bounds.bottom));
     if (x.value !== x.target || x.velocity || y.value !== y.target || y.velocity) schedule();
   });
   control.dataset.magnetReady = 'true';

@@ -211,7 +211,7 @@ export function initializeWorkFilter(onChange?: () => void, onReposition?: (top:
     if (!button || !section.contains(button)) return;
     const nav = button.closest<HTMLElement>('.section-navigation');
     const fromPill = nav?.classList.contains('section-navigation--pill');
-    const clearance = nav ? parseFloat(getComputedStyle(nav).getPropertyValue('--header-inset')) / 2
+    const clearance = fromPill && nav ? parseFloat(getComputedStyle(nav.closest<HTMLElement>('.work-filter-pill')!).top)
       + nav.offsetHeight + parseFloat(getComputedStyle(nav).getPropertyValue('--space-4')) : 0;
     const belowListTop = list.getBoundingClientRect().top < clearance;
     select(button.dataset.workFilter as WorkFilter, true, true, true, !fromPill);

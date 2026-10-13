@@ -10,8 +10,8 @@
   letter-spacing: var(--letter-spacing-body-m);
 }
 .case-study-narrative > :where(section:not(.case-study-overview)) { padding-block: var(--case-section-space); }
-.case-study-chapter--inverse { --color-text-primary: var(--color-inverse-text-primary); --color-text-secondary: var(--color-inverse-text-secondary); --color-interactive-accent: var(--color-inverse-accent); width: 100vw; margin-left: calc(50% - 50vw); color: var(--color-text-primary); background: var(--color-inverse-bg-surface); }
-.case-study-chapter__inner { width: min(1200px, calc(100% - var(--gutter) * 2)); margin-inline: auto; }
+.case-study-chapter--inverse { --color-text-primary: var(--color-inverse-text-primary); --color-text-secondary: var(--color-inverse-text-secondary); --color-interactive-accent: var(--color-inverse-accent); width: 100vw; margin-left: calc(50% - 50vw + (var(--safe-right) - var(--safe-left)) / 2); color: var(--color-text-primary); background: var(--color-inverse-bg-surface); }
+.case-study-chapter__inner { width: min(1200px, calc(100% - var(--gutter-left) - var(--gutter-right))); margin-inline: var(--gutter-left) var(--gutter-right); }
 .case-study-narrative :where(p, li) { text-wrap: pretty; }
 .case-study-narrative :where(h3, h4) { margin: 0; font-size: var(--text-body-m); line-height: var(--line-height-body); letter-spacing: var(--letter-spacing-body-m-strong); font-weight: var(--font-weight-body-m-strong); }
 .case-study-narrative :where(strong, b) { font-weight: var(--font-weight-body-m-strong); }
@@ -49,7 +49,7 @@
 .case-study-sticky { display: block; align-self: start; }
 @media (min-width: 768px) {
   /* Taller copy scrolls into view before pinning its bottom above the viewport edge. */
-  .case-study-sticky { position: sticky; top: min(var(--space-6), calc(100dvh - var(--case-sticky-height, 0px) - var(--space-6))); }
+  .case-study-sticky { position: sticky; top: min(calc(var(--space-6) + var(--safe-top)), calc(100dvh - var(--case-sticky-height, 0px) - var(--space-6) - var(--safe-bottom))); }
 }
 .case-study-overview__intro, .case-study-overview__details { padding-block: var(--case-section-space); }
 .case-study-overview__intro { border-bottom: 1px solid var(--color-border-default); }

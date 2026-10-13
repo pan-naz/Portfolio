@@ -57,6 +57,10 @@
   --project-card-bg-surface: var(--color-bg-surface);
   --footer-pile-icon-color: #b8b8b8;
   --gutter: max(64px, calc((100vw - 1200px) / 2)); --hero-gutter: max(64px, calc((100vw - 1328px) / 2)); --hero-visual-gutter: calc(var(--hero-gutter) - 4px); --header-inset: 32px;
+  /* Shared viewport protection: surfaces bleed; content retains its existing gutters. */
+  --safe-left: env(safe-area-inset-left, 0px); --safe-right: env(safe-area-inset-right, 0px);
+  --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --gutter-left: calc(var(--gutter) + var(--safe-left)); --gutter-right: calc(var(--gutter) + var(--safe-right));
   --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
   --space-6: 24px; --space-8: 32px; --space-12: 48px; --space-16: 64px; --space-24: 96px;
   --section-space: var(--space-24); --grid-gap: var(--space-6);

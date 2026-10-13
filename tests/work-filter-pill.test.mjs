@@ -9,11 +9,12 @@ const nav={dataset:{},style:{maxWidth:''},removeAttribute(){delete this.dataset.
 const wrapper={dataset:{},inert:true,setAttribute(name,value){this[name]=value;},querySelector(){return nav;}};
 const panel={getBoundingClientRect(){reads++;return {top};}};
 const section=Object.assign(new EventTarget(),{querySelector:selector=>selector==='.work-panel'?panel:wrapper,getBoundingClientRect:()=>({bottom})});
-const root={dataset:{}};
+const root={dataset:{},append(){}};
+let safeLeft=0,safeRight=0;
 globalThis.window=new EventTarget();
 Object.defineProperty(globalThis,'innerWidth',{get:()=>width});
-globalThis.document=Object.assign(new EventTarget(),{documentElement:root,querySelector:()=>section,fonts:{ready:Promise.resolve()}});
-globalThis.getComputedStyle=()=>({getPropertyValue:()=> '16px'});
+globalThis.document=Object.assign(new EventTarget(),{documentElement:root,createElement:()=>({style:{},remove(){}}),querySelector:()=>section,fonts:{ready:Promise.resolve()}});
+globalThis.getComputedStyle=()=>({paddingLeft:`${safeLeft}px`,paddingRight:`${safeRight}px`,paddingTop:'0px',paddingBottom:'0px',getPropertyValue:()=> '16px'});
 globalThis.requestAnimationFrame=callback=>{frames.set(++serial,callback);return serial;};
 globalThis.cancelAnimationFrame=id=>frames.delete(id);
 globalThis.ResizeObserver=class{observe(){observers++;}disconnect(){observers--;}};
@@ -23,6 +24,7 @@ assert.equal(wrapper.dataset.visible,'false');assert.equal(wrapper.inert,true);a
 section.dispatchEvent(new Event('focusin'));
 assert.equal(wrapper.dataset.visible,'false','Programmatic dialog return focus is not a new Tab entry');
 for(width of [320,351,352,360,390,820]){window.dispatchEvent(new Event('resize'));assert.equal(nav.dataset.themeFit,String(width>=352));}
+width=390;safeLeft=safeRight=47;window.dispatchEvent(new Event('resize'));assert.equal(nav.dataset.themeFit,'false','Safe gutters participate in the measured theme fit');safeLeft=safeRight=0;
 top=0;window.dispatchEvent(new Event('scroll'));flush();
 assert.equal(wrapper.dataset.visible,'true','The dark edge, not the former bar, triggers the pill');
 assert.equal(wrapper.inert,false);assert.equal(wrapper['aria-hidden'],'false');

@@ -1,3 +1,4 @@
+import { readSafeAreaInsets } from '../safe-area.ts';
 import { advancePill, advancePillExit, mix, nextPillState, pillDockOffset, pillExitY, pillGeometry, pillLabels, pillReturnViewportBuffer, pillShape } from './header-morph-model';
 import { createNativeMotion, readMotionToken, revealEffects } from '../native-motion';
 
@@ -21,7 +22,7 @@ export function initializeHeaderMorph() {
   // The same live decision owns the side filter, section surfaces and header.
   const floatingLayout = () => document.documentElement.dataset.workStageLayout === 'true';
   let metrics: { inset: number; buttonTop: number; buttonX: number; buttonWidth: number; buttonHeight: number;
-    controlsWidth: number; viewport: number; enterDuration: number; exitDuration: number } | undefined;
+    controlsWidth: number; viewport: number; safe: ReturnType<typeof readSafeAreaInsets>; enterDuration: number; exitDuration: number } | undefined;
   let queued = 0, previousTime = 0, previousScroll = window.scrollY, progress = 0;
   let expanded = false, releasing = false, disposed = false;
   let exit = 0;
@@ -77,7 +78,7 @@ export function initializeHeaderMorph() {
     header.dataset.pillState = docked ? (!expanded ? 'hiding' : progress === 1 ? 'expanded' : 'expanding') : 'hero';
     header.dataset.pillExit = exit.toFixed(3);
     header.dataset.pillSourceX = m.buttonX.toFixed(2);
-    header.dataset.pillTrigger = (m.buttonTop - m.inset).toFixed(1);
+    header.dataset.pillTrigger = (m.buttonTop - m.inset - m.safe.top).toFixed(1);
     relocate(docked);
     if (!docked) {
       identity.style.cssText = '';
@@ -90,16 +91,16 @@ export function initializeHeaderMorph() {
     }
     const shape = pillShape(progress), labels = pillLabels(progress);
     const targetControlsWidth = m.controlsWidth;
-    const target = pillGeometry(m.viewport, targetControlsWidth, m.buttonWidth);
-    const width = Math.min(m.viewport - 48, mix(m.buttonWidth, target.width, shape));
-    const center = Math.max(width / 2 + 24, Math.min(m.viewport - width / 2 - 24,
-      mix(m.buttonX + m.buttonWidth / 2, m.viewport / 2, shape)));
+    const target = pillGeometry(m.viewport - m.safe.left - m.safe.right, targetControlsWidth, m.buttonWidth);
+    const width = Math.min(m.viewport - m.safe.left - m.safe.right - 48, mix(m.buttonWidth, target.width, shape));
+    const center = Math.max(m.safe.left + width / 2 + 24, Math.min(m.viewport - m.safe.right - width / 2 - 24,
+      mix(m.buttonX + m.buttonWidth / 2, (m.viewport + m.safe.left - m.safe.right) / 2, shape)));
     const left = center - width / 2;
     const paddingLeft = mix(0, target.paddingLeft, shape);
     const paddingRight = mix(0, target.paddingRight, shape);
     // Exit translates the whole capsule upward without shrinking or morphing
     // back. Return the real CTA to its hero slot only once fully offscreen.
-    const y = pillDockOffset(progress, m.inset) + pillExitY(exit, m.inset);
+    const y = pillDockOffset(progress, m.inset) + pillExitY(exit, m.inset + m.safe.top);
     surface.style.width = `${width}px`;
     surface.style.height = `${mix(m.buttonHeight, 64, shape)}px`;
     surface.style.transform = `translate3d(${left}px, ${y}px, 0)`;
@@ -109,12 +110,12 @@ export function initializeHeaderMorph() {
     // Reveal within the capsule late; nothing flies in from the header corners.
     const logoX = left + paddingLeft;
     const controlsX = logoX + target.logoWidth + target.logoGap;
-    identity.style.transform = `translate3d(${logoX - m.inset}px, ${y + 10}px, 0)`;
+    identity.style.transform = `translate3d(${logoX - m.inset - m.safe.left}px, ${y + 10}px, 0)`;
     identity.style.width = `${target.logoWidth}px`;
     identity.style.opacity = String(labels);
     fullLogo.style.opacity = '0';
     compactLogo.style.opacity = '1';
-    controls.style.transform = `translate3d(${controlsX - (m.viewport - m.inset - targetControlsWidth)}px, ${y + 10}px, 0)`;
+    controls.style.transform = `translate3d(${controlsX - (m.viewport - m.inset - m.safe.right - targetControlsWidth)}px, ${y + 10}px, 0)`;
     controls.style.opacity = String(labels);
     const hideControls = labels < .1 || !expanded;
     if (hideControls && (identity.contains(document.activeElement) || controls.contains(document.activeElement))) button.focus({ preventScroll: true });
@@ -150,8 +151,8 @@ export function initializeHeaderMorph() {
     const state = nextPillState(
       scroll,
       previousScroll,
-      metrics.buttonTop - metrics.inset,
-      metrics.inset + metrics.buttonHeight + pillReturnViewportBuffer,
+      metrics.buttonTop - metrics.inset - metrics.safe.top,
+      metrics.inset + metrics.safe.top + metrics.buttonHeight + pillReturnViewportBuffer,
       expanded,
       releasing,
     );
@@ -172,9 +173,10 @@ export function initializeHeaderMorph() {
     navigation.hidden = false;
     const headerTokens = getComputedStyle(header);
     const fullWidth = fullLogo.querySelector<SVGSVGElement>('svg')!.width.baseVal.value;
-    const inset = parseFloat(headerTokens.top);
+    const inset = parseFloat(headerTokens.getPropertyValue('--header-inset'));
+    const safe = readSafeAreaInsets();
     const gap = parseFloat(headerTokens.getPropertyValue('--space-3'));
-    const hideLinks = !floatingLayout() && fullWidth + controls.offsetWidth + gap > window.innerWidth - inset * 2;
+    const hideLinks = !floatingLayout() && fullWidth + controls.offsetWidth + gap > window.innerWidth - inset * 2 - safe.left - safe.right;
     navigation.hidden = hideLinks;
     if (hideLinks && navigation.contains(document.activeElement)) theme.focus({ preventScroll: true });
     const slotRect = slot.getBoundingClientRect();
@@ -182,7 +184,7 @@ export function initializeHeaderMorph() {
     slot.style.setProperty('--cta-width', `${width}px`);
     slot.style.setProperty('--cta-height', `${height}px`);
     metrics = {
-      inset: parseFloat(getComputedStyle(header).top), buttonTop: slotRect.top + window.scrollY,
+      inset, safe, buttonTop: slotRect.top + window.scrollY,
       buttonX: slotRect.left, buttonWidth: width, buttonHeight: height,
       controlsWidth: controls.offsetWidth, viewport: window.innerWidth,
       enterDuration: readMotionToken(headerTokens, '--duration-header-enter'),
