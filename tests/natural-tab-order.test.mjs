@@ -3,10 +3,13 @@ import {readFileSync} from 'node:fs';
 import {projects,collectionProjects} from '../src/data/portfolio.ts';
 
 const routes=['index.html','404.html',...[...projects,...collectionProjects].map(p=>`case-studies/${p.id}/index.html`)];
+for(const route of [...routes,'design-system/index.html']){
+ const html=readFileSync(new URL(`../dist/${route}`,import.meta.url),'utf8');
+ assert.ok(!html.includes('class="skip-link"'),`${route}: pages follow the approved logo-first/no-skip-link contract`);
+}
 let controls=0;
 for(const route of routes){
  const html=readFileSync(new URL(`../dist/${route}`,import.meta.url),'utf8');
- assert.ok(!html.includes('class="skip-link"'),`${route}: website pages follow the approved logo-first/no-skip-link contract`);
  for(const match of html.matchAll(/<(a|button|input|select|textarea)\b([^>]*)>/g)){
   const [,tag,attributes]=match;
   if(tag==='a'&&!/\bhref=/.test(attributes))continue;

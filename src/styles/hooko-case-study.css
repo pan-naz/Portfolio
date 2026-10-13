@@ -1,8 +1,8 @@
 /* Project-only: Hooko brand styles, not part of the design system */
 @layer system, project;
 @layer project {
-.case-study-content--hooko { --hk-page-secondary: var(--color-ink-alpha-64-light); }
-:root[data-theme='dark'] .case-study-content--hooko { --hk-page-secondary: var(--color-ink-alpha-64-dark); }
+.case-study-content--hooko { --hk-page-secondary: var(--color-ink-64); }
+:root[data-theme='dark'] .case-study-content--hooko { --hk-page-secondary: var(--color-paper-64); }
 .case-study-content--hooko { padding-bottom: 0; }
 .hk-pillrow, .hk-kw { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .hk-case figure, .hk-srows, .hk-pipeline { margin: 0; }
@@ -30,7 +30,7 @@
 .hk-stxt p { grid-column: 1 / -1; margin: 0; color: var(--color-text-secondary); }
 .hk-band { width: 100vw; margin-left: calc(50% - 50vw + (var(--safe-right) - var(--safe-left)) / 2); color: var(--color-text-primary); background: var(--color-bg-canvas); }
 .hk-band-inner { width: min(1200px, calc(100% - var(--gutter-left) - var(--gutter-right))); margin-inline: var(--gutter-left) var(--gutter-right); gap: var(--case-content-gap); }
-.hk-decisions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--grid-gap); --color-bg-surface: var(--color-overlay-bg-surface); --color-bg-canvas: var(--color-overlay-bg-surface-subtle); --color-text-secondary: var(--hk-page-secondary); --color-border-default: var(--color-overlay-border-default); }
+.hk-decisions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--grid-gap); --color-bg-surface: var(--color-white); --color-bg-canvas: var(--color-mist); --color-text-secondary: var(--hk-page-secondary); --color-border-default: var(--color-ink-8); }
 .hk-pillrow { margin-top: var(--space-3); }
 .hk-stack { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
 .hk-diagram { display: grid; gap: var(--space-4); padding: var(--space-6); border-radius: var(--radius-medium); background: var(--color-bg-surface); box-shadow: var(--shadow-floating); }

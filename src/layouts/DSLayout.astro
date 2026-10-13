@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import SiteMetadata from '../components/SiteMetadata.astro';
 interface Props { title?: string; }
-const { title = 'Folio design system' } = Astro.props;
+const { title = 'Design system' } = Astro.props;
 ---
 <!doctype html>
 <html lang="en" data-theme="light" data-catalog>
@@ -20,5 +20,5 @@ const { title = 'Folio design system' } = Astro.props;
     <meta name="theme-color" content="#FAF8F7" />
     <title>{title}</title>
   </head>
-  <body><a class="skip-link" href="#main">Skip to content</a><slot /><script>import '../scripts/theme';</script></body>
+  <body><slot /><script>import '../scripts/theme';</script></body>
 </html>

@@ -4,7 +4,7 @@ export interface ComponentClassification { file: string; kind: ComponentKind; gr
 export const componentManifest: ComponentClassification[] = [
   { file: 'src/components/DeferredVideo.astro', kind: 'internal-helper', reason: 'Native video markup, deferred poster delivery and identical noscript fallback for real website media.' },
   {file:'src/components/DSDashboard.astro',kind:'internal-helper',reason:'Catalog dashboard composed from real shared specimens.'},
-  {file:'src/components/DSTokenNames.astro',kind:'internal-helper',reason:'Opt-in source names using the existing catalog Button appearance.'},
+  {file:'src/components/DSTokenNames.astro',kind:'internal-helper',reason:'Fixed-size human/source label slots and their switch using the existing catalog Button appearance.'},
   { file: 'src/components/DSTabs.astro', kind: 'internal-helper', reason: 'Catalog tab wiring composed from the shared Button documentation variant.' },
   { file: 'src/components/DSPreview.astro', kind: 'internal-helper', reason: 'Documentation-only live specimens of existing components.' },
   { file: 'src/components/AboutSection.astro', kind: 'page-section', reason: 'Composes a page or a narrative chapter; not a catalog building block.' },

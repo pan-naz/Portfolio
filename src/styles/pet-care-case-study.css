@@ -7,10 +7,10 @@
 .pc-muted { color: var(--color-text-secondary); }
 /* The closing media continues the guide; its bottom inset supplies the gap. */
 .case-study-narrative > .pc-animation { padding-block-start: 0; }
-.pc-pink, .pc-coral { --color-text-primary: var(--color-overlay-bg-surface); --color-text-secondary: var(--color-overlay-bg-surface); color: var(--color-text-primary); }
+.pc-pink, .pc-coral { --color-text-primary: var(--color-white); --color-text-secondary: var(--color-white); color: var(--color-text-primary); }
 .pc-pink { background: linear-gradient(180deg, var(--pc-pink), var(--pc-magenta)); }
 .pc-coral { background: var(--pc-coral); }
-.pc-cream { --color-text-primary: var(--color-overlay-text-primary); --color-text-secondary: var(--color-overlay-text-secondary); color: var(--color-text-primary); background: var(--pc-cream); }
+.pc-cream { --color-text-primary: var(--color-ink); --color-text-secondary: var(--color-ink-64); color: var(--color-text-primary); background: var(--pc-cream); }
 .pc-band-inner { display: grid; gap: var(--case-content-gap); }
 .pc-heading { align-items: end; margin-bottom: var(--case-content-gap); }
 .pc-band-inner > .pc-heading { margin-bottom: 0; }
@@ -25,14 +25,14 @@
 .pc-competition-cards { display: grid; gap: var(--grid-gap); }
 .pc-prizes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; gap: var(--space-6); margin: 0; padding: 0; list-style: none; }
 .pc-prize { display: flex; align-items: center; gap: var(--space-6); min-width: 0; }
-.pc-prize-icon { display: grid; place-items: center; flex: none; width: var(--space-16); height: var(--space-16); border-radius: var(--radius-small); background: var(--color-inverse-text-primary); }
+.pc-prize-icon { display: grid; place-items: center; flex: none; width: var(--space-16); height: var(--space-16); border-radius: var(--radius-small); background: var(--color-paper); }
 .pc-prize-copy { display: grid; gap: var(--space-1); min-width: 0; }
 .pc-prize-place { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-2); color: var(--color-text-secondary); }
 .pc-prize--won { --color-interactive-accent: var(--pc-pink); }
 .pc-prize--won .pc-prize-place, .pc-prize--won .pc-prize-icon { color: var(--pc-pink); }
 .pc-prize--won .pc-prize-icon { background: color-mix(in srgb, var(--pc-pink) 8%, var(--color-bg-surface)); }
 .pc-research-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: var(--grid-gap); }
-.pc-wireframes .case-study-media { padding: var(--space-3); background: var(--color-overlay-bg-surface); }
+.pc-wireframes .case-study-media { padding: var(--space-3); background: var(--color-white); }
 .pc-main-preview .case-study-media { display: grid; place-items: center; padding: var(--space-6); background: var(--pc-cream); }
 .pc-main-preview :is(picture, img) { width: 100%; max-width: 360px; }
 .pc-phone { width: 100%; justify-self: center; }
@@ -46,7 +46,7 @@
 .pc-palette code { font: inherit; color: var(--color-text-secondary); }
 .pc-swatch { aspect-ratio: 2 / 1; border-radius: var(--radius-small); }
 .pc-type-cards { align-items: stretch; }
-.pc-type-plate { display: grid; place-items: center; min-height: calc(var(--space-24) * 2 + var(--space-2)); padding: var(--space-6) var(--space-4); border-radius: var(--radius-small); background: var(--color-inverse-text-primary); }
+.pc-type-plate { display: grid; place-items: center; min-height: calc(var(--space-24) * 2 + var(--space-2)); padding: var(--space-6) var(--space-4); border-radius: var(--radius-small); background: var(--color-paper); }
 .pc-type-plate .case-study-media { width: 100%; max-width: 340px; }
 .pc-brand .project-identity { width: 100%; flex-direction: column; gap: var(--space-6); }
 .pc-brand .svg-asset { width: 88px; height: 88px; flex: none; }

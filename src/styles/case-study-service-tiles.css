@@ -1,7 +1,7 @@
 @layer system, project;
 @layer system {
 /* An original product specimen; the consuming case supplies its brand palette and font. */
-.case-study-service-demo { --service-ink: var(--color-overlay-text-primary); --service-surface: var(--color-overlay-bg-surface); --service-subtle: var(--color-overlay-bg-surface-subtle); --service-accent: var(--color-interactive-accent); --service-muted: var(--color-overlay-text-secondary); position: relative; display: block; font-family: var(--service-font, var(--font-body)); color: var(--service-ink); }
+.case-study-service-demo { --service-ink: var(--color-text-primary); --service-surface: var(--color-bg-surface); --service-subtle: var(--color-bg-surface-subtle); --service-accent: var(--color-interactive-accent); --service-muted: var(--color-text-secondary); position: relative; display: block; font-family: var(--service-font, var(--font-body)); color: var(--service-ink); }
 .case-study-service-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-flow: dense; background: var(--service-subtle); }
 .case-study-service-tile { position: relative; z-index: 1; aspect-ratio: 1; min-width: 0; display: grid; place-content: center; justify-items: center; gap: var(--space-3); padding: var(--space-6); text-align: center; border-radius: 0; background: var(--service-surface); color: var(--service-ink); }
 .case-study-service-tile[data-service-tile] > * { pointer-events: none; }

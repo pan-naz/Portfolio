@@ -8,11 +8,11 @@
 .kc-copy { display: grid; gap: var(--space-6); }
 .kc-copy > p { margin: 0; }
 .kc-muted { color: var(--color-text-secondary); }
-.kc-chat { --color-border-default: var(--color-overlay-border-default); display: grid; gap: var(--space-3); padding: var(--space-2); }
+.kc-chat { --color-border-default: var(--color-ink-8); display: grid; gap: var(--space-3); padding: var(--space-2); }
 .kc-chat :is(p, small) { margin: 0; text-wrap: wrap; }
 .kc-message { min-width: 0; max-width: 80%; padding: var(--space-3) var(--space-4); border-radius: var(--radius-medium); }
-.kc-message--bot { justify-self: start; background: var(--color-inverse-text-primary); border-bottom-left-radius: var(--radius-small); }
-.kc-message--user { justify-self: end; color: var(--color-overlay-bg-surface); background: var(--kc-purple); border-bottom-right-radius: var(--radius-small); }
+.kc-message--bot { justify-self: start; background: var(--color-paper); border-bottom-left-radius: var(--radius-small); }
+.kc-message--user { justify-self: end; color: var(--color-white); background: var(--kc-purple); border-bottom-right-radius: var(--radius-small); }
 .kc-message small { display: block; color: var(--color-text-secondary); }
 .kc-dishes { justify-self: start; width: 80%; display: grid; gap: var(--space-2); }
 .kc-dish { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); border: 1px solid var(--color-border-default); border-radius: var(--radius-small); font-weight: var(--font-weight-body-m-strong); }

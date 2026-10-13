@@ -16,22 +16,22 @@
 .cravus-stack { display: grid; gap: var(--space-6); }
 .cravus-block > h3 + .cravus-stack { margin-top: var(--space-6); }
 .cravus-band { width: 100vw; margin-left: calc(50% - 50vw + (var(--safe-right) - var(--safe-left)) / 2); }
-.cravus-mobile { --color-text-primary: var(--color-overlay-text-primary); --color-text-secondary: var(--color-overlay-text-secondary); --color-interactive-accent: var(--color-overlay-accent); color: var(--color-text-primary); background: var(--cravus-cream); }
+.cravus-mobile { --color-text-primary: var(--color-ink); --color-text-secondary: var(--color-ink-64); --color-interactive-accent: var(--color-orange); color: var(--color-text-primary); background: var(--cravus-cream); }
 .cravus-breakpoint { margin-top: var(--space-6); color: var(--color-text-secondary); }
 .cravus-style { background: var(--cravus-brown); }
 .cravus-palette { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--grid-gap); margin: var(--space-6) 0 0; padding: 0; list-style: none; }
-.cravus-palette > li { overflow: hidden; color: var(--color-overlay-text-primary); background: var(--color-overlay-bg-surface); border: 1px solid var(--color-inverse-border-default); border-radius: var(--radius-medium); }
+.cravus-palette > li { overflow: hidden; color: var(--color-ink); background: var(--color-white); border: 1px solid var(--color-paper-8); border-radius: var(--radius-medium); }
 .cravus-swatch { aspect-ratio: 4 / 3; background: var(--cravus-swatch); }
 .cravus-palette > li > :last-child { display: grid; gap: var(--space-1); padding: var(--space-4); }
-.cravus-palette code { color: var(--color-overlay-text-secondary); font: inherit; }
+.cravus-palette code { color: var(--color-ink-64); font: inherit; }
 .cravus-brand-card { padding: var(--space-6); border-radius: var(--radius-medium); background: var(--cravus-screen); color: var(--cravus-brown); }
-.cravus-brand-card > .case-study-eyebrow { color: var(--color-overlay-text-secondary); }
+.cravus-brand-card > .case-study-eyebrow { color: var(--color-ink-64); }
 .cravus-specimens { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--grid-gap); margin-top: var(--space-6); }
 .cravus-specimens .cravus-brand-card { display: grid; gap: var(--space-4); align-content: start; min-width: 0; }
 .cravus-specimens .cravus-titillium { margin-top: 0; }
 .cravus-assets { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--grid-gap); }
 .cravus-assets > div { display: grid; grid-template-rows: auto 1fr; gap: var(--space-6); min-width: 0; }
-.cravus-assets-card { --color-text-primary: var(--color-overlay-text-primary); --color-text-secondary: var(--color-overlay-text-secondary); --color-bg-surface: var(--cravus-screen); display: grid; align-items: center; gap: var(--grid-gap); padding: var(--space-6); border-radius: var(--radius-medium); color: var(--color-text-primary); background: var(--color-bg-surface); }
+.cravus-assets-card { --color-text-primary: var(--color-ink); --color-text-secondary: var(--color-ink-64); --color-bg-surface: var(--cravus-screen); display: grid; align-items: center; gap: var(--grid-gap); padding: var(--space-6); border-radius: var(--radius-medium); color: var(--color-text-primary); background: var(--color-bg-surface); }
 .cravus-assets-card .svg-asset { display: block; width: 100%; height: auto; border-radius: var(--radius-small); }
 .cravus-grid-card { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .cravus-grid-card dl { display: grid; gap: var(--space-4); margin: 0; }

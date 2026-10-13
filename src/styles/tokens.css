@@ -1,27 +1,34 @@
 @layer system, project;
 @layer system {
 :root {
+  /* The single named palette; project brand values live only in project styles. */
+  --color-white: #FFFFFF;
+  --color-paper: #FAF8F7;
+  --color-mist: #F0EDEB;
+  --color-stone: #DEDAD7;
+  --color-silver: #B8B8B8;
+  --color-pewter: #747474;
+  --color-graphite: #343432;
+  --color-smoke: #2B2A29;
+  --color-charcoal: #222320;
+  --color-ink: #161715;
+  --color-night: #0F100E;
+  --color-orange: #F25A30;
+  --color-orange-light: #FF6B42;
+  --color-ink-64: rgb(22 23 21 / 0.64);
+  --color-ink-16: rgb(22 23 21 / 0.16);
+  --color-ink-8: rgb(22 23 21 / 0.08);
+  --color-paper-64: rgb(250 248 247 / 0.64);
+  --color-paper-10: rgb(250 248 247 / 0.1);
+  --color-paper-8: rgb(250 248 247 / 0.08);
+  --color-section-bg-surface: var(--color-ink);
+  --waterfall-icon-color: var(--color-ink);
+  --footer-pile-icon-color: var(--color-silver);
   /* Palette and geometry primitives; project-brand colours remain project-scoped. */
-  --color-neutral-950: #161715; --color-neutral-800: #343432;
-  --color-canvas-light: #FAF8F7; --color-white: #ffffff;
-  --color-surface-subtle-light: #f0edeb; --color-surface-dark: #0F100E;
-  --color-surface-subtle-dark: #2b2a29;
-  --color-accent-light: #F25A30; --color-accent-dark: #FF6B42;
-  --color-ink-alpha-64-light: rgb(22 23 21 / .64);
-  --color-ink-alpha-16-light: rgb(22 23 21 / .16);
-  --color-ink-alpha-64-dark: rgb(250 248 247 / .64);
-  --color-ink-alpha-10-dark: rgb(250 248 247 / .10);
   --radius-12: 12px; --radius-24: 24px; --radius-40: 40px; --radius-999: 999px;
   --shadow-overlay-light: 0 8px 24px rgb(22 23 21 / .10);
   --ease-stage-entrance: cubic-bezier(.22, .61, .36, 1);
   /* Canonical semantic roles used directly by website consumers. */
-  --color-text-primary: var(--color-neutral-950);
-  --color-text-secondary: var(--color-ink-alpha-64-light);
-  --color-bg-canvas: var(--color-canvas-light);
-  --color-bg-surface: var(--color-white);
-  --color-bg-surface-subtle: var(--color-surface-subtle-light);
-  --color-interactive-accent: var(--color-accent-light);
-  --color-border-default: var(--color-ink-alpha-16-light);
   /* One compact body role, with aliases preserving each consumer's px/rem contract. */
   --type-body-compact: 1.125;
   --text-body-compact: calc(var(--type-body-compact) * 16px);
@@ -37,25 +44,11 @@
   --layer-controls: 10; --layer-tooltip: 20; --layer-header: 30;
   --layer-cursor: 40; --layer-overlay: 100;
   color-scheme: light;
-  --color-text-primary-hover: var(--color-neutral-800); --color-text-on-primary: var(--color-white);
   /* Overlay controls keep a high-contrast white surface; floating navigation follows the page theme. */
-  --color-overlay-text-primary: var(--color-neutral-950); --color-overlay-text-primary-hover: var(--color-neutral-800); --color-overlay-bg-surface: var(--color-white); --color-overlay-bg-surface-subtle: var(--color-surface-subtle-light);
-  --color-overlay-text-secondary: var(--color-ink-alpha-64-light); --color-overlay-border-default: var(--color-ink-alpha-16-light);
-  --color-overlay-accent: var(--color-accent-light); --color-overlay-text-on-primary: var(--color-white); --color-overlay-focus-ring: var(--color-neutral-950);
   --shadow-overlay: var(--shadow-overlay-light);
-  --color-navigation-text-primary: var(--color-overlay-text-primary); --color-navigation-text-primary-hover: var(--color-overlay-text-primary-hover);
-  --color-navigation-text-secondary: var(--color-ink-alpha-64-light); --color-navigation-bg-surface: var(--color-overlay-bg-surface);
-  --color-navigation-bg-surface-subtle: var(--color-overlay-bg-surface-subtle); --color-navigation-accent: var(--color-overlay-accent);
-  --color-navigation-text-on-primary: var(--color-overlay-text-on-primary); --color-navigation-focus-ring: var(--color-overlay-focus-ring);
   --shadow-floating-navigation: var(--shadow-overlay);
-  --control-border: var(--color-text-primary);
+  /* Backdrop and shadows preserve their approved compositor values. */
   --backdrop-case: rgb(0 0 0 / .18);
-  --color-section-bg-surface: var(--color-neutral-950); --waterfall-icon-color: #111111;
-  --color-inverse-text-primary: var(--color-canvas-light); --color-inverse-text-secondary: var(--color-ink-alpha-64-dark); --color-inverse-text-copy: rgb(250 248 247 / .72);
-  --color-inverse-accent: var(--color-accent-dark); --color-inverse-border-default: var(--color-ink-alpha-10-dark);
-  --color-inverse-bg-surface: var(--color-neutral-950); --color-inverse-bg-raised: #222320;
-  --project-card-bg-surface: var(--color-bg-surface);
-  --footer-pile-icon-color: #b8b8b8;
   --gutter: max(64px, calc((100vw - 1200px) / 2)); --hero-gutter: max(64px, calc((100vw - 1328px) / 2)); --hero-visual-gutter: calc(var(--hero-gutter) - 4px); --header-inset: 32px;
   /* Shared viewport protection: surfaces bleed; content retains its existing gutters. */
   --safe-left: env(safe-area-inset-left, 0px); --safe-right: env(safe-area-inset-right, 0px);
@@ -137,26 +130,49 @@
   --ease-filter-enter: cubic-bezier(.25, .46, .45, 1);
   --delay-filter-enter: 140ms; --scale-filter: .9; --scale-filter-exit: .97; --distance-filter-enter: 24px;
 }
-:root[data-theme='dark'], [data-theme='dark'] {
-  /* Preserve the original serialized ink spelling used by catalog readouts. */
-  --color-text-primary: #faf8f7;
-  --color-text-secondary: var(--color-ink-alpha-64-dark);
-  --color-bg-canvas: var(--color-neutral-950);
-  --color-bg-surface: var(--color-surface-dark);
-  --color-bg-surface-subtle: var(--color-surface-subtle-dark);
-  --color-interactive-accent: var(--color-accent-dark);
-  --color-border-default: var(--color-ink-alpha-10-dark);
+/* One role family; scoped themes use these same Light/Dark values. */
+:root, [data-theme='light'], [data-color-zone='light'], .floating-control-theme:not(.floating-navigation-theme), .case-study-direct-close, .tooltip, .case-study-decision-card--figure, .case-study-service-demo {
+  --color-text-primary: var(--color-ink);
+  --color-text-primary-hover: var(--color-graphite);
+  --color-text-secondary: var(--color-ink-64);
+  --color-text-on-primary: var(--color-white);
+  --color-bg-canvas: var(--color-paper);
+  --color-bg-surface: var(--color-white);
+  --color-bg-surface-subtle: var(--color-mist);
+  --color-bg-raised: var(--color-white);
+  --color-bg-raised-hover: var(--color-mist);
+  --color-border-default: var(--color-ink-8);
+  --color-interactive-accent: var(--color-orange);
+  --color-video-track: var(--color-ink-16);
+  --control-border: var(--color-ink);
+  --focus-ring: var(--color-ink);
+  color-scheme: light;
+}
+:root[data-theme='dark'], [data-theme='dark'], [data-color-zone='dark'], .case-study-chapter--inverse, .about-details, .work .section-heading, .case-study-decision-card__impact {
+  --color-text-primary: var(--color-paper);
+  --color-text-primary-hover: var(--color-stone);
+  --color-text-secondary: var(--color-paper-64);
+  --color-text-on-primary: var(--color-ink);
+  --color-bg-canvas: var(--color-ink);
+  --color-bg-surface: var(--color-night);
+  --color-bg-surface-subtle: var(--color-smoke);
+  --color-bg-raised: var(--color-charcoal);
+  --color-bg-raised-hover: var(--color-graphite);
+  --color-border-default: var(--color-paper-8);
+  --color-interactive-accent: var(--color-orange-light);
+  --color-video-track: var(--color-paper-10);
+  --control-border: var(--color-paper);
+  --focus-ring: var(--color-paper);
   color-scheme: dark;
-  --color-text-primary-hover: #dedad7; --focus-ring: var(--color-text-primary);
-  --color-section-bg-surface: var(--color-bg-surface); --color-text-on-primary: var(--color-neutral-950);
-  --color-inverse-bg-surface: var(--color-bg-surface); --project-card-bg-surface: var(--color-inverse-bg-raised);
-  --control-border: var(--color-text-primary);
-  --waterfall-icon-color: #ddd8d4;
-  --footer-pile-icon-color: #747474;
-  --color-navigation-text-primary: var(--color-canvas-light); --color-navigation-text-primary-hover: #FFFFFF;
-  --color-navigation-text-secondary: var(--color-ink-alpha-64-dark); --color-navigation-bg-surface: #242522;
-  --color-navigation-bg-surface-subtle: #343532; --color-navigation-accent: var(--color-accent-dark);
-  --color-navigation-text-on-primary: var(--color-neutral-950); --color-navigation-focus-ring: var(--color-canvas-light);
+}
+/* Artwork substrates inherit the page surface and any project-scoped override.
+   Their surrounding dark chapter changes the copy roles, not the original frame. */
+.case-study-chapter--inverse, .about-details, .work .section-heading { --color-bg-surface:inherit; }
+:root[data-theme='dark'], [data-theme='dark'] {
+  color-scheme: dark;
+  --color-section-bg-surface: var(--color-night);
+  --waterfall-icon-color: var(--color-stone);
+  --footer-pile-icon-color: var(--color-pewter);
   --shadow-floating-navigation: 0 8px 24px rgb(0 0 0 / .38), 0 24px 64px rgb(0 0 0 / .52);
   --shadow-floating: 0 2px 8px rgb(0 0 0 / .16), 0 12px 32px rgb(0 0 0 / .28);
 }
@@ -171,7 +187,7 @@
   --icon-stroke-regular: 1.5; --icon-stroke-strong: 2; --icon-stroke-emphasis: 2.5;
   --icon-linecap: round; --icon-linejoin: round;
   --radius-small: var(--radius-12);
-  --focus-ring: var(--color-text-primary); --opacity-disabled: .4;
+  --opacity-disabled: .4;
 }
 
 }

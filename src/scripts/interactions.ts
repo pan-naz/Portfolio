@@ -49,7 +49,7 @@ new IntersectionObserver(entries => {
   updateHeroMotion();
 }).observe(hero);
 document.addEventListener('visibilitychange', updateHeroMotion);
-document.querySelectorAll<HTMLAnchorElement>('a[href]:not(.skip-link)').forEach(link => {
+document.querySelectorAll<HTMLAnchorElement>('a[href]').forEach(link => {
   if (link.pathname !== location.pathname || !link.hash) return;
   link.addEventListener('click', event => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;

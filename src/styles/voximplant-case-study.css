@@ -62,18 +62,18 @@
 .vox-stats--four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .vox-decisions { display: grid; grid-template-columns: repeat(3, 1fr); align-items: start; gap: var(--grid-gap); margin-top: var(--space-6); }
 
-.vox-solution .case-study-eyebrow { color: var(--color-inverse-text-primary); }
+.vox-solution .case-study-eyebrow { color: var(--color-text-primary); }
 .vox-solution-stats { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); }
 .vox-solution-stats > div { display: grid; grid-template-columns: 1fr; gap: var(--space-2); align-items: start; }
-.vox-solution-stats strong { letter-spacing: var(--letter-spacing-heading-l); color: var(--color-inverse-accent); font-size: var(--text-heading-l); line-height: 1; font-weight: var(--font-weight-heading-large); }
-.vox-solution-stats span { max-width: 230px; color: var(--color-inverse-text-secondary); font-family: var(--font-heading); font-size: var(--text-heading-m); line-height: 1.333333; font-weight: var(--font-weight-heading); }
+.vox-solution-stats strong { letter-spacing: var(--letter-spacing-heading-l); color: var(--color-interactive-accent); font-size: var(--text-heading-l); line-height: 1; font-weight: var(--font-weight-heading-large); }
+.vox-solution-stats span { max-width: 230px; color: var(--color-text-secondary); font-family: var(--font-heading); font-size: var(--text-heading-m); line-height: 1.333333; font-weight: var(--font-weight-heading); }
 .vox-product-feature { margin-top: var(--case-section-space); }
 .vox-product-feature > :is(p, ul) { max-width: 620px; margin-top: var(--space-2); }
 .vox-product-feature > :is(.case-study-media, img), .vox-product-feature > picture > img { margin-top: var(--space-6); }
 .vox-product-feature > img + img, .vox-product-feature > picture + picture > img { margin-top: var(--space-6); }
 .vox-product-feature--messaging-history .case-study-media :is(video, img) { border-radius: var(--radius-medium); box-shadow: var(--shadow-floating); }
-.vox-solution .vox-product-feature > :is(p, ul) { color: var(--color-inverse-text-copy); }
-.vox-solution li::marker { color: var(--color-inverse-text-copy); }
+.vox-solution .vox-product-feature > :is(p, ul) { color: var(--color-text-secondary); }
+.vox-solution li::marker { color: var(--color-text-secondary); }
 
 .vox-chapter-head { align-items: start; }
 .vox-chapter-head > div > p { max-width: 610px; margin-top: var(--space-4); color: var(--color-text-secondary); }

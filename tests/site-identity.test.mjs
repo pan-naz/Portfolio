@@ -15,7 +15,7 @@ assert.equal(siteTitle, 'naz');
 assert.equal(indexingEnabled, false);
 assert.deepEqual(profile.sameAs, expectedLinks);
 assert.equal(profile.linkedin, profile.sameAs[0]);
-const pageTitles = new Map([['index.html', siteTitle], ['design-system/index.html', 'Folio design system'], ['404.html', 'Page not found'], ...[...projects, ...collectionProjects].map(project => [`case-studies/${project.id}/index.html`, project.title])]);
+const pageTitles = new Map([['index.html', siteTitle], ['design-system/index.html', 'Design system'], ['404.html', 'Page not found'], ...[...projects, ...collectionProjects].map(project => [`case-studies/${project.id}/index.html`, project.title])]);
 const pages = filesUnder('dist').filter(file => file.endsWith('.html'));
 assert.equal(pages.length, 23);
 for (const page of pages) {
