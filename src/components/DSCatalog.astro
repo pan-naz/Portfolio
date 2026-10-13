@@ -5,7 +5,7 @@ import '../styles/case-study-narrative.css';
 const inventory=buildSystemInventory();
 ---
 <main id="main" class="ds-main" tabindex="-1">
- <header class="ds-item-header"><div><p class="ds-breadcrumb" data-ds-breadcrumb hidden><a href="/design-system/" data-ds-dashboard-link>Design system</a><span aria-hidden="true"> / </span><span data-ds-group></span></p><h1 class="text-heading-l" data-ds-title>Design system</h1><p class="ds-item-description" data-ds-description>{dashboardDescription}</p></div><ThemeToggle appearance="segmented"/></header>
+ <header class="ds-item-header"><div><p class="ds-breadcrumb" data-ds-breadcrumb hidden><a tabindex="0" href="/design-system/" data-ds-dashboard-link>Design system</a><span aria-hidden="true"> / </span><span data-ds-group></span></p><h1 class="text-heading-l" data-ds-title>Design system</h1><p class="ds-item-description" data-ds-description>{dashboardDescription}</p></div><ThemeToggle appearance="segmented"/></header>
  <DSDashboard inventory={inventory}/><DSFoundations inventory={inventory}/>
  {visibleComponents.map(entry=><DSComponent component={inventory.components.find(component=>component.file===entry.file)!} inventory={inventory}/>)}
 </main>

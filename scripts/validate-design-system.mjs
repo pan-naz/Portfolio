@@ -8,7 +8,7 @@ import { icons } from '../src/data/icons.ts';
 import { buildSystemInventory } from '../src/data/system-inventory.ts';
 import { componentVariants } from '../src/data/system-variants.ts';
 import { componentManifest, isReusableComponent } from '../src/data/system-components.ts';
-import { dsComponents as registry, visibleComponents } from '../src/data/ds-components.ts';
+import { dsComponents as registry, visibleComponents, overviewHiddenComponents } from '../src/data/ds-components.ts';
 import { dsGroups } from '../src/data/design-system.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -203,6 +203,13 @@ errors.push(...validateHiddenDocumentation(hiddenDocumentation,existsSync(extern
 errors.push(...validateComponentClassification(filesUnder('src/components').filter(file => /\.(astro|tsx|jsx|ts|js|vue|svelte)$/.test(file)), [...new Set(websitePages.flatMap(page => [...componentsReachableFrom(page)]))].map(file => file.slice(root.length + 1)), componentManifest, visibleComponents.map(item => item.file)));
 const inventory = buildSystemInventory(root);
 for (const entry of registry) if (!inventory.components.some(component => component.file === entry.file && component.usages.length)) errors.push(`Reusable UI has no rendered website consumer: ${entry.file}`);
+/** Overview notes are informational; they cannot become extra visible pages. */
+export function validateOverviewHiddenEntries(entries, expected = overviewHiddenComponents.map(item => item.documentedHidden)) {
+  return [...expected.filter(key => entries.filter(entry => entry === key).length !== 1).map(key => `Missing or duplicate Overview hidden entry: ${key}`), ...entries.filter(key => !expected.includes(key)).map(key => `Unexpected Overview hidden entry: ${key}`)];
+}
+const overview = read('src/components/DSDashboard.astro');
+if (!overview.includes('overviewHiddenComponents.map') || !overview.includes('item.description')) errors.push('Overview exclusions must use manifest entries and existing purpose sentences.');
+if (!read('src/components/DSNavigation.astro').includes('data-ds-dashboard-link>Overview</a>')) errors.push('Overview must use the existing dashboard navigation path.');
 export function validateRenderedComponentNames(names, expected) {
   return [...names.filter(name => !expected.includes(name)).map(name => `Non-reusable rendered component: ${name}`), ...expected.filter(name => !names.includes(name)).map(name => `Missing rendered reusable UI: ${name}`)];
 }

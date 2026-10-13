@@ -16,9 +16,8 @@ export function stepTiltSpring(spring: Spring, seconds: number) {
   }
 }
 
-export function initializeProjectTilt() {
-  const work = document.querySelector<HTMLElement>('#work');
-  if (!work) return;
+/** Shared stable-frame/surface tilt; consumers supply their real card selectors. */
+export function initializeCardTilt(work: HTMLElement, options: { cardSelector: string; surfaceSelector: string; resetEvent?: string }) {
   const capability = matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
   const controller = new AbortController();
   const signal = controller.signal;
@@ -29,8 +28,8 @@ export function initializeProjectTilt() {
   let frame = 0;
   let lastTime = 0;
   const makeSpring = (): Spring => ({ value: 0, velocity: 0, target: 0 });
-  const states = [...work.querySelectorAll<HTMLElement>('.project')].map(card => ({
-    card, surface: card.querySelector<HTMLElement>('.project-surface')!,
+  const states = [...work.querySelectorAll<HTMLElement>(options.cardSelector)].map(card => ({
+    card, surface: card.querySelector<HTMLElement>(options.surfaceSelector)!,
     rx: makeSpring(), ry: makeSpring(),
     hovered: false,
   }));
@@ -78,7 +77,7 @@ export function initializeProjectTilt() {
       if (!pointer.active || pointer.viewportChanged || !movedSinceClose) return;
       waitForPointerMove = false;
     }
-    const card = pointer.target?.closest('.project');
+    const card = pointer.target?.closest(options.cardSelector);
     const canFollow = pointer.active && capability.matches && !paused && !work.querySelector('[aria-busy="true"]');
     states.forEach(state => {
       if (canFollow && card === state.card && !card.closest('[inert], [hidden], [aria-hidden="true"]')) {
@@ -101,7 +100,7 @@ export function initializeProjectTilt() {
     });
   });
   capability.addEventListener('change', () => { reset(); refreshViewportPointer(); }, { signal });
-  work.addEventListener('workfilterchange', reset, { signal });
+  if (options.resetEvent) work.addEventListener(options.resetEvent, reset, { signal });
   const destroy = () => {
     reset();
     unwatch();
@@ -116,6 +115,14 @@ export function initializeProjectTilt() {
       waitForPointerMove = true;
     },
     setPaused(value: boolean) { if (paused === value) return; paused = value; if (value) reset(); else refreshViewportPointer(); },
+    reset,
     destroy,
   };
+}
+
+/** Home keeps its filter reset and popup pause/defer lifecycle unchanged. */
+export function initializeProjectTilt() {
+  const work = document.querySelector<HTMLElement>('#work');
+  if (!work) return;
+  return initializeCardTilt(work, { cardSelector: '.project', surfaceSelector: '.project-surface', resetEvent: 'workfilterchange' });
 }

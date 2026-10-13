@@ -1,6 +1,10 @@
+import { initializeCardTilt } from './project-tilt';
+
 history.scrollRestoration='manual';
 const views=[...document.querySelectorAll<HTMLElement>('[data-ds-view]')];
-const links=[...document.querySelectorAll<HTMLAnchorElement>('[data-ds-nav]')];
+const links=[...document.querySelectorAll<HTMLAnchorElement>('[data-ds-nav],[data-ds-dashboard-link]')];
+const dashboard=document.querySelector<HTMLElement>('#dashboard')!;
+const dashboardTilt=initializeCardTilt(dashboard,{cardSelector:'.ds-tile-frame',surfaceSelector:'.ds-tile'});
 const contents=document.querySelector<HTMLDetailsElement>('[data-ds-contents]');
 const wide=matchMedia('(min-width:1100px)');
 const syncMenu=()=>{if(contents)contents.open=wide.matches;};syncMenu();wide.addEventListener('change',syncMenu);
@@ -46,9 +50,10 @@ const refreshMarkup=(view:HTMLElement)=>{
  code.textContent=clone.innerHTML.trim().replace(/></g,'>\n<');
 };
 const selectView=()=>{
+ dashboardTilt.reset();dashboardTilt.deferHoverUntilPointerMove();
  const id=location.hash.slice(1)||'dashboard';const selected=views.find(view=>view.id===id)||views.find(view=>view.id==='dashboard')!;
  for(const view of views)view.hidden=view!==selected;
- for(const link of links){if(selected.id!=='dashboard'&&link.hash===`#${selected.id}`)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');}
+ for(const link of links){if(link.closest('.ds-navigation')&&(selected.id==='dashboard'?link.hasAttribute('data-ds-dashboard-link'):link.hash===`#${selected.id}`))link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');}
  document.querySelector('[data-ds-title]')!.textContent=selected.dataset.title!;
  document.querySelector('[data-ds-group]')!.textContent=selected.dataset.group!;
  document.querySelector<HTMLElement>('[data-ds-breadcrumb]')!.hidden=selected.id==='dashboard';
@@ -58,13 +63,13 @@ const selectView=()=>{
  requestAnimationFrame(()=>requestAnimationFrame(()=>scrollTo({top:0,left:0,behavior:'instant'})));
 };
 window.addEventListener('hashchange',selectView);window.addEventListener('popstate',selectView);
-links.forEach(link=>link.addEventListener('click',event=>{event.preventDefault();if(link.hash!==location.hash)history.pushState(null,'',link.hash);selectView();}));
+links.filter(link=>!link.hasAttribute('data-ds-dashboard-link')).forEach(link=>link.addEventListener('click',event=>{event.preventDefault();if(link.hash!==location.hash)history.pushState(null,'',link.hash);selectView();}));
 for(const tabset of document.querySelectorAll<HTMLElement>('[data-ds-tabset]')){
  const tabs=[...tabset.querySelectorAll<HTMLButtonElement>('[role=tab]')];
  const select=(index:number,focus=false)=>{tabs.forEach((tab,i)=>{tab.setAttribute('aria-selected',String(i===index));tab.tabIndex=i===index?0:-1;document.getElementById(tab.getAttribute('aria-controls')!)!.hidden=i!==index;});if(focus)tabs[index].focus();};
  tabs.forEach((tab,index)=>{tab.addEventListener('click',()=>{select(index);const view=tab.closest<HTMLElement>('[data-ds-view]');if(view)refreshMarkup(view);});tab.addEventListener('keydown',event=>{const next=event.key==='ArrowRight'?(index+1)%tabs.length:event.key==='ArrowLeft'?(index+tabs.length-1)%tabs.length:event.key==='Home'?0:event.key==='End'?tabs.length-1:undefined;if(next!==undefined){event.preventDefault();select(next,true);}});});
 }
-document.querySelector('[data-ds-dashboard-link]')?.addEventListener('click',event=>{event.preventDefault();history.pushState(null,'',location.pathname);selectView();});
+document.querySelectorAll('[data-ds-dashboard-link]').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();history.pushState(null,'',location.pathname);selectView();}));
 for(const toggle of document.querySelectorAll<HTMLButtonElement>('[data-ds-names]'))toggle.addEventListener('click',()=>{const on=toggle.getAttribute('aria-checked')!=='true';toggle.setAttribute('aria-checked',String(on));toggle.closest<HTMLElement>('[data-ds-view]')!.dataset.showNames=String(on);});
 for(const preview of document.querySelectorAll<HTMLElement>('.ds-specimens')){
  preview.querySelectorAll('[data-work-filter]').forEach(button=>button.removeAttribute('aria-controls'));

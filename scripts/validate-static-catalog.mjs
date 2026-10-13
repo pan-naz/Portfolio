@@ -4,7 +4,7 @@ import {resolve} from 'node:path';
 import {visibleComponents,dsComponents} from '../src/data/ds-components.ts';
 import {componentPropSpecs} from '../src/data/system-props.ts';
 import {buildSystemInventory} from '../src/data/system-inventory.ts';
-import {validateInventoryCoverage,validateVariantCoverage,validateRenderedComponentNames} from './validate-design-system.mjs';
+import {validateInventoryCoverage,validateVariantCoverage,validateRenderedComponentNames,validateOverviewHiddenEntries} from './validate-design-system.mjs';
 const root=resolve(import.meta.dirname,'..'),read=file=>readFileSync(resolve(root,file),'utf8');
 const catalog=read('dist/design-system/index.html'),home=read('dist/index.html');
 const styles=html=>[...html.matchAll(/<link[^>]*href="([^"]+\.css)"[^>]*>/g)].map(([,file])=>read('dist'+file)).concat([...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map(([,css])=>css)).join('\n');
@@ -18,6 +18,19 @@ assert.equal((catalog.match(/<h1\b/g)||[]).length,1,'One global item heading');
 const views=[...catalog.matchAll(/<section\b[^>]*\bid="([^"]+)"[^>]*\bdata-ds-view/g)].map(([,id])=>id);
 assert.equal(views.length,visibleComponents.length+6);
 assert.ok(catalog.includes('id="dashboard"'));
+const dashboardMarkup=catalog.match(/<section[^>]*id="dashboard"[\s\S]*?<\/section>/)?.[0];assert.ok(dashboardMarkup);
+assert.deepEqual(validateOverviewHiddenEntries([...dashboardMarkup.matchAll(/data-ds-hidden-component="([^"]+)"/g)].map(([,key])=>key)),[]);
+assert.equal((catalog.match(/data-ds-hidden-component=/g)||[]).length,(dashboardMarkup.match(/data-ds-hidden-component=/g)||[]).length,'Hidden notes belong only to Overview');
+const overviewCards=[...catalog.matchAll(/<article class="ds-tile-frame"[^>]*>([\s\S]*?)<\/article>/g)].map(([,html])=>html);
+assert.equal(overviewCards.length,visibleComponents.length+5);
+for(const card of overviewCards){
+ assert.equal((card.match(/<a\b/g)||[]).length,1,'One actual anchor per Overview card');
+ assert.match(card,/<div[^>]*class="ds-tile-visual"[^>]*inert[^>]*aria-hidden="true"/);
+ assert.match(card,/<a[^>]*tabindex="0"[^>]*class="ds-tile-link"[^>]*data-ds-nav/);
+}
+for(const attribute of ['property="og:title"','property="og:image:alt"'])assert.ok(new RegExp(attribute+'[^>]*content="Design system"').test(catalog),'Catalog metadata uses its short title');
+assert.ok(catalog.includes('<title>Design system</title>'));
+
 const sections=views.filter(id=>id!=='dashboard');
 assert.equal((catalog.match(/<[^>]+role="tablist"/g)||[]).length,sections.length);
 assert.equal((catalog.match(/<[^>]+role="tabpanel"/g)||[]).length,sections.length*2);
