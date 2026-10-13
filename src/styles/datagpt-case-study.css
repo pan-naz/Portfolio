@@ -45,8 +45,8 @@
 .dg-model { background: var(--color-bg-surface); border: 0; box-shadow: var(--shadow-floating); }
 .dg-model .dg-badge { text-transform: uppercase; background: var(--color-text-primary); color: var(--color-bg-canvas); }
 .dg-model--shipped { background: var(--color-bg-canvas); color: var(--color-text-primary); }
-.dg-dark { width: 100vw; margin-left: calc(50% - 50vw); color: var(--color-text-primary); background: var(--color-bg-canvas); }
-.dg-dark-inner { width: min(1200px, calc(100% - var(--gutter) * 2)); margin-inline: auto; }
+.dg-dark { width: 100vw; margin-left: calc(50% - 50vw + (var(--safe-right) - var(--safe-left)) / 2); color: var(--color-text-primary); background: var(--color-bg-canvas); }
+.dg-dark-inner { width: min(1200px, calc(100% - var(--gutter-left) - var(--gutter-right))); margin-inline: var(--gutter-left) var(--gutter-right); }
 .dg-feature { margin-top: var(--case-section-space); }
 .dg-feature .case-study-media { margin-top: var(--space-6); }
 .dg-feature p { margin-top: var(--space-2); }
@@ -74,7 +74,7 @@
   .dg-card { padding: var(--space-4); }
   .dg-persona .dg-card-heading { flex-direction: column-reverse; }
   .dg-persona .dg-badge { align-self: flex-end; }
-  .dg-dark-inner { width: calc(100% - var(--gutter) * 2); }
+  .dg-dark-inner { width: calc(100% - var(--gutter-left) - var(--gutter-right)); }
   .dg-research-stats { grid-template-columns: 1fr; gap: var(--space-6); }
   .dg-voice { grid-template-columns: 32px minmax(0, 1fr); }
   .dg-avatar { width: 32px; height: 32px; }

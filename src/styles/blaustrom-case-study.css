@@ -8,7 +8,7 @@
 .blaustrom-number { color: var(--color-interactive-accent); }
 .blaustrom-block { margin-top: var(--space-16); }
 .blaustrom-stack { display: grid; gap: var(--space-6); }
-.blaustrom-band { width: 100vw; margin-left: calc(50% - 50vw); }
+.blaustrom-band { width: 100vw; margin-left: calc(50% - 50vw + (var(--safe-right) - var(--safe-left)) / 2); }
 .blaustrom-configurator { --color-text-primary: var(--color-inverse-text-primary); --color-text-secondary: var(--color-inverse-text-primary); --color-interactive-accent: var(--color-inverse-text-primary); background: linear-gradient(135deg, var(--blaustrom-blue), var(--blaustrom-teal)); color: var(--color-text-primary); }
 .blaustrom-config-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: var(--grid-gap); }
 .blaustrom-responsive { background: var(--color-bg-canvas); }

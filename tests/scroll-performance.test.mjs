@@ -105,9 +105,12 @@ document.querySelector = selector => selector === '.site-header' ? header : sele
 document.activeElement = null;
 window.scrollY = 0; window.innerWidth = 1440;
 globalThis.matchMedia = () => ({ matches: false, addEventListener() {} });
-globalThis.getComputedStyle = () => ({ top: '32px', getPropertyValue: name => name === '--duration-header-enter' ? '560ms' : name === '--duration-header-exit' ? '240ms' : '900' });
+globalThis.document.createElement = () => ({ style: {}, remove() {} });
+globalThis.document.documentElement.append = () => {};
+globalThis.getComputedStyle = () => ({ paddingTop:'0px',paddingLeft:'0px',paddingRight:'0px',paddingBottom:'0px', top: '32px', getPropertyValue: name => name === '--header-inset' ? '32px' : name === '--duration-header-enter' ? '560ms' : name === '--duration-header-exit' ? '240ms' : '900' });
 globalThis.ResizeObserver = class { observe() {} };
 source = readFileSync('src/scripts/header-morph/header-morph.ts', 'utf8')
+  .replace("'../safe-area.ts'", JSON.stringify(new URL('../src/scripts/safe-area.ts', import.meta.url).href))
   .replace("'./header-morph-model'", JSON.stringify(new URL('../src/scripts/header-morph/header-morph-model.ts', import.meta.url).href))
   .replace("'../native-motion'", JSON.stringify(new URL('../src/scripts/native-motion.ts', import.meta.url).href))
   .replaceAll('import.meta.hot', 'undefined');

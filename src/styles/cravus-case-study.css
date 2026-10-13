@@ -15,7 +15,7 @@
 .cravus-page-copy > p { margin-top: 0; }
 .cravus-stack { display: grid; gap: var(--space-6); }
 .cravus-block > h3 + .cravus-stack { margin-top: var(--space-6); }
-.cravus-band { width: 100vw; margin-left: calc(50% - 50vw); }
+.cravus-band { width: 100vw; margin-left: calc(50% - 50vw + (var(--safe-right) - var(--safe-left)) / 2); }
 .cravus-mobile { --color-text-primary: var(--color-overlay-text-primary); --color-text-secondary: var(--color-overlay-text-secondary); --color-interactive-accent: var(--color-overlay-accent); color: var(--color-text-primary); background: var(--cravus-cream); }
 .cravus-breakpoint { margin-top: var(--space-6); color: var(--color-text-secondary); }
 .cravus-style { background: var(--cravus-brown); }

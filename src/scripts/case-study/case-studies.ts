@@ -1,3 +1,4 @@
+import { readSafeAreaInsets } from '../safe-area.ts';
 import type { WorkFilter } from '../work-filter/work-filter';
 import type { initializeProjectCursor } from '../project-cursor';
 import { initializeSmoothScroll, pauseScroll, resumeScroll, repositionWork } from '../motion';
@@ -56,7 +57,10 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
   };
   const fullFrame = () => ({ left: '0px', top: '0px', width: `${innerWidth}px`, height: `${innerHeight}px`, borderRadius: '0px' });
   const buttonAt = (x: number, y: number) => `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
-  const topCenter = () => buttonAt(innerWidth / 2, motion.controlInset + motion.controlSize / 2);
+  const topCenter = () => {
+    const safe = readSafeAreaInsets();
+    return buttonAt((innerWidth + safe.left - safe.right) / 2, safe.top + motion.controlInset + motion.controlSize / 2);
+  };
   const lockScroll = (locked: boolean) => scroll.toggleAttribute('data-scroll-locked', locked);
   const viewportPosition = (frame: { left: string; top: string }) => ({
     left: `${-parseFloat(frame.left)}px`, top: `${-parseFloat(frame.top)}px`,
