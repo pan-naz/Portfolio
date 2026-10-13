@@ -16,7 +16,7 @@
 .sternfit-copy > p { margin-top: 0; }
 .sternfit-brand { padding-block: var(--space-16); border-top: 1px solid var(--color-paper-8); }
 .sternfit-brand:last-child { padding-bottom: 0; }
-.sternfit-brand-name, .sternfit-quote { font-size: var(--text-heading-m); line-height: 1.333333; letter-spacing: var(--letter-spacing-heading-m); font-weight: var(--font-weight-heading); }
+.sternfit-brand-name, .sternfit-quote { font-size: var(--text-heading-m); line-height: 1.333333; letter-spacing: var(--letter-spacing-heading-m); font-weight: var(--font-weight-heading-m); }
 .sternfit-tagline { font-style: italic; }
 .sternfit-pair { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: var(--space-4); align-items: center; }
 .sternfit-pair .case-study-media { width: 100%; max-width: 285px; justify-self: center; }

@@ -1,7 +1,7 @@
 /* Project-only: Peak Hotel brand styles, not part of the design system */
 @layer system, project;
 @layer project {
-.case-study-content--peak-hotel { --peak-font-peak-playfair-serif: 'Peak Playfair', serif; --peak-font-peak-lato-sans-serif: 'Peak Lato', sans-serif; }
+.case-study-content--peak-hotel { --peak-specimen-display-size: clamp(1.625rem, calc(.5rem + 3.333vw), 3.5rem); --peak-specimen-copy-size: 1.25rem; --peak-font-peak-playfair-serif: 'Peak Playfair', serif; --peak-font-peak-lato-sans-serif: 'Peak Lato', sans-serif; }
 /* Folio's shared editorial roles own type and section spacing. */
 .case-study-content--peak-hotel { padding-bottom: 0; }
 .peak-block { margin-top: var(--case-content-gap); }
@@ -20,11 +20,11 @@
 .peak-color-label code { font-family: var(--font-body); color: var(--color-text-secondary); }
 .peak-type-grid { margin-top: var(--space-6); }
 .peak-type-specimen { padding-top: var(--space-6); border-top: 1px solid var(--color-border-default); }
-.peak-type-display { font-size: var(--text-heading-l); line-height: 1.142857; }
+.peak-type-display { font-size: var(--peak-specimen-display-size); line-height: 1.142857; }
 .peak-type-display + .case-study-eyebrow { margin-top: var(--space-4); }
 .peak-type-example { margin-top: var(--space-6); }
 .peak-type-example > :first-child { color: var(--color-text-secondary); }
-.peak-case .peak-type-sample { margin-top: var(--space-2); font-size: var(--text-body-l); line-height: 1.5; }
+.peak-case .peak-type-sample { margin-top: var(--space-2); font-size: var(--peak-specimen-copy-size); line-height: 1.5; }
 /* These are original brand specimens; portfolio UI keeps the shared heading and body tokens. */
 @font-face { font-family: 'Peak Playfair'; font-style: italic; font-weight: 400; font-display: swap; src: url('/projects/peak-hotel-case-study/playfair-italic.ttf') format('truetype'); }
 @font-face { font-family: 'Peak Playfair'; font-style: normal; font-weight: 700; font-display: swap; src: url('/projects/peak-hotel-case-study/playfair-bold.ttf') format('truetype'); }

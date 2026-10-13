@@ -96,8 +96,8 @@
 .ds-meta { display:grid; gap:var(--space-1); font-size:var(--text-label-s); color:var(--color-text-secondary); }
 .ds-meta strong { font-size:var(--text-body-s); font-weight:500; color:var(--color-text-primary); }
 .ds-color-specimen > div { width:var(--space-12); height:var(--space-12); border-radius:var(--radius-small); border:1px solid var(--color-border-default); }
-.ds-type-sample { min-width:0; overflow-wrap:break-word; }
-.ds-type-sample > p { margin:0; }
+
+
 .ds-spacing-scale,.ds-duration-scale { display:grid; gap:var(--space-2); font-size:var(--text-label-s); }
 .ds-spacing-scale > div { display:flex; align-items:center; gap:var(--space-4); min-height:var(--space-3); }
 .ds-spacing-scale > div > span:first-child { min-width:var(--space-6); color:var(--color-text-secondary); }
@@ -115,7 +115,7 @@
 .ds-icon-grid li { display:grid; gap:var(--space-2); justify-items:center; text-align:center; font-size:var(--text-label-s); }
 .ds-icon-strokes { display:flex; gap:var(--space-6); }
 .ds-dashboard { display:grid; gap:var(--space-8); }
-.ds-dashboard-title { font-family:var(--font-heading); font-size:var(--text-heading-m); font-weight:var(--font-weight-heading); line-height:var(--space-8); letter-spacing:var(--letter-spacing-heading-m); margin-bottom:var(--space-4); }
+.ds-dashboard-title { font-family:var(--font-heading); font-size:var(--text-heading-m); font-weight:var(--font-weight-heading-m); line-height:var(--space-8); letter-spacing:var(--letter-spacing-heading-m); margin-bottom:var(--space-4); }
 .ds-tile-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:var(--space-4); }
 .ds-tile-frame { position:relative; min-width:0; border-radius:var(--radius-medium); }
 .ds-tile { position:relative; min-width:0; height:100%; overflow:hidden; background:var(--color-bg-raised); box-shadow:var(--shadow-floating); border-radius:var(--radius-medium); }
@@ -131,7 +131,7 @@
 @media (max-width:767px) { .ds-exclusions-box { grid-template-columns:minmax(0,1fr); } }
 .ds-tile-visual { position:relative; display:grid; place-items:center; height:104px; padding:var(--space-3); overflow:hidden; background-color:var(--color-bg-surface-subtle); }
 .ds-tile-link { display:grid; gap:var(--space-1); padding:var(--space-4); min-height:96px; }
-.ds-tile-link strong { font-family:var(--font-heading); font-size:var(--text-body-s); font-weight:var(--font-weight-heading); }
+.ds-tile-link strong { font-family:var(--font-heading); font-size:var(--text-body-s); font-weight:var(--font-weight-heading-m); }
 .ds-tile-link > span { font-size:var(--text-label-s); line-height:1.5; color:var(--color-text-secondary); }
 .ds-tile-mini { position:absolute; left:50%; top:50%; width:320px; transform:translate(-50%,-50%) scale(.5); }
 .ds-tile-mini .ds-labelled-specimen > span { display:none; }
@@ -230,3 +230,39 @@
 
 @layer system { .ds-filter-specimen { width:max-content; } }
 /* The real phone pill already fits the card; keep its theme glyph visible. */
+
+@layer system {
+/* Approved three-device typography reference. Specimens keep the declared device values. */
+.ds-type-table { --ds-type-columns:minmax(210px,.9fr) repeat(3,minmax(0,1fr)); }
+.ds-type-device-headers,.ds-type-style { display:grid; grid-template-columns:var(--ds-type-columns); gap:var(--space-4); }
+.ds-type-device-header { display:flex; gap:var(--space-2); align-items:start; background:var(--color-bg-canvas); padding:var(--space-6); border-radius:var(--radius-medium) var(--radius-medium) 0 0; }
+.ds-type-device-header .icon,.ds-type-mobile-header .icon { width:var(--space-4); height:var(--space-4); margin-top:var(--space-1); }
+.ds-type-device-header p:last-child,.ds-type-mobile-header p:last-child { color:var(--color-text-secondary); }
+.ds-type-style { align-items:stretch; }
+.ds-type-info { padding:var(--space-6) 0; border-top:1px solid var(--color-border-default); }
+.ds-type-info > strong { display:block; margin-bottom:var(--space-2); }
+.ds-type-info p { color:var(--color-text-secondary); }
+.ds-type-info .ds-type-use { margin-top:var(--space-2); color:var(--color-text-primary); }
+.ds-type-device { display:flex; flex-direction:column; justify-content:center; min-width:0; background:var(--color-bg-canvas); padding:var(--space-6); border-top:1px solid var(--color-border-default); }
+.ds-type-device-last { border-radius:0 0 var(--radius-medium) var(--radius-medium); }
+.ds-type-live { margin:var(--space-4) 0 var(--space-6); overflow-wrap:normal; }
+.ds-type-value { color:var(--color-text-secondary); }
+.ds-type-changed { color:var(--color-interactive-accent); }
+.ds-type-dot { display:inline-block; width:var(--space-1); height:var(--space-1); border-radius:var(--radius-pill); background:var(--color-interactive-accent); margin-right:var(--space-1); vertical-align:middle; }
+.ds-type-legend { margin-top:var(--space-6); color:var(--color-text-secondary); }
+.ds-type-mobile-header { display:none; }
+.ds-type-code-columns { grid-template-columns:repeat(3,minmax(0,1fr)); }
+@media (max-width:1399px) {
+ .ds-type-device-headers { display:none; }
+ .ds-type-style { grid-template-columns:minmax(0,1fr); gap:0; margin-bottom:var(--space-6); }
+ .ds-type-device { border-radius:0; }
+ .ds-type-device-first { border-radius:var(--radius-medium) var(--radius-medium) 0 0; }
+ .ds-type-device-last { border-radius:0 0 var(--radius-medium) var(--radius-medium); }
+ .ds-type-mobile-header { display:flex; align-items:start; gap:var(--space-2); }
+ .ds-type-code-columns { grid-template-columns:minmax(0,1fr); }
+}
+@media (max-width:767px) {
+ .ds-type-device { padding:var(--space-3); }
+ .ds-type-live { margin-block:var(--space-4); }
+}
+}

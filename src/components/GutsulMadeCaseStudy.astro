@@ -81,7 +81,7 @@ const ornament = '/projects/gutsul-made-case-study/ornament-strip.svg';
       <div class="case-study-columns gutsul-heading"><div><p class="case-study-eyebrow">Style guide</p><h2 class="case-study-heading" id="gm-style">{gutsulGuide.title}</h2></div><p class="gutsul-muted">{gutsulGuide.description}</p></div>
       <div class="gutsul-guide gutsul-block">
         <CaseStudyDecisionCard title={gutsulGuide.icons.title} layout="figure"><div slot="media" class="gutsul-plate gutsul-icons"><CaseStudyMedia {...gutsulGuide.icons.media} presentation="bare" /></div><p>{gutsulGuide.icons.description}</p></CaseStudyDecisionCard>
-        <CaseStudyDecisionCard title={gutsulGuide.type.title} layout="figure"><div slot="media" class="gutsul-plate"><p class="gutsul-type">Open Sans<br /><span>Regular &amp; <b>Bold</b></span></p></div><p>{gutsulGuide.type.description}</p></CaseStudyDecisionCard>
+        <CaseStudyDecisionCard title={gutsulGuide.type.title} layout="figure"><div slot="media" class="gutsul-plate"><p class="gutsul-type" data-typography-exclusion="project-font-specimen">Open Sans<br /><span>Regular &amp; <b>Bold</b></span></p></div><p>{gutsulGuide.type.description}</p></CaseStudyDecisionCard>
         <CaseStudyDecisionCard title={gutsulGuide.colours.title} layout="figure"><div slot="media" class="gutsul-plate"><ul class="gutsul-palette" aria-label="Colour palette">{gutsulGuide.colours.values.map(colour => <li><span style={`--gutsul-swatch:${colour.value}`} aria-hidden="true" /><strong>{colour.label}</strong><code>{colour.value}</code></li>)}</ul></div><p>{gutsulGuide.colours.description}</p></CaseStudyDecisionCard>
       </div>
     </section>

@@ -29,7 +29,7 @@ const researchMetrics = [
       <div class="case-study-columns dg-block">
         <div class="dg-copy-stack"><div><h3>Business context</h3><p>Companies spend heavily on BI tools, but getting from data to a decision still went through a data team. Dashboards were static, and business users couldn't ask follow-up questions.</p></div><div><h3>User pains</h3><p>Executives waited for the next meeting to learn why revenue moved. Analysts were "drowning in ad hoc requests". Marketers pieced a story together from dozens of reports.</p></div><div class="dg-goal"><h3>Goal</h3><p>Let anyone ask a complex question in plain English and get an answer they can trust.</p></div></div>
         <div class="dg-card dg-voices">
-          <div class="dg-voice"><span class="dg-avatar" aria-hidden="true">E</span><div><h3>Executive</h3><blockquote>Why did revenue drop? I don't want to <strong>wait for the next meeting for answers.</strong> Revenue opportunities are going missed.</blockquote></div></div>
+          <div class="dg-voice"><span class="dg-avatar" data-typography-exclusion="product-avatar" aria-hidden="true">E</span><div><h3>Executive</h3><blockquote>Why did revenue drop? I don't want to <strong>wait for the next meeting for answers.</strong> Revenue opportunities are going missed.</blockquote></div></div>
           <div class="dg-voice"><span class="dg-avatar" aria-hidden="true">DT</span><div><h3>Data team</h3><blockquote>We <strong>spend so much time on dashboard building</strong> and maintenance, and next week the questions change.</blockquote></div></div>
           <div class="dg-voice"><span class="dg-avatar" aria-hidden="true">A</span><div><h3>Analyst</h3><blockquote>We are <strong>drowning in ad hoc requests.</strong></blockquote></div></div>
         </div>
@@ -43,7 +43,7 @@ const researchMetrics = [
       <h3 class="dg-outcome-label">Outcome</h3><div class="dg-grid dg-grid--three">{researchOutcomes.map(([title, body]) => <article class="dg-card"><h3>{title}</h3><p>{body}</p></article>)}</div>
       <div class="dg-subsection"><h3 class="dg-copy-width">Two groups: the people who ask questions and the people who make answers possible</h3><p class="dg-copy-width">Most users only ask questions. A smaller group connects the data and defines what the metrics mean. DataGPT had to serve both.</p>
         <div class="dg-grid dg-grid--three dg-personas">{dataGPTPersonas.map((persona, i) => <article class:list={['dg-card dg-persona', i === 3 && 'dg-persona--wide']}>
-          <div class="dg-card-heading"><h3>{persona.title}</h3><span class="dg-badge">{persona.group}</span></div><p>{persona.description}</p><blockquote class="dg-question">{persona.question}</blockquote>
+          <div class="dg-card-heading"><h3>{persona.title}</h3><span class="dg-badge" data-typography-exclusion="product-badge">{persona.group}</span></div><p>{persona.description}</p><blockquote class="dg-question">{persona.question}</blockquote>
           <div class="dg-grid dg-grid--two dg-needs"><div><h4>Need</h4><p>{persona.need}</p></div><div><h4>Frustration</h4><p>{persona.frustration}</p></div></div>
         </article>)}</div>
       </div>

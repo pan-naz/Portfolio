@@ -1,0 +1,43 @@
+@layer system, project;
+@layer system {
+/* Native defaults inherit the selected role; HTML tags never choose the font. */
+:where(h1,h2,h3,h4,h5,h6,strong,b,small,button,input,select,textarea) { font: inherit; letter-spacing: inherit; }
+/* Each role owns all five properties; tag names never choose the font family. */
+.text-heading-xl {
+  font-family: var(--font-heading-xl); font-size: var(--text-heading-xl); font-weight: var(--font-weight-heading-xl);
+  line-height: var(--line-height-heading-xl); letter-spacing: var(--letter-spacing-heading-xl);
+}
+.text-heading-l, .case-study-heading, .stat-value {
+  font-family: var(--font-heading-l); font-size: var(--text-heading-l); font-weight: var(--font-weight-heading-l);
+  line-height: var(--line-height-heading-l); letter-spacing: var(--letter-spacing-heading-l);
+}
+.text-heading-m, .project-identity {
+  font-family: var(--font-heading-m); font-size: var(--text-heading-m); font-weight: var(--font-weight-heading-m);
+  line-height: var(--line-height-heading-m); letter-spacing: var(--letter-spacing-heading-m);
+}
+.text-body-l, .hero-description, .section-description, .project-outcome, .contact-description, .case-study-intro {
+  font-family: var(--font-body-l); font-size: var(--text-body-l); font-weight: var(--font-weight-body-l);
+  line-height: var(--line-height-body-l); letter-spacing: var(--letter-spacing-body-l);
+}
+.text-body-m, .case-study-narrative {
+  font-family: var(--font-body-m); font-size: var(--text-body-m); font-weight: var(--font-weight-body-m);
+  line-height: var(--line-height-body-m); letter-spacing: var(--letter-spacing-body-m);
+}
+.text-body-m-strong, .case-study-narrative :where(h3, h4), .case-study-narrative :where(strong, b):not(:where([data-typography-exclusion], [data-typography-exclusion] *)) {
+  font-family: var(--font-body-m-strong); font-size: var(--text-body-m-strong); font-weight: var(--font-weight-body-m-strong);
+  line-height: var(--line-height-body-m-strong); letter-spacing: var(--letter-spacing-body-m-strong);
+}
+.text-body-s {
+  font-family: var(--font-body-s); font-size: var(--text-body-s); font-weight: var(--font-weight-body-s);
+  line-height: var(--line-height-body-s); letter-spacing: var(--letter-spacing-body-s);
+}
+.text-label-m, .eyebrow, .hero-eyebrow, .case-study-eyebrow {
+  font-family: var(--font-label-m); font-size: var(--text-label-m); font-weight: var(--font-weight-label-m);
+  line-height: var(--line-height-label-m); letter-spacing: var(--letter-spacing-label-m);
+  text-transform: uppercase;
+}
+.text-label-s, .skill-tag {
+  font-family: var(--font-label-s); font-size: var(--text-label-s); font-weight: var(--font-weight-label-s);
+  line-height: var(--line-height-label-s); letter-spacing: var(--letter-spacing-label-s);
+}
+}

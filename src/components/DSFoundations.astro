@@ -1,8 +1,8 @@
 ---
 import {paletteColors,colorRoles,strokeCards,paletteTokenNames} from '../data/system-colors';
 import {contrastRatio} from '../../scripts/text-contrast';
-import {foundations} from '../data/design-system';import {systemTypography} from '../data/system-typography';
-import {typeSamples,humanToken,px,sourceGrids} from '../data/system-human';
+import {foundations} from '../data/design-system';import {typographySystem} from '../data/system-typography';
+import {humanToken,sourceGrids} from '../data/system-human';
 import {caseStudyMotionTokens,caseStudyPresentationTokens} from '../scripts/case-study/case-study-motion';
 import Button from './Button.astro';import Icon from './Icon.astro';import IconButton from './IconButton.astro';import TextLink from './TextLink.astro';import DSTabs from './DSTabs.astro';import DSTokenNames from './DSTokenNames.astro';
 import type {IconName} from '../data/icons';
@@ -23,11 +23,17 @@ const focusStyle=globalStyles.match(/:where\(button, a, summary, input, select, 
 const strokeValue=(role:string,mode:'light'|'dark')=>{const token=inventory.tokens.find(item=>item.name===role)!,primitive=token[mode].match(/var\(--([\w-]+)\)/)![1],color=paletteColors.find(item=>item.token===primitive||item.shades?.some(shade=>shade.token===primitive))!,value=mode==='light'?token.resolvedLight:token.resolvedDark,alpha=value.match(/\/\s*([\d.]+)\s*\)/)?.[1];return {token:primitive,value,label:color.name+(alpha?' '+Number(alpha)*100+'%':'')};};
 const codeFor=(tokens:typeof inventory.tokens,mode:'light'|'dark')=>(mode==='light'?':root':"[data-theme='dark']")+` {\n${tokens.map(token=>`  --${token.name}: ${token[mode]};`).join('\n')}\n}`;
 const roles=()=>[...colorRoles,'backdrop-case'].map(name=>inventory.tokens.find(token=>token.name===name)!);
-const typography=systemTypography(),weights:Record<string,string>={'400':'Regular','500':'Medium','600':'Semibold'};
+const typeSystem=typographySystem(),typography=typeSystem.styles;
 const spacing=inventory.tokens.filter(token=>token.category==='spacing').sort((a,b)=>parseFloat(a.resolvedLight)-parseFloat(b.resolvedLight));
 const durationNames=['duration-fast','duration-navigation','duration-button-fill','duration-work-stage','duration-copy-reveal'];
 const durations=durationNames.map(name=>inventory.tokens.find(token=>token.name===name)).filter(Boolean);
 const easings=['ease-icon-shift','ease-entrance','ease-close'].map(name=>inventory.tokens.find(token=>token.name===name)).filter(Boolean);
+const typeDevices=['desktop','tablet','phone'] as const;
+const deviceNames={desktop:'Desktop',tablet:'Tablet',phone:'Phone'};
+const deviceScope=(style:typeof typography[number],device:typeof typeDevices[number])=>`--text-${style.id}:${style.devices[device].size};--letter-spacing-${style.id}:${style.devices[device].spacing}`;
+const typePercent=(value:number)=>Number((value*100).toFixed(2));
+const deviceCode=(device:typeof typeDevices[number])=>typography.map(style=>[`  --text-${style.id}: ${style.devices[device].size};`,`  --line-height-${style.id}: ${style.devices[device].lineHeight};`,`  --letter-spacing-${style.id}: ${style.devices[device].spacing};`].join('\n')).join('\n\n');
+const sharedTypeCode=typography.map(style=>`  --font-${style.id}: ${style.family};\n  --font-weight-${style.id}: ${style.weight};`).join('\n');
 const easePath=(value:string)=>{const n=value.match(/cubic-bezier\(([^)]+)\)/)?.[1].split(',').map(Number)||[0,0,1,1];return `M 2 78 C ${2+n[0]*156} ${78-n[1]*76}, ${2+n[2]*156} ${78-n[3]*76}, 158 2`;};
 ---
 {foundations.map(item=>{const tabs=`${item.id}-canvas`,tokens=item.id==='color'?[...new Map([...paletteTokenNames,...colorRoles,...tokensFor(item.id).map(token=>token.name)].map(name=>[name,inventory.tokens.find(token=>token.name===name)!])).values()].filter(Boolean):tokensFor(item.id);return <section id={item.id} class="ds-view ds-foundation-view" data-ds-view data-title={item.title} data-description={item.description} data-group="Foundations" hidden>
@@ -53,7 +59,19 @@ const easePath=(value:string)=>{const n=value.match(/cubic-bezier\(([^)]+)\)/)?.
      <div class="ds-stroke-values">{(['light','dark'] as const).map(mode=>{const value=strokeValue(stroke.role,mode);return <div class="ds-icon-text-row" data-ds-stroke-value={mode}><span class="ds-color-mode"><Icon name={mode==='light'?'sun':'moon'}/></span><span class="ds-stroke-swatch" style={`--ds-swatch-shade:var(--${value.token});--ds-swatch-base:var(--${mode==='light'?'color-white':'color-ink'})`} aria-hidden="true"/><span class="ds-mode-text" title={value.value}>{value.label}</span></div>;})}</div>
     </article>)}</div>
    </div>}
-   {item.id==='typography'&&typography.map((style,index)=>{const sample=typeSamples[index];return <article class="ds-foundation-row ds-type-row" data-ds-type={style.name}><div class="ds-specimens ds-type-sample">{index===2?<h3 class={sample.className}>{sample.text}</h3>:<p class={sample.className}>{sample.html?<Fragment set:html={sample.html}/>:sample.text}</p>}</div><div class="ds-meta"><strong><DSTokenNames label={style.name} token={'--'+style.sizeToken}/></strong><span>{style.family.includes('Funnel')?'Funnel Display':'Urbanist'} · {weights[style.weight]||style.weight}</span><span>{px(style.range)}</span><span data-ds-type-metrics></span><span>{sample.use}</span></div></article>;})}
+   {item.id==='typography'&&<div class="ds-type-table">
+    <div class="ds-type-device-headers" aria-hidden="true"><span/>{typeDevices.map(device=><div class="ds-type-device-header">{device==='desktop'?<Icon name="monitor"/>:device==='tablet'?<Icon name="tablet"/>:<Icon name="phone"/>}<div><p class="text-body-m-strong">{deviceNames[device]}</p><p class="text-body-s">{typeSystem.ranges[device]}</p></div></div>)}</div>
+    {typography.map((style,index)=><article class="ds-type-style" data-ds-type-style={style.id}>
+     <div class="ds-type-info"><strong class="text-body-m-strong"><DSTokenNames label={style.name} token={'--'+style.sizeToken}/></strong><p class="text-body-s">{style.fontName}{style.id==='label-m'?' · Uppercase':''}</p><p class="text-body-s">Weight {style.weight} · {style.weight==='400'?'Regular':'Medium'}</p><p class="text-body-s">Line height {Number(style.lineHeight).toFixed(2)}</p><p class="text-body-s ds-type-use">{style.use}</p></div>
+     {typeDevices.map(device=><div class:list={['ds-type-device',index===0&&'ds-type-device-first',index===typography.length-1&&'ds-type-device-last']} data-type-device={device} style={deviceScope(style,device)}>
+      <div class="ds-type-mobile-header">{device==='desktop'?<Icon name="monitor"/>:device==='tablet'?<Icon name="tablet"/>:<Icon name="phone"/>}<div><p class="text-body-m-strong">{deviceNames[device]}</p><p class="text-body-s">{typeSystem.ranges[device]}</p></div></div>
+      <p class:list={['ds-type-live','text-'+style.id]} data-type-sample={style.id}>{style.sample}</p>
+      <p class:list={['text-body-s','ds-type-value',style.devices[device].size!==style.devices.desktop.size&&'ds-type-changed']} data-type-size={style.id}>{style.devices[device].size!==style.devices.desktop.size&&<span class="ds-type-dot" aria-hidden="true"/>}{Number((style.devices[device].sizeRem*16).toFixed(4))}px · {style.devices[device].sizeRem}rem</p>
+      <p class:list={['text-body-s','ds-type-value',style.devices[device].spacing!==style.devices.desktop.spacing&&'ds-type-changed']} data-type-spacing={style.id}>{style.devices[device].spacing!==style.devices.desktop.spacing&&<span class="ds-type-dot" aria-hidden="true"/>}Letter spacing {typePercent(style.devices[device].spacingEm)}%</p>
+     </div>)}
+    </article>)}
+    <p class="ds-type-legend text-body-s"><span class="ds-type-dot" aria-hidden="true"/>Changes on this device</p>
+   </div>}
    {item.id==='spacing-layout'&&<>
     <article class="ds-foundation-row"><div class="ds-spacing-scale">{spacing.map(token=><div><DSTokenNames label={String(parseFloat(token.resolvedLight))} token={'--'+token.name}/><span class="ds-spacing-bar" style={`width:var(--${token.name})`}/></div>)}</div><div class="ds-meta"><strong>Spacing</strong><span>{spacing.map(token=>parseFloat(token.resolvedLight)).join(' · ')}px</span><span>Gaps, padding and section rhythm.</span></div></article>
     <article class="ds-foundation-row"><div class="ds-shape-grid">{['radius-small','radius-medium','radius-media','radius-pill'].map(name=><div><div class="ds-radius-tile" style={`border-radius:var(--${name})`}/><DSTokenNames label={humanToken(name.replace('radius-',''))} token={'--'+name}/></div>)}</div><div class="ds-meta"><strong>Corners</strong>{['radius-small','radius-medium','radius-media','radius-pill'].map(name=><span>{humanToken(name.replace('radius-',''))} · <span data-ds-human-token={name}/></span>)}<span>Controls, cards and media.</span></div></article>
@@ -64,12 +82,11 @@ const easePath=(value:string)=>{const n=value.match(/cubic-bezier\(([^)]+)\)/)?.
    {item.id==='icons'&&<><article class="ds-foundation-row"><ul class="ds-icon-grid">{inventory.iconNames.map(name=><li data-ds-icon={name}><Icon name={name as IconName}/><span>{name.replaceAll('-',' ')}</span></li>)}</ul><div class="ds-meta"><strong>Interface icons</strong><span><DSTokenNames label="Size" token="--icon-size"/> · <span data-ds-human-token="icon-size"/></span><span><DSTokenNames label="Compact" token="--icon-size-compact"/> · <span data-ds-human-token="icon-size-compact"/></span><span>Menus, media controls and destinations.</span></div></article><article class="ds-foundation-row"><div class="ds-icon-strokes"><Icon name="arrow"/><Icon name="arrow" class="icon--strong"/></div><div class="ds-meta"><strong>Stroke</strong><span><DSTokenNames label="Regular" token="--icon-stroke-regular"/> · <span data-ds-human-token="icon-stroke-regular"/></span><span><DSTokenNames label="Strong" token="--icon-stroke-strong"/> · <span data-ds-human-token="icon-stroke-strong"/></span><span>Rounded caps and joins.</span></div></article></>}
   </div>
   <div class="ds-code" id={`${tabs}-panel-1`} role="tabpanel" aria-labelledby={`${tabs}-tab-1`} hidden>
-   {item.id==='color'?<Fragment>
+   {item.id==='typography'?<Fragment><pre><span class="ds-code-comment">/* Shared font families and weights */</span><code>{sharedTypeCode}</code></pre><div class="ds-code-columns ds-type-code-columns">{typeDevices.map(device=><pre><span class="ds-code-comment">{device==='desktop'?'/* Desktop: '+typeSystem.ranges.desktop+' */':device==='tablet'?'/* Tablet: '+typeSystem.ranges.tablet+' */':'/* Phone: under '+typeSystem.boundaries.tablet+'px */'}</span><code>{deviceCode(device)}</code></pre>)}</div></Fragment>:item.id==='color'?<Fragment>
     <pre><span class="ds-code-comment">/* Palette: each colour once */</span><code>{codeFor(paletteTokenNames.map(name=>inventory.tokens.find(token=>token.name===name)!),'light')}</code></pre>
     <div class="ds-code-columns">{(['light','dark'] as const).map(mode=><pre><span class="ds-code-comment">{mode==='light'?'/* Light mode roles */':'/* Dark mode roles */'}</span><code>{codeFor(roles(),'light'===mode?'light':'dark')}</code></pre>)}</div>
    </Fragment>:<div class="ds-code-columns">{(['light','dark'] as const).filter(mode=>mode==='light'||tokens.some(token=>token.dark!==token.light)).map(mode=><pre><span class="ds-code-comment">{mode==='light'?'/* Light mode values */':'/* Dark mode values */'}</span><code>{codeFor(tokens.filter(token=>mode==='light'||token.dark!==token.light),mode)}</code></pre>)}</div>}
    {tokens.map(token=><span data-ds-token={token.name}/>)}
-   {item.id==='typography'&&<pre><span class="ds-code-comment">/* Text styles */</span><code>{typography.map(style=>`${style.selector} {\n  font-family: ${style.family};\n  font-size: var(--${style.sizeToken});\n  font-weight: ${style.weight};\n  line-height: ${style.lineHeight};\n  letter-spacing: ${style.rawTracking};\n}`).join('\n\n')}</code></pre>}
   </div>
  </div>
 </section>;})}

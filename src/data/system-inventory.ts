@@ -103,7 +103,8 @@ export function buildSystemInventory(root = process.cwd()) {
     return { name, file: relative(root, file), usages, source, props, tokens: tokens.filter(token => names.has(token.name) || token.owner === name).map(token => token.name) };
   });
   const iconNames = new Set<string>();
-  for (const file of [...reachable]) {
+  // Foundation device glyphs are genuine catalog consumers, not specimen variants.
+  for (const file of [...reachable, resolve(root, 'src/components/DSFoundations.astro')]) {
     const source = readFileSync(file, 'utf8');
     for (const [, name] of source.matchAll(/<Icon\b[^>]*\bname=["']([\w-]+)["']/g)) iconNames.add(name);
     for (const [, name] of source.matchAll(/<IconButton\b[^>]*\bicon=["']([\w-]+)["']/g)) iconNames.add(name);

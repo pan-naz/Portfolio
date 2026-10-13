@@ -105,7 +105,6 @@ const refreshValues=()=>{
   const sample=view.querySelector<HTMLElement>('.ds-specimens '+node.dataset.dsMeasure);if(!sample)continue;
   const computed=getComputedStyle(sample);node.textContent=node.dataset.properties!.split(',').map(property=>{const value=computed.getPropertyValue(property).trim();return property==='font-weight'?namedWeights[value]||value:readable(value);}).join(' · ');
  }
- for(const row of view.querySelectorAll<HTMLElement>('[data-ds-type]')){const sample=row.querySelector<HTMLElement>('.ds-type-sample > *')!,computed=getComputedStyle(sample);row.querySelector('[data-ds-type-metrics]')!.textContent=`Line height ${readable(computed.lineHeight)} · tracking ${computed.letterSpacing==='normal'?'0px':readable(computed.letterSpacing)}`;}
 };
 window.addEventListener('resize',refreshValues);window.addEventListener('themechange',refreshValues);selectView();
 

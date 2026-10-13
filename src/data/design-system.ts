@@ -1,7 +1,7 @@
 import { visibleComponents } from './ds-components.ts';
 export const foundations = [
   {id:'color',title:'Color',description:'Each colour once, and where it is used.'},
-  {id:'typography',title:'Typography',description:'Funnel Display for headings and Urbanist for reading, shown at their real sizes.'},
+  {id:'typography',title:'Typography',description:'Nine text styles, and how each one looks on desktop, tablet and phone.'},
   {id:'spacing-layout',title:'Spacing & layout',description:'One spacing scale, shared corners and a responsive grid.'},
   {id:'motion',title:'Motion',description:'Shared durations and easing keep feedback consistent. Reduced motion skips decoration.'},
   {id:'icons',title:'Icons',description:'The interface icons used on the portfolio, drawn from the live geometry.'},

@@ -1,7 +1,7 @@
 /* Project-only: Yellow Leaf brand styles, not part of the design system */
 @layer system, project;
 @layer project {
-.case-study-content--yellow-leaf { --yellow-font-yellow-leaf-oswald-sans-serif: 'Yellow Leaf Oswald', sans-serif; --yellow-font-yellow-leaf-raleway-sans-serif: 'Yellow Leaf Raleway', sans-serif; }
+.case-study-content--yellow-leaf { --yellow-specimen-display-size: clamp(1.625rem, calc(.5rem + 3.333vw), 3.5rem); --yellow-specimen-copy-size: 1.25rem; --yellow-font-yellow-leaf-oswald-sans-serif: 'Yellow Leaf Oswald', sans-serif; --yellow-font-yellow-leaf-raleway-sans-serif: 'Yellow Leaf Raleway', sans-serif; }
 /* Reference composition; all portfolio UI roles come from the shared narrative and tokens. */
 .case-study-content--yellow-leaf { padding-bottom: 0; }
 .yellow-block { margin-top: var(--space-16); }
@@ -26,11 +26,11 @@
 .yellow-colour-label code { color: var(--color-text-secondary); font-family: var(--font-body); }
 .yellow-type-grid { margin-top: var(--space-6); }
 .yellow-type-card { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-6); padding: var(--space-8); border: 1px solid var(--color-paper-8); border-radius: var(--radius-medium); height: 100%; }
-.yellow-type-display { font-size: var(--text-heading-l); line-height: 1.142857; }
+.yellow-type-display { font-size: var(--yellow-specimen-display-size); line-height: 1.142857; }
 .yellow-type-card > div > .case-study-eyebrow { margin-top: 0; }
 .yellow-type-example { margin-top: var(--space-6); }
 .yellow-type-example > :first-child { color: var(--color-text-secondary); }
-.yellow-case .yellow-type-sample { margin-top: var(--space-2); font-size: var(--text-body-l); line-height: 1.5; }
+.yellow-case .yellow-type-sample { margin-top: var(--space-2); font-size: var(--yellow-specimen-copy-size); line-height: 1.5; }
 /* Original brand specimens alone retain Yellow Leaf's fonts and weights. */
 @font-face { font-family: 'Yellow Leaf Oswald'; font-style: normal; font-weight: 400 700; font-display: swap; src: url('/projects/yellow-leaf-case-study/oswald.woff2') format('woff2'); }
 @font-face { font-family: 'Yellow Leaf Raleway'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('/projects/yellow-leaf-case-study/raleway.woff2') format('woff2'); }

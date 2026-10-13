@@ -13,7 +13,7 @@ export interface ServiceTile {
 interface Props { id: string; services: readonly ServiceTile[]; order: readonly string[]; class?: string; }
 const { id, services, order, class: className } = Astro.props;
 ---
-<case-study-service-tiles id={id} class:list={['case-study-service-demo', className]}>
+<case-study-service-tiles data-typography-exclusion="product-service-tiles" id={id} class:list={['case-study-service-demo', className]}>
   <div class="case-study-service-grid">
     {order.map(key => {
       const service = services.find(service => service.id === key);
