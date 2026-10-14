@@ -5,7 +5,7 @@
 .tooltip[data-placement='below'] { transform: translate(-50%, 14px) scale(var(--tooltip-scale)); transform-origin: 50% 0; }
 .tooltip[data-tooltip-visible] { --tooltip-scale: var(--scale-tooltip-end); opacity: 1; }
 @media (hover: hover) and (pointer: fine) {
-  [data-tooltip-target]:focus-visible > .tooltip,
-  [data-tooltip-target].is-pointer-hovered > .tooltip { --tooltip-scale: var(--scale-tooltip-end); opacity: 1; }
+  [data-tooltip-target]:focus-visible .tooltip,
+  [data-tooltip-target].is-pointer-hovered .tooltip { --tooltip-scale: var(--scale-tooltip-end); opacity: 1; }
 }
 }

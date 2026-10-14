@@ -31,10 +31,10 @@ const prefix=miniature?'tile-':'example-';
  </div></div>
  {!miniature&&<><div class="ds-labelled-specimen"><span>Plain</span><div data-ds-example="icon-theme" data-ds-target=".icon-button"><ThemeToggle /></div></div>
  <div class="ds-labelled-specimen"><span>Secondary · Small</span><div data-ds-example="icon-layers" data-ds-target=".icon-button"><IconButton href="/design-system/" label="Design system" variant="secondary" size="small" icon="layers" /></div></div>
- <div class="ds-labelled-specimen"><span>Media</span><div class="case-video-controls ds-media-controls" data-theme="dark">
+ <div class="ds-labelled-specimen"><span>Media</span><div class="ds-media-backdrop"><div class="case-video-controls ds-media-controls" data-theme="dark">
  <div data-ds-example="icon-play" data-ds-target=".icon-button"><IconButton label="Play video" data-video-toggle><span data-play-icon><Icon name="play" /></span><span data-pause-icon hidden><Icon name="pause" /></span></IconButton></div>
  <div data-ds-example="icon-sound" data-ds-target=".icon-button"><IconButton label="Sound off. Turn sound on" data-video-mute aria-pressed="false"><span data-muted-icon><Icon name="volume-muted" /></span><span data-sound-icon hidden><Icon name="volume" /></span></IconButton></div>
- </div></div></>}
+ </div></div></div></>}
 </div>}
 {name==='TextLink'&&<div class="ds-specimen-composition">
  <div class="ds-labelled-specimen"><span>Default</span><div data-ds-example="link-default" data-ds-target=".text-link"><TextLink href={profile.linkedin}>LinkedIn</TextLink></div></div>

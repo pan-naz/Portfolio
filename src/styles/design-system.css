@@ -52,7 +52,8 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
 .ds-inline-controls { display:flex; gap:var(--space-3); align-items:center; }
 .ds-icon-surface { border-radius:var(--radius-full); }
 .ds-close-holder { position:static; transform:none; }
-.ds-media-controls { position:static; opacity:1; pointer-events:auto; padding:var(--space-1); }
+.ds-media-backdrop { padding:var(--space-6); background:var(--color-section-bg-surface); border-radius:var(--radius-medium); }
+.ds-media-backdrop .ds-media-controls { display:flex; align-items:center; gap:var(--space-2); position:static; opacity:1; pointer-events:auto; padding:var(--space-1); }
 .ds-floating-header { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:var(--space-2); min-height:var(--space-16); padding:var(--space-2) var(--space-3); border-radius:var(--radius-full); }
 .ds-comparison-switch { height:60px; overflow:hidden; min-width:180px; }
 .ds-stat-composition { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--space-6); max-width:760px; margin:0 auto; }
@@ -282,9 +283,9 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
 .ds-space-scale-label { min-width:0; color:var(--color-text-secondary); }
 .ds-space-scale-label .ds-token-swap { width:100%; }
 .ds-space-cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--space-3); }
-.ds-space-card,.ds-layout-card,.ds-corner-card,.ds-shadow-card { min-width:0; padding:var(--space-6); background:var(--color-bg-canvas); border-radius:var(--radius-medium); }
+.ds-space-card,.ds-layout-card,.ds-radius-card,.ds-shadow-card { min-width:0; padding:var(--space-6); background:var(--color-bg-canvas); border-radius:var(--radius-medium); }
 .ds-space-card { display:grid; grid-template-columns:var(--space-24) minmax(0,1fr); align-items:center; gap:var(--space-4); }
-.ds-space-card p,.ds-layout-card p,.ds-corner-card p,.ds-shadow-card p { color:var(--color-text-secondary); }
+.ds-space-card p,.ds-layout-card p,.ds-radius-card p,.ds-shadow-card p { color:var(--color-text-secondary); }
 .ds-space-demo { display:grid; place-items:center; height:var(--space-16); background:var(--color-bg-surface); border-radius:var(--radius-small); }
 .ds-space-demo span { height:var(--space-6); background:color-mix(in srgb,var(--color-interactive-accent) 16%,transparent); border-inline:1px solid var(--color-interactive-accent); }
 .ds-layout-cards { display:grid; grid-template-columns:2fr 2fr 1fr; gap:var(--space-3); }
@@ -297,11 +298,11 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
 .ds-layout-projects,.ds-layout-metrics { display:grid; }
 .ds-layout-projects > span { height:var(--space-12); background:var(--color-bg-surface); border-radius:var(--radius-small); box-shadow:var(--shadow-small); }
 .ds-layout-metrics > span { height:var(--space-4); background:color-mix(in srgb,var(--color-interactive-accent) 16%,transparent); border-radius:var(--radius-full); }
-.ds-corner-cards { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:var(--space-3); }
-.ds-corner-card { display:grid; align-content:start; gap:var(--space-1); }
-.ds-corner-demo { display:grid; place-items:center; padding:var(--space-6); height:calc(var(--space-24) + var(--space-2)); margin-bottom:var(--space-3); background:var(--color-bg-surface); border-radius:var(--radius-small); }
-.ds-corner-demo > span { width:100%; height:var(--space-16); border-top:1px solid var(--color-interactive-accent); border-left:1px solid var(--color-interactive-accent); background:color-mix(in srgb,var(--color-interactive-accent) 16%,transparent); }
-.ds-corner-demo > .ds-corner-pill { width:var(--space-16); height:var(--space-8); border:1px solid var(--color-interactive-accent); }
+.ds-radius-cards { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:var(--space-3); }
+.ds-radius-card { display:grid; align-content:start; gap:var(--space-1); }
+.ds-radius-demo { display:grid; place-items:center; padding:var(--space-6); height:calc(var(--space-24) + var(--space-2)); margin-bottom:var(--space-3); background:var(--color-bg-surface); border-radius:var(--radius-small); }
+.ds-radius-demo > span { width:100%; height:var(--space-16); border-top:1px solid var(--color-interactive-accent); border-left:1px solid var(--color-interactive-accent); background:color-mix(in srgb,var(--color-interactive-accent) 16%,transparent); }
+.ds-radius-demo > .ds-radius-pill { width:var(--space-16); height:var(--space-8); border:1px solid var(--color-interactive-accent); }
 .ds-shadow-cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-3); }
 .ds-shadow-card { display:grid; gap:var(--space-1); align-content:start; }
 .ds-shadow-demo { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); overflow:hidden; border-radius:var(--radius-small); margin-bottom:var(--space-3); }
@@ -311,6 +312,6 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
 .ds-shadow-values p { display:flex; align-items:start; gap:var(--space-2); }
 .ds-shadow-values .icon { flex:none; width:var(--icon-size-compact); height:var(--icon-size-compact); margin-top:calc((var(--text-label-s) * 1.5 - var(--icon-size-compact)) / 2); }
 .ds-shadow-values code { min-width:0; white-space:normal; overflow-wrap:anywhere; }
-@media(max-width:1099px) { .ds-space-cards,.ds-corner-cards { grid-template-columns:repeat(2,minmax(0,1fr)); } .ds-layout-cards { grid-template-columns:minmax(0,1fr); } .ds-layout-card--phone .ds-layout-sheet { width:var(--space-24); justify-self:center; } }
-@media(max-width:767px) { .ds-space-cards,.ds-corner-cards,.ds-shadow-cards { grid-template-columns:minmax(0,1fr); } .ds-space-scale { padding:var(--space-4); gap:var(--space-1); } .ds-space-scale-label .ds-token-name { writing-mode:vertical-rl; justify-self:center; } }
+@media(max-width:1099px) { .ds-space-cards,.ds-radius-cards { grid-template-columns:repeat(2,minmax(0,1fr)); } .ds-layout-cards { grid-template-columns:minmax(0,1fr); } .ds-layout-card--phone .ds-layout-sheet { width:var(--space-24); justify-self:center; } }
+@media(max-width:767px) { .ds-space-cards,.ds-radius-cards,.ds-shadow-cards { grid-template-columns:minmax(0,1fr); } .ds-space-scale { padding:var(--space-4); gap:var(--space-1); } .ds-space-scale-label .ds-token-name { writing-mode:vertical-rl; justify-self:center; } }
 }

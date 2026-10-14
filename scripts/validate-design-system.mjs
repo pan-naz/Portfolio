@@ -1,3 +1,4 @@
+import {validateRadiusContract} from './validate-radius-language.mjs';
 import {validateSpaceShape} from './validate-space-shape.mjs';
 import {validateTypographySystem,validateStaticTypography,validateCatalogTypographyLayout} from './validate-typography.mjs';
 import {typographyCssExclusions} from '../src/data/typography-exclusions.ts';
@@ -182,7 +183,7 @@ export function validateHiddenDocumentation(records, text) {
   }
   return failures;
 }
-const errors = [...validate(registry),...validateColors(),...validateSpaceShape(root)];
+const errors = [...validate(registry),...validateColors(),...validateSpaceShape(root),...validateRadiusContract()];
 errors.push(...validateLogoWave(read('src/styles/global.css'), read('src/components/Logo.astro'), read('src/styles/tokens.css'), filesUnder('src/scripts').filter(file=>file.endsWith('.ts')).map(read).join('\n')));
 if(JSON.stringify(visibleComponents.map(item=>item.name).sort())!==JSON.stringify([...expectedVisible].sort()))errors.push('Visible catalog must contain exactly the approved ten components');
 for(const [file,key] of Object.entries(hiddenKeys))if(componentManifest.find(item=>item.file===file)?.documentedHidden!==key)errors.push('Missing documented-hidden classification: '+file);

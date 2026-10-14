@@ -1,0 +1,32 @@
+[
+  {
+    "file": "src/components/BlaustromCaseStudy.astro",
+    "needle": "top-left corner",
+    "reason": "Approved positional case-study copy, not a system-scale label."
+  },
+  {
+    "file": "src/components/CravusCaseStudy.astro",
+    "needle": "top-left corner",
+    "reason": "Approved positional case-study copy, not a system-scale label."
+  },
+  {
+    "file": "src/data/promshyna-case-study.ts",
+    "needle": "at the corner.",
+    "reason": "Approved project artwork description of a physical position."
+  },
+  {
+    "file": "src/scripts/waterfall/waterfall-gpu.ts",
+    "pattern": "(?:const vec2 corners|vec2 corner = corners|corner \\* tileSize|corner\\) / atlasGrid)",
+    "reason": "Native vertex-quad coordinates in the unchanged rain shader."
+  },
+  {
+    "file": "src/scripts/waterfall/waterfall-icon-data.ts",
+    "pattern": "(?://.*corner|\"name\":\\s*\"[^\"]*corner[^\"]*\")",
+    "reason": "Original Lucide direction/icon names in generated rain geometry."
+  },
+  {
+    "file": "../docs/assets-datagpt.md",
+    "needle": "transparent corners",
+    "reason": "Original transparent image geometry, not a system token or catalog label."
+  }
+]

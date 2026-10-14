@@ -191,15 +191,15 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     hero.style.visibility = 'hidden';
     active.closest<HTMLElement>('.project')!.style.visibility = 'hidden';
     const source = cardFrame();
-    // Keep the card silhouette throughout the flight, then gently square the corners.
+    // Keep the card silhouette throughout the flight, then gently remove the radius.
     const travel = play(panel, [source, { ...fullFrame(), borderRadius: source.borderRadius }]);
     const imageTravel = play(artwork!, [sourceArtwork, destinationArtwork]);
     // Counter the panel's movement so copy stays in viewport coordinates and
     // only its own vertical fade is visible, regardless of the card's column.
     play(scroll, [viewportPosition(source), { left: '0px', top: '0px' }]);
     play(clone, [{ left: '0px', top: '0px' }, { left: source.left, top: source.top }]);
-    const corners = play(panel, [{ borderRadius: source.borderRadius }, { borderRadius: '0px' }], {
-      delay: motion.openDuration, duration: motion.cornersDuration, easing: motion.cornersEasing,
+    const radiusFinish = play(panel, [{ borderRadius: source.borderRadius }, { borderRadius: '0px' }], {
+      delay: motion.openDuration, duration: motion.radiusDuration, easing: motion.radiusEasing,
     });
     play(clone, [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: contentOffset() }], { duration: motion.captionExitDuration });
     const body = scroll.querySelector<HTMLElement>('.case-study-body')!;
@@ -224,10 +224,10 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     hero.style.removeProperty('visibility');
     artwork?.remove(); artwork = null;
     // Release the real hero at the shared travel endpoint, while the decorative
-    // corner finish continues independently.
+    // radius finish continues independently.
     lockScroll(false);
     caseScroll = initializeSmoothScroll(scroll, scroll.querySelector<HTMLElement>('[data-case-content]')!);
-    await corners;
+    await radiusFinish;
     if (ticket !== revision) return;
     panel.style.cssText = 'inset:0;width:100%;height:100%;border-radius:0';
     cancelAnimations();

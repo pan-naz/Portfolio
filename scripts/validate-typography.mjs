@@ -13,7 +13,7 @@ export function validateCatalogTypographyLayout(css,catalog,toggle){
  requireValue(stacked,'.ds-type-device[data-type-device="desktop"]::before','content','none');
  requireValue(shared,'.ds-type-device::before','inset','0 var(--space-6) auto');
  requireValue(shared,'.ds-type-device-last','border-radius','0 0 var(--radius-medium) var(--radius-medium)');
- if(css.includes('.ds-type-device-first')||catalog.includes('ds-type-device-first'))errors.push('Stacked corners must use device hooks, never a first-style class.');
+ if(css.includes('.ds-type-device-first')||catalog.includes('ds-type-device-first'))errors.push('Stacked radius must use device hooks, never a first-style class.');
  if(!catalog.includes('data-type-device={device}')||!catalog.includes("index===typography.length-1&&'ds-type-device-last'"))errors.push('Preserve device hooks and desktop column endings.');
  for(const [mode,icon,label] of [['light','sun','Light'],['dark','moon','Dark']])if(!new RegExp(`data-theme-choice="${mode}"[^>]*><Icon name="${icon}" class="theme-icon-glyph"\\s*/><span>${label}</span>`).test(toggle))errors.push(`Theme segment ${mode} must use the shared decorative ${icon} before its existing label.`);
  requireValue(shared,'.theme-toggle-group .button','gap','var(--space-2)');

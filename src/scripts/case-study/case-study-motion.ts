@@ -9,14 +9,14 @@ export const caseStudyMotionTokens = [
   { key: 'captionEnterDelay', name: '--delay-case-caption-enter', label: 'Returning caption delay' },
   { key: 'bodyEnterDuration', name: '--duration-case-body-enter', label: 'Case body entrance' },
   { key: 'bodyEnterDelay', name: '--delay-case-body-enter', label: 'Case body delay' },
-  { key: 'cornersDuration', name: '--duration-case-corners', label: 'Panel corner finish' },
+  { key: 'radiusDuration', name: '--duration-case-radius', label: 'Panel radius finish' },
   { key: 'copyDistance', name: '--distance-case-copy', label: 'Caption and body rise' },
   { key: 'controlRotation', name: '--rotation-case-control', label: 'Opening control rotation' },
 ] as const;
 
 export const caseStudyPresentationTokens = [
   { name: '--ease-case-travel', label: 'Panel, hero and control easing' },
-  { name: '--ease-case-corners', label: 'Corner finish easing' },
+  { name: '--ease-case-radius', label: 'Radius finish easing' },
   { name: '--case-hero-fit', label: 'Card, traveling and settled hero fit' },
 ] as const;
 
@@ -26,7 +26,7 @@ export function readCaseStudyMotion(tokens: Pick<CSSStyleDeclaration, 'getProper
   return {
     ...timings,
     travelEasing: tokens.getPropertyValue('--ease-case-travel').trim(),
-    cornersEasing: tokens.getPropertyValue('--ease-case-corners').trim(),
+    radiusEasing: tokens.getPropertyValue('--ease-case-radius').trim(),
     controlInset: readMotionToken(tokens, '--space-4'),
     controlSize: readMotionToken(tokens, '--control-icon'),
   };

@@ -80,10 +80,10 @@
   --duration-case-caption-exit: 200ms; --duration-case-caption-enter: 600ms;
   --delay-case-caption-enter: 100ms;
   --duration-case-body-enter: 350ms; --delay-case-body-enter: 350ms;
-  --duration-case-corners: 260ms; --distance-case-copy: 16px;
+  --duration-case-radius: 260ms; --distance-case-copy: 16px;
   --rotation-case-control: 225deg;
   --ease-case-travel: cubic-bezier(.22, .75, .25, 1);
-  --ease-case-corners: ease-in-out;
+  --ease-case-radius: ease-in-out;
   --case-hero-fit: contain;
   --duration-entrance: 900ms;
   --intro-stage-progress: .5;
@@ -181,6 +181,8 @@
   --waterfall-icon-color: var(--color-stone);
   --footer-pile-icon-color: var(--color-pewter);
   --shadow-large: 0 8px 24px rgb(0 0 0 / .38), 0 24px 64px rgb(0 0 0 / .52);
+}
+:root[data-theme='dark'], [data-theme='dark'], [data-color-zone='dark'], .about-details {
   --shadow-small: 0 2px 8px rgb(0 0 0 / .16), 0 12px 32px rgb(0 0 0 / .28);
 }
 @media (max-width: 767px) {

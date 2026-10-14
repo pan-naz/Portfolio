@@ -35,9 +35,9 @@ assert.ok(source.includes('sectionRevealEffects(title, index, description, conte
 assert.ok(source.includes("number('--section-reveal-trigger-viewport-ratio')") && source.includes('shouldRevealWorkContent(stageTop, window.scrollY, window.innerHeight * sectionRevealRatio)'), 'The heading requires scroll progress and the bottom 90% trigger');
 assert.ok(source.includes('revealRail();'), 'The independent filter still waits until the background reaches full width');
 assert.ok(work.includes('data-work-stage-surface') && work.includes('data-work-rail') && !work.includes('reveal={false}'));
-assert.ok(css.includes('inset: calc(-1 * var(--work-preview-height))') && css.includes("html[data-work-stage-layout='true'] .work-panel { border-radius: var(--radius-xlarge) 0 0 var(--radius-xlarge); }"), 'Desktop preview gives both left corners the same radius for their shared expansion and return animation');
-assert.ok(source.includes('element: panel') && source.includes('radiusKeyframes'), 'The background position and corner geometry share one native animation clock');
-assert.ok(source.includes('{ offset: 0.72, borderRadius: currentRadius }') && source.includes('{ offset: 0.28, borderRadius: targetRadius }'), 'The corner morph rejoins the final forward travel and begins with movement on return');
+assert.ok(css.includes('inset: calc(-1 * var(--work-preview-height))') && css.includes("html[data-work-stage-layout='true'] .work-panel { border-radius: var(--radius-xlarge) 0 0 var(--radius-xlarge); }"), 'Desktop preview gives both left radius the same radius for their shared expansion and return animation');
+assert.ok(source.includes('element: panel') && source.includes('radiusKeyframes'), 'The background position and radius geometry share one native animation clock');
+assert.ok(source.includes('{ offset: 0.72, borderRadius: currentRadius }') && source.includes('{ offset: 0.28, borderRadius: targetRadius }'), 'The radius morph rejoins the final forward travel and begins with movement on return');
 assert.ok(css.includes('.work-stage-can-shift.is-work-shifting .work-panel { will-change: transform, border-radius; }'), 'The large background is promoted only during the stage shift');
 assert.ok(source.includes("section.classList.add('is-work-shifting')") && source.includes("section.classList.remove('is-work-shifting')"), 'The compositor hint follows the transition lifecycle');
 assert.ok(!source.includes('element: surface'), 'Heading, project cards and other content keep their final coordinates during the shift');

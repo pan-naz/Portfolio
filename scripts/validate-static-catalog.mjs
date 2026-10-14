@@ -83,5 +83,5 @@ console.log(`Final catalog verified: ${views.length} views, ten reusable entries
 const spaceModel=spacingLayoutSystem(model.tokens);
 for(const step of spaceModel.spaces){assert.ok(catalog.includes(`data-ds-space-uses="${step.name}">${step.uses} uses`),'Space count must match fresh source occurrences: '+step.name);assert.ok(catalog.includes(`height:var(--${step.name})`),'Scale bars must use the actual source token.');}
 assert.deepEqual([...catalog.matchAll(/data-ds-layout-columns="(\d+)"/g)].map(m=>Number(m[1])),spaceModel.layouts.flatMap(l=>[l.projects,l.metrics]));
-for(const name of ['Spacing','Layout: desktop / tablet / phone','Corners','Shadows: light','Shadows: dark'])assert.ok(catalog.includes('/* '+name+' */'),'Complete labelled geometry code: '+name);
-for(const token of spaceModel.corners.map(c=>c.token).concat(spaceModel.shadows.map(s=>s.token)))assert.ok(catalog.includes('data-ds-'+(token.startsWith('radius')?'corner':'shadow')+'="'+token+'"'));
+for(const name of ['Spacing','Layout: desktop / tablet / phone','Radius','Shadows: light','Shadows: dark'])assert.ok(catalog.includes('/* '+name+' */'),'Complete labelled geometry code: '+name);
+for(const token of spaceModel.radius.map(c=>c.token).concat(spaceModel.shadows.map(s=>s.token)))assert.ok(catalog.includes('data-ds-'+(token.startsWith('radius')?'radius':'shadow')+'="'+token+'"'));

@@ -27,4 +27,4 @@ export const strokeCards=[
 export const paletteTokenNames=paletteColors.flatMap(color=>[color.token,...(color.shades||[]).map(shade=>shade.token)]);
 
 /** Reviewed external Colour contract; local guards verify its body when present. */
-export const colorDocumentationReceipt={"section":"Colour","sha256":"0f167aa1856901b865643359d8bd5c254d044eb1c9b3a416dd050495e62710c8","characters":7013};
+export const colorDocumentationReceipt={"section":"Colour","sha256":"284d1eaafa755eb85e9f539eeb0d99576796767feb4872f13fb90842b1a81413","characters":7011};

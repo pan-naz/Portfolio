@@ -473,7 +473,7 @@
     "context": "@layer system",
     "property": "border-radius",
     "value": "calc(var(--radius-large) + 2px)",
-    "kind": "corner",
+    "kind": "radius",
     "values": [
       {
         "raw": "2px",
@@ -821,7 +821,7 @@
     "context": "@layer system",
     "property": "border-radius",
     "value": "calc(var(--radius-large) + 2px)",
-    "kind": "corner",
+    "kind": "radius",
     "values": [
       {
         "raw": "2px",
@@ -838,7 +838,7 @@
     "context": "@layer system",
     "property": "border-radius",
     "value": "var(--case-media-radius, 0px)",
-    "kind": "corner",
+    "kind": "radius",
     "values": [
       {
         "raw": "0px",

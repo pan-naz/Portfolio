@@ -382,7 +382,8 @@ html[data-work-stage-layout='true'] .about-details::before { left: max(0px, calc
 .tools-section { margin-top: var(--space-16); }
 .tools-grid { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: var(--space-8); list-style: none; margin: var(--space-16) 0 0; padding: 0; }
 .tools-grid > li { min-width: 0; }
-.tool-card { position: relative; display: grid; place-items: center; aspect-ratio: 236 / 220; border: 1px solid var(--color-border-default); border-radius: var(--radius-large); }
+.tool-card { position: relative; display: grid; place-items: center; aspect-ratio: 236 / 220; border: 0; padding:calc(var(--space-1) / 4); border-radius: var(--radius-large); box-shadow:var(--shadow-small); }
+.tool-card-inner { position:relative; display:grid; place-items:center; width:100%; height:100%; min-width:0; min-height:0; }
 :root[data-theme='dark'] .tool-card:not([data-theme='light'] .tool-card, [data-color-zone='light'] .tool-card), .about-details .tool-card { background: var(--color-charcoal); }
 /* The card owns hover tracking; scaling decorative vectors must not change the hit target. */
 .tool-card .svg-asset { pointer-events: none; width: auto; height: min(70px, 35%); max-width: 42%; transform-origin: center; transition: transform 520ms var(--ease-entrance); }
