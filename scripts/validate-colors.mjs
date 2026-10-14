@@ -28,7 +28,7 @@ export function validateColorPalette(css){
   if(paletteTokenNames.includes(decl.prop.slice(2))){const shade=decl.prop.match(/^--color-(?:ink|paper)-(\d+)$/);if(shade){const alpha=decl.value.match(/\/\s*([\d.]+)\s*\)/)?.[1];if(alpha===undefined||Math.abs(Number(alpha)*100-Number(shade[1]))>1e-8)errors.push('Shade token name must match its opacity: '+decl.prop);}
    counts.set(decl.prop,(counts.get(decl.prop)||0)+1);const value=decl.value.toUpperCase().replaceAll(/\s/g,'');if(values.has(value))errors.push('Duplicate palette value: '+decl.prop);values.set(value,decl.prop);}
   else if(/#[0-9a-f]{3,8}\b|\brgba?\(\s*\d/i.test(decl.value)&&!/^--(?:shadow-|backdrop-case)/.test(decl.prop))errors.push('Colour literal outside palette: '+decl.prop);
-  if(/--color-(?:overlay|inverse|navigation)-|--project-card-bg-surface/.test(decl.prop+decl.value))errors.push('Removed colour family: '+decl.prop);
+  if(/--color-(?:overlay|inverse|navigation)-|--color-(?:smoke|bg-raised)\b|--project-card-bg-surface/.test(decl.prop+' '+decl.value))errors.push('Removed colour family: '+decl.prop);
  });
  for(const token of paletteTokenNames)if(counts.get('--'+token)!==1)errors.push('Palette token must be defined once: '+token);
  return errors;
@@ -60,4 +60,4 @@ export function validateColorDocumentation(text,receipt=colorDocumentationReceip
  if(text!==undefined){const start=text.indexOf('## Colour\n'),next=text.indexOf('\n## ',start+4),body=start<0?'':text.slice(start,next<0?undefined:next).trim();if(!body||body.length!==receipt.characters||createHash('sha256').update(body).digest('hex')!==receipt.sha256)errors.push('Stale Colour documentation receipt');}return errors;
 }
 export function validateColors(){const css=fs.readFileSync(path.join(root,'src/styles/tokens.css'),'utf8');return [...validateColorPalette(css),...validateColorUses(css),...validateSharedColorLiterals(),...validateColorDocumentation(fs.existsSync(path.join(root,'../docs/design-system.md'))?fs.readFileSync(path.join(root,'../docs/design-system.md'),'utf8'):undefined)];}
-if(process.argv[1]&&path.resolve(process.argv[1])===import.meta.filename){const errors=validateColors();if(errors.length){console.error(errors.join('\n'));process.exit(1);}console.log('Colour contract verified: 13 palette colours, six alpha shades, one role family, exact use coverage and no shared literals.');}
+if(process.argv[1]&&path.resolve(process.argv[1])===import.meta.filename){const errors=validateColors();if(errors.length){console.error(errors.join('\n'));process.exit(1);}console.log('Colour contract verified: 12 palette colours, six alpha shades, one role family, exact use coverage and no shared literals.');}

@@ -19,7 +19,7 @@ for (const metadataClass of ['experience-period text-body-s', 'experience-compan
   assert.ok(experienceRow.includes(metadataClass), `${metadataClass} consumes Body/S`);
 }
 assert.ok(read('../src/components/Hero.astro').includes('hero-description text-body-l'), 'Homepage hero copy consumes Body/L');
-assert.ok(read('../src/components/ProjectCard.astro').includes('project-outcome text-body-l') && read('../src/components/ProjectCard.astro').includes("compact ? 'text-body-s' : 'text-body-m'"), 'Homepage project copy consumes shared Body/L and Body/M roles');
+assert.ok(read('../src/components/ProjectCard.astro').includes("['project-outcome', compact ? 'text-body-m' : 'text-body-l']") && read('../src/components/ProjectCard.astro').includes("compact ? 'text-body-s' : 'text-body-m'"), 'Homepage project copy consumes shared Body/L and Body/M roles');
 assert.ok(!/\.hero-title\s*\{[^}]*font-size/.test(global), 'Hero uses the shared Heading/XL class');
 assert.ok(/\.hero-title\s*\{[^}]*text-wrap: wrap/.test(global));
 assert.ok(/grid-template-columns: minmax\(0, 1fr\)/.test(global));

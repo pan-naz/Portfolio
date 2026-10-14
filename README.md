@@ -26,7 +26,7 @@ node --test tests/*.test.mjs
 RAIN_GPU=1 node --test tests/waterfall-renderer.test.mjs
 ```
 
-The test suite covers case-study media, genuine SVG geometry, typography and interactive/rendering behavior. Original-byte fixture tests also use the workspace's sibling `reference-research/` archive; keep that archive available when running the full suite locally. Browser comparison tools and their own dependencies live outside this repository in the workspace tools folder.
+The test suite covers case-study media, genuine SVG geometry, typography and interactive/rendering behavior. Committed SHA-256/size fingerprints and byte-identical copy/preview JSON fixtures verify original evidence without needing the workspace archive. After changing fixtures, run `node scripts/verify-reference-fixtures.mjs` to reverify them against the optional sibling `reference-research/`; it skips cleanly when the archive is absent. Browser comparison tools and their dependencies live outside this repository.
 
 Website routes compose shared components. The portfolio and separately maintained `/design-system/` catalog share `src/styles/tokens.css`. Catalog changes require an explicit design-system request. Standalone icons/logos use shared `Icon`, `SvgAsset` and `Logo`; project website links use shared `TextLink`.
 
@@ -43,6 +43,8 @@ The design-system guard rejects missing or unused components/tokens/icons/varian
 ## Generated images
 
 `pnpm build` generates ignored `public/generated/images/` with the Sharp dependency supplied by Astro. `scripts/responsive-image-policy.json` lists eligible static sources and exclusions. PNG sources receive lossless WebP; other eligible static raster sources receive quality-88 WebP/AVIF. A format is served only when every candidate is no heavier than the original. Posters, animated media and videos remain excluded; the native-alpha/shadow exceptions stay explicit. Original assets are preserved as fallbacks. A fresh dev checkout works with originals before generation. No runtime image optimizer is used.
+
+Verified derivative bundles live in ignored `node_modules/.cache/responsive-images/`, restored with Vercel's node-modules build cache. Keys include source bytes, settings, generator version and encoder environment. Valid bundles are copied to the same content-hashed output names; missing or corrupt bundles regenerate. Logs show generated files, cache hits and encoded/cached source counts. The first Vercel build populates this cache; the next unchanged build should report zero generated files. No new dependency, runtime service or build setting is needed.
 
 ## Pre-launch indexing
 

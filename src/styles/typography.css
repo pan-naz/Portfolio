@@ -44,7 +44,6 @@
 .accent-stat,
 .section-description,
 .project-outcome,
-:where(.project--compact .project-outcome),
 body,
 .case-study-intro,
 .dg-lede,
@@ -57,6 +56,7 @@ body,
 
 /* body-m: canonical role and actual website consumers. */
 .text-body-m,
+.project--compact .project-outcome,
 :where(.case-study-decision-card--media h3),
 :where(.case-study-decision-card__copy),
 :where(.case-study-narrative),

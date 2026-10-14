@@ -11,7 +11,7 @@ const css = readFileSync(new URL('../src/styles/tokens.css', import.meta.url), '
 const palettes=readSystemTokens(css),{light,dark}=palettes;
 const resolve=(palette,key)=>palettes.value(palette,key);
 for (const [theme, palette] of Object.entries({ light, dark })) {
-  for (const surface of ['color-bg-canvas', 'color-bg-surface', 'color-bg-surface-subtle','color-bg-raised']) {
+  for (const surface of ['color-bg-canvas', 'color-bg-surface', 'color-bg-surface-subtle']) {
     let previous = Infinity;
     for (const role of ['color-text-primary', 'color-text-secondary']) {
       const ratio = contrastRatio(resolve(palette, role), resolve(palette, surface));
@@ -35,13 +35,14 @@ assert.throws(() => contrastRatio('rgb(0 0 0 / 2)', '#ffffff'));
 assert.equal(resolve(light, 'color-interactive-accent'), '#F25A30');
 assert.equal(resolve(dark, 'color-interactive-accent'), '#FF6B42');
 assert.equal(resolve(dark, 'color-bg-canvas'), '#161715', 'Dark mode preserves the original main page canvas');
-assert.equal(resolve(dark, 'color-bg-surface'), '#0F100E', 'Dark containers use a separate neutral darker than the original canvas');
+assert.equal(resolve(dark, 'color-bg-surface'), '#222320', 'Dark UI surfaces are lifted above the unchanged Ink canvas');
+assert.equal(resolve(dark, 'color-bg-surface-subtle'), '#343432', 'Dark hover and selected fills use Graphite');
 assert.equal(resolve(light,'color-bg-surface'),'#FFFFFF','Light-zone controls retain White');
-assert.notEqual(resolve(dark,'color-bg-raised'),resolve(light,'color-bg-raised'),'Raised navigation follows the page theme');
+assert.notEqual(resolve(dark,'color-bg-surface'),resolve(light,'color-bg-surface'),'Navigation shares the page surface role');
 assert.notEqual(dark['shadow-floating-navigation'], light['shadow-floating-navigation'], 'Floating navigation gains a stronger dark-mode elevation');
 for (const [theme, palette] of Object.entries({ light, dark })) {
   assert.ok(
-    passesNormalTextAA(contrastRatio(resolve(palette, 'color-text-primary'), resolve(palette, 'color-bg-raised'))),
+    passesNormalTextAA(contrastRatio(resolve(palette, 'color-text-primary'), resolve(palette, 'color-bg-surface'))),
     `${theme}: floating-navigation text passes AA on its surface`,
   );
 }

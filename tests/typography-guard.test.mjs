@@ -5,6 +5,7 @@ import {typographyCssExclusions,typographyExclusions} from '../src/data/typograp
 const root=new URL('../',import.meta.url),read=file=>readFileSync(new URL(file,root),'utf8');
 const tokens=read('src/styles/tokens.css'),styles=read('src/styles/typography.css'),catalog=read('src/components/DSFoundations.astro');
 assert.deepEqual(validateTypographySystem(tokens,styles,catalog),[]);
+assert(read('src/components/ProjectCard.astro').includes("['project-outcome', compact ? 'text-body-m' : 'text-body-l']"), 'Only compact outcomes use Body/M; full cards retain Body/L');
 const bodySmall = styles.match(/\/\* body-s:[\s\S]*?\n\}/)?.[0];
 assert(bodySmall?.includes('[data-small-work-type] .navigation-item {'), 'The small Work pill selects the complete Body/S role with a simple attribute descendant selector');
 assert(!bodySmall.includes('!important'), 'The small Work pill needs no important override');

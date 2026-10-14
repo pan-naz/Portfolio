@@ -9,7 +9,6 @@
   --color-silver: #B8B8B8;
   --color-pewter: #747474;
   --color-graphite: #343432;
-  --color-smoke: #2B2A29;
   --color-charcoal: #222320;
   --color-ink: #161715;
   --color-night: #0F100E;
@@ -149,8 +148,6 @@
   --color-bg-canvas: var(--color-paper);
   --color-bg-surface: var(--color-white);
   --color-bg-surface-subtle: var(--color-mist);
-  --color-bg-raised: var(--color-white);
-  --color-bg-raised-hover: var(--color-mist);
   --color-border-default: var(--color-ink-8);
   --color-interactive-accent: var(--color-orange);
   --color-video-track: var(--color-ink-16);
@@ -164,10 +161,8 @@
   --color-text-secondary: var(--color-paper-64);
   --color-text-on-primary: var(--color-ink);
   --color-bg-canvas: var(--color-ink);
-  --color-bg-surface: var(--color-night);
-  --color-bg-surface-subtle: var(--color-smoke);
-  --color-bg-raised: var(--color-charcoal);
-  --color-bg-raised-hover: var(--color-graphite);
+  --color-bg-surface: var(--color-charcoal);
+  --color-bg-surface-subtle: var(--color-graphite);
   --color-border-default: var(--color-paper-8);
   --color-interactive-accent: var(--color-orange-light);
   --color-video-track: var(--color-paper-10);
@@ -177,7 +172,7 @@
 }
 /* Artwork substrates inherit the page surface and any project-scoped override.
    Their surrounding dark chapter changes the copy roles, not the original frame. */
-.case-study-chapter--inverse, .about-details, .work .section-heading { --color-bg-surface:inherit; }
+.case-study-chapter--inverse, .work .section-heading { --color-bg-surface:inherit; }
 :root[data-theme='dark'], [data-theme='dark'] {
   color-scheme: dark;
   --color-section-bg-surface: var(--color-night);

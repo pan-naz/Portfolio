@@ -30,7 +30,7 @@ export const petCareAnimation = {
   "kind": "video",
   "presentation": "floating",
   "poster": "/projects/pet-care-case-study/hero-poster.jpg",
-  "canvasColor": "#FFF5E7",
+  "canvasColor": "var(--pc-cream)",
   "canvasInset": 6,
   "canvasFade": true,
   "canvasSourceRatio": 1.4

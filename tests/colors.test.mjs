@@ -3,6 +3,9 @@ import {validateColorPalette,validateColorUses,validateSharedColorLiterals,valid
 import {paletteColors,strokeCards} from '../src/data/system-colors.ts';import {readSystemTokens} from '../src/data/system-inventory.ts';
 const read=name=>fs.readFileSync(new URL('../'+name,import.meta.url),'utf8'),css=read('src/styles/tokens.css'),tokens=readSystemTokens(css);
 assert.deepEqual(validateColors(),[]);
+assert.equal(paletteColors.length, 12);
+for(const role of ['color-smoke','color-bg-raised','color-bg-raised-hover']) assert.ok(!(role in tokens.light) && !(role in tokens.dark), 'Retired role stays removed: ' + role);
+assert.ok(validateColorPalette(css+'\n:root {--color-bg-raised:var(--color-white);}').length, 'Merged role cannot return');
 assert.deepEqual(validateColorDocumentation(undefined),[],'Vercel validates the reviewed receipt when external docs are absent');
 assert.ok(validateColorDocumentation('## Colour\nIncorrect or incomplete contract.').length,'Changed/missing Colour contract fails');
 const fixture=fs.mkdtempSync(path.join(os.tmpdir(),'palette-guard-'));
