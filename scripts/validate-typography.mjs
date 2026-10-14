@@ -15,7 +15,7 @@ export function validateCatalogTypographyLayout(css,catalog,toggle){
  requireValue(shared,'.ds-type-device-last','border-radius','0 0 var(--radius-medium) var(--radius-medium)');
  if(css.includes('.ds-type-device-first')||catalog.includes('ds-type-device-first'))errors.push('Stacked corners must use device hooks, never a first-style class.');
  if(!catalog.includes('data-type-device={device}')||!catalog.includes("index===typography.length-1&&'ds-type-device-last'"))errors.push('Preserve device hooks and desktop column endings.');
- for(const [mode,icon,label] of [['light','sun','Light'],['dark','moon','Dark']])if(!new RegExp(`data-theme-choice="${mode}"[^>]*><Icon name="${icon}"\\s*/><span>${label}</span>`).test(toggle))errors.push(`Theme segment ${mode} must use the shared decorative ${icon} before its existing label.`);
+ for(const [mode,icon,label] of [['light','sun','Light'],['dark','moon','Dark']])if(!new RegExp(`data-theme-choice="${mode}"[^>]*><Icon name="${icon}" class="theme-icon-glyph"\\s*/><span>${label}</span>`).test(toggle))errors.push(`Theme segment ${mode} must use the shared decorative ${icon} before its existing label.`);
  requireValue(shared,'.theme-toggle-group .button','gap','var(--space-2)');
  requireValue(shared,'.theme-toggle-group .button > span','text-box-trim','trim-both');
  requireValue(shared,'.theme-toggle-group .button > span','text-box-edge','text');
