@@ -8,7 +8,7 @@ import NavigationItem from './NavigationItem.astro';
   <nav class="ds-navigation" aria-label="Design system sections">
     <div class="ds-nav-scroll" data-ds-nav-scroll>
       <NavigationItem label="Overview" href="/design-system/" data-ds-dashboard-link />
-      {dsGroups.map((group,index)=><Fragment>{index>0&&<span class="ds-nav-divider" aria-hidden="true"/>}<div class="ds-nav-group"><p class="text-label-s">{group.label}</p>{group.links.map(([id,label])=><NavigationItem label={label} href={`#${id}`} data-ds-nav />)}</div></Fragment>)}
+      {dsGroups.map((group,index)=><Fragment>{index>0&&<span class="ds-nav-divider" aria-hidden="true"/>}<div class="ds-nav-group"><p class="text-label-m">{group.label}</p>{group.links.map(([id,label])=><NavigationItem label={label} href={`#${id}`} data-ds-nav />)}</div></Fragment>)}
     </div>
   </nav>
 </aside>

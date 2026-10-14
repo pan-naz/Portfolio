@@ -58,11 +58,11 @@ export function buildSystemInventory(root = process.cwd()) {
     }
   };
   [...used].forEach(visitToken);
-  const owner = (name: string) => name === 'control-border' ? 'Button' : name === 'radius-project-logo' ? 'ProjectIdentity' : name === 'project-identity-tags-gap' ? 'ProjectTags' : name.startsWith('footer-pile-') ? 'SiteFooter' : name.startsWith('waterfall-') ? 'HeroWaterfall' : name.startsWith('project-card-') || name.startsWith('project-identity-') ? 'ProjectCard' : name === 'shadow-overlay' ? 'IconButton' : name === 'shadow-floating-navigation' ? 'NavigationItem' : undefined;
+  const owner = (name: string) => name === 'control-border' ? 'Button' : name === 'radius-project-logo' ? 'ProjectIdentity' : name === 'project-identity-tags-gap' ? 'ProjectTags' : name.startsWith('footer-pile-') ? 'SiteFooter' : name.startsWith('waterfall-') ? 'HeroWaterfall' : name.startsWith('project-card-') || name.startsWith('project-identity-') ? 'ProjectCard' : undefined;
   const category = (name: string) => /^(color-|waterfall-icon-color$|footer-pile-icon-color$|focus-ring$|control-border$|backdrop-)/.test(name) ? 'color' : /^(font-|text-|type-|letter-spacing-|line-height-)/.test(name) ? 'typography' : name.startsWith('space-') ? 'spacing' : /^(radius-|shadow-)/.test(name) ? 'shape' : /^(duration-|delay-|ease-|stagger-|distance-|rotation-|intro-stage-|scale-|project-tilt-|work-filter-)/.test(name) ? 'motion' : name.startsWith('icon-') ? 'iconography' : 'layout';
   const tokens: SourceToken[] = [...used].filter(name => definitions.has(name)).sort().map(name => ({
     name, light: palettes.light[name], dark: palettes.dark[name], resolvedLight: palettes.value(palettes.light, name), resolvedDark: palettes.value(palettes.dark, name), users: [...(consumers.get(name) || [])],
-    tier: owner(name) ? 'component' : /^(color-(white|paper(?:-\d+)?|mist|stone|silver|pewter|graphite|charcoal|ink(?:-\d+)?|night|orange(?:-light)?)$|radius-\d|shadow-overlay-light|ease-stage-entrance)/.test(name) ? 'primitive' : 'semantic', category: category(name), owner: owner(name),
+    tier: owner(name) ? 'component' : /^(color-(white|paper(?:-\d+)?|mist|stone|silver|pewter|graphite|charcoal|ink(?:-\d+)?|night|orange(?:-light)?)$|radius-\d|ease-stage-entrance)/.test(name) ? 'primitive' : 'semantic', category: category(name), owner: owner(name),
   }));
   const components: SourceComponent[] = componentFiles.map(file => {
     const name = basename(file, '.astro');

@@ -20,7 +20,7 @@
 #tg-video > .case-study-media { margin-top: var(--space-16); }
 .telegram-case > .tg-result { margin-top: var(--case-section-space); background: linear-gradient(180deg, var(--tg-blue), var(--tg-blue-deep)); }
 .tg-result .case-study-chapter__inner { display: grid; gap: var(--space-16); }
-.tg-window { width: min(100%, 1000px); justify-self: center; filter: drop-shadow(var(--shadow-overlay)); }
+.tg-window { width: min(100%, 1000px); justify-self: center; filter: drop-shadow(var(--shadow-small)); }
 @media (max-width: 1023px) {
   .tg-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

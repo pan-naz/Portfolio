@@ -11,7 +11,7 @@
 .yellow-chapter-heading > p { color: var(--color-text-secondary); }
 .yellow-duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--grid-gap); align-items: start; }
 .yellow-duo > * { min-width: 0; }
-.yellow-brand-card { display: grid; align-content: space-between; gap: var(--space-6); height: 100%; margin: 0; padding: var(--space-8); background: var(--color-bg-surface); border-radius: var(--radius-medium); box-shadow: var(--shadow-floating); }
+.yellow-brand-card { display: grid; align-content: space-between; gap: var(--space-6); height: 100%; margin: 0; padding: var(--space-8); background: var(--color-bg-surface); border-radius: var(--radius-medium); box-shadow: var(--shadow-small); }
 .yellow-brand-card figcaption { color: var(--color-text-secondary); }
 .yellow-equation { display: grid; grid-template-columns: minmax(0, 1fr) var(--space-6) minmax(0, 1fr) var(--space-6) minmax(0, 1fr); gap: var(--space-2); align-items: center; text-align: center; }
 .yellow-equation > div { display: grid; justify-items: center; gap: var(--space-3); }

@@ -35,7 +35,7 @@ assert.ok(source.includes('sectionRevealEffects(title, index, description, conte
 assert.ok(source.includes("number('--section-reveal-trigger-viewport-ratio')") && source.includes('shouldRevealWorkContent(stageTop, window.scrollY, window.innerHeight * sectionRevealRatio)'), 'The heading requires scroll progress and the bottom 90% trigger');
 assert.ok(source.includes('revealRail();'), 'The independent filter still waits until the background reaches full width');
 assert.ok(work.includes('data-work-stage-surface') && work.includes('data-work-rail') && !work.includes('reveal={false}'));
-assert.ok(css.includes('inset: calc(-1 * var(--work-preview-height))') && css.includes("html[data-work-stage-layout='true'] .work-panel { border-radius: var(--radius-chapter) 0 0 var(--radius-chapter); }"), 'Desktop preview gives both left corners the same radius for their shared expansion and return animation');
+assert.ok(css.includes('inset: calc(-1 * var(--work-preview-height))') && css.includes("html[data-work-stage-layout='true'] .work-panel { border-radius: var(--radius-xlarge) 0 0 var(--radius-xlarge); }"), 'Desktop preview gives both left corners the same radius for their shared expansion and return animation');
 assert.ok(source.includes('element: panel') && source.includes('radiusKeyframes'), 'The background position and corner geometry share one native animation clock');
 assert.ok(source.includes('{ offset: 0.72, borderRadius: currentRadius }') && source.includes('{ offset: 0.28, borderRadius: targetRadius }'), 'The corner morph rejoins the final forward travel and begins with movement on return');
 assert.ok(css.includes('.work-stage-can-shift.is-work-shifting .work-panel { will-change: transform, border-radius; }'), 'The large background is promoted only during the stage shift');
@@ -58,7 +58,7 @@ const tokenValue = name => tokenDefinitions[name].startsWith('var(') ? tokenValu
 assert.equal(tokenValue('ease-work-stage'), 'cubic-bezier(.22, .61, .36, 1)', 'The shared stage curve keeps its exact value through aliases');
 assert.ok(source.includes("const stageEase = () => tokens.getPropertyValue('--ease-work-stage').trim()"), 'Both stage directions consume the same gentle easing curve');
 assert.ok(tokens.includes('--section-reveal-trigger-viewport-ratio: .9') && tokens.includes('--work-stage-trigger-viewport-ratio: .02') && tokens.includes('--work-stage-collapse-scroll-y: 1'));
-assert.ok(tokens.includes('--radius-chapter: clamp(40px, 5.8vw, 100px)'), 'Both dark chapter surfaces share a fluid compact-screen radius');
+assert.ok(tokens.includes('--radius-xlarge: clamp(40px, 5.8vw, 100px)'), 'Both dark chapter surfaces share a fluid compact-screen radius');
 assert.ok(!source.includes('radiusDelay') && !tokens.includes('--duration-work-stage-radius'), 'No second radius phase or timer remains');
 assert.ok(!/ScrollTrigger|scrub:/.test(source), 'Work panel motion is event-triggered, not scroll-scrubbed');
 console.log('PASS: static intro panel, 90% section reveal, top-edge expansion and top-only reverse transition.');

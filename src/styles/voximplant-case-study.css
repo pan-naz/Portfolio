@@ -40,7 +40,7 @@
 .vox-persona-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4); }
 .vox-persona-icon { display: block; flex: 0 0 56px; width: 56px; height: 56px; color: var(--color-text-primary); }
 .vox-persona-icon svg { display: block; width: 56px; height: 56px; }
-.vox-persona-group { padding: 8px 16px; border-radius: var(--radius-pill); background: var(--color-bg-surface); box-shadow: var(--shadow-floating); white-space: nowrap; }
+.vox-persona-group { padding: 8px 16px; border-radius: var(--radius-full); background: var(--color-bg-surface); box-shadow: var(--shadow-small); white-space: nowrap; }
 .vox-persona > h3 { margin-top: var(--space-4); }
 .vox-persona > p { margin-top: var(--space-2); }
 .vox-persona-needs { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--color-border-default); }
@@ -71,7 +71,7 @@
 .vox-product-feature > :is(p, ul) { max-width: 620px; margin-top: var(--space-2); }
 .vox-product-feature > :is(.case-study-media, img), .vox-product-feature > picture > img { margin-top: var(--space-6); }
 .vox-product-feature > img + img, .vox-product-feature > picture + picture > img { margin-top: var(--space-6); }
-.vox-product-feature--messaging-history .case-study-media :is(video, img) { border-radius: var(--radius-medium); box-shadow: var(--shadow-floating); }
+.vox-product-feature--messaging-history .case-study-media :is(video, img) { border-radius: var(--radius-medium); box-shadow: var(--shadow-small); }
 .vox-solution .vox-product-feature > :is(p, ul) { color: var(--color-text-secondary); }
 .vox-solution li::marker { color: var(--color-text-secondary); }
 
@@ -81,7 +81,7 @@
 .vox-contact-center .vox-product-feature { margin-top: var(--case-section-space); }
 .vox-product-feature--design-system { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-6); align-items: start; }
 .vox-product-feature--design-system > :is(h3, ul) { grid-column: 1 / -1; }
-.vox-product-feature--design-system > img, .vox-product-feature--design-system > picture > img { border-radius: var(--radius-medium); box-shadow: var(--shadow-floating); }
+.vox-product-feature--design-system > img, .vox-product-feature--design-system > picture > img { border-radius: var(--radius-medium); box-shadow: var(--shadow-small); }
 
 .vox-stats--impact { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: var(--space-16); }
 .vox-final-cards { display: grid; grid-template-columns: 1fr 1fr; gap: var(--grid-gap); margin-top: var(--space-24); }

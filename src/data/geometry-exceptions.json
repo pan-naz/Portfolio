@@ -1,0 +1,902 @@
+[
+  {
+    "file": "src/styles/case-study-guides.css",
+    "line": 4,
+    "selector": ".case-study-guides",
+    "context": "@layer system",
+    "property": "inset",
+    "value": "calc(-1 * var(--case-content-top-inset, 0px)) auto 0 0",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "0px",
+        "number": 0
+      }
+    ],
+    "inline": false,
+    "reason": "Dimensioned zero fallback in geometry expressions; preserve unchanged."
+  },
+  {
+    "file": "src/styles/case-study-guides.css",
+    "line": 12,
+    "selector": ".case-study-guides, .case-study-marker",
+    "context": "@layer system > @supports (width: round(down, 100%, 4px))",
+    "property": "margin-left",
+    "value": "round(down, (100% - var(--case-guide-width)) / 2, 1px)",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "1px",
+        "number": 1
+      }
+    ],
+    "inline": false,
+    "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
+  },
+  {
+    "file": "src/styles/case-study-narrative.css",
+    "line": 45,
+    "selector": ".case-study-sticky",
+    "context": "@layer system > @media (min-width: 768px)",
+    "property": "top",
+    "value": "min(calc(var(--space-6) + var(--safe-top)), calc(100dvh - var(--case-sticky-height, 0px) - var(--space-6) - var(--safe-bottom)))",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "0px",
+        "number": 0
+      }
+    ],
+    "inline": false,
+    "reason": "Dimensioned zero fallback in geometry expressions; preserve unchanged."
+  },
+  {
+    "file": "src/styles/case-study-service-tiles.css",
+    "line": 35,
+    "selector": ".case-study-service-popover li",
+    "context": "@layer system",
+    "property": "padding-left",
+    "value": "calc(var(--space-4) + 2px)",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "2px",
+        "number": 2
+      }
+    ],
+    "inline": false,
+    "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
+  },
+  {
+    "file": "src/styles/case-study-service-tiles.css",
+    "line": 36,
+    "selector": ".case-study-service-popover li::before",
+    "context": "@layer system",
+    "property": "top",
+    "value": "10px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "10px",
+        "number": 10
+      }
+    ],
+    "inline": false,
+    "reason": "Existing control inset, line-height or pointer target geometry; token snapping would alter the control."
+  },
+  {
+    "file": "src/styles/case-video-player.css",
+    "line": 16,
+    "selector": ".case-video-seek input::-webkit-slider-thumb",
+    "context": "@layer system",
+    "property": "margin-top",
+    "value": "-6px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "-6px",
+        "number": -6
+      }
+    ],
+    "inline": false,
+    "reason": "Existing control inset, line-height or pointer target geometry; token snapping would alter the control."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "line": 30,
+    "selector": "html[data-work-stage-layout='true'] .ds-main",
+    "context": "@layer system",
+    "property": "margin-left",
+    "value": "calc(240px + var(--safe-left))",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "240px",
+        "number": 240
+      }
+    ],
+    "inline": false,
+    "reason": "Approved 240px sidebar lane; changing it would move catalog content."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "line": 78,
+    "selector": ".ds-name-switch::before",
+    "context": "@layer system",
+    "property": "top",
+    "value": "1px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "1px",
+        "number": 1
+      }
+    ],
+    "inline": false,
+    "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "line": 78,
+    "selector": ".ds-name-switch::before",
+    "context": "@layer system",
+    "property": "left",
+    "value": "1px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "1px",
+        "number": 1
+      }
+    ],
+    "inline": false,
+    "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "line": 80,
+    "selector": ".ds-name-toggle[aria-checked=true] .ds-name-switch::before",
+    "context": "@layer system",
+    "property": "right",
+    "value": "1px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "1px",
+        "number": 1
+      }
+    ],
+    "inline": false,
+    "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 27,
+    "selector": ".project-surface:focus-visible",
+    "context": "@layer system",
+    "property": "box-shadow",
+    "value": "0 0 0 calc(var(--space-1) + 2px) var(--color-bg-canvas)",
+    "kind": "shadow",
+    "values": [
+      {
+        "raw": "2px",
+        "number": 2
+      }
+    ],
+    "inline": false,
+    "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 43,
+    "selector": ".sr-only",
+    "context": "@layer system",
+    "property": "margin",
+    "value": "-1px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "-1px",
+        "number": -1
+      }
+    ],
+    "inline": false,
+    "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 51,
+    "selector": ".button",
+    "context": "@layer system",
+    "property": "padding",
+    "value": "calc(var(--space-3) - 1px) var(--space-6)",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "1px",
+        "number": 1
+      }
+    ],
+    "inline": false,
+    "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 107,
+    "selector": ".button--arrow-fill.button--small",
+    "context": "@layer system",
+    "property": "padding",
+    "value": "var(--button-orb-inset) var(--button-orb-inset) var(--button-orb-inset) 14px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "14px",
+        "number": 14
+      }
+    ],
+    "inline": false,
+    "reason": "Existing control inset, line-height or pointer target geometry; token snapping would alter the control."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 113,
+    "selector": ".icon-button--secondary.icon-button--small",
+    "context": "@layer system",
+    "property": "padding",
+    "value": "calc((var(--control-height-small) - var(--icon-size-compact)) / 2 - 1px)",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "1px",
+        "number": 1
+      }
+    ],
+    "inline": false,
+    "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 178,
+    "selector": ".hero-waterfall-canvas",
+    "context": "@layer system",
+    "property": "left",
+    "value": "calc(-1 * var(--waterfall-bleed, 160px))",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "160px",
+        "number": 160
+      }
+    ],
+    "inline": false,
+    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 191,
+    "selector": ".navigation-item",
+    "context": "@layer system",
+    "property": "padding",
+    "value": "10px var(--navigation-item-padding-inline)",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "10px",
+        "number": 10
+      }
+    ],
+    "inline": false,
+    "reason": "Existing control inset, line-height or pointer target geometry; token snapping would alter the control."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 203,
+    "selector": ".hero",
+    "context": "@layer system",
+    "property": "padding-block",
+    "value": "calc(208px + var(--safe-top)) 150px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "208px",
+        "number": 208
+      },
+      {
+        "raw": "150px",
+        "number": 150
+      }
+    ],
+    "inline": false,
+    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 212,
+    "selector": ".hero-cta-slot",
+    "context": "@layer system",
+    "property": "margin-top",
+    "value": "28px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "28px",
+        "number": 28
+      }
+    ],
+    "inline": false,
+    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 215,
+    "selector": ".hero-eyebrow",
+    "context": "@layer system",
+    "property": "margin-bottom",
+    "value": "28px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "28px",
+        "number": 28
+      }
+    ],
+    "inline": false,
+    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 232,
+    "selector": ".skill-tag",
+    "context": "@layer system",
+    "property": "padding",
+    "value": "5px 11px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "5px",
+        "number": 5
+      },
+      {
+        "raw": "11px",
+        "number": 11
+      }
+    ],
+    "inline": false,
+    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 236,
+    "selector": ".process-tags",
+    "context": "@layer system",
+    "property": "top",
+    "value": "calc(108px + var(--safe-top))",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "108px",
+        "number": 108
+      }
+    ],
+    "inline": false,
+    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 239,
+    "selector": ".skill-marquee",
+    "context": "@layer system",
+    "property": "top",
+    "value": "calc(230px + var(--safe-top))",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "230px",
+        "number": 230
+      }
+    ],
+    "inline": false,
+    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 251,
+    "selector": ".work-panel",
+    "context": "@layer system",
+    "property": "inset",
+    "value": "calc(-1 * var(--work-preview-height)) auto 284px 0",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "284px",
+        "number": 284
+      }
+    ],
+    "inline": false,
+    "reason": "Existing Work preview/filter lane and scroll coordinates; preserve geometry and triggers."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 270,
+    "selector": ".work-rail",
+    "context": "@layer system",
+    "property": "top",
+    "value": "366px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "366px",
+        "number": 366
+      }
+    ],
+    "inline": false,
+    "reason": "Existing Work preview/filter lane and scroll coordinates; preserve geometry and triggers."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 270,
+    "selector": ".work-rail",
+    "context": "@layer system",
+    "property": "left",
+    "value": "calc(var(--gutter) - 206px)",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "206px",
+        "number": 206
+      }
+    ],
+    "inline": false,
+    "reason": "Existing Work preview/filter lane and scroll coordinates; preserve geometry and triggers."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 275,
+    "selector": ".section-navigation",
+    "context": "@layer system",
+    "property": "top",
+    "value": "calc(112px + var(--safe-top))",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "112px",
+        "number": 112
+      }
+    ],
+    "inline": false,
+    "reason": "Existing Work preview/filter lane and scroll coordinates; preserve geometry and triggers."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 318,
+    "selector": ".project",
+    "context": "@layer system",
+    "property": "border-radius",
+    "value": "calc(var(--radius-large) + 2px)",
+    "kind": "corner",
+    "values": [
+      {
+        "raw": "2px",
+        "number": 2
+      }
+    ],
+    "inline": false,
+    "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 372,
+    "selector": "html[data-work-stage-layout='true'] .about-details::before",
+    "context": "@layer system",
+    "property": "left",
+    "value": "max(0px, calc(var(--gutter) - var(--space-16)))",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "0px",
+        "number": 0
+      }
+    ],
+    "inline": false,
+    "reason": "Dimensioned zero fallback in geometry expressions; preserve unchanged."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 376,
+    "selector": ".experience-row",
+    "context": "@layer system",
+    "property": "padding-block",
+    "value": "20px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "20px",
+        "number": 20
+      }
+    ],
+    "inline": false,
+    "reason": "Existing approved section spacing or geometry; leave unchanged pending user review."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 393,
+    "selector": ".contact",
+    "context": "@layer system",
+    "property": "margin-top",
+    "value": "120px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "120px",
+        "number": 120
+      }
+    ],
+    "inline": false,
+    "reason": "Existing approved section spacing or geometry; leave unchanged pending user review."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 408,
+    "selector": ".footer",
+    "context": "@layer system",
+    "property": "margin-top",
+    "value": "128px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "128px",
+        "number": 128
+      }
+    ],
+    "inline": false,
+    "reason": "Existing footer/pile clearance and responsive margin; keep the current positions."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 408,
+    "selector": ".footer",
+    "context": "@layer system",
+    "property": "padding-block",
+    "value": "var(--space-6) calc(40px + var(--safe-bottom))",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "40px",
+        "number": 40
+      }
+    ],
+    "inline": false,
+    "reason": "Existing footer/pile clearance and responsive margin; keep the current positions."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 412,
+    "selector": ".footer-icon-pile-layer",
+    "context": "@layer system",
+    "property": "top",
+    "value": "calc(-1 * var(--pile-above) - 1px)",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "1px",
+        "number": 1
+      }
+    ],
+    "inline": false,
+    "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 419,
+    "selector": ".button--small",
+    "context": "@layer system",
+    "property": "padding",
+    "value": "6px 14px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "6px",
+        "number": 6
+      },
+      {
+        "raw": "14px",
+        "number": 14
+      }
+    ],
+    "inline": false,
+    "reason": "Existing control inset, line-height or pointer target geometry; token snapping would alter the control."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 423,
+    "selector": ".process-tags",
+    "context": "@layer system > @media (max-width: 1439px)",
+    "property": "margin",
+    "value": "0 var(--gutter-right) 36px var(--gutter-left)",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "36px",
+        "number": 36
+      }
+    ],
+    "inline": false,
+    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 425,
+    "selector": ".hero",
+    "context": "@layer system > @media (max-width: 1439px)",
+    "property": "padding-bottom",
+    "value": "calc(150px + var(--space-8) + var(--space-2))",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "150px",
+        "number": 150
+      }
+    ],
+    "inline": false,
+    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 426,
+    "selector": ".hero-content",
+    "context": "@layer system > @media (max-width: 1439px)",
+    "property": "padding-right",
+    "value": "130px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "130px",
+        "number": 130
+      }
+    ],
+    "inline": false,
+    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 433,
+    "selector": ".hero",
+    "context": "@layer system > @media (max-width: 1023px)",
+    "property": "padding-bottom",
+    "value": "calc(70px + var(--space-8) + var(--space-2))",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "70px",
+        "number": 70
+      }
+    ],
+    "inline": false,
+    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 439,
+    "selector": ".hero",
+    "context": "@layer system > @media (max-width: 767px)",
+    "property": "padding-bottom",
+    "value": "calc(70px + var(--space-8))",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "70px",
+        "number": 70
+      }
+    ],
+    "inline": false,
+    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 442,
+    "selector": ".process-tags",
+    "context": "@layer system > @media (max-width: 767px)",
+    "property": "margin-bottom",
+    "value": "36px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "36px",
+        "number": 36
+      }
+    ],
+    "inline": false,
+    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 445,
+    "selector": ".work-panel",
+    "context": "@layer system > @media (max-width: 767px)",
+    "property": "bottom",
+    "value": "100px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "100px",
+        "number": 100
+      }
+    ],
+    "inline": false,
+    "reason": "Existing Work preview/filter lane and scroll coordinates; preserve geometry and triggers."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 447,
+    "selector": ".work .section-heading, .impact .section-heading, .about-details .section-heading",
+    "context": "@layer system > @media (max-width: 767px)",
+    "property": "margin-bottom",
+    "value": "40px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "40px",
+        "number": 40
+      }
+    ],
+    "inline": false,
+    "reason": "Existing Work preview/filter lane and scroll coordinates; preserve geometry and triggers."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 465,
+    "selector": ".tools-grid",
+    "context": "@layer system > @media (max-width: 767px)",
+    "property": "margin-top",
+    "value": "40px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "40px",
+        "number": 40
+      }
+    ],
+    "inline": false,
+    "reason": "Existing approved section spacing or geometry; leave unchanged pending user review."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 470,
+    "selector": ".footer",
+    "context": "@layer system > @media (max-width: 767px)",
+    "property": "margin-top",
+    "value": "clamp(80px, calc(16vw - var(--gutter) * .32 + var(--space-6)), 128px)",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "80px",
+        "number": 80
+      },
+      {
+        "raw": "128px",
+        "number": 128
+      }
+    ],
+    "inline": false,
+    "reason": "Existing footer/pile clearance and responsive margin; keep the current positions."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 494,
+    "selector": "html[data-work-stage-layout='true'] .work-rail",
+    "context": "@layer system",
+    "property": "left",
+    "value": "calc(max(var(--space-4), var(--gutter) - 206px) + var(--safe-left))",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "206px",
+        "number": 206
+      }
+    ],
+    "inline": false,
+    "reason": "Existing Work preview/filter lane and scroll coordinates; preserve geometry and triggers."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 496,
+    "selector": "html[data-work-stage-layout='true'] .work-content",
+    "context": "@layer system",
+    "property": "margin-left",
+    "value": "calc(max(220px, var(--gutter)) + var(--safe-left))",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "220px",
+        "number": 220
+      }
+    ],
+    "inline": false,
+    "reason": "Existing Work preview/filter lane and scroll coordinates; preserve geometry and triggers."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 555,
+    "selector": ":is(.project-media, .case-study-transition-artwork, .case-study-artwork)",
+    "context": "@layer system",
+    "property": "border-radius",
+    "value": "calc(var(--radius-large) + 2px)",
+    "kind": "corner",
+    "values": [
+      {
+        "raw": "2px",
+        "number": 2
+      }
+    ],
+    "inline": false,
+    "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 562,
+    "selector": ".case-media-frame.media-crop",
+    "context": "@layer system",
+    "property": "border-radius",
+    "value": "var(--case-media-radius, 0px)",
+    "kind": "corner",
+    "values": [
+      {
+        "raw": "0px",
+        "number": 0
+      }
+    ],
+    "inline": false,
+    "reason": "Dimensioned zero fallback in geometry expressions; preserve unchanged."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 76,
+    "selector": ".button--arrow-fill",
+    "context": "@layer system",
+    "property": "--button-orb-inset",
+    "value": "5px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "5px",
+        "number": 5
+      }
+    ],
+    "inline": false,
+    "reason": "The5px inset centres the orb and matches its optical frame; a nearby spacing step would move the orb and alter the fill mask."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 270,
+    "selector": ".work-rail",
+    "context": "@layer system",
+    "property": "--work-filter-half-height",
+    "value": "78px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "78px",
+        "number": 78
+      }
+    ],
+    "inline": false,
+    "reason": "The78px half-height centres the existing side-filter control; a scale replacement would move the whole control."
+  },
+  {
+    "file": "src/styles/global.css",
+    "line": 537,
+    "selector": ".case-study-media--floating",
+    "context": "@layer system",
+    "property": "--media-stroke-half",
+    "value": "2px",
+    "kind": "spacing",
+    "values": [
+      {
+        "raw": "2px",
+        "number": 2
+      }
+    ],
+    "inline": false,
+    "reason": "The2px half-stroke keeps the4px border centred on the original media edge; a scale replacement would shift the frame."
+  }
+]

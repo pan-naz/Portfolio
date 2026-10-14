@@ -20,7 +20,7 @@
 .blaustrom-swatch--gradient { background: linear-gradient(135deg, var(--blaustrom-blue), var(--blaustrom-teal)); }
 .blaustrom-palette > li > :last-child { display: grid; gap: var(--space-1); padding: var(--space-4); }
 .blaustrom-palette code { color: var(--color-text-secondary); font: inherit; }
-.blaustrom-brand-card { --color-text-primary: var(--color-ink); --color-text-secondary: var(--color-ink-64); color: var(--color-text-primary); padding: var(--space-6); background: var(--color-white); border-radius: var(--radius-medium); box-shadow: var(--shadow-floating); }
+.blaustrom-brand-card { --color-text-primary: var(--color-ink); --color-text-secondary: var(--color-ink-64); color: var(--color-text-primary); padding: var(--space-6); background: var(--color-white); border-radius: var(--radius-medium); box-shadow: var(--shadow-small); }
 .blaustrom-brand-card > .case-study-eyebrow { color: var(--color-text-secondary); }
 .blaustrom-brand-card > p + p { margin-top: var(--space-6); }
 .blaustrom-type-grid { margin-top: var(--grid-gap); gap: var(--grid-gap); align-items: stretch; }

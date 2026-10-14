@@ -20,7 +20,7 @@ interface Props {
   presentation?: 'framed' | 'bare' | 'shadow' | 'floating';
   strokeWidth?: 4 | 8;
   strokePlacement?: 'center' | 'outside';
-  radius?: 'medium' | 'small' | 'media';
+  radius?: 'medium' | 'small' | 'large';
   controls?: boolean;
   audioControls?: boolean;
   canvasColor?: string;
@@ -43,7 +43,7 @@ const MediaRoot = player ? 'case-video-player' : 'figure';
 // another stroke, shadow or margin when their asset is reused as a hero.
 const presentation = artwork ? 'framed' : requestedPresentation;
 const floating = !artwork && (presentation === 'floating' || player);
-const mediaRadius = artwork ? 'media' : radius;
+const mediaRadius = artwork ? 'large' : radius;
 // Insets use the same proportion on both axes and travel with the media node.
 const mediaStyle = mediaCanvasStyle({ width, height, canvasColor, canvasInset, canvasFade, canvasSourceRatio });
 const crop = mediaCrop({ width, height, cropPixels });

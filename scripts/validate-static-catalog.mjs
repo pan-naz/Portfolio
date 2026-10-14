@@ -1,3 +1,4 @@
+import {spacingLayoutSystem} from '../src/data/system-spacing-layout.ts';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {resolve} from 'node:path';
@@ -78,3 +79,9 @@ assert.deepEqual(validateInventoryCoverage(model,paths,tokens,icons,read('src/st
 const variantValues=[...catalog.matchAll(/data-ds-variant="([^"]+)"/g)].map(([,value])=>value);assert.deepEqual(validateVariantCoverage(model,variantValues),[]);
 assert.ok(!model.projectFonts.some(font=>styles(catalog).includes(font)));
 console.log(`Final catalog verified: ${views.length} views, ten reusable entries plus eleven documented-hidden components, linked panels and live shared styles.`);
+
+const spaceModel=spacingLayoutSystem(model.tokens);
+for(const step of spaceModel.spaces){assert.ok(catalog.includes(`data-ds-space-uses="${step.name}">${step.uses} uses`),'Space count must match fresh source occurrences: '+step.name);assert.ok(catalog.includes(`height:var(--${step.name})`),'Scale bars must use the actual source token.');}
+assert.deepEqual([...catalog.matchAll(/data-ds-layout-columns="(\d+)"/g)].map(m=>Number(m[1])),spaceModel.layouts.flatMap(l=>[l.projects,l.metrics]));
+for(const name of ['Spacing','Layout: desktop / tablet / phone','Corners','Shadows: light','Shadows: dark'])assert.ok(catalog.includes('/* '+name+' */'),'Complete labelled geometry code: '+name);
+for(const token of spaceModel.corners.map(c=>c.token).concat(spaceModel.shadows.map(s=>s.token)))assert.ok(catalog.includes('data-ds-'+(token.startsWith('radius')?'corner':'shadow')+'="'+token+'"'));

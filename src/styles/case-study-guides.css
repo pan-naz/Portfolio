@@ -9,7 +9,7 @@
 .case-study-marker > i { width: 0; height: calc(var(--space-8) + var(--space-2)); border-left: 1px solid var(--color-text-primary); }
 /* Keep the reference's one-pixel guides sharp at fractional responsive widths. */
 @supports (width: round(down, 100%, 4px)) {
-  .case-study-guides, .case-study-marker { --case-guide-width: round(down, 100%, 4px); width: var(--case-guide-width); margin-left: round(down, (100% - var(--case-guide-width)) / 2, 1px); }
+  .case-study-guides, .case-study-marker { --case-guide-width: round(down, 100%, var(--space-1)); width: var(--case-guide-width); margin-left: round(down, (100% - var(--case-guide-width)) / 2, 1px); }
 }
 @media (max-width: 767px) {
   .case-study-guides, .case-study-marker { grid-template-columns: repeat(2, minmax(0, 1fr)); }
