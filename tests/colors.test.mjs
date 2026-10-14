@@ -1,10 +1,12 @@
 import assert from 'node:assert/strict';import fs from 'node:fs';import os from 'node:os';import path from 'node:path';
-import {validateColorPalette,validateColorUses,validateCatalogInnerPanels,validateSharedColorLiterals,validateColorDocumentation,validateColors} from '../scripts/validate-colors.mjs';
+import {validateColorPalette,validateColorUses,validateCatalogInnerPanels,validateCatalogBoxStyles,validateSharedColorLiterals,validateColorDocumentation,validateColors} from '../scripts/validate-colors.mjs';
 import {paletteColors,strokeCards} from '../src/data/system-colors.ts';import {readSystemTokens} from '../src/data/system-inventory.ts';
 const read=name=>fs.readFileSync(new URL('../'+name,import.meta.url),'utf8'),css=read('src/styles/tokens.css'),tokens=readSystemTokens(css);
 assert.deepEqual(validateColors(),[]);
 assert.equal(paletteColors.length, 12);
 const catalogCss=read('src/styles/design-system.css');
+assert.deepEqual(validateCatalogBoxStyles(catalogCss),[]);
+for(const rule of ['.ds-stage{border:1px solid var(--color-border-default);}', '.ds-specs-card{border-radius:var(--radius-medium);}', '.ds-stage{box-shadow:none;}', '.ds-color-card{border-radius:var(--radius-small);}', '.ds-type-device::before{inset:0;}', '.ds-type-device{border-top:1px solid var(--color-border-default);}'])assert.ok(validateCatalogBoxStyles(catalogCss+rule).length,'Catalog box regression rejected: '+rule);
 assert.deepEqual(validateCatalogInnerPanels(catalogCss),[]);
 assert.ok(validateCatalogInnerPanels(catalogCss+"\n:root[data-theme='dark'] :is(.ds-color-card,.ds-stroke-card,.ds-code pre,.ds-type-device-header,.ds-type-device) { background:var(--color-bg-surface); }").length,'Dark inner-panel Surface override cannot return');
 assert.ok(validateCatalogInnerPanels(catalogCss.replace(/(\.ds-code pre \{[^}]*background:)var\(--color-bg-canvas\)/,'$1var(--color-bg-surface)')).length,'Inner Canvas binding cannot be replaced');
