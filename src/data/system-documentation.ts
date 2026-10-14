@@ -12,7 +12,7 @@ export const componentPurposes: Record<string, string> = {
   'src/components/CaseStudyMarker.astro': 'Marks a point or step in an illustration.',
   'src/components/CaseStudyMedia.astro': 'Shows an image or a video with the shared media treatment.',
   'src/components/CaseStudyOverview.astro': 'Introduces a project, its summary, role and team.',
-  'src/components/CaseStudyPalette.astro': 'Lists a project palette without defining system colours.',
+  'src/components/CaseStudyPalette.astro': 'Lists a project palette without defining system colors.',
   'src/components/CaseStudyServiceTiles.astro': 'Shows services with details that open on request.',
   'src/components/CaseStudySpecimen.astro': 'Labels an example of a project’s original identity.',
   'src/components/CaseStudySteps.astro': 'Shows a sequence as numbered steps.',

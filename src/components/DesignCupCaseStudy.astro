@@ -19,7 +19,7 @@ const { project } = Astro.props;
       <div class="dc-landing"><CaseStudyMedia {...designCupPage.media} presentation="shadow" /></div>
     </section>
 
-    <section class="case-study-chapter--inverse dc-jury" id="dc-jury" aria-labelledby="dc-jury-title">
+    <section class="case-study-chapter--inverse dc-jury" data-color-zone="dark" data-color-surface="page" data-color-section="page" data-shadow-theme="page" id="dc-jury" aria-labelledby="dc-jury-title">
       <div class="case-study-chapter__inner case-study-columns dc-row">
         <div class="dc-copy"><div><p class="case-study-eyebrow">{designCupJury.eyebrow}</p><h2 class="case-study-heading" id="dc-jury-title">{designCupJury.title}</h2></div><p class="dc-muted">{designCupJury.description}</p></div>
         <CaseStudyMedia {...designCupJury.media} presentation="bare" />
@@ -35,7 +35,7 @@ const { project } = Astro.props;
       </div>
     </section>
 
-    <section class="case-study-chapter--inverse dc-guide" id="dc-style" aria-labelledby="dc-style-title">
+    <section class="case-study-chapter--inverse dc-guide" data-color-zone="dark" data-color-surface="page" data-color-section="page" data-shadow-theme="page" id="dc-style" aria-labelledby="dc-style-title">
       <div class="case-study-chapter__inner dc-guide-inner">
         <div class="case-study-columns dc-heading"><div><p class="case-study-eyebrow">{designCupGuide.eyebrow}</p><h2 class="case-study-heading" id="dc-style-title">{designCupGuide.title}</h2></div><p class="dc-muted">{designCupGuide.description}</p></div>
         <CaseStudyDecisionCard title={designCupGuide.lettering.title} layout="figure">

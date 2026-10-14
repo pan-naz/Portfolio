@@ -1,7 +1,10 @@
 @layer system, project;
 @layer system {
+
+/* Color · palette and theme roles */
+
+/* Palette · src/styles/tokens.css */
 :root {
-  /* The single named palette; project brand values live only in project styles. */
   --color-white: #FFFFFF;
   --color-paper: #FAF8F7;
   --color-mist: #F0EDEB;
@@ -14,77 +17,255 @@
   --color-night: #0F100E;
   --color-orange: #F25A30;
   --color-orange-light: #FF6B42;
+  /* Transparent shades · named alpha variants */
   --color-ink-64: rgb(22 23 21 / 0.64);
   --color-ink-16: rgb(22 23 21 / 0.16);
   --color-ink-8: rgb(22 23 21 / 0.08);
   --color-paper-64: rgb(250 248 247 / 0.64);
   --color-paper-10: rgb(250 248 247 / 0.1);
   --color-paper-8: rgb(250 248 247 / 0.08);
-  --color-section-bg-surface: var(--color-ink);
-  --waterfall-icon-color: var(--color-ink);
-  --footer-pile-icon-color: var(--color-silver);
-  /* Palette and geometry primitives; project-brand colours remain project-scoped. */
-  --radius-12: 12px; --radius-24: 24px; --radius-40: 40px; --radius-999: 999px;
-  --ease-stage-entrance: cubic-bezier(.22, .61, .36, 1);
-  /* Canonical semantic roles used directly by website consumers. */
-  --duration-button-fill: 450ms;
-  --control-height-small: 36px;
-  --scale-tooltip-start: .82; --scale-tooltip-end: 1;
-  --distance-icon-shift: 3px; --ease-icon-shift: ease-out;
-  --duration-tooltip-opacity: 320ms; --duration-tooltip-scale: 440ms;
-  --layer-behind: -1; --layer-base: 0; --layer-content: 1; --layer-raised: 2;
-  --layer-controls: 10; --layer-tooltip: 20; --layer-header: 30;
-  --layer-cursor: 40; --layer-overlay: 100;
+}
+
+/* Roles · light (default) */
+:root, [data-theme='light'], [data-color-zone='light'] {
+  --color-bg-section: var(--color-ink);
+  --color-text-primary: var(--color-ink);
+  --color-text-primary-hover: var(--color-graphite);
+  --color-text-secondary: var(--color-ink-64);
+  --color-text-on-primary: var(--color-white);
+  --color-bg-canvas: var(--color-paper);
+  --color-bg-surface: var(--color-white);
+  --color-bg-surface-subtle: var(--color-mist);
+  --color-border-default: var(--color-ink-8);
+  --color-interactive-accent: var(--color-orange);
+  --color-video-track: var(--color-ink-16);
+  --color-rain-icon: var(--color-ink);
+  --color-footer-icon: var(--color-silver);
   color-scheme: light;
-  /* Overlay controls keep a high-contrast white surface; floating navigation follows the page theme. */
-  /* Backdrop and shadows preserve their approved compositor values. */
-  --backdrop-case: rgb(0 0 0 / .18);
-  --gutter: max(64px, calc((100vw - 1200px) / 2)); --hero-gutter: max(64px, calc((100vw - 1328px) / 2)); --hero-visual-gutter: calc(var(--hero-gutter) - 4px); --header-inset: 32px;
-  /* Shared viewport protection: surfaces bleed; content retains its existing gutters. */
-  --safe-left: env(safe-area-inset-left, 0px); --safe-right: env(safe-area-inset-right, 0px);
-  --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --gutter-left: calc(var(--gutter) + var(--safe-left)); --gutter-right: calc(var(--gutter) + var(--safe-right));
-  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
-  --space-6: 24px; --space-8: 32px; --space-12: 48px; --space-16: 64px; --space-24: 96px;
-  --section-space: var(--space-24); --grid-gap: var(--space-6);
-  --work-preview-height: 200px;
-  --section-reveal-trigger-viewport-ratio: .9; --work-stage-trigger-viewport-ratio: .02; --work-stage-collapse-scroll-y: 1;
-  --radius-full: var(--radius-999); --radius-medium: var(--radius-24); --radius-large: var(--radius-40); --radius-xlarge: clamp(40px, 5.8vw, 100px);
-  --radius-project-logo: 25%;
-  /* Fixed text system: phone defaults; only 768px and 1024px switch values. */
-  --font-body: 'Urbanist Variable', Urbanist, Arial, sans-serif;
+}
+
+/* Shared roles · local text and backdrop in both modes */
+:root, [data-theme], [data-color-zone] {
+  --color-border-control: var(--color-text-primary);
+  --color-focus-ring: var(--color-text-primary);
+  --color-backdrop: rgb(0 0 0 / .18);
+}
+
+/* Roles · dark */
+:root[data-theme='dark'], [data-theme='dark'], [data-color-zone='dark'] {
+  --color-bg-section: var(--color-night);
+  --color-text-primary: var(--color-paper);
+  --color-text-primary-hover: var(--color-stone);
+  --color-text-secondary: var(--color-paper-64);
+  --color-text-on-primary: var(--color-ink);
+  --color-bg-canvas: var(--color-ink);
+  --color-bg-surface: var(--color-charcoal);
+  --color-bg-surface-subtle: var(--color-graphite);
+  --color-border-default: var(--color-paper-8);
+  --color-interactive-accent: var(--color-orange-light);
+  --color-video-track: var(--color-paper-10);
+  --color-rain-icon: var(--color-stone);
+  --color-footer-icon: var(--color-pewter);
+  color-scheme: dark;
+}
+
+/* Scoped surfaces · retain inherited page artwork and section bands */
+[data-color-zone][data-color-surface='page'] { --color-bg-surface: inherit; }
+[data-color-zone][data-color-section='page'] { --color-bg-section: inherit; }
+
+/* Typography · families, phone styles and larger-screen changes */
+
+/* Font families · src/styles/tokens.css */
+:root {
   --font-heading: 'Funnel Display Variable', 'Funnel Display', Arial, sans-serif;
-  --font-heading-xl: var(--font-heading); --font-weight-heading-xl: 400;
-  --text-heading-xl: 2.5rem; --line-height-heading-xl: .909091; --letter-spacing-heading-xl: -.045em;
-  --font-heading-l: var(--font-heading); --font-weight-heading-l: 400;
-  --text-heading-l: 1.625rem; --line-height-heading-l: 1.142857; --letter-spacing-heading-l: -.042em;
-  --font-heading-m: var(--font-heading); --font-weight-heading-m: 500;
-  --text-heading-m: 1.375rem; --line-height-heading-m: 1.333333; --letter-spacing-heading-m: -.038em;
-  --font-body-l: var(--font-body); --font-weight-body-l: 400;
-  --text-body-l: 1.125rem; --line-height-body-l: 1.5; --letter-spacing-body-l: 0em;
-  --font-body-m: var(--font-body); --font-weight-body-m: 400;
-  --text-body-m: 1rem; --line-height-body-m: 1.5; --letter-spacing-body-m: 0em;
-  --font-body-m-strong: var(--font-body); --font-weight-body-m-strong: 500;
-  --text-body-m-strong: 1rem; --line-height-body-m-strong: 1.5; --letter-spacing-body-m-strong: 0em;
-  --font-body-s: var(--font-body); --font-weight-body-s: 400;
-  --text-body-s: .875rem; --line-height-body-s: 1.428571; --letter-spacing-body-s: 0em;
-  --font-label-m: var(--font-heading); --font-weight-label-m: 500;
-  --text-label-m: .875rem; --line-height-label-m: 1.428571; --letter-spacing-label-m: -.036em;
-  --font-label-s: var(--font-body); --font-weight-label-s: 500;
-  --text-label-s: .75rem; --line-height-label-s: 1.333333; --letter-spacing-label-s: 0em;
-  --project-identity-tags-gap: var(--space-6);
+  --font-body: 'Urbanist Variable', Urbanist, Arial, sans-serif;
+}
+
+/* Styles · phone is the default */
+:root {
+  /* Heading/XL · shared text role */
+  --font-heading-xl: var(--font-heading);
+  --font-weight-heading-xl: 400;
+  --text-heading-xl: 2.5rem; /* 40px */
+  --line-height-heading-xl: .909091;
+  --letter-spacing-heading-xl: -.045em;
+
+  /* Heading/L · shared text role */
+  --font-heading-l: var(--font-heading);
+  --font-weight-heading-l: 400;
+  --text-heading-l: 1.625rem; /* 26px */
+  --line-height-heading-l: 1.142857;
+  --letter-spacing-heading-l: -.042em;
+
+  /* Heading/M · shared text role */
+  --font-heading-m: var(--font-heading);
+  --font-weight-heading-m: 500;
+  --text-heading-m: 1.375rem; /* 22px */
+  --line-height-heading-m: 1.333333;
+  --letter-spacing-heading-m: -.038em;
+
+  /* Body/L · shared text role */
+  --font-body-l: var(--font-body);
+  --font-weight-body-l: 400;
+  --text-body-l: 1.125rem; /* 18px */
+  --line-height-body-l: 1.5;
+  --letter-spacing-body-l: 0em;
+
+  /* Body/M · shared text role */
+  --font-body-m: var(--font-body);
+  --font-weight-body-m: 400;
+  --text-body-m: 1rem; /* 16px */
+  --line-height-body-m: 1.5;
+  --letter-spacing-body-m: 0em;
+
+  /* Body/M Strong · shared text role */
+  --font-body-m-strong: var(--font-body);
+  --font-weight-body-m-strong: 500;
+  --text-body-m-strong: 1rem; /* 16px */
+  --line-height-body-m-strong: 1.5;
+  --letter-spacing-body-m-strong: 0em;
+
+  /* Body/S · shared text role */
+  --font-body-s: var(--font-body);
+  --font-weight-body-s: 400;
+  --text-body-s: .875rem; /* 14px */
+  --line-height-body-s: 1.428571;
+  --letter-spacing-body-s: 0em;
+
+  /* Label/M · shared text role */
+  --font-label-m: var(--font-heading);
+  --font-weight-label-m: 500;
+  --text-label-m: .875rem; /* 14px */
+  --line-height-label-m: 1.428571;
+  --letter-spacing-label-m: -.036em;
+
+  /* Label/S · shared text role */
+  --font-label-s: var(--font-body);
+  --font-weight-label-s: 500;
+  --text-label-s: .75rem; /* 12px */
+  --line-height-label-s: 1.333333;
+  --letter-spacing-label-s: 0em;
+
+}
+
+/* Tablet · 768px and wider: only what changes */
+@media (min-width: 768px) {
+  :root {
+    --text-heading-xl: 3rem; /* 48px */
+    --letter-spacing-heading-xl: -.046em;
+    --text-heading-l: 2.25rem; /* 36px */
+    --letter-spacing-heading-l: -.044em;
+  }
+}
+
+/* Desktop · 1024px and wider: only what changes */
+@media (min-width: 1024px) {
+  :root {
+    --text-heading-xl: 4.75rem; /* 76px */
+    --letter-spacing-heading-xl: -.048em;
+    --text-heading-l: 3.5rem; /* 56px */
+    --letter-spacing-heading-l: -.047em;
+    --text-heading-m: 1.5rem; /* 24px */
+    --letter-spacing-heading-m: -.040em;
+    --text-body-l: 1.25rem; /* 20px */
+  }
+}
+
+/* Spacing · src/styles/tokens.css */
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+}
+
+/* Layout · phone is the default */
+:root {
+  --gutter: var(--space-6);
+  --header-inset: var(--space-6);
+  --grid-gap: var(--space-4);
+  --section-space: var(--space-16);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --gutter-left: calc(var(--gutter) + var(--safe-left));
+  --gutter-right: calc(var(--gutter) + var(--safe-right));
+}
+/* Projects · 1 column · metrics: 1 column */
+
+/* Tablet and desktop · 768px and wider */
+@media (min-width: 768px) {
+  :root {
+    --gutter: max(var(--space-16), calc((100vw - 1200px) / 2));
+    --header-inset: var(--space-8);
+    --grid-gap: var(--space-6);
+    --section-space: var(--space-24);
+  }
+}
+/* Projects · 2 columns · metrics: 3 columns */
+
+/* Radius · phone is the default */
+:root {
+  --radius-small: 12px;
+  --radius-medium: 24px;
+  --radius-large: 24px;
+  --radius-xlarge: 40px;
+  --radius-full: 999px;
+}
+
+/* Radius changes · 768px and wider */
+@media (min-width: 768px) {
+  :root {
+    --radius-large: 40px;
+    --radius-xlarge: clamp(40px, 5.8vw, 100px);
+  }
+}
+
+/* Shadows · light (default) */
+:root, [data-theme='light'], [data-color-zone='light'], [data-shadow-theme='light'] {
+  --shadow-small: 0 8px 24px rgb(22 23 21 / .10);
+  --shadow-large: 0 8px 24px rgb(22 23 21 / .10), 0 24px 56px rgb(22 23 21 / .12);
+}
+
+/* Shadows · dark */
+:root[data-theme='dark'], [data-theme='dark'], [data-color-zone='dark'] {
+  --shadow-small: 0 2px 8px rgb(0 0 0 / .16), 0 12px 32px rgb(0 0 0 / .28);
+  --shadow-large: 0 8px 24px rgb(0 0 0 / .38), 0 24px 64px rgb(0 0 0 / .52);
+}
+
+/* Scoped shadows · retain page elevation when only copy changes */
+[data-color-zone][data-shadow-theme='page'] { --shadow-small: inherit; --shadow-large: inherit; }
+[data-color-zone][data-shadow-theme='small'] { --shadow-large: inherit; }
+
+/* Motion · src/styles/tokens.css */
+:root {
+  --ease-stage-entrance: cubic-bezier(.22, .61, .36, 1);
+  --duration-button-fill: 450ms;
+  --distance-icon-shift: 3px;
+  --ease-icon-shift: ease-out;
+  --duration-tooltip-opacity: 320ms;
+  --duration-tooltip-scale: 440ms;
+  --section-reveal-trigger-viewport-ratio: .9;
   --ease-entrance: var(--ease-stage-entrance);
   --ease-work-stage: var(--ease-stage-entrance);
-  /* One card/case/hero transition contract across all project collections. */
-  --duration-case-open: 700ms; --duration-case-close: 400ms;
-  --duration-case-caption-exit: 200ms; --duration-case-caption-enter: 600ms;
+  --duration-case-open: 700ms;
+  --duration-case-close: 400ms;
+  --duration-case-caption-exit: 200ms;
+  --duration-case-caption-enter: 600ms;
   --delay-case-caption-enter: 100ms;
-  --duration-case-body-enter: 350ms; --delay-case-body-enter: 350ms;
-  --duration-case-radius: 260ms; --distance-case-copy: 16px;
+  --duration-case-body-enter: 350ms;
+  --delay-case-body-enter: 350ms;
+  --duration-case-radius: 260ms;
+  --distance-case-copy: 16px;
   --rotation-case-control: 225deg;
   --ease-case-travel: cubic-bezier(.22, .75, .25, 1);
   --ease-case-radius: ease-in-out;
-  --case-hero-fit: contain;
   --duration-entrance: 900ms;
   --intro-stage-progress: .5;
   --stagger-tag-reveal: 150ms;
@@ -96,107 +277,89 @@
   --duration-role-exit: 450ms;
   --distance-text-reveal: 8px;
   --distance-title-reveal: 16px;
-  /* Logo wave: user reference's physical spring, stiffness 300, damping 15, mass 1.
-     Unit-step response sampled every 12ms, including its exact first peak. */
+  /* Logo wave · stiffness 300, damping 15, mass 1; unit-step samples every 12ms, exact first peak */
   --ease-spring-wave: linear(0 0%, 0.020288 1.28342%, 0.075828 2.56684%, 0.158625 3.85027%, 0.260927 5.13369%, 0.375491 6.41711%, 0.495784 7.70053%, 0.616125 8.98396%, 0.731763 10.26738%, 0.838919 11.5508%, 0.934769 12.83422%, 1.017399 14.11765%, 1.085732 15.40107%, 1.139432 16.68449%, 1.178793 17.96791%, 1.204626 19.25134%, 1.218143 20.53476%, 1.221093 21.52117%, 1.220841 21.81818%, 1.214394 23.1016%, 1.200564 24.38503%, 1.181111 25.66845%, 1.157728 26.95187%, 1.131983 28.23529%, 1.10528 29.51872%, 1.078829 30.80214%, 1.05363 32.08556%, 1.030469 33.36898%, 1.009923 34.65241%, 0.992371 35.93583%, 0.97801 37.21925%, 0.966882 38.50267%, 0.958891 39.7861%, 0.953836 41.06952%, 0.951432 42.35294%, 0.951338 43.63636%, 0.953176 44.91979%, 0.956556 46.20321%, 0.96109 47.48663%, 0.96641 48.77005%, 0.972177 50.05348%, 0.97809 51.3369%, 0.983893 52.62032%, 0.989373 53.90374%, 0.99437 55.18717%, 0.998765 56.47059%, 1.002485 57.75401%, 1.005494 59.03743%, 1.007791 60.32086%, 1.009403 61.60428%, 1.010379 62.8877%, 1.010785 64.17112%, 1.0107 65.45455%, 1.010207 66.73797%, 1.009393 68.02139%, 1.008343 69.30481%, 1.007138 70.58824%, 1.005849 71.87166%, 1.004543 73.15508%, 1.003273 74.4385%, 1.002083 75.72193%, 1.001007 77.00535%, 1.000069 78.28877%, 0.999282 79.57219%, 0.998654 80.85561%, 0.998182 82.13904%, 0.997859 83.42246%, 0.997674 84.70588%, 0.997611 85.9893%, 0.997652 87.27273%, 0.997779 88.55615%, 0.997973 89.83957%, 0.998215 91.12299%, 0.998487 92.40642%, 0.998774 93.68984%, 0.999062 94.97326%, 0.999339 96.25668%, 0.999597 97.54011%, 0.999828 98.82353%, 1 100%);
-  /* Same spring's 0.1% displacement-envelope settling time, rounded up to ms. */
+  /* Logo settle time · the spring’s 0.1% displacement-envelope time, rounded up to ms */
   --duration-logo-wave: 935ms;
-  /* User-approved 1.05 scale replaces 1.15 after the glyph-clearance review. */
-  --scale-logo-wave: 1.05;
   --duration-skills-loop: 13.075s;
   --duration-toggle-enter: 600ms;
-  /* Existing desktop header clock and smooth(t) = t*t*(3-2*t), now shared. */
-  --duration-header-enter: 560ms; --duration-header-exit: 240ms;
+  --duration-header-enter: 560ms;
+  --duration-header-exit: 240ms;
   --ease-header-pill: cubic-bezier(.3333333333333333, 0, .6666666666666666, 1);
   --duration-toggle-return: 600ms;
   --ease-toggle-rotation: cubic-bezier(.4, 0, .2, 1);
-  --duration-fast: 160ms; --duration-navigation: 420ms; --duration-layout: 500ms; --duration-work-stage: 800ms;
-  --duration-filter-exit: 140ms; --duration-filter-enter: 200ms; --duration-filter-layout: 420ms;
-  --work-filter-magnet-spring-speed: 14; --work-filter-magnet-inside-spring-speed: 2;
-  --work-filter-scroll-lag: 32; --work-filter-scroll-spring-speed: 10;
-  --work-filter-scroll-return-speed: 20; --delay-work-filter-scroll-return: 80ms;
-  --project-tilt-angle: 6; --project-tilt-perspective: 1000px;
+  --duration-fast: 160ms;
+  --duration-navigation: 420ms;
+  --duration-layout: 500ms;
+  --duration-work-stage: 800ms;
+  --duration-filter-exit: 140ms;
+  --duration-filter-enter: 200ms;
+  --duration-filter-layout: 420ms;
+  --delay-work-filter-scroll-return: 80ms;
   --ease-filter-enter: cubic-bezier(.25, .46, .45, 1);
-  --delay-filter-enter: 140ms; --scale-filter: .9; --scale-filter-exit: .97; --distance-filter-enter: 24px;
+  --delay-filter-enter: 140ms;
+  --scale-filter: .9;
+  --scale-filter-exit: .97;
+  --distance-filter-enter: 24px;
 }
 
-/* Small rests on the page; Large floats above content. Light large is the approved two-layer elevation. */
-:root, [data-theme='light'], [data-color-zone='light'], [data-shadow-theme='light'] {
-  --shadow-small: 0 8px 24px rgb(22 23 21 / .10);
-  --shadow-large: 0 8px 24px rgb(22 23 21 / .10), 0 24px 56px rgb(22 23 21 / .12);
-}
-
-/* Text alone switches at these two boundaries; layout breakpoints stay local. */
-@media (min-width: 768px) {
-  :root {
-    --text-heading-xl: 3rem; --letter-spacing-heading-xl: -.046em;
-    --text-heading-l: 2.25rem; --letter-spacing-heading-l: -.044em;
-  }
-}
-@media (min-width: 1024px) {
-  :root {
-    --text-heading-xl: 4.75rem; --letter-spacing-heading-xl: -.048em;
-    --text-heading-l: 3.5rem; --letter-spacing-heading-l: -.047em;
-    --text-heading-m: 1.5rem; --letter-spacing-heading-m: -.040em;
-    --text-body-l: 1.25rem;
-  }
-}
-/* One role family; scoped themes use these same Light/Dark values. */
-:root, [data-theme='light'], [data-color-zone='light'], .floating-control-theme:not(.floating-navigation-theme), .case-study-direct-close, .tooltip, .case-study-decision-card--figure, .case-study-service-demo {
-  --color-text-primary: var(--color-ink);
-  --color-text-primary-hover: var(--color-graphite);
-  --color-text-secondary: var(--color-ink-64);
-  --color-text-on-primary: var(--color-white);
-  --color-bg-canvas: var(--color-paper);
-  --color-bg-surface: var(--color-white);
-  --color-bg-surface-subtle: var(--color-mist);
-  --color-border-default: var(--color-ink-8);
-  --color-interactive-accent: var(--color-orange);
-  --color-video-track: var(--color-ink-16);
-  --control-border: var(--color-ink);
-  --focus-ring: var(--color-ink);
-  color-scheme: light;
-}
-:root[data-theme='dark'], [data-theme='dark'], [data-color-zone='dark'], .case-study-chapter--inverse, .about-details, .work .section-heading, .case-study-decision-card__impact {
-  --color-text-primary: var(--color-paper);
-  --color-text-primary-hover: var(--color-stone);
-  --color-text-secondary: var(--color-paper-64);
-  --color-text-on-primary: var(--color-ink);
-  --color-bg-canvas: var(--color-ink);
-  --color-bg-surface: var(--color-charcoal);
-  --color-bg-surface-subtle: var(--color-graphite);
-  --color-border-default: var(--color-paper-8);
-  --color-interactive-accent: var(--color-orange-light);
-  --color-video-track: var(--color-paper-10);
-  --control-border: var(--color-paper);
-  --focus-ring: var(--color-paper);
-  color-scheme: dark;
-}
-/* Artwork substrates inherit the page surface and any project-scoped override.
-   Their surrounding dark chapter changes the copy roles, not the original frame. */
-.case-study-chapter--inverse, .work .section-heading { --color-bg-surface:inherit; }
-:root[data-theme='dark'], [data-theme='dark'], [data-color-zone='dark'] {
-  color-scheme: dark;
-  --color-section-bg-surface: var(--color-night);
-  --waterfall-icon-color: var(--color-stone);
-  --footer-pile-icon-color: var(--color-pewter);
-  --shadow-large: 0 8px 24px rgb(0 0 0 / .38), 0 24px 64px rgb(0 0 0 / .52);
-}
-:root[data-theme='dark'], [data-theme='dark'], [data-color-zone='dark'], .about-details {
-  --shadow-small: 0 2px 8px rgb(0 0 0 / .16), 0 12px 32px rgb(0 0 0 / .28);
-}
-@media (max-width: 767px) {
-  :root { --gutter: 24px; --hero-gutter: 24px; --hero-visual-gutter: 24px; --header-inset: 24px; --section-space: var(--space-16); --grid-gap: var(--space-4); --radius-large: var(--radius-24); --radius-xlarge: var(--radius-40); --work-preview-height: 120px; }
-}
-
-/* Shared control geometry and interaction states. */
+/* Icons · src/styles/tokens.css */
 :root {
-  --control-height: 48px; --control-icon: 44px; --icon-size: 24px;
+  --icon-size: 24px;
   --icon-size-compact: 20px;
-  --icon-stroke-regular: 1.5; --icon-stroke-strong: 2; --icon-stroke-emphasis: 2.5;
-  --icon-linecap: round; --icon-linejoin: round;
-  --radius-small: var(--radius-12);
+  --icon-stroke-regular: 1.5;
+  --icon-stroke-strong: 2;
+  --icon-stroke-emphasis: 2.5;
+  --icon-linecap: round;
+  --icon-linejoin: round;
+}
+
+/* Controls and layers · shared geometry and stacking */
+:root {
+  --control-height-small: 36px;
+  --layer-behind: -1;
+  --layer-base: 0;
+  --layer-content: 1;
+  --layer-raised: 2;
+  --layer-controls: 10;
+  --layer-tooltip: 20;
+  --layer-header: 30;
+  --layer-cursor: 40;
+  --layer-overlay: 100;
+  --control-height: 48px;
+  --control-icon: 44px;
   --opacity-disabled: .4;
 }
 
+/* Component tokens · component-owned values */
+:root {
+  --scale-tooltip-start: .82;
+  --scale-tooltip-end: 1;
+  --hero-gutter: var(--space-6);
+  --hero-visual-gutter: var(--space-6);
+  --work-preview-height: 120px;
+  --work-stage-trigger-viewport-ratio: .02;
+  --work-stage-collapse-scroll-y: 1;
+  --radius-project-logo: 25%;
+  --project-identity-tags-gap: var(--space-6);
+  --case-hero-fit: contain;
+  /* Logo scale · user-approved1.05 after the glyph-clearance review */
+  --scale-logo-wave: 1.05;
+  --work-filter-magnet-spring-speed: 14;
+  --work-filter-magnet-inside-spring-speed: 2;
+  --work-filter-scroll-lag: 32;
+  --work-filter-scroll-spring-speed: 10;
+  --work-filter-scroll-return-speed: 20;
+  --project-tilt-angle: 6;
+  --project-tilt-perspective: 1000px;
+}
+
+/* Component changes · 768px and wider */
+@media (min-width: 768px) {
+  :root {
+    --hero-gutter: max(var(--space-16), calc((100vw - 1328px) / 2));
+    --hero-visual-gutter: calc(var(--hero-gutter) - var(--space-1));
+    --work-preview-height: 200px;
+  }
+}
 }

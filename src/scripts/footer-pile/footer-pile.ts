@@ -106,7 +106,7 @@ export function initializeFooterPile() {
     canvas.style.height = `${height}px`;
     canvas.style.top = `${-above}px`;
     const style = getComputedStyle(field);
-    ink = style.getPropertyValue('--footer-pile-icon-color').trim();
+    ink = style.getPropertyValue('--color-footer-icon').trim();
     draw();
     if (!pile) { ensurePile(); return; }
     field.dataset.ready = 'true';

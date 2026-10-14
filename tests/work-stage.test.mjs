@@ -50,8 +50,8 @@ assert.ok(!css.includes('.work-rail .section-navigation { top: 50vh; transform: 
 assert.ok(!css.includes('.work-rail { --work-filter-half-height: 78px; position: absolute; top: 366px; bottom: 284px;'), 'The lower stop is not tied to the dark sheet, which ends before the last project card');
 assert.ok(source.includes("const railHiddenTransform = 'translate3d(0px, var(--distance-text-reveal), 0px)'") && source.includes("duration: number('--duration-title-reveal')"), 'The floating filter reuses the title rise-and-fade distance and entrance pace without horizontal travel');
 assert.ok(css.includes("html[data-work-preview-layout='true'] .work { margin-top: calc(-1 * var(--work-preview-height)); }") && css.includes("html[data-work-preview-layout='true'] .work-panel { top: 0;"), 'The expanded desktop title stays 96px from the visible sheet top without changing the preview position');
-assert.ok(tokens.includes('--hero-gutter: max(64px, calc((100vw - 1328px) / 2))'), 'Preview aligns to the hero title guide');
-assert.ok(tokens.includes('--hero-visual-gutter: calc(var(--hero-gutter) - 4px)'), 'Preview includes the hero heading optical correction');
+assert.ok(tokens.includes('--hero-gutter: max(var(--space-16), calc((100vw - 1328px) / 2))'), 'Preview aligns to the hero title guide');
+assert.ok(tokens.includes('--hero-visual-gutter: calc(var(--hero-gutter) - var(--space-1))'), 'Preview includes the hero heading optical correction');
 assert.ok(tokens.includes('--work-preview-height: 200px') && tokens.includes('--duration-work-stage: 800ms'));
 const tokenDefinitions = Object.fromEntries([...tokens.matchAll(/--([\w-]+):\s*([^;]+);/g)].map(([, name, value]) => [name, value.trim()]));
 const tokenValue = name => tokenDefinitions[name].startsWith('var(') ? tokenValue(tokenDefinitions[name].slice(6, -1)) : tokenDefinitions[name];

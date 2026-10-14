@@ -49,7 +49,7 @@ export function validateTypographySystem(tokens,styles,catalog){
   for(const [property,token] of [['font-family','font'],['font-size','text'],['font-weight','font-weight'],['line-height','line-height'],['letter-spacing','letter-spacing']])if(!matches[0]?.[2].includes(`${property}: var(--${token}-${style.id})`))errors.push(`${style.id} must own ${property}.`);
  }
  if(/--text-(?:body-compact|body-compact-relative|stat-compact|contact-compact)|--(?:text|letter-spacing)-[\w-]+:\s*(?:clamp|calc)/.test(tokens))errors.push('Retired/fluid typography tokens found.');
- for(const marker of ['typographySystem()','data-type-device','data-type-sample','style.devices[device].sizeRem','style.devices[device].spacingEm','data-type-size','data-type-spacing','deviceCode(device)'])if(!catalog.includes(marker))errors.push(`Catalog must read source values: ${marker}.`);
+ for(const marker of ['typographySystem()','data-type-device','data-type-sample','style.devices[device].sizeRem','style.devices[device].spacingEm','data-type-size','data-type-spacing','foundationCode[item.id]'])if(!catalog.includes(marker))errors.push(`Catalog must read source values: ${marker}.`);
  return errors;
 }
 

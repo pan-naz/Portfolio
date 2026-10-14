@@ -5,7 +5,7 @@ interface Props { title: string; titleHidden?: boolean; label?: string; labelVar
 const { title, titleHidden = false, label, labelVariant = 'text', layout = 'stack' } = Astro.props;
 ---
 
-<article class:list={['case-study-decision-card', layout === 'media' && 'case-study-decision-card--media', layout === 'figure' && 'case-study-decision-card--figure']}>
+<article class:list={['case-study-decision-card', layout === 'media' && 'case-study-decision-card--media', layout === 'figure' && 'case-study-decision-card--figure']} data-color-zone={layout === 'figure' ? 'light' : undefined} data-shadow-theme={layout === 'figure' ? 'page' : undefined}>
   {layout === 'figure' && Astro.slots.has('media') && <div class="case-study-decision-card__media"><slot name="media" /></div>}
   <div class="case-study-decision-card__text">
   <div class:list={['case-study-decision-card__header', titleHidden && 'sr-only']}>
@@ -16,7 +16,7 @@ const { title, titleHidden = false, label, labelVariant = 'text', layout = 'stac
     {Astro.slots.has('icon') && <span class="case-study-decision-card__icon" aria-hidden="true"><slot name="icon" /></span>}
   </div>
   <div class:list={['case-study-decision-card__copy', titleHidden && 'case-study-decision-card__copy--without-heading']}><slot /></div>
-  {Astro.slots.has('impact') && <div class="case-study-decision-card__impact">
+  {Astro.slots.has('impact') && <div class="case-study-decision-card__impact" data-color-zone="dark" data-color-section="page" data-shadow-theme="page">
     <h4>Impact:</h4>
     <slot name="impact" />
   </div>}

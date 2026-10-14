@@ -1,8 +1,9 @@
 ---
-interface Props { id: string; label: string; reveal?: boolean; layout?: 'columns' | 'stacked'; appearance?: 'default' | 'case'; }
-const { id, label, reveal = true, layout = 'columns', appearance = 'default' } = Astro.props;
+import type { HTMLAttributes } from 'astro/types';
+interface Props extends HTMLAttributes<'div'> { id: string; label: string; reveal?: boolean; layout?: 'columns' | 'stacked'; appearance?: 'default' | 'case'; }
+const { id, label, reveal = true, layout = 'columns', appearance = 'default', ...attributes } = Astro.props;
 ---
-{appearance === 'case' ? <><p class="case-study-eyebrow">{label}</p><h2 class="case-study-heading" id={id}><slot /></h2></> : (<div class:list={['section-heading', layout === 'stacked' && 'section-heading--stacked']} data-section-reveal={reveal ? '' : undefined}><div class="section-index"><slot name="index"><p class="eyebrow">{label}</p></slot></div><div><h2 class="text-heading-l" id={id}><slot /></h2><slot name="description" /></div></div>)}
+{appearance === 'case' ? <><p class="case-study-eyebrow">{label}</p><h2 class="case-study-heading" id={id}><slot /></h2></> : (<div {...attributes} class:list={['section-heading', layout === 'stacked' && 'section-heading--stacked']} data-section-reveal={reveal ? '' : undefined}><div class="section-index"><slot name="index"><p class="eyebrow">{label}</p></slot></div><div><h2 class="text-heading-l" id={id}><slot /></h2><slot name="description" /></div></div>)}
 
 <style>
 @layer system, project;

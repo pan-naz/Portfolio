@@ -13,7 +13,7 @@ assert(validateCatalogTypographyLayout(catalogCss,catalog,themeToggle.replace('<
 assert(validateCatalogTypographyLayout(catalogCss+'.theme-toggle-group .icon{width:16px;}',catalog,themeToggle).length,'Reject literal theme icon sizes');
 assert(validateCatalogTypographyLayout(catalogCss+'.theme-toggle-group .button > span{text-box-trim:none;}',catalog,themeToggle).length,'Reject untrimmed label leading that misaligns the icons');
 assert(read('src/components/ProjectCard.astro').includes("['project-outcome', compact ? 'text-body-m' : 'text-body-l']"), 'Only compact outcomes use Body/M; full cards retain Body/L');
-const bodySmall = styles.match(/\/\* body-s:[\s\S]*?\n\}/)?.[0];
+const bodySmall = [...styles.replace(/\/\*[\s\S]*?\*\//g,'').matchAll(/([^{}]+)\{([^{}]+)\}/g)].find(([,selector])=>selector.trim().startsWith('.text-body-s,'))?.[0];
 assert(bodySmall?.includes('[data-small-work-type] .navigation-item {'), 'The small Work pill selects the complete Body/S role with a simple attribute descendant selector');
 assert(!bodySmall.includes('!important'), 'The small Work pill needs no important override');
 assert(read('src/scripts/work-filter/work-filter-pill.ts').includes("nav.toggleAttribute('data-small-work-type', innerWidth < 381)"), 'The sole extra type boundary is strictly below 381px');

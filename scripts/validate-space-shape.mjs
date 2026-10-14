@@ -73,7 +73,9 @@ export function layoutSource(root=process.cwd()){
  const global=postcss.parse(fs.readFileSync(path.join(root,'src/styles/global.css'),'utf8'));
  /** @type {Record<string,string>} */ const base={};
  /** @type {Record<string,string>} */ const phone={};
- tokens.walkRules(rule=>{if(rule.selector!==':root')return;let small=false;for(let p=rule.parent;p;p=p.parent)if(p.type==='atrule'&&p.name==='media'&&p.params.includes('max-width: 767px'))small=true;for(const d of rule.nodes.filter(n=>n.type==='decl'))(small?phone:base)[d.prop.slice(2)]=d.value;});
+ const changes=[];
+ tokens.walkRules(rule=>{if(rule.selector!==':root')return;let width=0;for(let p=rule.parent;p;p=p.parent)if(p.type==='atrule'&&p.name==='media')width=Number(p.params.match(/min-width:\s*(\d+)px/)?.[1]||0);const values=Object.fromEntries(rule.nodes.filter(n=>n.type==='decl').map(d=>[d.prop.slice(2),d.value]));if(width)changes.push({width,values});else Object.assign(phone,values);});
+ Object.assign(base,phone);for(const change of changes.sort((a,b)=>a.width-b.width))Object.assign(base,change.values);
  const query=fs.readFileSync(path.join(root,'src/scripts/layout-capabilities.js'),'utf8');
  const desktop=Number(query.match(/min-width:\s*(\d+)px/)[1]);
  const tablet=Number(fs.readFileSync(path.join(root,'src/styles/tokens.css'),'utf8').match(/@media\s*\(min-width:\s*(\d+)px\)/)[1]);
@@ -93,6 +95,6 @@ export function validateSpaceShape(root=process.cwd()) {
  if(/\.ds-tile-link\s*\{[^}]*min-height/.test(css))errors.push('Overview text may not reserve a fixed minimum height.');
  if(!cover.includes('inert aria-hidden="true"'))errors.push('Overview covers must be unreachable, inert and hidden.');
  for(const hook of ['spaceUsageCounts()','layoutSource()','resolvedLight','resolvedDark'])if(!model.includes(hook))errors.push('Spacing model must derive '+hook);
- for(const hook of ['spaceSystem.spaces.map','spaceSystem.layouts.map','spaceSystem.radius.map','spaceSystem.shadows.map','data-ds-space-uses={space.name}','data-ds-layout-columns={layout.projects}','data-ds-layout-columns={layout.metrics}','data-color-zone={mode}','spaceSystem.code[mode]'])if(!foundation.includes(hook))errors.push('Spacing page missing source-derived '+hook);
+ for(const hook of ['spaceSystem.spaces.map','spaceSystem.layouts.map','spaceSystem.radius.map','spaceSystem.shadows.map','data-ds-space-uses={space.name}','data-ds-layout-columns={layout.projects}','data-ds-layout-columns={layout.metrics}','data-color-zone={mode}','foundationCode[item.id]'])if(!foundation.includes(hook))errors.push('Spacing page missing source-derived '+hook);
  return errors;
 }

@@ -7,7 +7,7 @@
 .case-study-decision-card__icon svg { width: var(--icon-size); height: var(--icon-size); }
 .case-study-decision-card__copy { margin-top: var(--space-2); }
 .case-study-decision-card__copy--without-heading { margin-top: 0; }
-.case-study-decision-card__impact { margin-top: var(--space-2); padding: var(--space-4); border-radius: var(--radius-small); color: var(--color-text-primary); background: var(--color-section-bg-surface); }
+.case-study-decision-card__impact { margin-top: var(--space-2); padding: var(--space-4); border-radius: var(--radius-small); color: var(--color-text-primary); background: var(--color-bg-section); }
 .case-study-decision-card__impact h4 { margin-bottom: var(--space-2); }
 .case-study-decision-card__impact p + p { margin-top: var(--space-2); }
 .case-study-decision-card__impact strong { color: var(--color-interactive-accent); }

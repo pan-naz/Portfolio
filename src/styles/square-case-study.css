@@ -6,8 +6,8 @@
 .case-study-content--square { --square-crimson: #1c0409; padding-bottom: 0; }
 .square-muted { color: var(--color-text-secondary); }
 .square-challenge {
-  --control-border: var(--color-paper);
-  --focus-ring: var(--color-paper);
+  --color-border-control: var(--color-paper);
+  --color-focus-ring: var(--color-paper);
   background: linear-gradient(90deg, var(--square-color-rgba-10-18-16-92) 0%, var(--square-color-rgba-10-18-16-78) 50%, var(--square-color-rgba-10-18-16-35) 100%), var(--square-cover) center / cover no-repeat, var(--square-color-0f1f1b);
 }
 .square-challenge-copy { display: grid; justify-items: start; gap: var(--space-6); max-width: calc(50% - var(--grid-gap)); }

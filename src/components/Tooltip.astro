@@ -3,5 +3,5 @@ import '../styles/tooltip.css';
 interface Props { id: string; label: string; }
 const { id, label } = Astro.props;
 ---
-<span id={id} class="tooltip text-body-m" role="tooltip">{label}</span>
+<span id={id} class="tooltip text-body-m" data-color-zone="light" data-shadow-theme="page" role="tooltip">{label}</span>
 <script>import '../scripts/tooltip';</script>
