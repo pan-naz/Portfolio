@@ -190,6 +190,7 @@ main, .footer { position: relative; }
 }
 .navigation-item { --navigation-item-padding-inline: var(--space-3); --navigation-item-shift: 12px; position: relative; display: inline-flex; align-items: center; min-height: 44px; padding: 10px var(--navigation-item-padding-inline); border: 0; border-radius: var(--radius-pill); color: var(--color-text-primary); background: transparent; text-align: left; white-space: nowrap; }
 .navigation-item-indicator { position: absolute; left: var(--navigation-item-padding-inline); top: 50%; width: 6px; height: 6px; border-radius: var(--radius-pill); background: var(--color-interactive-accent); opacity: 0; transform: translate3d(-6px,-50%,0) scale(0); transform-origin: 50% 50%; transition: opacity var(--duration-navigation) var(--ease-entrance), transform var(--duration-navigation) var(--ease-entrance); }
+.navigation-item[aria-current='page'] { padding-inline-end: calc(var(--navigation-item-padding-inline) + var(--navigation-item-shift)); }
 .navigation-item-label { display: inline-block; transform: translate3d(0,0,0); transition: transform var(--duration-navigation) var(--ease-entrance); }
 @media (hover: hover) and (pointer: fine) {
 .navigation-item:is(:hover) .navigation-item-indicator { opacity: 1; transform: translate3d(0,-50%,0) scale(1); }

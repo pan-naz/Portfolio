@@ -3,14 +3,18 @@ import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 
 // Execute the actual prepaint bootstrap, including its real change listeners.
-const source = readFileSync(new URL('../src/layouts/BaseLayout.astro', import.meta.url), 'utf8');
-const bootstrap = [...source.matchAll(/<script is:inline>([\s\S]*?)<\/script>/g)]
-  .map(match => match[1]).find(script => script.includes('updateWorkLayout'));
+const bootstrap = readFileSync(new URL('../src/scripts/layout-capabilities.js', import.meta.url), 'utf8');
+for (const layout of ['BaseLayout','DSLayout']) {
+  const source=readFileSync(new URL('../src/layouts/'+layout+'.astro',import.meta.url),'utf8');
+  assert(source.includes("import layoutCapabilitiesSource from '../scripts/layout-capabilities.js?raw';"));
+  assert(source.includes('<script is:inline set:html={layoutCapabilitiesSource} />'));
+  assert(!source.includes('updateWorkLayout'), 'There is only one shared layout condition');
+}
 assert.ok(bootstrap);
 function fixture(width, touch = 0, hover = true, reduced = false, pathname = '/') {
   const window = new EventTarget(), queries = new Map();
   const location = { pathname };
-  const root = { dataset: {}, classList: { contains: () => true } };
+  const root = { dataset: {}, classList: { contains: () => true }, hasAttribute: name=>name==='data-catalog'&&pathname==='/design-system/' };
   const matchMedia = query => {
     const media = new EventTarget();
     media.matches = query.includes('min-width') ? width >= 1024
@@ -29,12 +33,12 @@ function fixture(width, touch = 0, hover = true, reduced = false, pathname = '/'
     media.matches = matches; media.dispatchEvent(new Event('change'));
   } };
 }
-for (const width of [320, 768, 975, 1023, 1024, 1280, 1920]) {
+for (const pathname of ['/', '/design-system/']) for (const width of [320, 768, 975, 1023, 1024, 1280, 1920]) {
   for (const touch of [0, 1, 5]) {
-    const f = fixture(width, touch);
+    const f = fixture(width, touch, true, false, pathname);
     assert.equal(f.root.dataset.workStageLayout, width >= 1024 && touch === 0 ? 'true' : undefined);
-    assert.equal(f.root.dataset.workStageMotion, f.root.dataset.workStageLayout);
-    assert.equal(f.root.dataset.workPreviewLayout, 'true', 'Home preview coordinates and reveal do not depend on input type or width');
+    assert.equal(f.root.dataset.workStageMotion, pathname==='/'?f.root.dataset.workStageLayout:undefined);
+    assert.equal(f.root.dataset.workPreviewLayout, pathname==='/'?'true':undefined, 'Existing home and catalog preview coordinates remain unchanged');
   }
 }
 assert.equal(fixture(1440, 0, false).root.dataset.workStageLayout, undefined);
@@ -59,7 +63,7 @@ f.window.dispatchEvent(new Event('pagehide'));
 f.change('hover', true);
 assert.equal(changes, 5, 'Discarded documents remove capability listeners');
 assert.equal(fixture(390, 5, false, false, '/design-system/').root.dataset.workPreviewLayout, undefined, 'Touch catalog specimens retain their existing context');
-assert.equal(fixture(1280, 0, true, false, '/design-system/').root.dataset.workPreviewLayout, 'true', 'Mouse catalog specimens retain their existing context');
+assert.equal(fixture(1280, 0, true, false, '/design-system/').root.dataset.workPreviewLayout, undefined, 'The catalog consumes only the layout decision; home preview coordinates must not clip its live specimens');
 const popup = fixture(834, 5, false);
 popup.location.pathname = '/case-studies/hooko/';
 popup.change('min-width', true);

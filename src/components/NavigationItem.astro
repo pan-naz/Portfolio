@@ -1,5 +1,6 @@
 ---
-interface Props {
+import type { HTMLAttributes } from 'astro/types';
+interface Props extends HTMLAttributes<'a'> {
   label: string;
   href?: string;
   filter?: string;
@@ -13,17 +14,19 @@ const {
   filter,
   controls,
   pressed = false,
+  class: className,
+  ...attributes
 } = Astro.props;
 
-const classes = ['navigation-item', 'text-body-m-strong'];
+const classes = ['navigation-item', 'text-body-m-strong', className];
 ---
 {href ? (
-  <a class:list={classes} href={href} tabindex="0">
+  <a {...attributes} class:list={classes} href={href} tabindex="0">
     <span class="navigation-item-indicator" aria-hidden="true"></span>
     <span class="navigation-item-label">{label}</span>
   </a>
 ) : (
-  <button class:list={classes} type="button" tabindex="0" data-work-filter={filter} aria-controls={controls} aria-pressed={pressed ? 'true' : 'false'}>
+  <button {...attributes} class:list={classes} type="button" tabindex="0" data-work-filter={filter} aria-controls={controls} aria-pressed={pressed ? 'true' : 'false'}>
     <span class="navigation-item-indicator" aria-hidden="true"></span>
     <span class="navigation-item-label">{label}</span>
   </button>

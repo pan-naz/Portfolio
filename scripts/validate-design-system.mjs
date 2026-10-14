@@ -99,6 +99,22 @@ export function validateWorkPill(work, controller, css, presentation) {
   for (const token of ['duration-header-enter', 'duration-header-exit', 'ease-header-pill']) if (!css.includes(`var(--${token})`) || !presentation.includes(`token:'${token}'`)) errors.push(`Work pill and Navigation specs must share --${token}.`);
   return errors;
 }
+export function validateCatalogNavigation(layouts, navigation, controller, css) {
+  const failures=[];
+  for(const [name,source] of Object.entries(layouts)) {
+    if(!source.includes("import layoutCapabilitiesSource from '../scripts/layout-capabilities.js?raw';") || !source.includes('<script is:inline set:html={layoutCapabilitiesSource} />')) failures.push(`${name} must render the shared prepaint layout initializer.`);
+    if(source.includes('updateWorkLayout')) failures.push(`${name} duplicates the layout condition.`);
+  }
+  if(!navigation.includes("import NavigationItem from './NavigationItem.astro'") || !navigation.includes('<NavigationItem label={label}') || !navigation.includes('<NavigationItem label="Overview"')) failures.push('Catalog navigation must use NavigationItem for every page link.');
+  if(/<(?:details|summary|a)[\s>]/.test(navigation.replace(/<a[^>]*class="ds-home"[^>]*>/,''))) failures.push('Catalog navigation must not retain a disclosure or private page links.');
+  if(!navigation.includes('aria-label="Design system sections"')) failures.push('Catalog navigation requires an accessible name.');
+  if(!css.includes("html[data-work-stage-layout='true'] .ds-sidebar") || /(?:min-width:1100px|data-ds-contents)/.test(controller+css+navigation)) failures.push('Catalog layout must use the home layout flag, without the old sidebar breakpoint.');
+  if(!css.includes("@media(max-width:767px) { .ds-navigation [data-ds-dashboard-link] { display:none; } }") || !controller.includes("phone.matches&&requested==='dashboard'?'color':requested")) failures.push('Phone catalog must hide Overview and default to Color.');
+  for(const hook of ['workstagelayoutchange','focusin','ArrowRight','ArrowLeft','Home','End','revealNavigationLink','updateNavigationEdges']) if(!controller.includes(hook)) failures.push(`Catalog navigation missing ${hook}.`);
+  if(!controller.includes("link.setAttribute('aria-current','page')") || !controller.includes("behavior:'instant'")) failures.push('Catalog selection and reduced-motion scrolling must remain accessible.');
+  if(/\.ds-navigation[^{}]*a[^{}]*\{[^{}]*(?:background|border-radius)/.test(css)) failures.push('Catalog links must not have a private active pill.');
+  return failures;
+}
 function validate(entries) {
   const errors = [];
   const menuFiles = ['src/components/SiteHeader.astro', 'src/components/NavLinks.astro', 'src/components/NavigationItem.astro', 'src/components/DSPreview.astro', 'src/components/DSDashboard.astro', 'src/scripts/interactions.ts', 'src/scripts/motion.ts', 'src/scripts/scroll-engine.ts', 'src/styles/global.css', 'src/styles/tokens.css'];
@@ -132,6 +148,9 @@ function validate(entries) {
   if (/tooltip-link|<Tooltip/.test(preview) || !/data-ds-example="tooltip-tool"[\s\S]*?<ToolCard/.test(preview)) errors.push('Tooltip catalog must use the real tool-card specimen only.');
   if (/tooltipAnchor|data-tooltip-anchor/.test(read('src/scripts/tooltip.ts') + read('src/components/Tooltip.astro'))) errors.push('Tooltip must not retain footer-only anchor positioning.');
   const css = read('src/styles/design-system.css');
+  const capabilities=read('src/scripts/layout-capabilities.js');
+  if(!capabilities.includes("const catalog = root.hasAttribute('data-catalog');") || !capabilities.includes('!catalog && (precise || homeWork)') || !capabilities.includes('!catalog && floating && !motion.matches')) errors.push('Catalog must consume the shared layout decision without home preview/motion flags that clip specimens.');
+  errors.push(...validateCatalogNavigation({BaseLayout:read('src/layouts/BaseLayout.astro'),DSLayout:layout},read('src/components/DSNavigation.astro'),read('src/scripts/design-system.ts'),css));
   errors.push(...validateWorkPill(read('src/components/WorkSection.astro'), read('src/scripts/work-filter/work-filter-pill.ts'), read('src/styles/global.css'), read('src/data/system-presentation.ts')));
   for (const match of css.matchAll(/([^{}]+)\{[^{}]*\}/g)) {
     const selector = match[1].trim();
@@ -178,7 +197,7 @@ export function validateOverviewHiddenEntries(entries, expected = overviewHidden
 }
 const overview = read('src/components/DSDashboard.astro');
 if (!overview.includes('overviewHiddenComponents.map') || !overview.includes('item.description')) errors.push('Overview exclusions must use manifest entries and existing purpose sentences.');
-if (!read('src/components/DSNavigation.astro').includes('data-ds-dashboard-link>Overview</a>')) errors.push('Overview must use the existing dashboard navigation path.');
+if (!read('src/components/DSNavigation.astro').includes('<NavigationItem label="Overview" href="/design-system/" data-ds-dashboard-link')) errors.push('Overview must use the existing dashboard navigation path.');
 export function validateRenderedComponentNames(names, expected) {
   return [...names.filter(name => !expected.includes(name)).map(name => `Non-reusable rendered component: ${name}`), ...expected.filter(name => !names.includes(name)).map(name => `Missing rendered reusable UI: ${name}`)];
 }

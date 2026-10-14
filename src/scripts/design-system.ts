@@ -5,10 +5,29 @@ const views=[...document.querySelectorAll<HTMLElement>('[data-ds-view]')];
 const links=[...document.querySelectorAll<HTMLAnchorElement>('[data-ds-nav],[data-ds-dashboard-link]')];
 const dashboard=document.querySelector<HTMLElement>('#dashboard')!;
 const dashboardTilt=initializeCardTilt(dashboard,{cardSelector:'.ds-tile-frame',surfaceSelector:'.ds-tile'});
-const contents=document.querySelector<HTMLDetailsElement>('[data-ds-contents]');
-const wide=matchMedia('(min-width:1100px)');
-const syncMenu=()=>{if(contents)contents.open=wide.matches;};syncMenu();wide.addEventListener('change',syncMenu);
-document.documentElement.dataset.docNavigationReady='true';
+const phone=matchMedia('(max-width:767px)');
+const navigation=document.querySelector<HTMLElement>('[data-ds-nav-scroll]')!;
+const horizontal=()=>document.documentElement.dataset.workStageLayout!=='true';
+const updateNavigationEdges=()=>{
+ navigation.toggleAttribute('data-scroll-start',horizontal()&&navigation.scrollLeft>0);
+ navigation.toggleAttribute('data-scroll-end',horizontal()&&navigation.scrollLeft+navigation.clientWidth<navigation.scrollWidth-1);
+};
+const revealNavigationLink=(link:HTMLAnchorElement|null)=>{
+ if(!link||!horizontal())return;
+ const row=navigation.getBoundingClientRect(),item=link.getBoundingClientRect();
+ const gutter=parseFloat(getComputedStyle(navigation).scrollPaddingInlineStart)||0;
+ const delta=item.left<row.left+gutter?item.left-row.left-gutter:item.right>row.right-gutter?item.right-row.right+gutter:0;
+ if(delta)navigation.scrollTo({left:navigation.scrollLeft+delta,behavior:'instant'});
+ updateNavigationEdges();
+};
+navigation.addEventListener('scroll',updateNavigationEdges,{passive:true});
+navigation.addEventListener('focusin',event=>revealNavigationLink((event.target as Element).closest<HTMLAnchorElement>('.navigation-item')));
+navigation.addEventListener('keydown',event=>{
+ const visible=links.filter(link=>navigation.contains(link)&&link.getClientRects().length>0);
+ const current=visible.indexOf(document.activeElement as HTMLAnchorElement);
+ const next=event.key==='ArrowRight'?(current+1)%visible.length:event.key==='ArrowLeft'?(current+visible.length-1)%visible.length:event.key==='Home'?0:event.key==='End'?visible.length-1:undefined;
+ if(next!==undefined&&current>=0){event.preventDefault();visible[next].focus({preventScroll:horizontal()});revealNavigationLink(visible[next]);}
+});
 
 // Show the actual website pill state, and pin its real phone typography when
 // the small specimen is viewed in a desktop catalog. No private size value.
@@ -38,20 +57,25 @@ const refreshMarkup=(view:HTMLElement)=>{
  const clone=specimen.cloneNode(true) as HTMLElement;clone.querySelectorAll('script,style').forEach(node=>node.remove());
  code.textContent=clone.innerHTML.trim().replace(/></g,'>\n<');
 };
-const selectView=()=>{
+const selectView=(resetScroll=true)=>{
  dashboardTilt.reset();dashboardTilt.deferHoverUntilPointerMove();
- const id=location.hash.slice(1)||'dashboard';const selected=views.find(view=>view.id===id)||views.find(view=>view.id==='dashboard')!;
+ const requested=location.hash.slice(1)||'dashboard';
+ const id=phone.matches&&requested==='dashboard'?'color':requested;
+ const selected=views.find(view=>view.id===id)||views.find(view=>view.id===(phone.matches?'color':'dashboard'))!;
  for(const view of views)view.hidden=view!==selected;
  for(const link of links){if(link.closest('.ds-navigation')&&(selected.id==='dashboard'?link.hasAttribute('data-ds-dashboard-link'):link.hash===`#${selected.id}`))link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');}
  document.querySelector('[data-ds-title]')!.textContent=selected.dataset.title!;
  document.querySelector('[data-ds-group]')!.textContent=selected.dataset.group!;
  document.querySelector<HTMLElement>('[data-ds-breadcrumb]')!.hidden=selected.id==='dashboard';
  document.querySelector('[data-ds-description]')!.textContent=selected.dataset.description!;
- refreshMarkup(selected);refreshValues();if(contents&&!wide.matches)contents.open=false;
- scrollTo({top:0,left:0,behavior:'instant'});
- requestAnimationFrame(()=>requestAnimationFrame(()=>scrollTo({top:0,left:0,behavior:'instant'})));
+ refreshMarkup(selected);refreshValues();
+ revealNavigationLink(navigation.querySelector<HTMLAnchorElement>('[aria-current=page]'));
+ if(resetScroll){scrollTo({top:0,left:0,behavior:'instant'});requestAnimationFrame(()=>requestAnimationFrame(()=>scrollTo({top:0,left:0,behavior:'instant'})));}
 };
-window.addEventListener('hashchange',selectView);window.addEventListener('popstate',selectView);
+window.addEventListener('hashchange',()=>selectView());window.addEventListener('popstate',()=>selectView());
+const syncNavigation=()=>{const previous=views.find(view=>!view.hidden)?.id;selectView(false);if(previous!==views.find(view=>!view.hidden)?.id)scrollTo({top:0,left:0,behavior:'instant'});};
+window.addEventListener('workstagelayoutchange',syncNavigation);phone.addEventListener('change',syncNavigation);
+window.addEventListener('resize',()=>{revealNavigationLink(navigation.querySelector<HTMLAnchorElement>('[aria-current=page]'));updateNavigationEdges();});
 links.filter(link=>!link.hasAttribute('data-ds-dashboard-link')).forEach(link=>link.addEventListener('click',event=>{event.preventDefault();if(link.hash!==location.hash)history.pushState(null,'',link.hash);selectView();}));
 for(const tabset of document.querySelectorAll<HTMLElement>('[data-ds-tabset]')){
  const tabs=[...tabset.querySelectorAll<HTMLButtonElement>('[role=tab]')];
@@ -95,7 +119,7 @@ const refreshValues=()=>{
   const computed=getComputedStyle(sample);node.textContent=node.dataset.properties!.split(',').map(property=>{const value=computed.getPropertyValue(property).trim();return property==='font-weight'?namedWeights[value]||value:readable(value);}).join(' · ');
  }
 };
-window.addEventListener('resize',refreshValues);window.addEventListener('themechange',refreshValues);selectView();
+window.addEventListener('resize',refreshValues);window.addEventListener('themechange',refreshValues);selectView();document.documentElement.dataset.docNavigationReady='true';
 
 // Exercise the shared bubble itself; phone catalog previews show its focus anchor.
 const tooltipExample=document.querySelector<HTMLElement>('#tooltip [data-ds-example=tooltip-tool] .tooltip');
