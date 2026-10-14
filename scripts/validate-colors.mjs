@@ -20,6 +20,38 @@ export function validateColorUses(css,colors=paletteColors,strokes=strokeCards){
  }
  const declaredPageRoles=[...new Set([...colorRoles,...Object.keys({...tokens.light,...tokens.dark}).filter(name=>name.startsWith('color-')&&!paletteTokenNames.includes(name))])];
  for(const mode of ['light','dark'])for(const role of declaredPageRoles)if(seen[mode].get(role)!==1)errors.push(`${mode}: ${role} must appear exactly once`);
+ for(const [token,role,label] of [['color-charcoal','color-bg-surface','Cards and surfaces'],['color-night','color-section-bg-surface','Work and About']]){
+  const use=colors.find(color=>color.token===token)?.uses.find(use=>use.mode==='dark'&&use.roles.includes(role));
+  if(use?.label!==label)errors.push(`${token}: dark role label must be ${label}`);
+ }
+ return errors;
+}
+/** Nested catalog panels keep the page role in both themes; outer cards own Surface. */
+export function validateCatalogInnerPanels(css){
+ const errors=[],tree=postcss.parse(css),targets=['.ds-color-card','.ds-stroke-card','.ds-code pre','.ds-type-device-header','.ds-type-device'];
+ for(const target of targets){let ownsCanvas=false;
+  tree.walkRules(rule=>{const selector=rule.selector.replace(/\s+/g,' ').trim();
+   if(!selector.includes(target))return;
+   for(const decl of rule.nodes.filter(node=>node.type==='decl'&&['background','background-color'].includes(node.prop))){
+    if(decl.value!=='var(--color-bg-canvas)')errors.push(`Catalog inner panel must use Canvas: ${selector}`);
+    if(selector===target&&decl.value==='var(--color-bg-canvas)')ownsCanvas=true;
+   }
+  });
+  if(!ownsCanvas)errors.push(`Missing Canvas binding for catalog inner panel: ${target}`);
+ }
+ return errors;
+}
+export function validateCatalogBoxStyles(css){
+ const tree=postcss.parse(css),errors=[];
+ const declarations=selector=>{const values={};tree.walkRules(rule=>{if(rule.selector.split(',').map(value=>value.trim()).includes(selector))for(const decl of rule.nodes.filter(node=>node.type==='decl'))values[decl.prop]=decl.value;});return values;};
+ const requireValue=(selector,property,value)=>{if(declarations(selector)[property]!==value)errors.push(`Catalog box contract: ${selector} ${property} must be ${value}`);};
+ for(const selector of ['.ds-stage','.ds-specs-card','.ds-exclusions-box'])for(const [property,value] of Object.entries({'border':'0','border-radius':'var(--radius-media)','box-shadow':'var(--shadow-floating)','overflow':'hidden','background':'var(--color-bg-surface)'}))requireValue(selector,property,value);
+ for(const selector of ['.ds-color-card','.ds-stroke-card'])requireValue(selector,'border-radius','var(--radius-medium)');
+ requireValue('.ds-canvas','border-radius','0 0 var(--radius-media) var(--radius-media)');
+ for(const [property,value] of Object.entries({'position':'absolute','inset':'0 var(--space-6) auto','border-top':'1px solid var(--color-border-default)','pointer-events':'none'}))requireValue('.ds-type-device::before',property,value);
+ if(declarations('.ds-type-device')['border-top'])errors.push('Typography device separators must not be full-width borders');
+ requireValue('.ds-type-device','padding','var(--space-3) var(--space-6)');
+ requireValue('.ds-type-info','border-top','1px solid var(--color-border-default)');
  return errors;
 }
 export function validateColorPalette(css){
@@ -28,7 +60,7 @@ export function validateColorPalette(css){
   if(paletteTokenNames.includes(decl.prop.slice(2))){const shade=decl.prop.match(/^--color-(?:ink|paper)-(\d+)$/);if(shade){const alpha=decl.value.match(/\/\s*([\d.]+)\s*\)/)?.[1];if(alpha===undefined||Math.abs(Number(alpha)*100-Number(shade[1]))>1e-8)errors.push('Shade token name must match its opacity: '+decl.prop);}
    counts.set(decl.prop,(counts.get(decl.prop)||0)+1);const value=decl.value.toUpperCase().replaceAll(/\s/g,'');if(values.has(value))errors.push('Duplicate palette value: '+decl.prop);values.set(value,decl.prop);}
   else if(/#[0-9a-f]{3,8}\b|\brgba?\(\s*\d/i.test(decl.value)&&!/^--(?:shadow-|backdrop-case)/.test(decl.prop))errors.push('Colour literal outside palette: '+decl.prop);
-  if(/--color-(?:overlay|inverse|navigation)-|--project-card-bg-surface/.test(decl.prop+decl.value))errors.push('Removed colour family: '+decl.prop);
+  if(/--color-(?:overlay|inverse|navigation)-|--color-(?:smoke|bg-raised)\b|--project-card-bg-surface/.test(decl.prop+' '+decl.value))errors.push('Removed colour family: '+decl.prop);
  });
  for(const token of paletteTokenNames)if(counts.get('--'+token)!==1)errors.push('Palette token must be defined once: '+token);
  return errors;
@@ -59,5 +91,5 @@ export function validateColorDocumentation(text,receipt=colorDocumentationReceip
  const errors=[];if(receipt.section!=='Colour'||!/^[a-f0-9]{64}$/.test(receipt.sha256)||receipt.characters<100)errors.push('Missing reviewed Colour documentation receipt');
  if(text!==undefined){const start=text.indexOf('## Colour\n'),next=text.indexOf('\n## ',start+4),body=start<0?'':text.slice(start,next<0?undefined:next).trim();if(!body||body.length!==receipt.characters||createHash('sha256').update(body).digest('hex')!==receipt.sha256)errors.push('Stale Colour documentation receipt');}return errors;
 }
-export function validateColors(){const css=fs.readFileSync(path.join(root,'src/styles/tokens.css'),'utf8');return [...validateColorPalette(css),...validateColorUses(css),...validateSharedColorLiterals(),...validateColorDocumentation(fs.existsSync(path.join(root,'../docs/design-system.md'))?fs.readFileSync(path.join(root,'../docs/design-system.md'),'utf8'):undefined)];}
-if(process.argv[1]&&path.resolve(process.argv[1])===import.meta.filename){const errors=validateColors();if(errors.length){console.error(errors.join('\n'));process.exit(1);}console.log('Colour contract verified: 13 palette colours, six alpha shades, one role family, exact use coverage and no shared literals.');}
+export function validateColors(){const css=fs.readFileSync(path.join(root,'src/styles/tokens.css'),'utf8'),catalogCss=fs.readFileSync(path.join(root,'src/styles/design-system.css'),'utf8');return [...validateColorPalette(css),...validateColorUses(css),...validateCatalogInnerPanels(catalogCss),...validateCatalogBoxStyles(catalogCss),...validateSharedColorLiterals(),...validateColorDocumentation(fs.existsSync(path.join(root,'../docs/design-system.md'))?fs.readFileSync(path.join(root,'../docs/design-system.md'),'utf8'):undefined)];}
+if(process.argv[1]&&path.resolve(process.argv[1])===import.meta.filename){const errors=validateColors();if(errors.length){console.error(errors.join('\n'));process.exit(1);}console.log('Colour contract verified: 12 palette colours, six alpha shades, one role family, exact use coverage and no shared literals.');}

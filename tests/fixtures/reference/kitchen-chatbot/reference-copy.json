@@ -1,0 +1,90 @@
+{
+  "description": "Chatbot concept for a smart kitchen. I made it in one day, as a challenge during my internship at a design agency.",
+  "credit": "The robot mascot is from Vic Bell’s Blink Bot.",
+  "tags": [
+    "Chatbot",
+    "Interaction design",
+    "Principle",
+    "After Effects"
+  ],
+  "hero": {
+    "src": "/projects/kitchen-chatbot-case-study/chatbot.gif",
+    "alt": "The chatbot on a tilted phone: the bot greets the user, suggests egg noodles, then three other dishes, opens the meatloaf recipe and asks when to serve it",
+    "width": 1200,
+    "height": 680,
+    "kind": "image",
+    "reducedMotionSrc": "/projects/kitchen-chatbot-case-study/chatbot-static.png",
+    "canvasColor": "#FAF1EE",
+    "canvasInset": 5.88235294117647,
+    "canvasFade": true,
+    "canvasSourceRatio": 1.3333333333333333
+  },
+  "conversation": {
+    "eyebrow": "Flow",
+    "title": "The conversation",
+    "description": [
+      "You tell the bot what you want to eat by typing, by voice, or with the quick buttons for vegetables, pasta and wine. The bot offers one dish with its cook time and a side to go with it. If you turn it down, it shows three more.",
+      "After you open a recipe and tap Cook it, the bot asks when to serve the dish, and you pick the time."
+    ],
+    "transcriptLabel": "The conversation from the GIF",
+    "messages": [
+      {
+        "kind": "bot",
+        "text": "Hello Nazar!",
+        "detail": "Hungry, need help?"
+      },
+      {
+        "kind": "user",
+        "text": "Hi cook for me something spicy"
+      },
+      {
+        "kind": "bot",
+        "text": "Oh Yes:) I have something special for you"
+      },
+      {
+        "kind": "dishes",
+        "items": [
+          {
+            "title": "Egg Noodles with Rich Chicken",
+            "state": "rejected",
+            "duration": "45 min"
+          }
+        ]
+      },
+      {
+        "kind": "bot",
+        "text": "Don’t like it :) Check this out"
+      },
+      {
+        "kind": "dishes",
+        "items": [
+          {
+            "title": "Chicken Broccoli Bake",
+            "state": "default"
+          },
+          {
+            "title": "Turkey Artichoke Cheese Dip",
+            "state": "default"
+          },
+          {
+            "title": "Meatloaf with Prune Glaze",
+            "state": "selected",
+            "duration": "1½ hours"
+          }
+        ]
+      },
+      {
+        "kind": "user",
+        "text": "Cook it"
+      },
+      {
+        "kind": "bot",
+        "text": "Cool :) When I have to serve it?"
+      },
+      {
+        "kind": "note",
+        "text": "Serve time picked"
+      }
+    ]
+  }
+}

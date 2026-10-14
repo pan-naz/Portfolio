@@ -1,0 +1,32 @@
+{
+  "description": "Landing page for Professions in Digital, an online marathon by Skillbox. Over three weeks, 33 speakers gave 39 master classes on design, code and marketing.",
+  "tags": [
+    "Landing page",
+    "Animation"
+  ],
+  "hero": {
+    "src": "/projects/professions-in-digital-case-study/hero.mp4",
+    "alt": "The first screen of the landing page loading: a blue glass cube fades in on a black page, a light panel with the headline Professions in Digital and an email form slides in from the left, the dates appear, and the cube changes to another set of faces",
+    "width": 1432,
+    "height": 890,
+    "kind": "video",
+    "poster": "/projects/professions-in-digital-case-study/hero-still.jpg",
+    "cropPixels": 3
+  },
+  "page": {
+    "eyebrow": "Page",
+    "title": "Full scroll",
+    "description": "The landing page from top to bottom: the cube intro, the prize draw, the speakers, the schedule and the certificate.",
+    "media": {
+      "src": "/projects/professions-in-digital-case-study/page.mp4",
+      "alt": "Screen recording of the whole landing page, 51 seconds",
+      "width": 1432,
+      "height": 890,
+      "kind": "video",
+      "poster": "/projects/professions-in-digital-case-study/hero-still.jpg",
+      "cropPixels": 3,
+      "controls": true,
+      "audioControls": false
+    }
+  }
+}

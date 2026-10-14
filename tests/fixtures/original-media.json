@@ -1,0 +1,1177 @@
+{
+  "media": {
+    "gutsul-made/source/card-3d.jpg": {
+      "sha256": "8a64b57632bb084df86e783613d2a63434e61425acc215e969ca24a758b20c66",
+      "size": 22621,
+      "sources": [
+        "gutsul-made/source/card-3d.jpg"
+      ]
+    },
+    "gutsul-made/source/cart.jpg": {
+      "sha256": "8348417cd049156170c133998a40106389478c0657b4272be9d7703cddf8e283",
+      "size": 28811,
+      "sources": [
+        "gutsul-made/source/cart.jpg"
+      ]
+    },
+    "gutsul-made/source/catalog-mid.jpg": {
+      "sha256": "50644f2d413eaed332b9e11a872b821d762a9a02fd477381e3883a359c356a7c",
+      "size": 19090,
+      "sources": [
+        "gutsul-made/source/catalog-mid.jpg"
+      ]
+    },
+    "gutsul-made/source/catalog-rest.jpg": {
+      "sha256": "3c059642ec8a44e2e0dd4f8055fc59f127c6717f4cd7bf4706e0800d3c08af79",
+      "size": 55095,
+      "sources": [
+        "gutsul-made/source/catalog-rest.jpg"
+      ]
+    },
+    "gutsul-made/source/catalog-top.jpg": {
+      "sha256": "f06ec74c2f16f851292de40cb0751d130def9a901b4dc394f8f8cefcbeab08b9",
+      "size": 26848,
+      "sources": [
+        "gutsul-made/source/catalog-top.jpg"
+      ]
+    },
+    "gutsul-made/source/contact.jpg": {
+      "sha256": "24104f5e67953c7793317795b7dca971e181adddb171690dda0b7bfbc2c735d8",
+      "size": 40270,
+      "sources": [
+        "gutsul-made/source/contact.jpg"
+      ]
+    },
+    "gutsul-made/source/filter-3d.jpg": {
+      "sha256": "125b846a700e3751c9d713bf7dfe0dd08bce5833abbc798675f9755ea101e2b4",
+      "size": 25713,
+      "sources": [
+        "gutsul-made/source/filter-3d.jpg"
+      ]
+    },
+    "gutsul-made/source/hero-devices.png": {
+      "sha256": "72d717b508269fd06b586de368bfc9b475c82fb058e36ca0a3f6f74e11ca4704",
+      "size": 1014203,
+      "sources": [
+        "gutsul-made/source/hero-devices.png"
+      ]
+    },
+    "gutsul-made/source/icons.jpg": {
+      "sha256": "fe6fa24e9c92b98c1aae7139be110b4a685d9cea34fc05ecda1862bc2a4dedd9",
+      "size": 10252,
+      "sources": [
+        "gutsul-made/source/icons.jpg"
+      ]
+    },
+    "gutsul-made/source/logo-final.svg": {
+      "sha256": "c8b6dfd59bb32c05e7627e5570fe875a28b69cc5fbb65f575191cc4545f9bcde",
+      "size": 31816,
+      "sources": [
+        "gutsul-made/source/logo-final.svg"
+      ]
+    },
+    "gutsul-made/source/logo-frame.svg": {
+      "sha256": "c18cef3141e08b76df0ecb0134b790a37a05eec65105a2d42c1b3f18e9479eef",
+      "size": 31327,
+      "sources": [
+        "gutsul-made/source/logo-frame.svg"
+      ]
+    },
+    "gutsul-made/source/logo-grid.svg": {
+      "sha256": "f6c378efea84d3a831deb3869b3e6975e3b4bcd3bbe78d5090991bc2e24b295a",
+      "size": 31231,
+      "sources": [
+        "gutsul-made/source/logo-grid.svg"
+      ]
+    },
+    "gutsul-made/source/logo-sketch.svg": {
+      "sha256": "b05dfa4349bb42378ade410b362501955e519829edacc06ddc0e0f51b3832e6e",
+      "size": 5374,
+      "sources": [
+        "gutsul-made/source/logo-sketch.svg"
+      ]
+    },
+    "gutsul-made/source/logo.svg": {
+      "sha256": "14f916d9ccbf6e7719a9714e46bd85ebbe5316d115020cf4cf697a61b79ad2e9",
+      "size": 1181,
+      "sources": [
+        "gutsul-made/source/logo.svg"
+      ]
+    },
+    "gutsul-made/source/main-counters.jpg": {
+      "sha256": "d5c87080f9a8c82840c6a44d599c69103406b7c726ed2210424a2e689c8b0398",
+      "size": 25607,
+      "sources": [
+        "gutsul-made/source/main-counters.jpg"
+      ]
+    },
+    "gutsul-made/source/main-counters.mp4": {
+      "sha256": "2b22c362cbdfe0b7705d236b0a9a6bb08319a716529b15a6c0d74db6467d2d27",
+      "size": 258401,
+      "sources": [
+        "gutsul-made/source/main-counters.mp4"
+      ]
+    },
+    "gutsul-made/source/main-rest.jpg": {
+      "sha256": "7f5bf7db6848c96de06af465908fb3ca50aa2308e5594b94de9a86f3afe94eda",
+      "size": 45057,
+      "sources": [
+        "gutsul-made/source/main-rest.jpg"
+      ]
+    },
+    "gutsul-made/source/main-top.jpg": {
+      "sha256": "5577b8b70918b907258f7b6484afd684539afd0f66debf499994aef7dd97099d",
+      "size": 59584,
+      "sources": [
+        "gutsul-made/source/main-top.jpg"
+      ]
+    },
+    "gutsul-made/source/motif.jpg": {
+      "sha256": "9449e86acb6ff881dba9db0c0b3f64c2ede25c6efb649cf3161e825b95a034dd",
+      "size": 87697,
+      "sources": [
+        "gutsul-made/source/motif.jpg"
+      ]
+    },
+    "gutsul-made/source/news.jpg": {
+      "sha256": "1791cc707d4f28ac5de31418b429e2952c4c9174c65a9d07472a38804f66e955",
+      "size": 97795,
+      "sources": [
+        "gutsul-made/source/news.jpg"
+      ]
+    },
+    "gutsul-made/source/ornament.svg": {
+      "sha256": "266600ff311719982afe1102555d01124714fdadeb56579ed456837a39391be5",
+      "size": 1021,
+      "sources": [
+        "gutsul-made/source/ornament.svg"
+      ]
+    },
+    "gutsul-made/source/phone-cart.jpg": {
+      "sha256": "1b07a1c45e84a0cbbac68be9a8c406d8a86210d04d129e2452822b3359da0d93",
+      "size": 12634,
+      "sources": [
+        "gutsul-made/source/phone-cart.jpg"
+      ]
+    },
+    "gutsul-made/source/phone-contact.jpg": {
+      "sha256": "25f571cad1c58bbeac52fbd242a73ba8aa336452e5b1f29a16e0a59e0abf84a2",
+      "size": 12982,
+      "sources": [
+        "gutsul-made/source/phone-contact.jpg"
+      ]
+    },
+    "gutsul-made/source/phone-home.jpg": {
+      "sha256": "080ebce115001eccab19604bdcfe5db7dce9a63f751e42de7a5e63dc3d6389b4",
+      "size": 19207,
+      "sources": [
+        "gutsul-made/source/phone-home.jpg"
+      ]
+    },
+    "gutsul-made/source/phone-menu.jpg": {
+      "sha256": "b8de9ea827aa91de0a765762f36a5cffdbe5e752bdfb0c0b22f035e24ea9f4a9",
+      "size": 17535,
+      "sources": [
+        "gutsul-made/source/phone-menu.jpg"
+      ]
+    },
+    "gutsul-made/source/phone-menu.mp4": {
+      "sha256": "1b783ff304f16a0bfd30473ee915570c02a3dbd3fbb9aa03a6fb7fdc6e520327",
+      "size": 148237,
+      "sources": [
+        "gutsul-made/source/phone-menu.mp4"
+      ]
+    },
+    "gutsul-made/source/product.jpg": {
+      "sha256": "082d173e12335a7704995a61da0df22fe38fc1247fb6025ee2ba734d0ff28b33",
+      "size": 70104,
+      "sources": [
+        "gutsul-made/source/product.jpg"
+      ]
+    },
+    "gutsul-made/source/shirt.jpg": {
+      "sha256": "95a328a47b0e3afd4b2ce30619a871252d3333d0dfa39706e53305de341c7718",
+      "size": 120248,
+      "sources": [
+        "gutsul-made/source/shirt.jpg"
+      ]
+    },
+    "peak-hotel/source/button.gif": {
+      "sha256": "296392248929f19bdaf9991e2788eeb412d3e699f72206a1192af193705b05fd",
+      "size": 32216,
+      "sources": [
+        "peak-hotel/source/button.gif"
+      ]
+    },
+    "peak-hotel/source/contact.jpg": {
+      "sha256": "bbdb8b84f689f79ae5b9b495f0b0c6258a9a36bba28bce330006d1c297acfdc2",
+      "size": 113815,
+      "sources": [
+        "peak-hotel/source/contact.jpg"
+      ]
+    },
+    "peak-hotel/source/devices.jpg": {
+      "sha256": "4639428ddce1270de523dbc6e955094abaa9d019471266f57b7a036d3d7c0a62",
+      "size": 130865,
+      "sources": [
+        "peak-hotel/source/devices.jpg"
+      ]
+    },
+    "peak-hotel/source/grid.jpg": {
+      "sha256": "d461f0288bbf7857e96d7a50e1f7e70550791ffc51daadc6ce584bc0c6374ed8",
+      "size": 125802,
+      "sources": [
+        "peak-hotel/source/grid.jpg"
+      ]
+    },
+    "peak-hotel/source/home.jpg": {
+      "sha256": "720ce3a4414379680e8a0c66ba7fbec7847aefca36a063f6c44787c82859486c",
+      "size": 292399,
+      "sources": [
+        "peak-hotel/source/home.jpg"
+      ]
+    },
+    "peak-hotel/source/icons.jpg": {
+      "sha256": "0599ef9fe7005646493d0e453cc4012fa02153bbff3b8dcc575b2d4e3ba326da",
+      "size": 6191,
+      "sources": [
+        "peak-hotel/source/icons.jpg"
+      ]
+    },
+    "peak-hotel/source/logo.png": {
+      "sha256": "0af76f7d8887d5076608215054823143b5d330225bc591bdfb96b84c305d4354",
+      "size": 7774,
+      "sources": [
+        "peak-hotel/source/logo.png"
+      ]
+    },
+    "peak-hotel/source/logo.svg": {
+      "sha256": "025ae57c950a0a088a5a92aa836dd9b194c8f2dba695b42061b7c112a7225e1c",
+      "size": 1493,
+      "sources": [
+        "peak-hotel/source/logo.svg"
+      ]
+    },
+    "peak-hotel/source/navigation.jpg": {
+      "sha256": "e8a1259a59d1b03121b9c0aad05647c3dfba7a10d3d5cf1333265e5a66da92b2",
+      "size": 103771,
+      "sources": [
+        "peak-hotel/source/navigation.jpg"
+      ]
+    },
+    "peak-hotel/source/navigation.mp4": {
+      "sha256": "e6b579118a9d13085885eb62f56c943c32df4e3c63621c328978826ecf6ae9f1",
+      "size": 2714060,
+      "sources": [
+        "peak-hotel/source/navigation.mp4"
+      ]
+    },
+    "peak-hotel/source/rental.jpg": {
+      "sha256": "a1ba9f144cf76c6aea0a381f3e56f1feb04d9620b9b8234814e36018ff8e9085",
+      "size": 32613,
+      "sources": [
+        "peak-hotel/source/rental.jpg"
+      ]
+    },
+    "peak-hotel/source/restaurant.jpg": {
+      "sha256": "6b7ca42697cb99d00d331b2316a7ea8be17e2a9202ef4fef7b2024d891f4c26a",
+      "size": 36170,
+      "sources": [
+        "peak-hotel/source/restaurant.jpg"
+      ]
+    },
+    "peak-hotel/source/reviews.jpg": {
+      "sha256": "fb8a1e2678826312dc1c37e000b8cde74aa8d4b11afe064ba99449564479c2e2",
+      "size": 128428,
+      "sources": [
+        "peak-hotel/source/reviews.jpg"
+      ]
+    },
+    "peak-hotel/source/rooms.jpg": {
+      "sha256": "451b6053b978e5e99effbd9c440cd3ecc6e0a476371ccf059d0d45965c2226b1",
+      "size": 234212,
+      "sources": [
+        "peak-hotel/source/rooms.jpg"
+      ]
+    },
+    "peak-hotel/source/safari.jpg": {
+      "sha256": "899fd2ea76f0bd2aceb24a9579a8d21e9b31953b956ea55335e8b2269374c81e",
+      "size": 35214,
+      "sources": [
+        "peak-hotel/source/safari.jpg"
+      ]
+    },
+    "peak-hotel/source/slider.jpg": {
+      "sha256": "f06ab41d9479b3c468eb2bced770e24a340677c6a0df12747fedb7c0c438bfdc",
+      "size": 56676,
+      "sources": [
+        "peak-hotel/source/slider.jpg"
+      ]
+    },
+    "peak-hotel/source/slider.mp4": {
+      "sha256": "4e69ad16d5b6d986d8b781e8472364cddf65b88fef73087b96b8a0dd7bfe6ffa",
+      "size": 655818,
+      "sources": [
+        "peak-hotel/source/slider.mp4"
+      ]
+    },
+    "peak-hotel/source/ui-elements.jpg": {
+      "sha256": "0c62305c33314f9c7903fd1092fedde5d01b53b31d5a7aec5ae66bbf86a13f27",
+      "size": 93735,
+      "sources": [
+        "peak-hotel/source/ui-elements.jpg"
+      ]
+    },
+    "promshyna/source/404-sign.png": {
+      "sha256": "060ce558152a3d07f419d20fa66761903a998c69d3535f16cb4d5284b00b2969",
+      "size": 26054,
+      "sources": [
+        "promshyna/source/404-sign.png"
+      ]
+    },
+    "promshyna/source/404.jpg": {
+      "sha256": "6642bf0bce56e47c46e2ffd9f3a3a6e196c35a084eb328e7a920e82af029e26b",
+      "size": 69670,
+      "sources": [
+        "promshyna/source/404.jpg"
+      ]
+    },
+    "promshyna/source/blog.jpg": {
+      "sha256": "81ab59ceded2a3eb94e3c2114e43446e07ce0dc5bba17c5c1364644bca5cd14b",
+      "size": 210703,
+      "sources": [
+        "promshyna/source/blog.jpg"
+      ]
+    },
+    "promshyna/source/cart.jpg": {
+      "sha256": "675e273ca5a8f69039102675b0b1371f76525e41160d0e030484c7a73822ed1b",
+      "size": 88441,
+      "sources": [
+        "promshyna/source/cart.jpg"
+      ]
+    },
+    "promshyna/source/contacts.jpg": {
+      "sha256": "a1ff9c2957b407b2bf5a2696090db4c9ad76c863a67d0af8e162aebee1b74736",
+      "size": 115967,
+      "sources": [
+        "promshyna/source/contacts.jpg"
+      ]
+    },
+    "promshyna/source/delivery.jpg": {
+      "sha256": "e01b227338f56e16d613d6473538083094d2d9222123366853007ddbe28fc735",
+      "size": 146824,
+      "sources": [
+        "promshyna/source/delivery.jpg"
+      ]
+    },
+    "promshyna/source/hero.jpg": {
+      "sha256": "53e82df6b93438fd347ea1e0ae2d24b42eb3caf0254df3de4e304157c3138079",
+      "size": 63288,
+      "sources": [
+        "promshyna/source/hero.jpg"
+      ]
+    },
+    "promshyna/source/home-rest.jpg": {
+      "sha256": "0792dac2f70537ef8632b1504dfc07c8782049be253a629a2b5e49b0bdf2c8d7",
+      "size": 189665,
+      "sources": [
+        "promshyna/source/home-rest.jpg"
+      ]
+    },
+    "promshyna/source/home-slider.jpg": {
+      "sha256": "71b70c4d03ff3290953dd401ccf24fd0578e2f16db3b4488dccf560b112ae058",
+      "size": 24263,
+      "sources": [
+        "promshyna/source/home-slider.jpg"
+      ]
+    },
+    "promshyna/source/home-slider.mp4": {
+      "sha256": "47acdee31422e18f473b572384b9b24f67586e960ea975d4742f4bca3dbb474c",
+      "size": 302984,
+      "sources": [
+        "promshyna/source/home-slider.mp4"
+      ]
+    },
+    "promshyna/source/home-top.jpg": {
+      "sha256": "3b6479f2f652daafb89de44dec779dc809be7fecf06dfd96c42bc763ff60ab39",
+      "size": 38546,
+      "sources": [
+        "promshyna/source/home-top.jpg"
+      ]
+    },
+    "promshyna/source/listing-rest.jpg": {
+      "sha256": "b96f558091c3433256e8807838c500a2d255150087b1f67d31bb3c7421a206b9",
+      "size": 232385,
+      "sources": [
+        "promshyna/source/listing-rest.jpg"
+      ]
+    },
+    "promshyna/source/listing-top.jpg": {
+      "sha256": "8a929b329c4706cf24faa7b1cac45c7f024129c9d31fb4972a21809945b98306",
+      "size": 46870,
+      "sources": [
+        "promshyna/source/listing-top.jpg"
+      ]
+    },
+    "promshyna/source/listing-top.mp4": {
+      "sha256": "a548f0360425a65ccbc1e544d4914f6a51e651e3752a7e9b3e62cbb3b4953e01",
+      "size": 276277,
+      "sources": [
+        "promshyna/source/listing-top.mp4"
+      ]
+    },
+    "promshyna/source/logo-after.png": {
+      "sha256": "1c86c714f98573538bcd6b1f472346eecaf159f85f30e2b00a810ca246abe63b",
+      "size": 5547,
+      "sources": [
+        "promshyna/source/logo-after.png"
+      ]
+    },
+    "promshyna/source/logo-before.png": {
+      "sha256": "fff48d6beeda314dba0ae423a35db68dc74fa97d52f6938403f3f529f5409172",
+      "size": 7769,
+      "sources": [
+        "promshyna/source/logo-before.png"
+      ]
+    },
+    "promshyna/source/logo.svg": {
+      "sha256": "4e335412883832228fa6c6e12c06c326cdcd19847263c1b6422a9fe6b0313d61",
+      "size": 12761,
+      "sources": [
+        "promshyna/source/logo.svg"
+      ]
+    },
+    "promshyna/source/order.jpg": {
+      "sha256": "8019c3537063ca0ff0eff53ea75834bda65610bef2b1e9b406e0d25f0c32aee0",
+      "size": 79354,
+      "sources": [
+        "promshyna/source/order.jpg"
+      ]
+    },
+    "promshyna/source/phone-filter.jpg": {
+      "sha256": "66c8a9a2cb783c9a324aac9453a7dff48e61c55c6b913d1ea0e830d1157c72bf",
+      "size": 26204,
+      "sources": [
+        "promshyna/source/phone-filter.jpg"
+      ]
+    },
+    "promshyna/source/phone-product.jpg": {
+      "sha256": "c71675b1f3786fd3f5524832eb3071e7e77563e95e3a9d831a27fa28df381559",
+      "size": 24738,
+      "sources": [
+        "promshyna/source/phone-product.jpg"
+      ]
+    },
+    "promshyna/source/phone-product.mp4": {
+      "sha256": "6c36fcac907279aa097c40e92ef14f08dea732472c3e0477fc39a37883257dda",
+      "size": 98569,
+      "sources": [
+        "promshyna/source/phone-product.mp4"
+      ]
+    },
+    "promshyna/source/phone-slider.jpg": {
+      "sha256": "e8c367329d21f4b14221f8b49cba897763681a352d58b33ad22a7e6a29040ec5",
+      "size": 37832,
+      "sources": [
+        "promshyna/source/phone-slider.jpg"
+      ]
+    },
+    "promshyna/source/product.jpg": {
+      "sha256": "6d8f38b2c3148d5674eb794a3e2a36c3106599a121a5c28f75b2151e046a8e23",
+      "size": 89183,
+      "sources": [
+        "promshyna/source/product.jpg"
+      ]
+    },
+    "team-sternfit/source/flow.jpg": {
+      "sha256": "cda14ff8731a57baaea2abe6016e04dbd9c58ec8399398915936954c8d3b173f",
+      "size": 45503,
+      "sources": [
+        "team-sternfit/source/flow.jpg"
+      ]
+    },
+    "team-sternfit/source/hero.jpg": {
+      "sha256": "6e6d49ac24050c14f12291615b13ee1b3220f4fc5c59308c9d37afeb89383293",
+      "size": 62287,
+      "sources": [
+        "team-sternfit/source/hero.jpg"
+      ]
+    },
+    "team-sternfit/source/loader.jpg": {
+      "sha256": "8a2c7701997df2dafa4a2294833665f59b217382d4898c72080eda94f697b7a0",
+      "size": 47833,
+      "sources": [
+        "team-sternfit/source/loader.jpg"
+      ]
+    },
+    "team-sternfit/source/loader.mp4": {
+      "sha256": "7102bcf0b336f04ba8a3b7205f1138e0936ea2bab98fdbbdf892861dda4df51f",
+      "size": 598411,
+      "sources": [
+        "team-sternfit/source/loader.mp4"
+      ]
+    },
+    "team-sternfit/source/logo.svg": {
+      "sha256": "e81f0cd3e2615f3d56c6fb809f93ed3aff2dad17f8d073278e12e67defa29274",
+      "size": 3046,
+      "sources": [
+        "team-sternfit/source/logo.svg"
+      ]
+    },
+    "team-sternfit/source/main-footer.jpg": {
+      "sha256": "9af3f8cee90f1e1ca93d8d55ad4ba50e1169a1e15f709312d935af7eeacd74cc",
+      "size": 18019,
+      "sources": [
+        "team-sternfit/source/main-footer.jpg"
+      ]
+    },
+    "team-sternfit/source/main-humans.jpg": {
+      "sha256": "f6e051bc230d6b66a840704606e4c19caed86ccc86831fb49204788ff860edf5",
+      "size": 48258,
+      "sources": [
+        "team-sternfit/source/main-humans.jpg"
+      ]
+    },
+    "team-sternfit/source/main-idea.jpg": {
+      "sha256": "e9620c6c7a4792b0425b281a6608511be62f0ffae7aaa5991cd127e92d404aa1",
+      "size": 34063,
+      "sources": [
+        "team-sternfit/source/main-idea.jpg"
+      ]
+    },
+    "team-sternfit/source/main-magic.jpg": {
+      "sha256": "782af43f07a4f3d35b1cdc243cfa72dc61e29409c08b2cfd4192038f8868f3d0",
+      "size": 36301,
+      "sources": [
+        "team-sternfit/source/main-magic.jpg"
+      ]
+    },
+    "team-sternfit/source/main-vision.jpg": {
+      "sha256": "fd1375324828b03c1ea4fe801790e6bc8acec8706bd04635d1c2cabe2cbcb5c8",
+      "size": 25852,
+      "sources": [
+        "team-sternfit/source/main-vision.jpg"
+      ]
+    },
+    "team-sternfit/source/panel-motiny.jpg": {
+      "sha256": "36be91a6a0790cd8e19b9afc7835022226ecffbb09c5f6f08a16ad5619a7a6dc",
+      "size": 17982,
+      "sources": [
+        "team-sternfit/source/panel-motiny.jpg"
+      ]
+    },
+    "team-sternfit/source/panel-sternfit.jpg": {
+      "sha256": "67374406e8b525f774388cd1c27ec356a9a4e085544cdb6af1612f3a5d09dbd6",
+      "size": 15468,
+      "sources": [
+        "team-sternfit/source/panel-sternfit.jpg"
+      ]
+    },
+    "team-sternfit/source/panel-trainy.jpg": {
+      "sha256": "0a5fe8766731877fb453e637c6f70fe3769b184d9b3da21f06a2b74c364a1b99",
+      "size": 19969,
+      "sources": [
+        "team-sternfit/source/panel-trainy.jpg"
+      ]
+    },
+    "team-sternfit/source/phone.jpg": {
+      "sha256": "20906ed29b5c188b0606fa1cdd519ece8b534c6f86a3325d05054e8edddb2710",
+      "size": 37816,
+      "sources": [
+        "team-sternfit/source/phone.jpg"
+      ]
+    },
+    "team-sternfit/source/photo-boxer.jpg": {
+      "sha256": "b7f7fd603d79cf7392552e71064f92c52b9ed15903d2d96678e76eca6f7197ff",
+      "size": 42024,
+      "sources": [
+        "team-sternfit/source/photo-boxer.jpg"
+      ]
+    },
+    "team-sternfit/source/photo-fighter.jpg": {
+      "sha256": "601c7fcc03fe57fa13e806c58e49dfead6d188b32198ca0d04e83d04550d0787",
+      "size": 60734,
+      "sources": [
+        "team-sternfit/source/photo-fighter.jpg"
+      ]
+    },
+    "team-sternfit/source/photo-gym.jpg": {
+      "sha256": "78852159a72f211da2d5932d1dc046052c5e7c38a65be1ffc30c79b0f3b95ad1",
+      "size": 41174,
+      "sources": [
+        "team-sternfit/source/photo-gym.jpg"
+      ]
+    },
+    "team-sternfit/source/photo-kids.jpg": {
+      "sha256": "a50b82bcb57d21b21fd83ce1003f43e78d14835a37ad92c52e732966b20bdacf",
+      "size": 27967,
+      "sources": [
+        "team-sternfit/source/photo-kids.jpg"
+      ]
+    },
+    "team-sternfit/source/photo-trainer.jpg": {
+      "sha256": "5805cbb07c5bafde518e1319d89c0d8fefc5f54f4f38de262341d1649f6c979f",
+      "size": 12938,
+      "sources": [
+        "team-sternfit/source/photo-trainer.jpg"
+      ]
+    },
+    "team-sternfit/source/signature.jpg": {
+      "sha256": "cea17f704d2281f6dade4f5cfa7f5971b5ab6ba75f52b0edd2862b3e8a4f2d9c",
+      "size": 2866,
+      "sources": [
+        "team-sternfit/source/signature.jpg"
+      ]
+    },
+    "team-sternfit/source/signature.mp4": {
+      "sha256": "966981d034f14bf1db6ac571cbdd307e5e89dfa73cff5b924f14575b11444409",
+      "size": 16890,
+      "sources": [
+        "team-sternfit/source/signature.mp4"
+      ]
+    },
+    "team-sternfit/source/type-georgia.jpg": {
+      "sha256": "ddac03272f4f1a6829e02795818aa15f95014b0b1ccc32c7d3ce8e8a7036de31",
+      "size": 13322,
+      "sources": [
+        "team-sternfit/source/type-georgia.jpg"
+      ]
+    },
+    "team-sternfit/source/type-museo.jpg": {
+      "sha256": "cb6a7a8ce9c0ef371c5f7cbdff099f70bc7f1e8f4d09724033bf41aec43aa8c9",
+      "size": 13863,
+      "sources": [
+        "team-sternfit/source/type-museo.jpg"
+      ]
+    },
+    "pet-care/source/cards.jpg": {
+      "sha256": "3df297b3223e598a904bb3ecc48ab8086a2fc1694d79db803b3b5932af4e007b",
+      "size": 198832,
+      "sources": [
+        "pet-care/source/cards.jpg"
+      ]
+    },
+    "pet-care/source/emotional.jpg": {
+      "sha256": "70d52336a4af7eaa5793c3a72f2ba6b1aa6e92eb1f4982c9ada9b31341559931",
+      "size": 170323,
+      "sources": [
+        "pet-care/source/emotional.jpg"
+      ]
+    },
+    "pet-care/source/hero-poster.jpg": {
+      "sha256": "c4872ebb03d3da1753d4d1d9a1daca7ba479308f052e230c90e4ae2420b93c37",
+      "size": 31026,
+      "sources": [
+        "pet-care/source/hero-poster.jpg"
+      ]
+    },
+    "pet-care/source/hero-static.jpg": {
+      "sha256": "9556d8c83a5aabf506b8a2a8bbf0e5d973e314c6a804fe33b1d7e8681511cfda",
+      "size": 699909,
+      "sources": [
+        "pet-care/source/hero-static.jpg"
+      ]
+    },
+    "pet-care/source/hero.mp4": {
+      "sha256": "3129b2ff0470c7f8ac3cefdd2c944c4a34ed9bc34d30e1353189dcd606e6e0aa",
+      "size": 2887979,
+      "sources": [
+        "pet-care/source/hero.mp4"
+      ]
+    },
+    "pet-care/source/logo.svg": {
+      "sha256": "e3d9b2e3692821ce3f6aa9c2ff1d59809789aa5bf41b6f7795b0bda5cde7720b",
+      "size": 5783,
+      "sources": [
+        "pet-care/source/logo.svg"
+      ]
+    },
+    "pet-care/source/needs.webp": {
+      "sha256": "fbc489fe1e31017defe65d7f520808a272f1f70dafbe5b1e4b8d5945ccccc3f2",
+      "size": 1167834,
+      "sources": [
+        "pet-care/source/needs.webp"
+      ]
+    },
+    "pet-care/source/pets.webp": {
+      "sha256": "89295ddbdde4340757ad1de373f4a0bbfdc383f0f9a144a48c12491d62eedaed",
+      "size": 3611096,
+      "sources": [
+        "pet-care/source/pets.webp"
+      ]
+    },
+    "pet-care/source/physical.webp": {
+      "sha256": "a03a0a70496bc990c7a719d21b4150165bf9c58809c7e8d8861b96ac7d6a34c8",
+      "size": 4728254,
+      "sources": [
+        "pet-care/source/physical.webp"
+      ]
+    },
+    "pet-care/source/type-bold.png": {
+      "sha256": "f13ea458eec86cb471487a459400504e2e08ea039765faabd16d990298e5a9a9",
+      "size": 25745,
+      "sources": [
+        "pet-care/source/type-bold.png"
+      ]
+    },
+    "pet-care/source/type-regular.png": {
+      "sha256": "23196758f07db798b69c369baa9ed94d953cb5c0e150ae2896088ce9b75736f3",
+      "size": 23750,
+      "sources": [
+        "pet-care/source/type-regular.png"
+      ]
+    },
+    "pet-care/source/wireframes.jpg": {
+      "sha256": "953c72c4e21a94650993a901c845070cc0ad361a2ac4e9f23acf3bfd332082e9",
+      "size": 91009,
+      "sources": [
+        "pet-care/source/wireframes.jpg"
+      ]
+    },
+    "telegram-file-picker/source/entry.mp4": {
+      "sha256": "77f145228837144780683891452fa585084f3e5216be318c3724c23d4c5351f3",
+      "size": 38380809,
+      "sources": [
+        "telegram-file-picker/source/entry.mp4"
+      ]
+    },
+    "telegram-file-picker/source/hero.jpg": {
+      "sha256": "7be6e962ba9667cd2c571f817bf06455367eab0f62bf1dbef7dd8b6843527bb3",
+      "size": 101530,
+      "sources": [
+        "telegram-file-picker/source/hero.jpg"
+      ]
+    },
+    "telegram-file-picker/source/hero.mp4": {
+      "sha256": "447d0c5cb03f0687b976a9e69ae82bee73f7181d7bf7db3cc53a98991ceb1d0c",
+      "size": 2906121,
+      "sources": [
+        "telegram-file-picker/source/hero.mp4"
+      ]
+    },
+    "telegram-file-picker/source/logo.svg": {
+      "sha256": "315a8192719e5f26f9104704e9089a4e38d78791a7a3dcb1105a34560f32006b",
+      "size": 1650,
+      "sources": [
+        "telegram-file-picker/source/logo.svg"
+      ]
+    },
+    "telegram-file-picker/source/poster.jpg": {
+      "sha256": "4a1ecc749a6c497594f121544e3d6e31616063a981e1a2fc77e123f6de88a092",
+      "size": 92144,
+      "sources": [
+        "telegram-file-picker/source/poster.jpg"
+      ]
+    },
+    "telegram-file-picker/source/support.png": {
+      "sha256": "8454aed0c9e291ec797b540f2ec82d928d6a7b418b3216ffdf7452b2bd092c53",
+      "size": 475915,
+      "sources": [
+        "telegram-file-picker/source/support.png"
+      ]
+    },
+    "telegram-file-picker/source/video-1.mp4": {
+      "sha256": "5c96cf80a064d138f6a521eee60f8d58edb43b2d7aa2fb52b26bc2782985ca8f",
+      "size": 13000000,
+      "sources": [
+        "telegram-file-picker/source/video-1.mp4"
+      ]
+    },
+    "telegram-file-picker/source/video-2.mp4": {
+      "sha256": "78138a347bb5715ca2523c690ffb57ad5e461dcd49897d458844601652e1bd5e",
+      "size": 13000000,
+      "sources": [
+        "telegram-file-picker/source/video-2.mp4"
+      ]
+    },
+    "telegram-file-picker/source/video-3.mp4": {
+      "sha256": "640af9412689ef23cae27a13ce3e901c605a1c3f7ff0613e57ea53c7e286adc9",
+      "size": 12380809,
+      "sources": [
+        "telegram-file-picker/source/video-3.mp4"
+      ]
+    },
+    "square/source/adeline.jpg": {
+      "sha256": "b60ae9032e4ce7a584455539f4e86b2e371043ca8c15fa75292c0c9c07f86c17",
+      "size": 94084,
+      "sources": [
+        "square/source/adeline.jpg"
+      ]
+    },
+    "square/source/cover.jpg": {
+      "sha256": "05258c8fba85e5f8b25cb392c437569635d1657aed56d3b0f828a3c22f55ffaf",
+      "size": 1452999,
+      "sources": [
+        "square/source/cover.jpg"
+      ]
+    },
+    "square/source/jeanette.jpg": {
+      "sha256": "cc7d036c66caaed051f50990e62eacf51682281f4007ca62a1456b5f47968404",
+      "size": 101654,
+      "sources": [
+        "square/source/jeanette.jpg"
+      ]
+    },
+    "square/source/libido-poster.jpg": {
+      "sha256": "7ff34592d373e2a89473184e79107b59c0d1d8a6944f6786684757c243e104d2",
+      "size": 141650,
+      "sources": [
+        "square/source/libido-poster.jpg"
+      ]
+    },
+    "square/source/libido.mp4": {
+      "sha256": "c7af9e52125c064ff843e4c86772576f8e1ba09f67b8ac11698be4adc45e3554",
+      "size": 3401991,
+      "sources": [
+        "square/source/libido.mp4"
+      ]
+    },
+    "square/source/logo.svg": {
+      "sha256": "252ae1ed25aa3daca737e8000698f1ff8caf1554df66f770199746f1616e5aa9",
+      "size": 230,
+      "sources": [
+        "square/source/logo.svg"
+      ]
+    },
+    "square/source/lookbook-poster.jpg": {
+      "sha256": "ad152666b0c85c634fa9441c56505c3d662f582a4ecef9b3bb9a8d2224414bbc",
+      "size": 78163,
+      "sources": [
+        "square/source/lookbook-poster.jpg"
+      ]
+    },
+    "square/source/lookbook.mp4": {
+      "sha256": "f25575e053736ddf9437f583f2d75ed04db4d428aaf44f62303c6a2a529fcc82",
+      "size": 15697064,
+      "sources": [
+        "square/source/lookbook.mp4"
+      ]
+    },
+    "kitchen-chatbot/source/chatbot.gif": {
+      "sha256": "160a67536070558d243deceb0ca6df207d615abff02fffb6f381eddac48f6129",
+      "size": 8972929,
+      "sources": [
+        "kitchen-chatbot/source/chatbot.gif"
+      ]
+    },
+    "kitchen-chatbot/source/logo.svg": {
+      "sha256": "e224b699fee494a34dad38d15ea431e308c238c386541c62a9386ddcef51bf20",
+      "size": 394,
+      "sources": [
+        "kitchen-chatbot/source/logo.svg"
+      ]
+    },
+    "design-cup/source/hero-still.webp": {
+      "sha256": "02441157508fd94dd8262b90ce3e4f15f3721d9cd8dc588fec3e94ebf76355c2",
+      "size": 47926,
+      "sources": [
+        "design-cup/source/hero-still.webp"
+      ]
+    },
+    "design-cup/source/hero.webp": {
+      "sha256": "08320a3c252b028af56c6ef2f9df938af0230875150b6d2a6af268eba9b25f80",
+      "size": 3622804,
+      "sources": [
+        "design-cup/source/hero.webp"
+      ]
+    },
+    "design-cup/source/jury-still.webp": {
+      "sha256": "e09b8b8a9b53652b7b47c0fadae74cf86aa2174e9a2b0e96174e86511caf9b58",
+      "size": 41902,
+      "sources": [
+        "design-cup/source/jury-still.webp"
+      ]
+    },
+    "design-cup/source/jury.gif": {
+      "sha256": "47ac344e3a5b644b1a117cc2f1e40c58669a6dd99bdb82be047537d0c13d5f32",
+      "size": 8069833,
+      "sources": [
+        "design-cup/source/jury.gif"
+      ]
+    },
+    "design-cup/source/landing.gif": {
+      "sha256": "27412342f56ac7773339177f66875c905334b75cacd69bc16b80d9b69a232e6b",
+      "size": 10401952,
+      "sources": [
+        "design-cup/source/landing.gif"
+      ]
+    },
+    "design-cup/source/lettering.webp": {
+      "sha256": "a77ddc6d7ddf3abde58ceb3021b2797542240e8f546c3104f42e0dd1f14a5eb7",
+      "size": 18518,
+      "sources": [
+        "design-cup/source/lettering.webp"
+      ]
+    },
+    "design-cup/source/logo.svg": {
+      "sha256": "bf8612caa9d6d6df13ca74ee1a77ea1df2dd26dc21b1d9fa4aad82d54655ee4a",
+      "size": 241,
+      "sources": [
+        "design-cup/source/logo.svg"
+      ]
+    },
+    "design-cup/source/organizers-still.webp": {
+      "sha256": "86a0021524e953dfed5488f7e4eb8f5b6ac7e9d32eb48585987d37aa64ce432e",
+      "size": 24342,
+      "sources": [
+        "design-cup/source/organizers-still.webp"
+      ]
+    },
+    "design-cup/source/organizers.webp": {
+      "sha256": "8e91ec403c10daef0b7fa7a121d4ea43403ff5bc0191f2438595906383a94da1",
+      "size": 1727678,
+      "sources": [
+        "design-cup/source/organizers.webp"
+      ]
+    },
+    "design-cup/source/signup-still.webp": {
+      "sha256": "579c57d2862eff3227b68ea6c85cfc774a61f7237246c6b162afce44776885f9",
+      "size": 31542,
+      "sources": [
+        "design-cup/source/signup-still.webp"
+      ]
+    },
+    "design-cup/source/signup.webp": {
+      "sha256": "3a448ec29bb5f8bf4206e2b94c1f3214c7fc4691bfa949d0a9563de80d2edc04",
+      "size": 1309660,
+      "sources": [
+        "design-cup/source/signup.webp"
+      ]
+    },
+    "voximplant-ivr/source/hero-still.webp": {
+      "sha256": "78dacce2992ffae29ecaee6f85fe18871875327545dccc8c13a03eec13ccd476",
+      "size": 29356,
+      "sources": [
+        "voximplant-ivr/source/hero-still.webp"
+      ]
+    },
+    "voximplant-ivr/source/hero.webp": {
+      "sha256": "ff3455b4b892baba41842a4a1cec1bf3eb444fc1d4d723a7d382ef61cc7bde7e",
+      "size": 679788,
+      "sources": [
+        "voximplant-ivr/source/hero.webp"
+      ]
+    },
+    "voximplant-ivr/source/landing-still.webp": {
+      "sha256": "428b5b40e943c9866c6104df63fac04e23071d3ea0909543b863ee29f14673d4",
+      "size": 30058,
+      "sources": [
+        "voximplant-ivr/source/landing-still.webp"
+      ]
+    },
+    "voximplant-ivr/source/landing.gif": {
+      "sha256": "e2bbaf69b4d7601abc240d452519dc63f3f731c83897eb3e2804300da9ace887",
+      "size": 6476852,
+      "sources": [
+        "voximplant-ivr/source/landing.gif"
+      ]
+    },
+    "voximplant-ivr/source/logo.svg": {
+      "sha256": "19bf0e973d67862480891a6f273af61759516fbfc86bdc3cc2f137f63cb1bace",
+      "size": 2801,
+      "sources": [
+        "voximplant-ivr/source/logo.svg"
+      ]
+    },
+    "offf-conference/source/hero-still.jpg": {
+      "sha256": "e7763f72a78a525581802aa0c390d42e6d5619e28469717d7286b55117a7c01a",
+      "size": 179153,
+      "sources": [
+        "offf-conference/source/hero-still.jpg"
+      ]
+    },
+    "offf-conference/source/hero.mp4": {
+      "sha256": "27797528e709fb495f31cf8c40b82b787c2281bd3dcc7de8675849ba516fc6f1",
+      "size": 8211572,
+      "sources": [
+        "offf-conference/source/hero.mp4"
+      ]
+    },
+    "offf-conference/source/logo.svg": {
+      "sha256": "e149e646bc01a31badbe727f18d2aa2b99a5c766eac154fcb71ba77459c3a9e9",
+      "size": 503,
+      "sources": [
+        "offf-conference/source/logo.svg"
+      ]
+    },
+    "offf-conference/source/page.mp4": {
+      "sha256": "5b4a24f28648879f5f2255ac32221cfe151e98b9c9664c6c6367d4cb4527c07b",
+      "size": 30298475,
+      "sources": [
+        "offf-conference/source/page.mp4"
+      ]
+    },
+    "offf-conference/source/video-1.mp4": {
+      "sha256": "086d2765428d2103fd9ca400508949752cd5d01cf3d9fdd56a1e94860673588b",
+      "size": 10099492,
+      "sources": [
+        "offf-conference/source/video-1.mp4"
+      ]
+    },
+    "offf-conference/source/video-2.mp4": {
+      "sha256": "c9ded71c73e16b393e30aa75a92dd7f845a3211a592bb743ea23243a429b1b24",
+      "size": 10099492,
+      "sources": [
+        "offf-conference/source/video-2.mp4"
+      ]
+    },
+    "offf-conference/source/video-3.mp4": {
+      "sha256": "1e2eec3fb89b21bbf78f9001e99253e3677f8aec17b073199afe3de68265c691",
+      "size": 10099491,
+      "sources": [
+        "offf-conference/source/video-3.mp4"
+      ]
+    },
+    "professions-in-digital/source/hero-still.jpg": {
+      "sha256": "a4d60862b86f37390a1f0cdf6a8b39425974a65915a9de5431fa818ab8c61c33",
+      "size": 123751,
+      "sources": [
+        "professions-in-digital/source/hero-still.jpg"
+      ]
+    },
+    "professions-in-digital/source/hero.mp4": {
+      "sha256": "b75e9ec2db12da99ba07c800de39de1a4d5c83361c1fda0b8f2658f673555ff1",
+      "size": 4400458,
+      "sources": [
+        "professions-in-digital/source/hero.mp4"
+      ]
+    },
+    "professions-in-digital/source/logo.svg": {
+      "sha256": "b5e6153e0c7052c56bf306a28962f20453f9acf8d760e8f1c132525c15fe9579",
+      "size": 372,
+      "sources": [
+        "professions-in-digital/source/logo.svg"
+      ]
+    },
+    "professions-in-digital/source/page.mp4": {
+      "sha256": "15af38f1f98d50491a9cc1d3efc74de470713f3ada915b03b286bdf8297c55f9",
+      "size": 22798693,
+      "sources": [
+        "professions-in-digital/source/page.mp4"
+      ]
+    },
+    "professions-in-digital/source/video-1.mp4": {
+      "sha256": "553f2caa81dc6278388e89d4986cd36cfd06aec77d1d0af656b17aed140c39e8",
+      "size": 11399347,
+      "sources": [
+        "professions-in-digital/source/video-1.mp4"
+      ]
+    },
+    "professions-in-digital/source/video-2.mp4": {
+      "sha256": "8d3cc4b4402b879fae86fceb3a4f6a16cb3c66fb2d59f954f0925272a81283d5",
+      "size": 11399346,
+      "sources": [
+        "professions-in-digital/source/video-2.mp4"
+      ]
+    },
+    "quit-university/source/hero-still.jpg": {
+      "sha256": "1b9dc63e1a39fbd865105618b639a9b449b9eb0c99cbfa607d150218e60f30fe",
+      "size": 153527,
+      "sources": [
+        "quit-university/source/hero-still.jpg"
+      ]
+    },
+    "quit-university/source/hero.mp4": {
+      "sha256": "2ef1b7f4ad19b7302781309bd4c844bc6344e2fdceed51266d3e345e7e1efca7",
+      "size": 11738400,
+      "sources": [
+        "quit-university/source/hero.mp4"
+      ]
+    },
+    "quit-university/source/logo.svg": {
+      "sha256": "b0a559ab42dfadaf4f0a49281972695c486e2546de5d939f065e63daf4410d2f",
+      "size": 441,
+      "sources": [
+        "quit-university/source/logo.svg"
+      ]
+    },
+    "quit-university/source/page.mp4": {
+      "sha256": "7f48071876b2505ffe00672e46c810e2bb3bc55e9a7f63b0d8f7a34d6fc63307",
+      "size": 20908027,
+      "sources": [
+        "quit-university/source/page.mp4"
+      ]
+    },
+    "quit-university/source/video-1.mp4": {
+      "sha256": "fa6e807eb50d12f9ebcb94e2349b94fa7756a12e3ec4fe11df01c9628fc9b1d1",
+      "size": 10454014,
+      "sources": [
+        "quit-university/source/video-1.mp4"
+      ]
+    },
+    "quit-university/source/video-2.mp4": {
+      "sha256": "662d367fc2e534200677d8a5810a4115ac4a43c112b44ce4e2a4285e2efeca34",
+      "size": 10454013,
+      "sources": [
+        "quit-university/source/video-2.mp4"
+      ]
+    },
+    "offf-conference/source/page.mp4:concatenated": {
+      "sha256": "5b4a24f28648879f5f2255ac32221cfe151e98b9c9664c6c6367d4cb4527c07b",
+      "size": 30298475,
+      "sources": [
+        "offf-conference/source/video-1.mp4",
+        "offf-conference/source/video-2.mp4",
+        "offf-conference/source/video-3.mp4"
+      ]
+    },
+    "professions-in-digital/source/page.mp4:concatenated": {
+      "sha256": "15af38f1f98d50491a9cc1d3efc74de470713f3ada915b03b286bdf8297c55f9",
+      "size": 22798693,
+      "sources": [
+        "professions-in-digital/source/video-1.mp4",
+        "professions-in-digital/source/video-2.mp4"
+      ]
+    },
+    "quit-university/source/page.mp4:concatenated": {
+      "sha256": "7f48071876b2505ffe00672e46c810e2bb3bc55e9a7f63b0d8f7a34d6fc63307",
+      "size": 20908027,
+      "sources": [
+        "quit-university/source/video-1.mp4",
+        "quit-university/source/video-2.mp4"
+      ]
+    }
+  },
+  "documents": {
+    "kitchen-chatbot/reference-copy.json": {
+      "sha256": "08c35450d57223e0b7a9668d782c87f94f86d9344bddd3cae2a1c43fa715d5a8",
+      "size": 2626
+    },
+    "telegram-file-picker/reference-copy.json": {
+      "sha256": "e27e70eaa7c707fac0181def842ea58b08abbc5d9532b1ac0b269003fa8f0d66",
+      "size": 2931
+    },
+    "design-cup/reference-copy.json": {
+      "sha256": "1e89fef3ace578444ef423f248736d7a112e831a1e18d608cf7ef54dfe06a5b4",
+      "size": 5608
+    },
+    "voximplant-ivr/reference-copy.json": {
+      "sha256": "c1b0e78d9f66f62bd68aa50d210db32af2689ea44c9e81efbbe7b5757e8fa475",
+      "size": 2218
+    },
+    "offf-conference/reference-copy.json": {
+      "sha256": "6d1cfa9e83f5f24a5ec204243b25aa338d1bd63a7f104bbfe367ecc8fcac1f7b",
+      "size": 1257
+    },
+    "professions-in-digital/reference-copy.json": {
+      "sha256": "2ed9382f0a012185ec4623ee17909f07c53b5865b59e98d51d34a5df4979bf6d",
+      "size": 1324
+    },
+    "quit-university/reference-copy.json": {
+      "sha256": "13260035aac6701f04047221a87ea8360f135dfe0f2696f9156b9fdd25c97534",
+      "size": 1285
+    },
+    "shared-video-controller/offf-page-preview-metadata.json": {
+      "sha256": "cb87f98f4f275a16c28fc172f8bbc5a883d845bbab14005424e6d78db054a5df",
+      "size": 2673
+    },
+    "shared-video-controller/professions-in-digital-page-preview-metadata.json": {
+      "sha256": "1c1fc2247532ec3cefc490eae41bd9bcbb90846679eadca43769c60204f6cd41",
+      "size": 3168
+    },
+    "shared-video-controller/quit-university-page-preview-metadata.json": {
+      "sha256": "06564a46cdf90241cda6638258b9fe25cdbe946ee387638efffeb18f38aec740",
+      "size": 2673
+    }
+  }
+}

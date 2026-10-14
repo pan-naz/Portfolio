@@ -28,8 +28,8 @@ assert.equal(sectionItemStart(2, 900, 900, .5), 2250, 'Third content continues t
 assert.equal(sectionItemStart(2, 900, 900, .5, true, 160), 1670, 'Experience rows can use a faster interval without changing the first row handoff');
 assert.ok(card.includes('data-project-reveal={!compact || undefined} data-section-item={!compact || undefined}'), 'Selected cards reveal as complete section items; filtered cards use their independent shuffle');
 assert.ok(
-  css.includes('.project { --color-bg-surface: var(--color-bg-raised);') &&
-    read('../src/styles/tokens.css').includes('--color-bg-raised: var(--color-charcoal);') &&
+  !css.includes('--color-bg-surface: var(--color-bg-surface)') &&
+    read('../src/styles/tokens.css').includes('--color-bg-surface: var(--color-charcoal);') &&
     read('../src/styles/tokens.css').includes('--color-charcoal: #222320;'),
   'Project-card chrome follows the shared theme palette with the approved raised surface'
 );

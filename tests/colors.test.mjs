@@ -1,8 +1,18 @@
 import assert from 'node:assert/strict';import fs from 'node:fs';import os from 'node:os';import path from 'node:path';
-import {validateColorPalette,validateColorUses,validateSharedColorLiterals,validateColorDocumentation,validateColors} from '../scripts/validate-colors.mjs';
+import {validateColorPalette,validateColorUses,validateCatalogInnerPanels,validateCatalogBoxStyles,validateSharedColorLiterals,validateColorDocumentation,validateColors} from '../scripts/validate-colors.mjs';
 import {paletteColors,strokeCards} from '../src/data/system-colors.ts';import {readSystemTokens} from '../src/data/system-inventory.ts';
 const read=name=>fs.readFileSync(new URL('../'+name,import.meta.url),'utf8'),css=read('src/styles/tokens.css'),tokens=readSystemTokens(css);
 assert.deepEqual(validateColors(),[]);
+assert.equal(paletteColors.length, 12);
+const catalogCss=read('src/styles/design-system.css');
+assert.deepEqual(validateCatalogBoxStyles(catalogCss),[]);
+for(const rule of ['.ds-stage{border:1px solid var(--color-border-default);}', '.ds-specs-card{border-radius:var(--radius-medium);}', '.ds-stage{box-shadow:none;}', '.ds-color-card{border-radius:var(--radius-small);}', '.ds-type-device::before{inset:0;}', '.ds-type-device{border-top:1px solid var(--color-border-default);}'])assert.ok(validateCatalogBoxStyles(catalogCss+rule).length,'Catalog box regression rejected: '+rule);
+assert.deepEqual(validateCatalogInnerPanels(catalogCss),[]);
+assert.ok(validateCatalogInnerPanels(catalogCss+"\n:root[data-theme='dark'] :is(.ds-color-card,.ds-stroke-card,.ds-code pre,.ds-type-device-header,.ds-type-device) { background:var(--color-bg-surface); }").length,'Dark inner-panel Surface override cannot return');
+assert.ok(validateCatalogInnerPanels(catalogCss.replace(/(\.ds-code pre \{[^}]*background:)var\(--color-bg-canvas\)/,'$1var(--color-bg-surface)')).length,'Inner Canvas binding cannot be replaced');
+for(const token of ['color-charcoal','color-night']){const wrongLabel=structuredClone(paletteColors);wrongLabel.find(color=>color.token===token).uses[0].label='Wrong label';assert.ok(validateColorUses(css,wrongLabel).length,'Dark role labels are guarded');}
+for(const role of ['color-smoke','color-bg-raised','color-bg-raised-hover']) assert.ok(!(role in tokens.light) && !(role in tokens.dark), 'Retired role stays removed: ' + role);
+assert.ok(validateColorPalette(css+'\n:root {--color-bg-raised:var(--color-white);}').length, 'Merged role cannot return');
 assert.deepEqual(validateColorDocumentation(undefined),[],'Vercel validates the reviewed receipt when external docs are absent');
 assert.ok(validateColorDocumentation('## Colour\nIncorrect or incomplete contract.').length,'Changed/missing Colour contract fails');
 const fixture=fs.mkdtempSync(path.join(os.tmpdir(),'palette-guard-'));

@@ -1,0 +1,222 @@
+{
+  "count": 52,
+  "duration": 51.033,
+  "height": 149,
+  "interval": 1,
+  "times": [
+    {
+      "actual": 0,
+      "requested": 0
+    },
+    {
+      "actual": 1,
+      "requested": 1
+    },
+    {
+      "actual": 2,
+      "requested": 2
+    },
+    {
+      "actual": 3,
+      "requested": 3
+    },
+    {
+      "actual": 4,
+      "requested": 4
+    },
+    {
+      "actual": 5,
+      "requested": 5
+    },
+    {
+      "actual": 6,
+      "requested": 6
+    },
+    {
+      "actual": 7,
+      "requested": 7
+    },
+    {
+      "actual": 8,
+      "requested": 8
+    },
+    {
+      "actual": 9,
+      "requested": 9
+    },
+    {
+      "actual": 10,
+      "requested": 10
+    },
+    {
+      "actual": 11,
+      "requested": 11
+    },
+    {
+      "actual": 12,
+      "requested": 12
+    },
+    {
+      "actual": 13,
+      "requested": 13
+    },
+    {
+      "actual": 14,
+      "requested": 14
+    },
+    {
+      "actual": 15,
+      "requested": 15
+    },
+    {
+      "actual": 16,
+      "requested": 16
+    },
+    {
+      "actual": 17,
+      "requested": 17
+    },
+    {
+      "actual": 18,
+      "requested": 18
+    },
+    {
+      "actual": 19,
+      "requested": 19
+    },
+    {
+      "actual": 20,
+      "requested": 20
+    },
+    {
+      "actual": 21,
+      "requested": 21
+    },
+    {
+      "actual": 22,
+      "requested": 22
+    },
+    {
+      "actual": 23,
+      "requested": 23
+    },
+    {
+      "actual": 24,
+      "requested": 24
+    },
+    {
+      "actual": 25,
+      "requested": 25
+    },
+    {
+      "actual": 26,
+      "requested": 26
+    },
+    {
+      "actual": 27,
+      "requested": 27
+    },
+    {
+      "actual": 28,
+      "requested": 28
+    },
+    {
+      "actual": 29,
+      "requested": 29
+    },
+    {
+      "actual": 30,
+      "requested": 30
+    },
+    {
+      "actual": 31,
+      "requested": 31
+    },
+    {
+      "actual": 32,
+      "requested": 32
+    },
+    {
+      "actual": 33,
+      "requested": 33
+    },
+    {
+      "actual": 34,
+      "requested": 34
+    },
+    {
+      "actual": 35,
+      "requested": 35
+    },
+    {
+      "actual": 36,
+      "requested": 36
+    },
+    {
+      "actual": 37,
+      "requested": 37
+    },
+    {
+      "actual": 38,
+      "requested": 38
+    },
+    {
+      "actual": 39,
+      "requested": 39
+    },
+    {
+      "actual": 40,
+      "requested": 40
+    },
+    {
+      "actual": 41,
+      "requested": 41
+    },
+    {
+      "actual": 42,
+      "requested": 42
+    },
+    {
+      "actual": 43,
+      "requested": 43
+    },
+    {
+      "actual": 44,
+      "requested": 44
+    },
+    {
+      "actual": 45,
+      "requested": 45
+    },
+    {
+      "actual": 46,
+      "requested": 46
+    },
+    {
+      "actual": 47,
+      "requested": 47
+    },
+    {
+      "actual": 48,
+      "requested": 48
+    },
+    {
+      "actual": 49,
+      "requested": 49
+    },
+    {
+      "actual": 50,
+      "requested": 50
+    },
+    {
+      "actual": 51,
+      "requested": 51
+    }
+  ],
+  "width": 240,
+  "columns": 8,
+  "rows": 7,
+  "sourceSha256": "15af38f1f98d50491a9cc1d3efc74de470713f3ada915b03b286bdf8297c55f9",
+  "previewSha256": "18690b4456ef1570a0d5c7b2dbc438a76b9f39a1354b7e58b6e681bc1c2d1187",
+  "bytes": 489304
+}
