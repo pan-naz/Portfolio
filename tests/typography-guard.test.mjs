@@ -1,10 +1,17 @@
 import assert from 'node:assert/strict';
 import {readFileSync,readdirSync} from 'node:fs';
-import {validateTypographySystem,validateStaticTypography} from '../scripts/validate-typography.mjs';
+import {validateTypographySystem,validateStaticTypography,validateCatalogTypographyLayout} from '../scripts/validate-typography.mjs';
 import {typographyCssExclusions,typographyExclusions} from '../src/data/typography-exclusions.ts';
 const root=new URL('../',import.meta.url),read=file=>readFileSync(new URL(file,root),'utf8');
 const tokens=read('src/styles/tokens.css'),styles=read('src/styles/typography.css'),catalog=read('src/components/DSFoundations.astro');
 assert.deepEqual(validateTypographySystem(tokens,styles,catalog),[]);
+const catalogCss=read('src/styles/design-system.css'),themeToggle=read('src/components/ThemeToggle.astro');
+assert.deepEqual(validateCatalogTypographyLayout(catalogCss,catalog,themeToggle),[]);
+for(const rule of ['.ds-type-device{border-radius:var(--radius-medium);}', '.ds-type-device[data-type-device="desktop"]::before{content:"";}', '.ds-type-device[data-type-device="phone"]{border-radius:0;}'])assert(validateCatalogTypographyLayout(catalogCss+'@media (max-width:1399px){'+rule+'}',catalog,themeToggle).length,'Reject a broken stacked card');
+assert(validateCatalogTypographyLayout(catalogCss,catalog+'ds-type-device-first',themeToggle).length,'Reject style-based stacked corners');
+assert(validateCatalogTypographyLayout(catalogCss,catalog,themeToggle.replace('<Icon name="sun"/>','')).length,'Reject a missing theme icon');
+assert(validateCatalogTypographyLayout(catalogCss+'.theme-toggle-group .icon{width:16px;}',catalog,themeToggle).length,'Reject literal theme icon sizes');
+assert(validateCatalogTypographyLayout(catalogCss+'.theme-toggle-group .button > span{text-box-trim:none;}',catalog,themeToggle).length,'Reject untrimmed label leading that misaligns the icons');
 assert(read('src/components/ProjectCard.astro').includes("['project-outcome', compact ? 'text-body-m' : 'text-body-l']"), 'Only compact outcomes use Body/M; full cards retain Body/L');
 const bodySmall = styles.match(/\/\* body-s:[\s\S]*?\n\}/)?.[0];
 assert(bodySmall?.includes('[data-small-work-type] .navigation-item {'), 'The small Work pill selects the complete Body/S role with a simple attribute descendant selector');

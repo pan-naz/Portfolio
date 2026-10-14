@@ -1,4 +1,27 @@
 import {readTypographyTokens} from '../src/data/system-typography.ts';
+import {createRequire} from 'node:module';
+import {dirname} from 'node:path';
+const require=createRequire(import.meta.url),astro=dirname(require.resolve('astro/package.json')),vite=dirname(require.resolve('vite/package.json',{paths:[astro]})),postcss=require(require.resolve('postcss',{paths:[vite]}));
+
+export function validateCatalogTypographyLayout(css,catalog,toggle){
+ const errors=[],tree=postcss.parse(css),stacked=new Map(),shared=new Map();
+ tree.walkRules(rule=>{let parent=rule.parent,isStacked=false;while(parent){if(parent.type==='atrule'&&parent.name==='media'&&parent.params==='(max-width:1399px)')isStacked=true;parent=parent.parent;}const values=Object.fromEntries(rule.nodes.filter(node=>node.type==='decl').map(node=>[node.prop,node.value]));(isStacked?stacked:shared).set(rule.selector,{...(isStacked?stacked:shared).get(rule.selector),...values});});
+ const requireValue=(rules,selector,property,value)=>{if(rules.get(selector)?.[property]!==value)errors.push(`Catalog Typography/theme contract: ${selector} ${property} must be ${value}`);};
+ requireValue(stacked,'.ds-type-device','border-radius','0');
+ requireValue(stacked,'.ds-type-device[data-type-device="desktop"]','border-radius','var(--radius-medium) var(--radius-medium) 0 0');
+ requireValue(stacked,'.ds-type-device[data-type-device="phone"]','border-radius','0 0 var(--radius-medium) var(--radius-medium)');
+ requireValue(stacked,'.ds-type-device[data-type-device="desktop"]::before','content','none');
+ requireValue(shared,'.ds-type-device::before','inset','0 var(--space-6) auto');
+ requireValue(shared,'.ds-type-device-last','border-radius','0 0 var(--radius-medium) var(--radius-medium)');
+ if(css.includes('.ds-type-device-first')||catalog.includes('ds-type-device-first'))errors.push('Stacked corners must use device hooks, never a first-style class.');
+ if(!catalog.includes('data-type-device={device}')||!catalog.includes("index===typography.length-1&&'ds-type-device-last'"))errors.push('Preserve device hooks and desktop column endings.');
+ for(const [mode,icon,label] of [['light','sun','Light'],['dark','moon','Dark']])if(!new RegExp(`data-theme-choice="${mode}"[^>]*><Icon name="${icon}"\\s*/><span>${label}</span>`).test(toggle))errors.push(`Theme segment ${mode} must use the shared decorative ${icon} before its existing label.`);
+ requireValue(shared,'.theme-toggle-group .button','gap','var(--space-2)');
+ requireValue(shared,'.theme-toggle-group .button > span','text-box-trim','trim-both');
+ requireValue(shared,'.theme-toggle-group .button > span','text-box-edge','text');
+ for(const property of ['width','height'])requireValue(shared,'.theme-toggle-group .icon',property,'var(--icon-size-compact)');
+ return errors;
+}
 
 // The approved specification is independent of the catalog renderer.
 export const approvedTypography={

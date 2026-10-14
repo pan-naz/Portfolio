@@ -5,7 +5,7 @@ import Button from './Button.astro';
 interface Props { appearance?: 'icon' | 'segmented'; }
 const { appearance = 'icon' } = Astro.props;
 ---
-{appearance === 'segmented' ? <div class="theme-toggle-group" data-theme-control role="group" aria-label="Color theme"><Button data-ds-chrome appearance="catalog" size="small" data-theme-choice="light" aria-pressed="true">Light</Button><Button data-ds-chrome appearance="catalog" size="small" data-theme-choice="dark" aria-pressed="false">Dark</Button></div> : <IconButton class="theme-toggle" label="Switch to dark theme" title="Switch theme">
+{appearance === 'segmented' ? <div class="theme-toggle-group" data-theme-control role="group" aria-label="Color theme"><Button data-ds-chrome appearance="catalog" size="small" data-theme-choice="light" aria-pressed="true"><Icon name="sun"/><span>Light</span></Button><Button data-ds-chrome appearance="catalog" size="small" data-theme-choice="dark" aria-pressed="false"><Icon name="moon"/><span>Dark</span></Button></div> : <IconButton class="theme-toggle" label="Switch to dark theme" title="Switch theme">
   <span class="theme-toggle-glyph" aria-hidden="true">
   <Icon name="sun" class="theme-sun" />
   <Icon name="moon" class="theme-moon" />
