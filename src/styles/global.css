@@ -362,6 +362,12 @@ html[data-work-stage-layout='true']:not([data-work-stage-motion='true']) .work-p
 .impact-groups { display: grid; gap: var(--space-8); }
 .impact-group { display: grid; grid-template-columns: 284px minmax(0,1fr); gap: var(--space-6); }
 .impact-group h3 { align-self: start; }
+.impact-company-line,.impact-company-cap { display:contents; }
+@media(min-width:1024px) {
+  /* Impact alignment · shared Heading/L baseline, ex and cap metrics */
+  .impact-company-line { display:block; }
+  .impact-company-cap { display:inline-block; line-height:0; vertical-align:middle; translate:0 calc((1ex - 1cap) / 2); }
+}
 .impact-metrics { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: var(--space-8); margin: 0; }
 .stat { min-width: 0; }
 .stat dt { display: grid; gap: var(--space-1); }

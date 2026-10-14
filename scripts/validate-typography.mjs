@@ -13,6 +13,15 @@ export function validateCatalogTypographyLayout(css,catalog,toggle){
  requireValue(stacked,'.ds-type-device[data-type-device="desktop"]::before','content','none');
  requireValue(shared,'.ds-type-device::before','inset','0 var(--space-6) auto');
  requireValue(shared,'.ds-type-device-last','border-radius','0 0 var(--radius-medium) var(--radius-medium)');
+ requireValue(shared,'.ds-type-live','text-box-trim','trim-both');
+ requireValue(shared,'.ds-type-live','text-box-edge','cap alphabetic');
+ requireValue(shared,'.ds-type-live','margin','0');
+ requireValue(shared,'.ds-type-sample-slot','min-height','1cap');
+ requireValue(shared,'.ds-type-sample-slot','align-items','flex-end');
+ requireValue(shared,'.ds-type-device','grid-template-rows','subgrid');
+ requireValue(shared,'.ds-type-info .ds-type-use','margin-top','auto');
+ requireValue(stacked,'.ds-type-device','grid-template-rows','auto auto auto auto');
+ if(!catalog.includes("['ds-type-sample-slot','text-'+style.id]")||!catalog.includes("style={deviceScope(style,'desktop')}")||!catalog.includes('data-type-sample={style.id} style={deviceScope(style,device)}'))errors.push('Catalog sample slots must read the Desktop cap metric, retaining each device sample role.');
  if(css.includes('.ds-type-device-first')||catalog.includes('ds-type-device-first'))errors.push('Stacked radius must use device hooks, never a first-style class.');
  if(!catalog.includes('data-type-device={device}')||!catalog.includes("index===typography.length-1&&'ds-type-device-last'"))errors.push('Preserve device hooks and desktop column endings.');
  for(const [mode,icon,label] of [['light','sun','Light'],['dark','moon','Dark']])if(!new RegExp(`data-theme-choice="${mode}"[^>]*><Icon name="${icon}" class="theme-icon-glyph"\\s*/><span>${label}</span>`).test(toggle))errors.push(`Theme segment ${mode} must use the shared decorative ${icon} before its existing label.`);
@@ -46,7 +55,7 @@ export function validateTypographySystem(tokens,styles,catalog){
   }
   const matches=[...styles.matchAll(/([^{}]+)\{([^{}]+)\}/g)].filter(([,selector])=>new RegExp('^\\.text-'+style.id+'(?:,|$)').test(selector.trim()));
   if(matches.length!==1)errors.push(`${style.id} requires one canonical rule.`);
-  for(const [property,token] of [['font-family','font'],['font-size','text'],['font-weight','font-weight'],['line-height','line-height'],['letter-spacing','letter-spacing']])if(!matches[0]?.[2].includes(`${property}: var(--${token}-${style.id})`))errors.push(`${style.id} must own ${property}.`);
+  for(const [property,token] of [['font-family','font'],['font-size','text'],['font-weight','font-weight'],['line-height','line-height'],['letter-spacing','letter-spacing']])if(!matches[0]?.[2].replace(/\s+/g,' ').includes(`${property}: var(--${token}-${style.id})`))errors.push(`${style.id} must own ${property}.`);
  }
  if(/--text-(?:body-compact|body-compact-relative|stat-compact|contact-compact)|--(?:text|letter-spacing)-[\w-]+:\s*(?:clamp|calc)/.test(tokens))errors.push('Retired/fluid typography tokens found.');
  for(const marker of ['typographySystem()','data-type-device','data-type-sample','style.devices[device].sizeRem','style.devices[device].spacingEm','data-type-size','data-type-spacing','foundationCode[item.id]'])if(!catalog.includes(marker))errors.push(`Catalog must read source values: ${marker}.`);

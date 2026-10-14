@@ -5,7 +5,7 @@ const read = path => readFileSync(new URL(path, import.meta.url), 'utf8');
 const source = read('../src/scripts/work-stage/work-stage.ts');
 const work = read('../src/components/WorkSection.astro');
 const css = read('../src/styles/global.css');
-const tokens = read('../src/styles/tokens.css');
+const tokens = read('../src/styles/tokens.css').replace(/\s+/g, ' ');
 const layout = read('../src/scripts/layout-capabilities.js');
 
 assert.equal(shouldRevealWorkContent(600, 0, 900), false, 'In-view Work preview stays hidden on reload or resize at page top');

@@ -44,6 +44,6 @@ export function validateLogoWave(css, logo, tokens, clients='') {
  if(/<script\b/.test(logo)||/logo-(?:wave|replay)|data-logo-letter/.test(clients))fail('no JavaScript or animation library may drive this effect.');
  if(rules.some(rule=>rule.nodes.some(node=>node.type==='decl'&&node.prop.startsWith('animation'))))fail('only transitions are permitted.');
  if(!logo.includes('mark.letters.map')||!logo.includes('--logo-letter-index'))fail('the real Logo must expose source glyphs in order.');
- if(!/--scale-logo-wave:\s*1\.05;/.test(tokens)||!tokens.includes('--ease-spring-wave: linear(')||!tokens.includes('--duration-logo-wave:'))fail('missing approved source scale or precomputed spring.');
+ if(!/--scale-logo-wave:\s*1\.05;/.test(tokens)||!/--ease-spring-wave:\s*linear\(/.test(tokens)||!tokens.includes('--duration-logo-wave:'))fail('missing approved source scale or precomputed spring.');
  return failures;
 }

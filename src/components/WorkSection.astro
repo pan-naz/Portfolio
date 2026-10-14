@@ -12,7 +12,7 @@ import CaseStudyLayer from './CaseStudyLayer.astro';
     <div class="work-panel" aria-hidden="true"></div>
     <div class="work-rail" data-work-rail><SectionNavigation /></div>
     <div class="container work-content">
-      <SectionHeading id="work-title" data-color-zone="dark" data-color-surface="page" data-color-section="page" data-shadow-theme="page" label={workCategories.selected.label}>{workCategories.selected.title}<p slot="description" class="section-description text-body-l">{workCategories.selected.description}</p></SectionHeading>
+      <SectionHeading id="work-title" data-color-zone="dark" data-zone-keep="surface section shadows" label={workCategories.selected.label}>{workCategories.selected.title}<p slot="description" class="section-description text-body-l">{workCategories.selected.description}</p></SectionHeading>
       <div class="work-filter-pill" data-visible="false" inert aria-hidden="true"><SectionNavigation compact theme pill /></div>
       <div id="project-list" class="projects" data-active-filter="selected">
         <div class="project-collection" data-project-collection="selected">{projects.map((project, index) => <ProjectCard project={project} lead={index === 0} />)}</div>

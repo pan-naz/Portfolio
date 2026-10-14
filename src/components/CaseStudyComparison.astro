@@ -10,7 +10,7 @@ const { before, after, label } = Astro.props;
     <Button size="small" appearance="comparison" variant="secondary" data-comparison-choice="before" aria-pressed="false">Before</Button>
     <Button size="small" appearance="comparison" variant="primary" data-comparison-choice="after" aria-pressed="true">After</Button>
   </div>
-  <div class="case-comparison-images" data-shadow-theme="light">
+  <div class="case-comparison-images" data-fixed-shadow="light">
     <ResponsiveImage {...before} data-comparison-image="before" aria-hidden="true" loading="lazy" decoding="async" />
     <ResponsiveImage {...after} data-comparison-image="after" data-active aria-hidden="false" loading="lazy" decoding="async" />
   </div>

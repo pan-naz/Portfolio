@@ -15,9 +15,9 @@ const filesUnder = (directory: string): string[] => readdirSync(directory, { wit
   return entry.isDirectory() ? filesUnder(path) : [path];
 });
 export function readSystemTokens(css: string) {
-  const read = (block: string): Record<string, string> => Object.fromEntries([...block.matchAll(/--([\w-]+):\s*([^;]+);/g)].map(([, key, value]) => [key, value.trim()]));
+  const read = (block: string): Record<string, string> => Object.fromEntries([...block.matchAll(/--([\w-]+):\s*([^;]+);/g)].map(([, key, value]) => [key, value.trim().replace(/\s+/g, ' ')]));
   const light = Object.assign({}, ...[...css.matchAll(/(?:^|\n):root(?:\s*,[^{}]+)?\s*\{([^}]+)\}/g)].map(([, block]) => read(block))) as Record<string, string>;
-  const dark = { ...light, ...Object.assign({}, ...[...css.matchAll(/:root\[data-theme=(?:'dark'|"dark")\][^{]*\{([^}]+)\}/g)].map(([,block])=>read(block))) };
+  const dark = { ...light, ...Object.assign({}, ...[...css.matchAll(/(?:^|\n)(?::root)?\[data-theme=(?:'dark'|"dark")\][^{]*\{([^}]+)\}/g)].map(([,block])=>read(block))) };
   const value = (palette: Record<string, string>, name: string, seen = new Set<string>()): string => {
     if (seen.has(name)) throw Error(`Cyclic system token: ${name}`);
     const next = new Set([...seen, name]);

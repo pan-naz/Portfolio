@@ -17,7 +17,7 @@
   --color-night: #0F100E;
   --color-orange: #F25A30;
   --color-orange-light: #FF6B42;
-  /* Transparent shades · named alpha variants */
+  /* Transparent shades */
   --color-ink-64: rgb(22 23 21 / 0.64);
   --color-ink-16: rgb(22 23 21 / 0.16);
   --color-ink-8: rgb(22 23 21 / 0.08);
@@ -27,151 +27,230 @@
 }
 
 /* Roles · light (default) */
-:root, [data-theme='light'], [data-color-zone='light'] {
-  --color-bg-section: var(--color-ink);
-  --color-text-primary: var(--color-ink);
-  --color-text-primary-hover: var(--color-graphite);
-  --color-text-secondary: var(--color-ink-64);
-  --color-text-on-primary: var(--color-white);
-  --color-bg-canvas: var(--color-paper);
-  --color-bg-surface: var(--color-white);
-  --color-bg-surface-subtle: var(--color-mist);
-  --color-border-default: var(--color-ink-8);
-  --color-interactive-accent: var(--color-orange);
-  --color-video-track: var(--color-ink-16);
-  --color-rain-icon: var(--color-ink);
-  --color-footer-icon: var(--color-silver);
+:root,
+[data-theme='light'],
+[data-color-zone='light'] {
+  --color-bg-section:
+    var(--color-ink);
+  --color-text-primary:
+    var(--color-ink);
+  --color-text-primary-hover:
+    var(--color-graphite);
+  --color-text-secondary:
+    var(--color-ink-64);
+  --color-text-on-primary:
+    var(--color-white);
+  --color-bg-canvas:
+    var(--color-paper);
+  --color-bg-surface:
+    var(--color-white);
+  --color-bg-surface-subtle:
+    var(--color-mist);
+  --color-border-default:
+    var(--color-ink-8);
+  --color-interactive-accent:
+    var(--color-orange);
+  --color-video-track:
+    var(--color-ink-16);
+  --color-rain-icon:
+    var(--color-ink);
+  --color-footer-icon:
+    var(--color-silver);
   color-scheme: light;
 }
 
-/* Shared roles · local text and backdrop in both modes */
-:root, [data-theme], [data-color-zone] {
-  --color-border-control: var(--color-text-primary);
-  --color-focus-ring: var(--color-text-primary);
-  --color-backdrop: rgb(0 0 0 / .18);
+/* Shared roles · local text and
+   backdrop in both modes */
+:root,
+[data-theme],
+[data-color-zone] {
+  --color-border-control:
+    var(--color-text-primary);
+  --color-focus-ring:
+    var(--color-text-primary);
+  --color-backdrop:
+    rgb(0 0 0 / .18);
 }
 
 /* Roles · dark */
-:root[data-theme='dark'], [data-theme='dark'], [data-color-zone='dark'] {
-  --color-bg-section: var(--color-night);
-  --color-text-primary: var(--color-paper);
-  --color-text-primary-hover: var(--color-stone);
-  --color-text-secondary: var(--color-paper-64);
-  --color-text-on-primary: var(--color-ink);
-  --color-bg-canvas: var(--color-ink);
-  --color-bg-surface: var(--color-charcoal);
-  --color-bg-surface-subtle: var(--color-graphite);
-  --color-border-default: var(--color-paper-8);
-  --color-interactive-accent: var(--color-orange-light);
-  --color-video-track: var(--color-paper-10);
-  --color-rain-icon: var(--color-stone);
-  --color-footer-icon: var(--color-pewter);
+[data-theme='dark'],
+[data-color-zone='dark'] {
+  --color-bg-section:
+    var(--color-night);
+  --color-text-primary:
+    var(--color-paper);
+  --color-text-primary-hover:
+    var(--color-stone);
+  --color-text-secondary:
+    var(--color-paper-64);
+  --color-text-on-primary:
+    var(--color-ink);
+  --color-bg-canvas:
+    var(--color-ink);
+  --color-bg-surface:
+    var(--color-charcoal);
+  --color-bg-surface-subtle:
+    var(--color-graphite);
+  --color-border-default:
+    var(--color-paper-8);
+  --color-interactive-accent:
+    var(--color-orange-light);
+  --color-video-track:
+    var(--color-paper-10);
+  --color-rain-icon:
+    var(--color-stone);
+  --color-footer-icon:
+    var(--color-pewter);
   color-scheme: dark;
 }
 
-/* Scoped surfaces · retain inherited page artwork and section bands */
-[data-color-zone][data-color-surface='page'] { --color-bg-surface: inherit; }
-[data-color-zone][data-color-section='page'] { --color-bg-section: inherit; }
+/* Scoped surfaces · retain
+   inherited page artwork and
+   section bands */
+/* Surface · keep page artwork */
+[data-zone-keep~='surface'] {
+  --color-bg-surface: inherit;
+}
+
+/* Section · keep page band */
+[data-zone-keep~='section'] {
+  --color-bg-section: inherit;
+}
 
 /* Typography · families, phone styles and larger-screen changes */
 
 /* Font families · src/styles/tokens.css */
 :root {
-  --font-heading: 'Funnel Display Variable', 'Funnel Display', Arial, sans-serif;
+  --font-heading:
+    'Funnel Display Variable', 'Funnel Display', Arial, sans-serif;
   --font-body: 'Urbanist Variable', Urbanist, Arial, sans-serif;
 }
 
 /* Styles · phone is the default */
 :root {
-  /* Heading/XL · shared text role */
-  --font-heading-xl: var(--font-heading);
+  /* Heading/XL */
+  --font-heading-xl:
+    var(--font-heading);
   --font-weight-heading-xl: 400;
-  --text-heading-xl: 2.5rem; /* 40px */
-  --line-height-heading-xl: .909091;
-  --letter-spacing-heading-xl: -.045em;
+  --text-heading-xl:
+    2.5rem; /* 40px */
+  --line-height-heading-xl:
+    .909091;
+  --letter-spacing-heading-xl:
+    -.045em;
 
-  /* Heading/L · shared text role */
-  --font-heading-l: var(--font-heading);
+  /* Heading/L */
+  --font-heading-l:
+    var(--font-heading);
   --font-weight-heading-l: 400;
-  --text-heading-l: 1.625rem; /* 26px */
-  --line-height-heading-l: 1.142857;
-  --letter-spacing-heading-l: -.042em;
+  --text-heading-l:
+    1.625rem; /* 26px */
+  --line-height-heading-l:
+    1.142857;
+  --letter-spacing-heading-l:
+    -.042em;
 
-  /* Heading/M · shared text role */
-  --font-heading-m: var(--font-heading);
+  /* Heading/M */
+  --font-heading-m:
+    var(--font-heading);
   --font-weight-heading-m: 500;
-  --text-heading-m: 1.375rem; /* 22px */
-  --line-height-heading-m: 1.333333;
-  --letter-spacing-heading-m: -.038em;
+  --text-heading-m:
+    1.375rem; /* 22px */
+  --line-height-heading-m:
+    1.333333;
+  --letter-spacing-heading-m:
+    -.038em;
 
-  /* Body/L · shared text role */
+  /* Body/L */
   --font-body-l: var(--font-body);
   --font-weight-body-l: 400;
-  --text-body-l: 1.125rem; /* 18px */
+  --text-body-l:
+    1.125rem; /* 18px */
   --line-height-body-l: 1.5;
   --letter-spacing-body-l: 0em;
 
-  /* Body/M · shared text role */
+  /* Body/M */
   --font-body-m: var(--font-body);
   --font-weight-body-m: 400;
   --text-body-m: 1rem; /* 16px */
   --line-height-body-m: 1.5;
   --letter-spacing-body-m: 0em;
 
-  /* Body/M Strong · shared text role */
-  --font-body-m-strong: var(--font-body);
+  /* Body/M Strong */
+  --font-body-m-strong:
+    var(--font-body);
   --font-weight-body-m-strong: 500;
-  --text-body-m-strong: 1rem; /* 16px */
+  --text-body-m-strong:
+    1rem; /* 16px */
   --line-height-body-m-strong: 1.5;
-  --letter-spacing-body-m-strong: 0em;
+  --letter-spacing-body-m-strong:
+    0em;
 
-  /* Body/S · shared text role */
+  /* Body/S */
   --font-body-s: var(--font-body);
   --font-weight-body-s: 400;
-  --text-body-s: .875rem; /* 14px */
+  --text-body-s:
+    .875rem; /* 14px */
   --line-height-body-s: 1.428571;
   --letter-spacing-body-s: 0em;
 
-  /* Label/M · shared text role */
-  --font-label-m: var(--font-heading);
+  /* Label/M */
+  --font-label-m:
+    var(--font-heading);
   --font-weight-label-m: 500;
-  --text-label-m: .875rem; /* 14px */
+  --text-label-m:
+    .875rem; /* 14px */
   --line-height-label-m: 1.428571;
-  --letter-spacing-label-m: -.036em;
+  --letter-spacing-label-m:
+    -.036em;
 
-  /* Label/S · shared text role */
+  /* Label/S */
   --font-label-s: var(--font-body);
   --font-weight-label-s: 500;
-  --text-label-s: .75rem; /* 12px */
+  --text-label-s:
+    .75rem; /* 12px */
   --line-height-label-s: 1.333333;
   --letter-spacing-label-s: 0em;
-
 }
 
-/* Tablet · 768px and wider: only what changes */
+/* Tablet · 768px and wider:
+   only what changes */
 @media (min-width: 768px) {
   :root {
-    --text-heading-xl: 3rem; /* 48px */
-    --letter-spacing-heading-xl: -.046em;
-    --text-heading-l: 2.25rem; /* 36px */
-    --letter-spacing-heading-l: -.044em;
+    --text-heading-xl:
+      3rem; /* 48px */
+    --letter-spacing-heading-xl:
+      -.046em;
+    --text-heading-l:
+      2.25rem; /* 36px */
+    --letter-spacing-heading-l:
+      -.044em;
   }
 }
 
-/* Desktop · 1024px and wider: only what changes */
+/* Desktop · 1024px and wider:
+   only what changes */
 @media (min-width: 1024px) {
   :root {
-    --text-heading-xl: 4.75rem; /* 76px */
-    --letter-spacing-heading-xl: -.048em;
-    --text-heading-l: 3.5rem; /* 56px */
-    --letter-spacing-heading-l: -.047em;
-    --text-heading-m: 1.5rem; /* 24px */
-    --letter-spacing-heading-m: -.040em;
-    --text-body-l: 1.25rem; /* 20px */
+    --text-heading-xl:
+      4.75rem; /* 76px */
+    --letter-spacing-heading-xl:
+      -.048em;
+    --text-heading-l:
+      3.5rem; /* 56px */
+    --letter-spacing-heading-l:
+      -.047em;
+    --text-heading-m:
+      1.5rem; /* 24px */
+    --letter-spacing-heading-m:
+      -.040em;
+    --text-body-l:
+      1.25rem; /* 20px */
   }
 }
 
-/* Spacing · src/styles/tokens.css */
+/* Spacing ·
+   src/styles/tokens.css */
 :root {
   --space-1: 4px;
   --space-2: 8px;
@@ -197,7 +276,8 @@
   --gutter-left: calc(var(--gutter) + var(--safe-left));
   --gutter-right: calc(var(--gutter) + var(--safe-right));
 }
-/* Projects · 1 column · metrics: 1 column */
+
+/* Projects: 1 column · metrics: 1 column */
 
 /* Tablet and desktop · 768px and wider */
 @media (min-width: 768px) {
@@ -208,7 +288,8 @@
     --section-space: var(--space-24);
   }
 }
-/* Projects · 2 columns · metrics: 3 columns */
+
+/* Projects: 2 columns · metrics: 3 columns */
 
 /* Radius · phone is the default */
 :root {
@@ -219,29 +300,55 @@
   --radius-full: 999px;
 }
 
-/* Radius changes · 768px and wider */
+/* Radius changes · 768px and
+   wider */
 @media (min-width: 768px) {
   :root {
     --radius-large: 40px;
-    --radius-xlarge: clamp(40px, 5.8vw, 100px);
+    --radius-xlarge:
+      clamp(40px, 5.8vw, 100px);
   }
 }
 
 /* Shadows · light (default) */
-:root, [data-theme='light'], [data-color-zone='light'], [data-shadow-theme='light'] {
-  --shadow-small: 0 8px 24px rgb(22 23 21 / .10);
-  --shadow-large: 0 8px 24px rgb(22 23 21 / .10), 0 24px 56px rgb(22 23 21 / .12);
+:root,
+[data-theme='light'],
+[data-color-zone='light'],
+[data-fixed-shadow='light'] {
+  --shadow-small:
+  0 8px 24px rgb(22 23 21 / .10);
+  --shadow-large:
+  0 8px 24px rgb(22 23 21 / .10),
+  0 24px 56px rgb(22 23 21 / .12);
 }
 
 /* Shadows · dark */
-:root[data-theme='dark'], [data-theme='dark'], [data-color-zone='dark'] {
-  --shadow-small: 0 2px 8px rgb(0 0 0 / .16), 0 12px 32px rgb(0 0 0 / .28);
-  --shadow-large: 0 8px 24px rgb(0 0 0 / .38), 0 24px 64px rgb(0 0 0 / .52);
+[data-theme='dark'],
+[data-color-zone='dark'] {
+  --shadow-small:
+  0 2px 8px rgb(0 0 0 / .16),
+  0 12px 32px rgb(0 0 0 / .28);
+  --shadow-large:
+  0 8px 24px rgb(0 0 0 / .38),
+  0 24px 64px rgb(0 0 0 / .52);
 }
 
-/* Scoped shadows · retain page elevation when only copy changes */
-[data-color-zone][data-shadow-theme='page'] { --shadow-small: inherit; --shadow-large: inherit; }
-[data-color-zone][data-shadow-theme='small'] { --shadow-large: inherit; }
+/* Scoped shadows · retain page
+   elevation when only copy
+   changes */
+/* Elevation · keep page mode */
+[data-zone-keep~='shadows'] {
+  --shadow-small:
+  inherit;
+  --shadow-large:
+  inherit;
+}
+
+/* Large · page; Small is Dark */
+[data-zone-keep~='large-shadow'] {
+  --shadow-large:
+  inherit;
+}
 
 /* Motion · src/styles/tokens.css */
 :root {
@@ -277,15 +384,44 @@
   --duration-role-exit: 450ms;
   --distance-text-reveal: 8px;
   --distance-title-reveal: 16px;
-  /* Logo wave · stiffness 300, damping 15, mass 1; unit-step samples every 12ms, exact first peak */
-  --ease-spring-wave: linear(0 0%, 0.020288 1.28342%, 0.075828 2.56684%, 0.158625 3.85027%, 0.260927 5.13369%, 0.375491 6.41711%, 0.495784 7.70053%, 0.616125 8.98396%, 0.731763 10.26738%, 0.838919 11.5508%, 0.934769 12.83422%, 1.017399 14.11765%, 1.085732 15.40107%, 1.139432 16.68449%, 1.178793 17.96791%, 1.204626 19.25134%, 1.218143 20.53476%, 1.221093 21.52117%, 1.220841 21.81818%, 1.214394 23.1016%, 1.200564 24.38503%, 1.181111 25.66845%, 1.157728 26.95187%, 1.131983 28.23529%, 1.10528 29.51872%, 1.078829 30.80214%, 1.05363 32.08556%, 1.030469 33.36898%, 1.009923 34.65241%, 0.992371 35.93583%, 0.97801 37.21925%, 0.966882 38.50267%, 0.958891 39.7861%, 0.953836 41.06952%, 0.951432 42.35294%, 0.951338 43.63636%, 0.953176 44.91979%, 0.956556 46.20321%, 0.96109 47.48663%, 0.96641 48.77005%, 0.972177 50.05348%, 0.97809 51.3369%, 0.983893 52.62032%, 0.989373 53.90374%, 0.99437 55.18717%, 0.998765 56.47059%, 1.002485 57.75401%, 1.005494 59.03743%, 1.007791 60.32086%, 1.009403 61.60428%, 1.010379 62.8877%, 1.010785 64.17112%, 1.0107 65.45455%, 1.010207 66.73797%, 1.009393 68.02139%, 1.008343 69.30481%, 1.007138 70.58824%, 1.005849 71.87166%, 1.004543 73.15508%, 1.003273 74.4385%, 1.002083 75.72193%, 1.001007 77.00535%, 1.000069 78.28877%, 0.999282 79.57219%, 0.998654 80.85561%, 0.998182 82.13904%, 0.997859 83.42246%, 0.997674 84.70588%, 0.997611 85.9893%, 0.997652 87.27273%, 0.997779 88.55615%, 0.997973 89.83957%, 0.998215 91.12299%, 0.998487 92.40642%, 0.998774 93.68984%, 0.999062 94.97326%, 0.999339 96.25668%, 0.999597 97.54011%, 0.999828 98.82353%, 1 100%);
-  /* Logo settle time · the spring’s 0.1% displacement-envelope time, rounded up to ms */
+  /* Logo wave · stiffness 300, damping 15, mass 1; unit-step samples
+     every 12ms, exact first peak */
+  --ease-spring-wave:
+    linear(0 0%, 0.020288 1.28342%, 0.075828 2.56684%, 0.158625
+    3.85027%, 0.260927 5.13369%, 0.375491 6.41711%, 0.495784 7.70053%,
+    0.616125 8.98396%, 0.731763 10.26738%, 0.838919 11.5508%, 0.934769
+    12.83422%, 1.017399 14.11765%, 1.085732 15.40107%, 1.139432
+    16.68449%, 1.178793 17.96791%, 1.204626 19.25134%, 1.218143
+    20.53476%, 1.221093 21.52117%, 1.220841 21.81818%, 1.214394
+    23.1016%, 1.200564 24.38503%, 1.181111 25.66845%, 1.157728
+    26.95187%, 1.131983 28.23529%, 1.10528 29.51872%, 1.078829
+    30.80214%, 1.05363 32.08556%, 1.030469 33.36898%, 1.009923
+    34.65241%, 0.992371 35.93583%, 0.97801 37.21925%, 0.966882
+    38.50267%, 0.958891 39.7861%, 0.953836 41.06952%, 0.951432
+    42.35294%, 0.951338 43.63636%, 0.953176 44.91979%, 0.956556
+    46.20321%, 0.96109 47.48663%, 0.96641 48.77005%, 0.972177 50.05348%,
+    0.97809 51.3369%, 0.983893 52.62032%, 0.989373 53.90374%, 0.99437
+    55.18717%, 0.998765 56.47059%, 1.002485 57.75401%, 1.005494
+    59.03743%, 1.007791 60.32086%, 1.009403 61.60428%, 1.010379
+    62.8877%, 1.010785 64.17112%, 1.0107 65.45455%, 1.010207 66.73797%,
+    1.009393 68.02139%, 1.008343 69.30481%, 1.007138 70.58824%, 1.005849
+    71.87166%, 1.004543 73.15508%, 1.003273 74.4385%, 1.002083
+    75.72193%, 1.001007 77.00535%, 1.000069 78.28877%, 0.999282
+    79.57219%, 0.998654 80.85561%, 0.998182 82.13904%, 0.997859
+    83.42246%, 0.997674 84.70588%, 0.997611 85.9893%, 0.997652
+    87.27273%, 0.997779 88.55615%, 0.997973 89.83957%, 0.998215
+    91.12299%, 0.998487 92.40642%, 0.998774 93.68984%, 0.999062
+    94.97326%, 0.999339 96.25668%, 0.999597 97.54011%, 0.999828
+    98.82353%, 1 100%);
+  /* Logo settle time · the spring’s 0.1% displacement-envelope time,
+     rounded up to ms */
   --duration-logo-wave: 935ms;
   --duration-skills-loop: 13.075s;
   --duration-toggle-enter: 600ms;
   --duration-header-enter: 560ms;
   --duration-header-exit: 240ms;
-  --ease-header-pill: cubic-bezier(.3333333333333333, 0, .6666666666666666, 1);
+  --ease-header-pill:
+    cubic-bezier(.3333333333333333, 0, .6666666666666666, 1);
   --duration-toggle-return: 600ms;
   --ease-toggle-rotation: cubic-bezier(.4, 0, .2, 1);
   --duration-fast: 160ms;

@@ -37,7 +37,7 @@ assert.equal(frames.size,0);assert.equal(reads,desktopReads,'No compact pill wor
 delete root.dataset.workStageLayout;top=-100;window.dispatchEvent(new Event('workstagelayoutchange'));assert.equal(wrapper.dataset.visible,'true');
 window.dispatchEvent(new Event('scroll'));pill.destroy();assert.equal(frames.size,0);assert.equal(observers,0);assert.equal(wrapper.inert,true);
 window.dispatchEvent(new Event('scroll'));assert.equal(frames.size,0);
-const css=readFileSync(new URL('../src/styles/tokens.css',import.meta.url),'utf8');
+const css=readFileSync(new URL('../src/styles/tokens.css',import.meta.url),'utf8').replace(/\s+/g,' ');
 assert.ok(css.includes(`--duration-header-enter: ${pillDuration}ms`));assert.ok(css.includes(`--duration-header-exit: ${pillExitDuration}ms`));
 // Bezier x(t)=t for controls at 1/3 and 2/3; y(t) exactly equals the
 // desktop's existing smooth(t), rather than introducing another motion curve.

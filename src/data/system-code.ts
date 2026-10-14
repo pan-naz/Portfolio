@@ -24,7 +24,7 @@ export function foundationSourceCode(root=process.cwd()){
   shadowDark:{key:'shadows-dark',source:tokens.slice(tokens.indexOf('/* Shadows · dark'),tokens.indexOf('/* Motion ·')).trim()},
   motion:block('motion','Motion','Icons'),
   icons:block('icons','Icons','Controls and layers'),
-  use:{key:'type-use',source:typography.slice(typography.indexOf('/* Use a style ·'),typography.indexOf('/* heading-l ·')).trim()+'\n\n<h2 class="text-heading-l">Projects</h2>'},
+  use:{key:'type-use',source:typography.slice(typography.indexOf('/* Use a style ·'),typography.indexOf('/* heading-l ·')).trim()+'\n\n<h2 class="text-heading-l">\n  Projects\n</h2>'},
  };
  const groups:Record<string,CodeColumns[]>={
   color:[[[code.palette]],[[code.light],[code.dark]]],

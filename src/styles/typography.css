@@ -3,17 +3,25 @@
 /* Reset · browser defaults without choosing a font from an HTML tag */
 :where(h1,h2,h3,h4,h5,h6,strong,b,small,button,input,select,textarea) { font: inherit; letter-spacing: inherit; }
 
-/* Use a style · src/styles/typography.css */
+/* Use a style ·
+   src/styles/typography.css */
 .text-heading-xl {
-  font-family: var(--font-heading-xl);
-  font-size: var(--text-heading-xl);
-  font-weight: var(--font-weight-heading-xl);
-  line-height: var(--line-height-heading-xl);
-  letter-spacing: var(--letter-spacing-heading-xl);
+  font-family:
+    var(--font-heading-xl);
+  font-size:
+    var(--text-heading-xl);
+  font-weight:
+    var(--font-weight-heading-xl);
+  line-height:
+    var(--line-height-heading-xl);
+  letter-spacing:
+  var(--letter-spacing-heading-xl);
 }
 
-/* Same for .text-heading-l … .text-label-s.
-   .text-label-m also sets text-transform: uppercase. */
+/* Same for .text-heading-l
+   … .text-label-s.
+   .text-label-m also sets
+   text-transform: uppercase. */
 
 /* heading-l · canonical role and actual website consumers */
 .text-heading-l,

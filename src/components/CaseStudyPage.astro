@@ -11,7 +11,7 @@ const returnUrl = project.category === 'selected' ? '/#work' : `/${workFilterHas
 ---
 <StandaloneCaseStyles project={project} />
 <main id="main" tabindex="-1" class="case-study-page">
-  <div class="case-study-direct-close" data-color-zone="light" data-shadow-theme="page"><IconButton label="Close case study" href={returnUrl} class="floating-control-theme floating-control-surface" data-case-home><Icon name="plus" style="transform:rotate(45deg)" /></IconButton></div>
+  <div class="case-study-direct-close" data-color-zone="light" data-zone-keep="shadows"><IconButton label="Close case study" href={returnUrl} class="floating-control-theme floating-control-surface" data-case-home><Icon name="plus" style="transform:rotate(45deg)" /></IconButton></div>
   <CaseStudyContent project={project} />
 </main>
 
