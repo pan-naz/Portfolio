@@ -207,7 +207,6 @@
 
  .ds-stroke-cards { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:var(--space-3); margin-top:var(--space-8); }
 .ds-stroke-card { min-width:0; padding:var(--space-4); border-radius:var(--radius-small); background:var(--color-bg-canvas); }
-:root[data-theme='dark'] :is(.ds-color-card,.ds-stroke-card,.ds-code pre,.ds-type-device-header,.ds-type-device) { background:var(--color-bg-surface); }
 .ds-stroke-sample { display:grid; place-items:center; min-width:0; min-height:var(--space-24); padding-block:var(--space-3); margin-bottom:var(--space-3); background:var(--color-bg-surface); border-radius:var(--radius-small); pointer-events:none; }
 .ds-stroke-sample * { pointer-events:none; animation:none; transition:none; }
 .ds-stroke-card > p { margin-top:var(--space-1); color:var(--color-text-secondary); }

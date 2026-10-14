@@ -11,9 +11,9 @@ export const paletteColors:PaletteColor[]=[
  {name:'Silver',token:'color-silver',uses:[use('light','Footer icons','footer-pile-icon-color')]},
  {name:'Pewter',token:'color-pewter',stripText:'color-white',uses:[use('dark','Footer icons','footer-pile-icon-color')]},
  {name:'Graphite',token:'color-graphite',uses:[use('light','Button hover','color-text-primary-hover'),use('dark','Hover fills','color-bg-surface-subtle')]},
- {name:'Charcoal',token:'color-charcoal',uses:[use('dark','Project cards, menu','color-bg-surface')]},
+ {name:'Charcoal',token:'color-charcoal',uses:[use('dark','Cards and surfaces','color-bg-surface')]},
  {name:'Ink',token:'color-ink',uses:[use('light','Text, rain icons, Work and About','color-text-primary','waterfall-icon-color','color-section-bg-surface'),{...use('light','Secondary text · 64%','color-text-secondary'),shade:'color-ink-64'},use('dark','Page','color-bg-canvas'),use('dark','Text on light buttons','color-text-on-primary')],shades:[{token:'color-ink-64'},{token:'color-ink-16'},{token:'color-ink-8'}]},
- {name:'Night',token:'color-night',uses:[use('dark','Surfaces, Work and About','color-section-bg-surface')]},
+ {name:'Night',token:'color-night',uses:[use('dark','Work and About','color-section-bg-surface')]},
  {name:'Orange',token:'color-orange',uses:[use('light','Accent','color-interactive-accent')]},
  {name:'Orange light',token:'color-orange-light',uses:[use('dark','Accent','color-interactive-accent')]},
 ];
@@ -27,4 +27,4 @@ export const strokeCards=[
 export const paletteTokenNames=paletteColors.flatMap(color=>[color.token,...(color.shades||[]).map(shade=>shade.token)]);
 
 /** Reviewed external Colour contract; local guards verify its body when present. */
-export const colorDocumentationReceipt={"section":"Colour","sha256":"4f49a0a0f40b25f981fc7488011a4b8592210e825fc734e389001759ea60818f","characters":6200};
+export const colorDocumentationReceipt={"section":"Colour","sha256":"6f2115b4804e97a882f32d7b1667125b03dbb8b846ce8af0d0004613d6339076","characters":6457};
