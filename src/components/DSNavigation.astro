@@ -1,8 +1,14 @@
 ---
 import {dsGroups} from '../data/design-system';
 import Logo from './Logo.astro';
+import NavigationItem from './NavigationItem.astro';
 ---
 <aside class="ds-sidebar">
-  <a tabindex="0" class="ds-home" href="/" aria-label="naz.wtf — home"><Logo /></a>
-  <details data-ds-contents><summary>Sections</summary><nav class="ds-navigation" aria-label="Design system sections"><a tabindex="0" href="/design-system/" data-ds-dashboard-link>Overview</a>{dsGroups.map(group=><div class="ds-nav-group"><p>{group.label}</p>{group.links.map(([id,label])=><a tabindex="0" href={`#${id}`} data-ds-nav>{label}</a>)}</div>)}</nav></details>
+  <div class="ds-logo-row"><a tabindex="0" class="ds-home" href="/" aria-label="naz.wtf — home"><Logo /></a></div>
+  <nav class="ds-navigation" aria-label="Design system sections">
+    <div class="ds-nav-scroll" data-ds-nav-scroll>
+      <NavigationItem label="Overview" href="/design-system/" data-ds-dashboard-link />
+      {dsGroups.map((group,index)=><Fragment>{index>0&&<span class="ds-nav-divider" aria-hidden="true"/>}<div class="ds-nav-group"><p class="text-label-s">{group.label}</p>{group.links.map(([id,label])=><NavigationItem label={label} href={`#${id}`} data-ds-nav />)}</div></Fragment>)}
+    </div>
+  </nav>
 </aside>

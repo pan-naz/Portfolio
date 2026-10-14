@@ -10,7 +10,8 @@ const catalog=read('dist/design-system/index.html'),home=read('dist/index.html')
 const styles=html=>[...html.matchAll(/<link[^>]*href="([^"]+\.css)"[^>]*>/g)].map(([,file])=>read('dist'+file)).concat([...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map(([,css])=>css)).join('\n');
 assert.equal((catalog.match(/\bdata-theme-control/g)||[]).length,1,'Only the header controls the page theme');
 assert.equal((catalog.match(/<[a-z][^>]*\sdata-theme=/g)||[]).length,2,'Page theme plus the shared fixed-dark media control specimen');
-assert.ok(catalog.includes('data-catalog')&&!home.includes('data-catalog'));
+assert.match(catalog, /<html\b[^>]*\bdata-catalog(?:[\s=>])/);
+assert.doesNotMatch(home, /<html\b[^>]*\bdata-catalog(?:[\s=>])/);
 assert.ok(!styles(catalog).includes('html[data-static]'),'Live specimens must keep genuine transitions and states');
 // The nine shared type rules may name catalog consumers; they carry no layout,
 // colour or interaction appearance. Everything else remains catalog-only.

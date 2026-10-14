@@ -57,8 +57,8 @@ export const hiddenDocumentation = [
   },
   {
     "section": "Theme switch",
-    "sha256": "fce18078222fc96c54cc4c614d569e4ced2f7bc2de8709df87b167fde98e631d",
-    "characters": 843
+    "sha256": "c7ec527d2c5fa32881a71e843bdc7569c6126e7dd0840d310c374c1ef4e49230",
+    "characters": 1201
   },
   {
     "section": "Icon",

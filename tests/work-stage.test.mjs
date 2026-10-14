@@ -6,7 +6,7 @@ const source = read('../src/scripts/work-stage/work-stage.ts');
 const work = read('../src/components/WorkSection.astro');
 const css = read('../src/styles/global.css');
 const tokens = read('../src/styles/tokens.css');
-const layout = read('../src/layouts/BaseLayout.astro');
+const layout = read('../src/scripts/layout-capabilities.js');
 
 assert.equal(shouldRevealWorkContent(600, 0, 900), false, 'In-view Work preview stays hidden on reload or resize at page top');
 assert.equal(shouldRevealWorkContent(600, -20, 900), false, 'Overscroll above the top does not reveal Work');
