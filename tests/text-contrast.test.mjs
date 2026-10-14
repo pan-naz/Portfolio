@@ -39,7 +39,7 @@ assert.equal(resolve(dark, 'color-bg-surface'), '#222320', 'Dark UI surfaces are
 assert.equal(resolve(dark, 'color-bg-surface-subtle'), '#343432', 'Dark hover and selected fills use Graphite');
 assert.equal(resolve(light,'color-bg-surface'),'#FFFFFF','Light-zone controls retain White');
 assert.notEqual(resolve(dark,'color-bg-surface'),resolve(light,'color-bg-surface'),'Navigation shares the page surface role');
-assert.notEqual(dark['shadow-floating-navigation'], light['shadow-floating-navigation'], 'Floating navigation gains a stronger dark-mode elevation');
+assert.notEqual(dark['shadow-large'], light['shadow-large'], 'Floating navigation gains a stronger dark-mode elevation');
 for (const [theme, palette] of Object.entries({ light, dark })) {
   assert.ok(
     passesNormalTextAA(contrastRatio(resolve(palette, 'color-text-primary'), resolve(palette, 'color-bg-surface'))),

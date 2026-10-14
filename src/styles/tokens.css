@@ -25,7 +25,6 @@
   --footer-pile-icon-color: var(--color-silver);
   /* Palette and geometry primitives; project-brand colours remain project-scoped. */
   --radius-12: 12px; --radius-24: 24px; --radius-40: 40px; --radius-999: 999px;
-  --shadow-overlay-light: 0 8px 24px rgb(22 23 21 / .10);
   --ease-stage-entrance: cubic-bezier(.22, .61, .36, 1);
   /* Canonical semantic roles used directly by website consumers. */
   --duration-button-fill: 450ms;
@@ -38,8 +37,6 @@
   --layer-cursor: 40; --layer-overlay: 100;
   color-scheme: light;
   /* Overlay controls keep a high-contrast white surface; floating navigation follows the page theme. */
-  --shadow-overlay: var(--shadow-overlay-light);
-  --shadow-floating-navigation: var(--shadow-overlay);
   /* Backdrop and shadows preserve their approved compositor values. */
   --backdrop-case: rgb(0 0 0 / .18);
   --gutter: max(64px, calc((100vw - 1200px) / 2)); --hero-gutter: max(64px, calc((100vw - 1328px) / 2)); --hero-visual-gutter: calc(var(--hero-gutter) - 4px); --header-inset: 32px;
@@ -52,7 +49,7 @@
   --section-space: var(--space-24); --grid-gap: var(--space-6);
   --work-preview-height: 200px;
   --section-reveal-trigger-viewport-ratio: .9; --work-stage-trigger-viewport-ratio: .02; --work-stage-collapse-scroll-y: 1;
-  --radius-pill: var(--radius-999); --radius-medium: var(--radius-24); --radius-media: var(--radius-40); --radius-chapter: clamp(40px, 5.8vw, 100px);
+  --radius-full: var(--radius-999); --radius-medium: var(--radius-24); --radius-large: var(--radius-40); --radius-xlarge: clamp(40px, 5.8vw, 100px);
   --radius-project-logo: 25%;
   /* Fixed text system: phone defaults; only 768px and 1024px switch values. */
   --font-body: 'Urbanist Variable', Urbanist, Arial, sans-serif;
@@ -76,7 +73,6 @@
   --font-label-s: var(--font-body); --font-weight-label-s: 500;
   --text-label-s: .75rem; --line-height-label-s: 1.333333; --letter-spacing-label-s: 0em;
   --project-identity-tags-gap: var(--space-6);
-  --shadow-floating: var(--shadow-overlay-light);
   --ease-entrance: var(--ease-stage-entrance);
   --ease-work-stage: var(--ease-stage-entrance);
   /* One card/case/hero transition contract across all project collections. */
@@ -84,10 +80,10 @@
   --duration-case-caption-exit: 200ms; --duration-case-caption-enter: 600ms;
   --delay-case-caption-enter: 100ms;
   --duration-case-body-enter: 350ms; --delay-case-body-enter: 350ms;
-  --duration-case-corners: 260ms; --distance-case-copy: 16px;
+  --duration-case-radius: 260ms; --distance-case-copy: 16px;
   --rotation-case-control: 225deg;
   --ease-case-travel: cubic-bezier(.22, .75, .25, 1);
-  --ease-case-corners: ease-in-out;
+  --ease-case-radius: ease-in-out;
   --case-hero-fit: contain;
   --duration-entrance: 900ms;
   --intro-stage-progress: .5;
@@ -122,6 +118,12 @@
   --project-tilt-angle: 6; --project-tilt-perspective: 1000px;
   --ease-filter-enter: cubic-bezier(.25, .46, .45, 1);
   --delay-filter-enter: 140ms; --scale-filter: .9; --scale-filter-exit: .97; --distance-filter-enter: 24px;
+}
+
+/* Small rests on the page; Large floats above content. Light large is the approved two-layer elevation. */
+:root, [data-theme='light'], [data-color-zone='light'], [data-shadow-theme='light'] {
+  --shadow-small: 0 8px 24px rgb(22 23 21 / .10);
+  --shadow-large: 0 8px 24px rgb(22 23 21 / .10), 0 24px 56px rgb(22 23 21 / .12);
 }
 
 /* Text alone switches at these two boundaries; layout breakpoints stay local. */
@@ -173,16 +175,18 @@
 /* Artwork substrates inherit the page surface and any project-scoped override.
    Their surrounding dark chapter changes the copy roles, not the original frame. */
 .case-study-chapter--inverse, .work .section-heading { --color-bg-surface:inherit; }
-:root[data-theme='dark'], [data-theme='dark'] {
+:root[data-theme='dark'], [data-theme='dark'], [data-color-zone='dark'] {
   color-scheme: dark;
   --color-section-bg-surface: var(--color-night);
   --waterfall-icon-color: var(--color-stone);
   --footer-pile-icon-color: var(--color-pewter);
-  --shadow-floating-navigation: 0 8px 24px rgb(0 0 0 / .38), 0 24px 64px rgb(0 0 0 / .52);
-  --shadow-floating: 0 2px 8px rgb(0 0 0 / .16), 0 12px 32px rgb(0 0 0 / .28);
+  --shadow-large: 0 8px 24px rgb(0 0 0 / .38), 0 24px 64px rgb(0 0 0 / .52);
+}
+:root[data-theme='dark'], [data-theme='dark'], [data-color-zone='dark'], .about-details {
+  --shadow-small: 0 2px 8px rgb(0 0 0 / .16), 0 12px 32px rgb(0 0 0 / .28);
 }
 @media (max-width: 767px) {
-  :root { --gutter: 24px; --hero-gutter: 24px; --hero-visual-gutter: 24px; --header-inset: 24px; --section-space: var(--space-16); --grid-gap: var(--space-4); --radius-media: var(--radius-24); --radius-chapter: var(--radius-40); --work-preview-height: 120px; }
+  :root { --gutter: 24px; --hero-gutter: 24px; --hero-visual-gutter: 24px; --header-inset: 24px; --section-space: var(--space-16); --grid-gap: var(--space-4); --radius-large: var(--radius-24); --radius-xlarge: var(--radius-40); --work-preview-height: 120px; }
 }
 
 /* Shared control geometry and interaction states. */

@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';import fs from 'node:fs';
+import {validateRadiusContract,validateRadiusLanguage} from '../scripts/validate-radius-language.mjs';
+const word=String.fromCharCode(99,111,114,110,101,114);
+assert.deepEqual(validateRadiusContract(),[]);
+assert(validateRadiusLanguage({'src/data/design-system.ts':word+'s'},[]).length,'Reject the retired scale label');
+assert(validateRadiusLanguage({'src/styles/tokens.css':'--duration-case-'+word+'s:260ms'},[]).length,'Reject the retired motion name');
+const copy='upper-left '+word,allowed={file:'story',needle:copy,reason:'Actual positional prose.'};
+assert.deepEqual(validateRadiusLanguage({story:copy},[allowed]),[]);
+assert(validateRadiusLanguage({other:copy},[allowed]).length,'A positional exception is file-scoped');
+assert(validateRadiusLanguage({story:word+' scale'},[allowed]).length,'A positional exception cannot excuse scale language');
+const tokens=fs.readFileSync('src/styles/tokens.css','utf8');assert(tokens.includes('--duration-case-radius: 260ms'));assert(tokens.includes('--ease-case-radius: ease-in-out'));
+console.log('Radius terminology rejects retired labels/tokens while preserving narrow positional geometry exceptions.');

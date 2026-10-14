@@ -107,7 +107,7 @@ export function initializeHeaderMorph() {
     surface.style.opacity = String(Math.min(1, shape * 4));
     button.style.width = `${m.buttonWidth}px`;
     button.style.transform = `translate3d(${left + width - paddingRight - m.buttonWidth}px, ${y + (64 - m.buttonHeight) / 2 * shape}px, 0)`;
-    // Reveal within the capsule late; nothing flies in from the header corners.
+    // Reveal within the capsule late; nothing flies in from the header edges.
     const logoX = left + paddingLeft;
     const controlsX = logoX + target.logoWidth + target.logoGap;
     identity.style.transform = `translate3d(${logoX - m.inset - m.safe.left}px, ${y + 10}px, 0)`;

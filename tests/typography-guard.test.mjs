@@ -8,7 +8,7 @@ assert.deepEqual(validateTypographySystem(tokens,styles,catalog),[]);
 const catalogCss=read('src/styles/design-system.css'),themeToggle=read('src/components/ThemeToggle.astro');
 assert.deepEqual(validateCatalogTypographyLayout(catalogCss,catalog,themeToggle),[]);
 for(const rule of ['.ds-type-device{border-radius:var(--radius-medium);}', '.ds-type-device[data-type-device="desktop"]::before{content:"";}', '.ds-type-device[data-type-device="phone"]{border-radius:0;}'])assert(validateCatalogTypographyLayout(catalogCss+'@media (max-width:1399px){'+rule+'}',catalog,themeToggle).length,'Reject a broken stacked card');
-assert(validateCatalogTypographyLayout(catalogCss,catalog+'ds-type-device-first',themeToggle).length,'Reject style-based stacked corners');
+assert(validateCatalogTypographyLayout(catalogCss,catalog+'ds-type-device-first',themeToggle).length,'Reject style-based stacked radius');
 assert(validateCatalogTypographyLayout(catalogCss,catalog,themeToggle.replace('<Icon name="sun" class="theme-icon-glyph"/>','')).length,'Reject a missing theme icon');
 assert(validateCatalogTypographyLayout(catalogCss+'.theme-toggle-group .icon{width:16px;}',catalog,themeToggle).length,'Reject literal theme icon sizes');
 assert(validateCatalogTypographyLayout(catalogCss+'.theme-toggle-group .button > span{text-box-trim:none;}',catalog,themeToggle).length,'Reject untrimmed label leading that misaligns the icons');

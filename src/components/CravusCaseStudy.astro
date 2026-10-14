@@ -13,7 +13,7 @@ interface Props { project: Project; }
 const { project } = Astro.props;
 ---
 <article class="case-study-content case-study-content--cravus" data-case-content>
-  <CaseStudyMedia {...media.hero} radius="media" artwork />
+  <CaseStudyMedia {...media.hero} radius="large" artwork />
   <div class="case-study-body case-study-narrative cravus-case">
     <CaseStudyOverview project={project} titleId="cv-title">
       <Fragment slot="role"><p>Designer</p><ul>{cravusRole.map(item => <li>{item}</li>)}</ul></Fragment>

@@ -19,7 +19,7 @@ export const hookoDemo = {
   width: 1320,
   height: 2700,
   presentation: 'floating',
-  radius: 'media',
+  radius: 'large',
   strokePlacement: 'outside',
   controls: true,
   showTime: false,

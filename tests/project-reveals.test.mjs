@@ -65,7 +65,7 @@ assert.ok(!footer.includes('data-reveal'), 'Footer metadata and the design-syste
 assert.ok(about.includes('<ToolsSection />') && tools.includes('class="tools-section" aria-labelledby="tools-title" data-section-item'), 'The complete tools section follows the experience rows as one timeline item');
 assert.ok(!toolCard.includes('data-section-item'), 'Tool cards stay together rather than animating separately');
 assert.ok(toolCard.includes('role="group" tabindex="0"') && tooltipMarkup.includes('role="tooltip"'), 'Every tool card exposes its name on hover and keyboard focus without pretending to be a link or button');
-assert.ok(css.includes('.tool-card.is-pointer-hovered .svg-asset { transform: scale(1.08); }') && tooltipCss.includes('[data-tooltip-target]:focus-visible > .tooltip'), 'Tool hover and focus enlarge the mark and reveal the tooltip');
+assert.ok(css.includes('.tool-card.is-pointer-hovered .svg-asset { transform: scale(1.08); }') && tooltipCss.includes('[data-tooltip-target]:focus-visible .tooltip'), 'Tool hover and focus enlarge the mark and reveal the tooltip');
 assert.ok(tooltipMarkup.includes('tooltip text-body-m'), 'Tool names use the Body/M type style');
 const simulateTooltipFollow = fps => Array.from({ length: fps / 2 }).reduce(position => tooltipFollowStep(position, 100, 1000 / fps), 0);
 assert.ok(Math.abs(simulateTooltipFollow(60) - simulateTooltipFollow(120)) < .001 && simulateTooltipFollow(60) > 99, 'Tooltip follow is smooth and frame-rate independent at 60/120Hz');

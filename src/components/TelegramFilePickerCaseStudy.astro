@@ -48,7 +48,7 @@ const { project } = Astro.props;
           <h2 class="case-study-heading" id="tg-result-title">{telegramResult.title}</h2>
           <p class="tg-copy">{telegramResult.description}</p>
         </div>
-        <div class="tg-window"><CaseStudyMedia {...telegramResult.media} presentation="bare" /></div>
+        <div class="tg-window" data-shadow-theme="light"><CaseStudyMedia {...telegramResult.media} presentation="bare" /></div>
       </div>
     </section>
   </div>

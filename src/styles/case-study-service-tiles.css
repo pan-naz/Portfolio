@@ -23,7 +23,7 @@
 .case-study-service-photo .case-study-media { height: 100%; }
 .case-study-service-photo img { width: 100%; height: 100%; object-fit: cover; }
 .case-study-service-blank { background: var(--service-subtle); }
-.case-study-service-popover { position: absolute; z-index: 5; width: min(360px, calc(100% - var(--space-4))); background: var(--service-surface); color: var(--service-ink); border-radius: var(--service-popover-radius, var(--radius-medium)); box-shadow: var(--shadow-overlay); }
+.case-study-service-popover { position: absolute; z-index: 5; width: min(360px, calc(100% - var(--space-4))); background: var(--service-surface); color: var(--service-ink); border-radius: var(--service-popover-radius, var(--radius-medium)); box-shadow: var(--shadow-large); }
 .case-study-service-popover::before { content: ''; position: absolute; left: var(--service-arrow-x, 50%); width: var(--space-3); height: var(--space-3); background: var(--service-surface); transform: translateX(-50%) rotate(45deg); }
 .case-study-service-popover[data-side='below']::before { top: calc(-1 * var(--space-3) / 2); }
 .case-study-service-popover[data-side='above']::before { bottom: calc(-1 * var(--space-3) / 2); }
