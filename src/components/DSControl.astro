@@ -1,0 +1,6 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+interface Props extends HTMLAttributes<'button'> {}
+const {class:className,...attributes}=Astro.props;
+---
+<button {...attributes} tabindex={attributes.tabindex??0} type={attributes.type??'button'} class:list={['button hit-area text-label-s button--secondary button--catalog button--small',className]}><slot/></button>

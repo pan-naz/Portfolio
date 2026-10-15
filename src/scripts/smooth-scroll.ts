@@ -6,6 +6,7 @@ const scrollRoots = new Map<Window | HTMLElement, ScrollRoot>();
 let createEngine: typeof import('./scroll-engine').createScrollEngine | undefined;
 let rootsChanged: (() => void) | undefined;
 let smoothScroll: ScrollEngine['lenis'] | undefined;
+let wheelOwner: Window | HTMLElement | undefined;
 let scrollPaused = false;
 export const pauseScroll = () => { scrollPaused = true; smoothScroll?.stop(); };
 export const resumeScroll = () => { scrollPaused = false; smoothScroll?.start(); };
@@ -116,6 +117,7 @@ function scrollAxis(element: HTMLElement): 'vertical' | 'horizontal' | undefined
   if (/(auto|scroll|overlay)/.test(style.overflowX) && element.scrollWidth > element.clientWidth + 1) return 'horizontal';
 }
 function scrollOwner(node: Element | null): Window | HTMLElement {
+  if (wheelOwner) return wheelOwner;
   for (let parent = node; parent; parent = parent.parentElement) {
     // SVG input targets still belong to their nearest HTML scroll surface.
     if (!(parent instanceof HTMLElement)) continue;
@@ -192,12 +194,33 @@ function startSharedScrolling() {
   };
   const wheel = (event: WheelEvent) => {
     if (event.ctrlKey || !(event.target instanceof Element)) return;
-    const owner = scrollOwner(event.target);
-    if (owner === window) return;
+    let owner = scrollOwner(event.target);
+    const verticalOnHorizontal = owner !== window && scrollAxis(owner as HTMLElement) === 'horizontal' && !event.shiftKey && Math.abs(event.deltaY) >= Math.abs(event.deltaX);
+    if (verticalOnHorizontal) {
+      const surface = owner as HTMLElement;
+      const position = scrollRoots.get(surface)?.lenis?.targetScroll ?? surface.scrollLeft;
+      const canMove = event.deltaY < 0 ? position > 0 : position < surface.scrollWidth - surface.clientWidth - 1;
+      // Only navigation converts a mouse wheel; content and navigation edges
+      // hand this same event to the document's unchanged scrolling engine.
+      if (!surface.matches('[data-ds-nav-scroll]') || !canMove || navigator.maxTouchPoints > 0) owner = window;
+    }
+    wheelOwner = owner;
+    // Native event dispatch can run microtasks between listeners. Keep the
+    // owner through bubbling so every scroll root sees this same wheel event.
+    setTimeout(() => { wheelOwner = undefined; }, 0);
+    if (owner === window) {
+      // WebKit can swallow native vertical wheel input over overflow-x content.
+      // Narrow mouse windows have no engine; forward that input without smoothing.
+      if (verticalOnHorizontal && !documentScroll.lenis && navigator.maxTouchPoints === 0 && event.cancelable) {
+        event.preventDefault();
+        const scale = event.deltaMode === 1 ? parseFloat(getComputedStyle(document.documentElement).lineHeight) || 16 : event.deltaMode === 2 ? innerHeight : 1;
+        window.scrollBy({top:event.deltaY * scale,behavior:'instant'});
+      }
+      return;
+    }
     const root = ensure(owner);
     if (root?.lenis) return; // Its native Lenis listener consumes this same event.
-    // Native touch/tablet/narrow-window physics remain native. X-only blocks
-    // accept a vertical mouse wheel too, without leaking to the document.
+    // Native sideways input stays in its block; only the navigation maps Y to X.
     if (scrollAxis(owner as HTMLElement) === 'horizontal' && event.cancelable) {
       event.preventDefault();
       const scale = event.deltaMode === 1 ? parseFloat(getComputedStyle(owner as HTMLElement).lineHeight) || 16 : event.deltaMode === 2 ? (owner as HTMLElement).clientWidth : 1;

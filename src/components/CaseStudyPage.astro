@@ -3,7 +3,7 @@ import type { Project } from '../data/portfolio';
 import CaseStudyContent from './CaseStudyContent.astro';
 import StandaloneCaseStyles from './StandaloneCaseStyles.astro';
 import IconButton from './IconButton.astro';
-import Icon from './Icon.astro';
+
 import { workFilterHash } from '../scripts/work-filter/work-filter';
 interface Props { project: Project; }
 const { project } = Astro.props;
@@ -11,7 +11,7 @@ const returnUrl = project.category === 'selected' ? '/#work' : `/${workFilterHas
 ---
 <StandaloneCaseStyles project={project} />
 <main id="main" tabindex="-1" class="case-study-page">
-  <div class="case-study-direct-close" data-color-zone="light" data-zone-keep="shadows"><IconButton label="Close case study" href={returnUrl} class="floating-control-theme floating-control-surface" data-case-home><Icon name="close" /></IconButton></div>
+  <div class="case-study-direct-close" data-color-zone="light" data-zone-keep="shadows"><IconButton href={returnUrl} icon="close" variant="raised" label="Close case study" data-case-home /></div>
   <CaseStudyContent project={project} />
 </main>
 

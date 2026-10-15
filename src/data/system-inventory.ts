@@ -77,7 +77,6 @@ export function buildSystemInventory(root = process.cwd()) {
       const imports = [...text.matchAll(/import\s+(\w+)\s+from\s+['"]([^'"]+\.astro)['"]/g)].filter(([, , specifier]) => resolve(dirname(caller), specifier) === file);
       for (const [, local] of imports) for (const match of text.replace(/<style\b[^>]*>[\s\S]*?<\/style>/g, '').matchAll(new RegExp(`<${local}\\b([^>]*?)(?:/>|>)`, 'g'))) {
         const props = Object.fromEntries([...match[1].matchAll(/([\w-]+)(?:=(?:"([^"]*)"|'([^']*)'|\{([^{}]*)\}))?/g)].map(([, key, double, single, expression]) => [key, double ?? single ?? (expression !== undefined ? `{${expression}}` : 'true')]));
-        if (props['data-ds-chrome'] && caller.endsWith('/ThemeToggle.astro') && props.appearance === 'catalog') continue;
         const tail = text.replace(/<style\b[^>]*>[\s\S]*?<\/style>/g, '').slice((match.index || 0) + match[0].length);
         const inner = match[0].endsWith('/>') ? '' : tail.slice(0, tail.indexOf(`</${local}>`)).trim();
         const label = inner && /^[^<{}]+$/.test(inner) ? inner : undefined;

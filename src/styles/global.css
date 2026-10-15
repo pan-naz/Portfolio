@@ -105,7 +105,6 @@ picture:has(+ noscript > picture) > img[data-deferred-image], img[data-deferred-
 .button--arrow-fill:hover .arrow { transform: none; }
 }
 .button--arrow-fill .arrow { transform: none; }
-.button--arrow-fill.button--small { --button-orb: 26px; --button-orb-inset: var(--space-1); padding: var(--button-orb-inset) var(--button-orb-inset) var(--button-orb-inset) var(--button-padding-inline-small); }
 .icon-button { display: inline-grid; place-items: center; width: var(--control-icon); height: var(--control-icon); flex-shrink: 0; padding: calc((var(--control-icon) - var(--icon-size)) / 2); border: 0; border-radius: var(--radius-full); background: transparent; }
 /* Convert the 24-unit viewBox motion to 3 screen pixels at the 20px compact size. */
 .icon-button--small { position: relative; --icon-layer-shift: calc(var(--distance-icon-shift) * 1.2); width: var(--control-height-small); height: var(--control-height-small); padding: calc((var(--control-height-small) - var(--icon-size-compact)) / 2); }
@@ -269,9 +268,9 @@ html[data-work-stage-layout='true']:not([data-work-stage-motion='true']) .work-p
 .work .section-index { color: var(--color-interactive-accent); }
 .work .section-description { color: var(--color-text-secondary); }
 .work-rail { --work-filter-half-height: 78px; position: absolute; top: 366px; bottom: 0; left: calc(var(--gutter) - var(--work-rail-offset)); z-index: var(--layer-raised); display: none; width: 180px; }
-.floating-control-theme { color: var(--color-text-primary); }
+.icon-button--raised, .floating-control-theme { color: var(--color-text-primary); }
 .floating-navigation-theme, .site-header.is-docking { color: var(--color-text-primary); color-scheme: inherit; }
-.floating-control-surface { background: var(--color-bg-surface); box-shadow: var(--shadow-large); }
+.icon-button--raised, .floating-control-surface { background: var(--color-bg-surface); box-shadow: var(--shadow-large); }
 .floating-navigation-surface { background: var(--color-bg-surface); box-shadow: var(--shadow-large); }
 .section-navigation { position: sticky; top: calc(var(--header-clearance) + var(--safe-top)); display: grid; padding: var(--space-3); border-radius: var(--radius-medium); }
 .section-navigation[data-magnet-ready='true'] { will-change: transform; }

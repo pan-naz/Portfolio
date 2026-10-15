@@ -1,0 +1,25 @@
+---
+import type {ButtonSpecimenId} from '../data/system-button';
+import {profile,cvUrl,hookoSiteUrl} from '../data/portfolio';
+import {squareChallenge} from '../data/square-case-study';
+import {dataGPTMedia} from '../data/datagpt-case-study';
+import Button from './Button.astro';import IconButton from './IconButton.astro';import TextLink from './TextLink.astro';import ThemeToggle from './ThemeToggle.astro';import CaseStudyComparison from './CaseStudyComparison.astro';import Icon from './Icon.astro';
+import '../styles/case-video-player.css';
+interface Props {id:ButtonSpecimenId;state?:string;cover?:boolean;}
+const {id,state,cover=false}=Astro.props;
+const stateAttributes=state?{'data-ds-state':state}:{};
+---
+{id==='primary'&&<Button {...stateAttributes} href={`mailto:${profile.email}`} arrow="up">Get in touch</Button>}
+{id==='secondary'&&<Button {...stateAttributes} href={cvUrl} variant="secondary" download>Download CV (PDF)</Button>}
+{id==='small'&&<Button {...stateAttributes} href={cvUrl} variant="secondary" size="small" download>Download CV (PDF)</Button>}
+{id==='outside'&&<Button {...stateAttributes} href={squareChallenge.href} variant="secondary" arrow="up" target="_blank" rel="noopener noreferrer">{squareChallenge.linkLabel}</Button>}
+{id==='toggle'&&(state?<div class="case-comparison-controls"><Button {...stateAttributes} appearance="comparison" size="small" variant={state==='active'?'primary':'secondary'} aria-pressed={state==='active'}>Before</Button></div>:<div class="ds-comparison-switch text-body-m"><CaseStudyComparison before={dataGPTMedia.before} after={dataGPTMedia.after} label="Compare date and filter visibility"/></div>)}
+{id==='raised'&&<div class="ds-inline-controls"><div data-ds-example={cover?undefined:'icon-cursor'} data-ds-target=".icon-button"><IconButton label="Project cursor" variant="raised" icon="plus"/></div>{!cover&&<div class="case-study-direct-close ds-close-holder" data-color-zone="light" data-zone-keep="shadows" data-ds-example="icon-close" data-ds-target=".icon-button"><IconButton href="/#work" icon="close" variant="raised" label="Close case study"/></div>}</div>}
+{id==='close'&&<div class="case-study-direct-close ds-close-holder" data-color-zone="light" data-zone-keep="shadows"><IconButton {...stateAttributes} href="/#work" icon="close" variant="raised" label="Close case study"/></div>}
+{id==='plain'&&<ThemeToggle/>}
+{id==='layers'&&<IconButton {...stateAttributes} href="/design-system/" icon="layers" variant="secondary" size="small" label="Design system"/>}
+{id==='media'&&<div class="ds-media-backdrop"><div class="case-video-controls ds-media-controls" data-theme="dark"><div data-ds-example="icon-play" data-ds-target=".icon-button"><IconButton label="Play video" data-video-toggle><span data-play-icon><Icon name="play"/></span><span data-pause-icon hidden><Icon name="pause"/></span></IconButton></div><div data-ds-example="icon-sound" data-ds-target=".icon-button"><IconButton label="Sound off. Turn sound on" data-video-mute aria-pressed="false"><span data-muted-icon><Icon name="volume-muted"/></span><span data-sound-icon hidden><Icon name="volume"/></span></IconButton></div></div></div>}
+{id==='link-default'&&<TextLink {...stateAttributes} href={profile.linkedin}>LinkedIn</TextLink>}
+{id==='link-accent'&&<TextLink {...stateAttributes} href={hookoSiteUrl} accent>iOS App - Hooko</TextLink>}
+{id==='link-compact'&&<TextLink {...stateAttributes} href="https://voximplant.com/kit" accent compact>Website</TextLink>}
+{id==='link-inline'&&<p class="text-body-m">The mascot is <TextLink {...stateAttributes} href="https://dribbble.com/shots/2937858-Blink-Bot" inline>Vic Bell’s Blink Bot</TextLink>, drawn for the chatbot.</p>}

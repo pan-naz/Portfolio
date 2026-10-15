@@ -61,7 +61,7 @@ export function validateIcons(root=process.cwd()){
   if(!file.endsWith('.astro'))continue;const source=fs.readFileSync(f,'utf8');for(const [,css] of source.matchAll(/<style(?:\s[^>]*)?>([\s\S]*?)<\/style>/g))errors.push(...validateProjectIconSizes(css,file));
   for(const [markup]of source.matchAll(/<Icon\b[\s\S]*?\/>/g))if((/\b(?:size|strokeWidth)=\{[\d.]+\}/.test(markup)||/\bstyle=["'][^"']*(?:rotate\([\d.-]+deg\)|(?:width|height|stroke-width):\s*[\d.]+)/.test(markup))&&!iconGeometryExceptions.some(e=>e.file===file))errors.push('Typed Icon prop/style: '+file);
  }
- for(const file of['src/components/CaseStudyPage.astro','src/components/DSPreview.astro'])if(!read(file).includes('<Icon name="close" />')||/rotate\(45deg\)/.test(read(file)))errors.push('Close control must consume the named icon: '+file);
+ for(const file of['src/components/CaseStudyPage.astro','src/components/DSButtonSpecimen.astro'])if(!read(file).includes('icon="close"')||/rotate\(45deg\)/.test(read(file)))errors.push('Close control must consume the named icon: '+file);
  return errors;
 }
 export function validateRenderedIcons(html){

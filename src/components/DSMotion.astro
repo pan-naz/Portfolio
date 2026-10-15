@@ -1,7 +1,7 @@
 ---
 import {sourceCurves,motionCards,motionCurves,otherTimings,reducedMotionCopy,motionTokenSource,milliseconds,motionValue} from '../data/system-motion';
 import SectionNavigation from './SectionNavigation.astro';
-import Chip from './Chip.astro';import Logo from './Logo.astro';import Button from './Button.astro';import IconButton from './IconButton.astro';import Icon from './Icon.astro';import ThemeToggle from './ThemeToggle.astro';import Tooltip from './Tooltip.astro';import DSTokenNames from './DSTokenNames.astro';import DSMotionCurve from './DSMotionCurve.astro';
+import Chip from './Chip.astro';import Logo from './Logo.astro';import Button from './Button.astro';import {squareChallenge} from '../data/square-case-study';import IconButton from './IconButton.astro';import Icon from './Icon.astro';import ThemeToggle from './ThemeToggle.astro';import Tooltip from './Tooltip.astro';import DSTokenNames from './DSTokenNames.astro';import DSMotionCurve from './DSMotionCurve.astro';
 import '../styles/design-system-motion.css';
 const tokens=motionTokenSource(),raw=(name:string)=>name==='ease-section-scroll'?'scroll':tokens[name],value=(name:string,kind?:Parameters<typeof motionValue>[2])=>motionValue(name,raw(name),kind);
 const endTime=(steps:NonNullable<typeof motionCards[number]['steps']>)=>Math.ceil((Math.max(...steps.map(step=>milliseconds(raw(step.duration))+(step.delay?milliseconds(raw(step.delay)):0)+(step.stagger?milliseconds(raw(step.stagger))*(step.count!-1):0)))+(steps.some(step=>step.stagger)?0:1))/100)*100;
@@ -15,10 +15,10 @@ const ticks=(end:number)=>[0,end/2,end];
    <div class="ds-motion-art" inert aria-hidden="true">
     {card.id==='logo'&&<Logo/>}
     {card.id==='button'&&<Button arrow="up">Get in touch</Button>}
-    {card.id==='arrow'&&<div class="ds-motion-arrow-parts"><Button href="/design-system/" size="small" variant="secondary" arrow="up">Design system</Button><IconButton href="/design-system/" label="Design system" variant="secondary" size="small" icon="layers"/></div>}
+    {card.id==='arrow'&&<div class="ds-motion-arrow-parts"><Button href={squareChallenge.href} variant="secondary" arrow="up" target="_blank" rel="noopener noreferrer">{squareChallenge.linkLabel}</Button><IconButton href="/design-system/" label="Design system" variant="secondary" size="small" icon="layers"/></div>}
     {card.id==='tooltip'&&<div class="ds-motion-bubble"><Tooltip id="motion-tooltip" label="Copied"/></div>}
     {card.id==='theme'&&<ThemeToggle/>}
-    {card.id==='tilt'&&<div class="ds-motion-tilt-scene"><div class="ds-motion-mini-card ds-motion-tilt"><span class="ds-motion-mini-thumbnail"/><span class="ds-motion-mini-title"/></div><div class="ds-motion-cursor"><IconButton label="Project cursor" class="floating-control-theme floating-control-surface" icon="plus"/></div><span class="container work-content ds-motion-project-width"/></div>}
+    {card.id==='tilt'&&<div class="ds-motion-tilt-scene"><div class="ds-motion-mini-card ds-motion-tilt"><span class="ds-motion-mini-thumbnail"/><span class="ds-motion-mini-title"/></div><div class="ds-motion-cursor"><IconButton label="Project cursor" variant="raised" icon="plus"/></div><span class="container work-content ds-motion-project-width"/></div>}
     {card.id==='project'&&<div class="ds-motion-project"><span data-motion-panel/><span data-motion-artwork/><span data-motion-caption/></div>}
     {card.id==='header'&&<div class="ds-motion-header"><div data-motion-header-items><span/><span/><span/></div></div>}
     {card.id==='text'&&<p class="text-heading-l ds-motion-letters">{[...'Projects'].map(letter=><span data-motion-letter>{letter}</span>)}</p>}

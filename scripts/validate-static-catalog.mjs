@@ -5,7 +5,7 @@ import {spacingLayoutSystem} from '../src/data/system-spacing-layout.ts';
 import assert from 'node:assert/strict';
 import {readFileSync,readdirSync} from 'node:fs';
 import {resolve} from 'node:path';
-import {visibleComponents,dsComponents} from '../src/data/ds-components.ts';
+import {visibleComponents,catalogComponents,dsComponents} from '../src/data/ds-components.ts';
 import {componentPropSpecs} from '../src/data/system-props.ts';
 import {buildSystemInventory} from '../src/data/system-inventory.ts';
 import {validateInventoryCoverage,validateVariantCoverage,validateRenderedComponentNames,validateOverviewHiddenEntries} from './validate-design-system.mjs';
@@ -76,13 +76,13 @@ for(const id of sections)for(const group of ['canvas'])for(let index=0;index<2;i
 }
 const ids=[...catalog.matchAll(/\bid="([^"]+)"/g)].map(([,id])=>id);assert.equal(ids.length,new Set(ids).size,'Unique document ids');
 const model=buildSystemInventory(root),names=[...new Set([...catalog.matchAll(/data-ds-component="([^"]+)"/g)].map(([,name])=>name))];
-assert.deepEqual(validateRenderedComponentNames(names,visibleComponents.map(item=>item.name)),[]);
-for(const entry of visibleComponents){const component=model.components.find(item=>item.name===entry.name);const view=catalog.match(new RegExp(`<section[^>]*id="${entry.section}"[\\s\\S]*?</section>`))?.[0]||'';const documented=[...view.matchAll(/data-ds-prop="([^"]+)"/g)].map(([,name])=>name);assert.deepEqual(documented,componentPropSpecs(component).map(prop=>prop.name),`All source props, including inherited fields: ${entry.name}`);}
+assert.deepEqual(validateRenderedComponentNames(names,catalogComponents.map(item=>item.name)),[]);
+for(const entry of catalogComponents){const component=model.components.find(item=>item.name===entry.name);const hook=entry.section==='button'?`data-ds-component-code="${entry.name}"`:`id="${entry.section}"`;const view=catalog.match(new RegExp(`<section[^>]*${hook}[\\s\\S]*?</section>`))?.[0]||'';const documented=[...view.matchAll(/data-ds-prop="([^"]+)"/g)].map(([,name])=>name);assert.deepEqual(documented,componentPropSpecs(component).map(prop=>prop.name),`All source props, including inherited fields: ${entry.name}`);}
 const paths=dsComponents.map(item=>item.file),tokens=[...new Set([...catalog.matchAll(/data-ds-token="([^"]+)"/g)].map(([,name])=>name))],icons=[...new Set([...catalog.matchAll(/data-ds-icon="([^"]+)"/g)].map(([,name])=>name))];
 assert.deepEqual(validateInventoryCoverage(model,paths,tokens,icons,read('src/styles/tokens.css'),catalog+styles(catalog)),[]);
 const variantValues=[...catalog.matchAll(/data-ds-variant="([^"]+)"/g)].map(([,value])=>value);assert.deepEqual(validateVariantCoverage(model,variantValues),[]);
 assert.ok(!model.projectFonts.some(font=>styles(catalog).includes(font)));
-console.log(`Final catalog verified: ${views.length} views, ten reusable entries plus eleven documented-hidden components, linked panels and live shared styles.`);
+console.log(`Final catalog verified: ${views.length} views, eight pages for ten reusable entries plus eleven documented-hidden components, linked panels and live shared styles.`);
 
 const spaceModel=spacingLayoutSystem(model.tokens);
 for(const step of spaceModel.spaces){assert.ok(catalog.includes(`data-ds-space-uses="${step.name}">${step.uses} uses`),'Space count must match fresh source occurrences: '+step.name);assert.ok(catalog.includes(`height:var(--${step.name})`),'Scale bars must use the actual source token.');}
