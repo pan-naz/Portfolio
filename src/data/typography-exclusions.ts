@@ -43,6 +43,7 @@ export const typographyExclusions={
 } as const;
 
 export const typographyCssExclusions=[
+  { file: "src/styles/global.css", selector: ".impact-company-cap", reason: "Zero leading only for an empty font-metric alignment wrapper; the nested ProjectIdentity retains its canonical Heading/M role." },
   {
     "file": "src/styles/blaustrom-case-study.css",
     "selector": ".blaustrom-palette code",

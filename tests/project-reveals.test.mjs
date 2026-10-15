@@ -29,8 +29,8 @@ assert.equal(sectionItemStart(2, 900, 900, .5, true, 160), 1670, 'Experience row
 assert.ok(card.includes('data-project-reveal={!compact || undefined} data-section-item={!compact || undefined}'), 'Selected cards reveal as complete section items; filtered cards use their independent shuffle');
 assert.ok(
   !css.includes('--color-bg-surface: var(--color-bg-surface)') &&
-    read('../src/styles/tokens.css').includes('--color-bg-surface: var(--color-charcoal);') &&
-    read('../src/styles/tokens.css').includes('--color-charcoal: #222320;'),
+    read('../src/styles/tokens.css').replace(/\s+/g,' ').includes('--color-bg-surface: var(--color-charcoal);') &&
+    read('../src/styles/tokens.css').replace(/\s+/g,' ').includes('--color-charcoal: #222320;'),
   'Project-card chrome follows the shared theme palette with the approved raised surface'
 );
 assert.ok(
@@ -59,7 +59,7 @@ assert.ok(sectionReveals.includes('shouldRevealWorkContent(trigger.getBoundingCl
 assert.ok(workStage.includes('sectionRevealEffects(title, index, description, content)'), 'Desktop Work uses the same ordered timeline');
 assert.ok(!motion.includes("querySelectorAll<HTMLElement>('article[data-project-reveal]')") && !motion.includes('scrub: projectScrub'), 'Retired independent card triggers cannot reorder the section timeline');
 assert.ok(layout.includes("document.documentElement.dataset.sectionRevealMotion = 'true'"));
-assert.ok(sectionReveals.includes("getPropertyValue('--section-reveal-trigger-viewport-ratio')") && read('../src/styles/tokens.css').includes('--section-reveal-trigger-viewport-ratio: .9'), 'Every chapter uses the shared 90% viewport trigger');
+assert.ok(sectionReveals.includes("getPropertyValue('--section-reveal-trigger-viewport-ratio')") && read('../src/styles/tokens.css').replace(/\s+/g,' ').includes('--section-reveal-trigger-viewport-ratio: .9'), 'Every chapter uses the shared 90% viewport trigger');
 assert.ok(css.includes(":is([data-section-item], [data-reveal]) { opacity: 0; }"), 'All later content is hidden before its scheduled animation begins');
 assert.ok(!footer.includes('data-reveal'), 'Footer metadata and the design-system link render immediately without an entrance');
 assert.ok(about.includes('<ToolsSection />') && tools.includes('class="tools-section" aria-labelledby="tools-title" data-section-item'), 'The complete tools section follows the experience rows as one timeline item');

@@ -1,15 +1,29 @@
 @layer system, project;
 @layer system {
-/* Reset browser defaults without choosing a font from an HTML tag. */
+/* Reset · browser defaults without choosing a font from an HTML tag */
 :where(h1,h2,h3,h4,h5,h6,strong,b,small,button,input,select,textarea) { font: inherit; letter-spacing: inherit; }
 
-/* heading-xl: canonical role and actual website consumers. */
+/* Use a style ·
+   src/styles/typography.css */
 .text-heading-xl {
-  font-family: var(--font-heading-xl); font-size: var(--text-heading-xl); font-weight: var(--font-weight-heading-xl);
-  line-height: var(--line-height-heading-xl); letter-spacing: var(--letter-spacing-heading-xl);
+  font-family:
+    var(--font-heading-xl);
+  font-size:
+    var(--text-heading-xl);
+  font-weight:
+    var(--font-weight-heading-xl);
+  line-height:
+    var(--line-height-heading-xl);
+  letter-spacing:
+  var(--letter-spacing-heading-xl);
 }
 
-/* heading-l: canonical role and actual website consumers. */
+/* Same for .text-heading-l
+   … .text-label-s.
+   .text-label-m also sets
+   text-transform: uppercase. */
+
+/* heading-l · canonical role and actual website consumers */
 .text-heading-l,
 .case-study-heading,
 :where(.case-study-narrative .stat-value),
@@ -20,7 +34,7 @@
   line-height: var(--line-height-heading-l); letter-spacing: var(--letter-spacing-heading-l);
 }
 
-/* heading-m: canonical role and actual website consumers. */
+/* heading-m · canonical role and actual website consumers */
 .text-heading-m,
 .cravus-case .cravus-page-title,
 :where(.cravus-grid-card dd),
@@ -37,7 +51,7 @@
   line-height: var(--line-height-heading-m); letter-spacing: var(--letter-spacing-heading-m);
 }
 
-/* body-l: canonical role and actual website consumers. */
+/* body-l · canonical role and actual website consumers */
 .text-body-l,
 :where(.ds-specimens),
 .hero-description,
@@ -54,7 +68,7 @@ body,
   line-height: var(--line-height-body-l); letter-spacing: var(--letter-spacing-body-l);
 }
 
-/* body-m: canonical role and actual website consumers. */
+/* body-m · canonical role and actual website consumers */
 .text-body-m,
 .project--compact .project-outcome,
 :where(.case-study-decision-card--media h3),
@@ -74,7 +88,7 @@ body,
   line-height: var(--line-height-body-m); letter-spacing: var(--letter-spacing-body-m);
 }
 
-/* body-m-strong: canonical role and actual website consumers. */
+/* body-m-strong · canonical role and actual website consumers */
 .text-body-m-strong,
 :where(.case-study-narrative) :where(th),
 :where(.case-study-narrative .stat-label),
@@ -99,7 +113,7 @@ body,
   line-height: var(--line-height-body-m-strong); letter-spacing: var(--letter-spacing-body-m-strong);
 }
 
-/* body-s: canonical role and actual website consumers. */
+/* body-s · canonical role and actual website consumers */
 .text-body-s,
 :where(.case-study-narrative .stat dd),
 :where(.dg-testimonials figcaption),
@@ -126,7 +140,7 @@ body,
   line-height: var(--line-height-body-s); letter-spacing: var(--letter-spacing-body-s);
 }
 
-/* label-m: canonical role and actual website consumers. */
+/* label-m · canonical role and actual website consumers */
 .text-label-m,
 :where(.case-study-eyebrow, .case-study-narrative .eyebrow),
 .hero-eyebrow,
@@ -137,7 +151,7 @@ body,
   text-transform: uppercase;
 }
 
-/* label-s: canonical role and actual website consumers. */
+/* label-s · canonical role and actual website consumers */
 .text-label-s,
 :where(.hk-code,.hk-c),
 :where(.case-study-marker > span),

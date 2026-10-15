@@ -7,13 +7,14 @@ const tokens=read('src/styles/tokens.css'),styles=read('src/styles/typography.cs
 assert.deepEqual(validateTypographySystem(tokens,styles,catalog),[]);
 const catalogCss=read('src/styles/design-system.css'),themeToggle=read('src/components/ThemeToggle.astro');
 assert.deepEqual(validateCatalogTypographyLayout(catalogCss,catalog,themeToggle),[]);
+for(const rule of ['.ds-type-live{text-box-trim:none;}', '.ds-type-live{text-box-edge:auto;}', '.ds-type-device{grid-template-rows:auto;}', '.ds-type-info .ds-type-use{margin-top:0;}'])assert(validateCatalogTypographyLayout(catalogCss+rule,catalog,themeToggle).length,'Reject broken sample/value alignment');
 for(const rule of ['.ds-type-device{border-radius:var(--radius-medium);}', '.ds-type-device[data-type-device="desktop"]::before{content:"";}', '.ds-type-device[data-type-device="phone"]{border-radius:0;}'])assert(validateCatalogTypographyLayout(catalogCss+'@media (max-width:1399px){'+rule+'}',catalog,themeToggle).length,'Reject a broken stacked card');
 assert(validateCatalogTypographyLayout(catalogCss,catalog+'ds-type-device-first',themeToggle).length,'Reject style-based stacked radius');
 assert(validateCatalogTypographyLayout(catalogCss,catalog,themeToggle.replace('<Icon name="sun" class="theme-icon-glyph"/>','')).length,'Reject a missing theme icon');
 assert(validateCatalogTypographyLayout(catalogCss+'.theme-toggle-group .icon{width:16px;}',catalog,themeToggle).length,'Reject literal theme icon sizes');
 assert(validateCatalogTypographyLayout(catalogCss+'.theme-toggle-group .button > span{text-box-trim:none;}',catalog,themeToggle).length,'Reject untrimmed label leading that misaligns the icons');
 assert(read('src/components/ProjectCard.astro').includes("['project-outcome', compact ? 'text-body-m' : 'text-body-l']"), 'Only compact outcomes use Body/M; full cards retain Body/L');
-const bodySmall = styles.match(/\/\* body-s:[\s\S]*?\n\}/)?.[0];
+const bodySmall = [...styles.replace(/\/\*[\s\S]*?\*\//g,'').matchAll(/([^{}]+)\{([^{}]+)\}/g)].find(([,selector])=>selector.trim().startsWith('.text-body-s,'))?.[0];
 assert(bodySmall?.includes('[data-small-work-type] .navigation-item {'), 'The small Work pill selects the complete Body/S role with a simple attribute descendant selector');
 assert(!bodySmall.includes('!important'), 'The small Work pill needs no important override');
 assert(read('src/scripts/work-filter/work-filter-pill.ts').includes("nav.toggleAttribute('data-small-work-type', innerWidth < 381)"), 'The sole extra type boundary is strictly below 381px');

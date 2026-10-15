@@ -6,21 +6,21 @@ const root=path.resolve(import.meta.dirname,'..');
 export function validateColorUses(css,colors=paletteColors,strokes=strokeCards){
  const tokens=readSystemTokens(css),errors=[],seen={light:new Map(),dark:new Map()};
  for(const color of colors){
-  if(!color.uses.length)errors.push('Palette colour has no use: '+color.token);
+  if(!color.uses.length)errors.push('Palette color has no use: '+color.token);
   for(const use of color.uses)for(const mode of use.mode==='both'?['light','dark']:[use.mode])for(const role of use.roles){
    const palette=tokens[use.zone||mode],primitive=use.shade||color.token;
-   if(tokens.value(palette,role)!==tokens.value(palette,primitive))errors.push(`${primitive}: ${role} does not resolve to this colour in ${mode}`);
+   if(tokens.value(palette,role)!==tokens.value(palette,primitive))errors.push(`${primitive}: ${role} does not resolve to this color in ${mode}`);
    if(!use.zone)seen[mode].set(role,(seen[mode].get(role)||0)+1);
   }
  }
  for(const stroke of strokes)for(const mode of ['light','dark']){
-  const alias=tokens[mode][stroke.role]?.match(/^var\(--([\w-]+)\)$/)?.[1];
-  if(!alias||!paletteTokenNames.includes(alias))errors.push(`${mode}: ${stroke.role} must resolve to a palette colour or shade`);
+  let alias=stroke.role;const visited=new Set();while(alias&&!paletteTokenNames.includes(alias)&&!visited.has(alias)){visited.add(alias);alias=tokens[mode][alias]?.match(/^var\(--([\w-]+)\)$/)?.[1];}
+  if(!alias||!paletteTokenNames.includes(alias))errors.push(`${mode}: ${stroke.role} must resolve to a palette color or shade`);
   seen[mode].set(stroke.role,(seen[mode].get(stroke.role)||0)+1);
  }
- const declaredPageRoles=[...new Set([...colorRoles,...Object.keys({...tokens.light,...tokens.dark}).filter(name=>name.startsWith('color-')&&!paletteTokenNames.includes(name))])];
+ const declaredPageRoles=[...new Set([...colorRoles,...Object.keys({...tokens.light,...tokens.dark}).filter(name=>name.startsWith('color-')&&!paletteTokenNames.includes(name)&&name!=='color-backdrop')])];
  for(const mode of ['light','dark'])for(const role of declaredPageRoles)if(seen[mode].get(role)!==1)errors.push(`${mode}: ${role} must appear exactly once`);
- for(const [token,role,label] of [['color-charcoal','color-bg-surface','Cards and surfaces'],['color-night','color-section-bg-surface','Work and About']]){
+ for(const [token,role,label] of [['color-charcoal','color-bg-surface','Cards and surfaces'],['color-night','color-bg-section','Work and About']]){
   const use=colors.find(color=>color.token===token)?.uses.find(use=>use.mode==='dark'&&use.roles.includes(role));
   if(use?.label!==label)errors.push(`${token}: dark role label must be ${label}`);
  }
@@ -59,8 +59,8 @@ export function validateColorPalette(css){
  tree.walkDecls(decl=>{
   if(paletteTokenNames.includes(decl.prop.slice(2))){const shade=decl.prop.match(/^--color-(?:ink|paper)-(\d+)$/);if(shade){const alpha=decl.value.match(/\/\s*([\d.]+)\s*\)/)?.[1];if(alpha===undefined||Math.abs(Number(alpha)*100-Number(shade[1]))>1e-8)errors.push('Shade token name must match its opacity: '+decl.prop);}
    counts.set(decl.prop,(counts.get(decl.prop)||0)+1);const value=decl.value.toUpperCase().replaceAll(/\s/g,'');if(values.has(value))errors.push('Duplicate palette value: '+decl.prop);values.set(value,decl.prop);}
-  else if(/#[0-9a-f]{3,8}\b|\brgba?\(\s*\d/i.test(decl.value)&&!/^--(?:shadow-|backdrop-case)/.test(decl.prop))errors.push('Colour literal outside palette: '+decl.prop);
-  if(/--color-(?:overlay|inverse|navigation)-|--color-(?:smoke|bg-raised)\b|--project-card-bg-surface/.test(decl.prop+' '+decl.value))errors.push('Removed colour family: '+decl.prop);
+  else if(/#[0-9a-f]{3,8}\b|\brgba?\(\s*\d/i.test(decl.value)&&!/^--(?:shadow-|color-backdrop)/.test(decl.prop))errors.push('Color literal outside palette: '+decl.prop);
+  if(/--color-(?:overlay|inverse|navigation)-|--color-(?:smoke|bg-raised)\b|--project-card-bg-surface/.test(decl.prop+' '+decl.value))errors.push('Removed color family: '+decl.prop);
  });
  for(const token of paletteTokenNames)if(counts.get('--'+token)!==1)errors.push('Palette token must be defined once: '+token);
  return errors;
@@ -76,20 +76,20 @@ export function validateSharedColorLiterals(directory=root){
    if(project)return;
    if(/#[0-9a-f]{3,8}\b|\brgba?\(\s*\d/i.test(decl.value)){
     if(/mask/.test(decl.prop)&&!/(?!#000\b)#[0-9a-f]{3,8}\b/i.test(decl.value)&&text.includes('opacity mask'))return;
-    errors.push('Shared colour literal: '+path.relative(directory,file)+': '+decl.prop);
+    errors.push('Shared color literal: '+path.relative(directory,file)+': '+decl.prop);
    }
   });
   // Project data is private artwork; shared TypeScript must read the palette.
   if(file.endsWith('.ts')&&!file.endsWith('-case-study.ts'))for(const match of text.matchAll(/(['"])(#[0-9a-f]{3,8}|rgba?\(\s*\d[^)]*\))\1/gi)){
    if(file.endsWith('/waterfall-gpu.ts')&&match[2].toLowerCase()==='#ffffff'&&text.includes('Atlas white stroke is coverage data'))continue;
-   errors.push('Shared script colour literal: '+path.relative(directory,file));
+   errors.push('Shared script color literal: '+path.relative(directory,file));
   }
  }
  return errors;
 }
 export function validateColorDocumentation(text,receipt=colorDocumentationReceipt){
- const errors=[];if(receipt.section!=='Colour'||!/^[a-f0-9]{64}$/.test(receipt.sha256)||receipt.characters<100)errors.push('Missing reviewed Colour documentation receipt');
- if(text!==undefined){const start=text.indexOf('## Colour\n'),next=text.indexOf('\n## ',start+4),body=start<0?'':text.slice(start,next<0?undefined:next).trim();if(!body||body.length!==receipt.characters||createHash('sha256').update(body).digest('hex')!==receipt.sha256)errors.push('Stale Colour documentation receipt');}return errors;
+ const errors=[];if(receipt.section!=='Color'||!/^[a-f0-9]{64}$/.test(receipt.sha256)||receipt.characters<100)errors.push('Missing reviewed Color documentation receipt');
+ if(text!==undefined){const start=text.indexOf('## Color\n'),next=text.indexOf('\n## ',start+4),body=start<0?'':text.slice(start,next<0?undefined:next).trim();if(!body||body.length!==receipt.characters||createHash('sha256').update(body).digest('hex')!==receipt.sha256)errors.push('Stale Color documentation receipt');}return errors;
 }
 export function validateColors(){const css=fs.readFileSync(path.join(root,'src/styles/tokens.css'),'utf8'),catalogCss=fs.readFileSync(path.join(root,'src/styles/design-system.css'),'utf8');return [...validateColorPalette(css),...validateColorUses(css),...validateCatalogInnerPanels(catalogCss),...validateCatalogBoxStyles(catalogCss),...validateSharedColorLiterals(),...validateColorDocumentation(fs.existsSync(path.join(root,'../docs/design-system.md'))?fs.readFileSync(path.join(root,'../docs/design-system.md'),'utf8'):undefined)];}
-if(process.argv[1]&&path.resolve(process.argv[1])===import.meta.filename){const errors=validateColors();if(errors.length){console.error(errors.join('\n'));process.exit(1);}console.log('Colour contract verified: 12 palette colours, six alpha shades, one role family, exact use coverage and no shared literals.');}
+if(process.argv[1]&&path.resolve(process.argv[1])===import.meta.filename){const errors=validateColors();if(errors.length){console.error(errors.join('\n'));process.exit(1);}console.log('Color contract verified: 12 palette colors, six alpha shades, one role family, exact use coverage and no shared literals.');}

@@ -22,7 +22,7 @@ a[href] { cursor: pointer; }
 /* Low specificity preserves component pills and card radii, while otherwise
    unshaped controls still receive a rounded keyboard-focus outline. */
 :where(button, a, summary, input, select, textarea, [tabindex]:not([tabindex='-1'])) { border-radius: var(--radius-small); }
-:where(button, a, summary, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 4px; }
+:where(button, a, summary, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid var(--color-focus-ring); outline-offset: 4px; }
 /* Canvas separation keeps card focus visible over either Work background. */
 .project-surface:focus-visible { box-shadow: 0 0 0 calc(var(--space-1) + 2px) var(--color-bg-canvas); }
 /* Safari treats dialog autofocus/return as focus-visible even after a tap.
@@ -58,7 +58,7 @@ picture:has(+ noscript > picture) > img[data-deferred-image], img[data-deferred-
 @media (hover: hover) and (pointer: fine) {
 .button--primary:hover { background: var(--color-text-primary-hover); }
 }
-.button--secondary { background: transparent; border-color: var(--control-border); }
+.button--secondary { background: transparent; border-color: var(--color-border-control); }
 @media (hover: hover) and (pointer: fine) {
 .button--secondary:not(.button--comparison):is(:hover) { --color-text-primary: var(--color-ink); --color-bg-surface: var(--color-white); color: var(--color-text-primary); background: var(--color-bg-surface); }
 }
@@ -109,7 +109,7 @@ picture:has(+ noscript > picture) > img[data-deferred-image], img[data-deferred-
 /* Convert the 24-unit viewBox motion to 3 screen pixels at the 20px compact size. */
 .icon-button--small { position: relative; --icon-layer-shift: calc(var(--distance-icon-shift) * 1.2); width: var(--control-height-small); height: var(--control-height-small); padding: calc((var(--control-height-small) - var(--icon-size-compact)) / 2); }
 .icon-button--small > .icon { width: var(--icon-size-compact); height: var(--icon-size-compact); }
-.icon-button--secondary { border: 1px solid var(--control-border); }
+.icon-button--secondary { border: 1px solid var(--color-border-control); }
 .icon-button--secondary.icon-button--small { padding: calc((var(--control-height-small) - var(--icon-size-compact)) / 2 - 1px); }
 .icon-button--secondary > .icon { overflow: visible; }
 .icon-button [data-icon-layer] { transition: transform var(--duration-fast) var(--ease-icon-shift); }
@@ -248,7 +248,7 @@ main, .footer { position: relative; }
 html[data-work-preview-layout='true'] .work { margin-top: calc(-1 * var(--work-preview-height)); }
 html[data-work-stage-motion='true'] .work-panel { transform: translate(var(--hero-visual-gutter), 0); }
 html[data-work-stage-motion='true'] .work-rail { opacity: 0; transform: translate3d(0, var(--distance-text-reveal), 0); }
-.work-panel { position: absolute; inset: calc(-1 * var(--work-preview-height)) auto 284px 0; z-index: var(--layer-base); width: 100%; border-radius: 0; background: var(--color-section-bg-surface); }
+.work-panel { position: absolute; inset: calc(-1 * var(--work-preview-height)) auto 284px 0; z-index: var(--layer-base); width: 100%; border-radius: 0; background: var(--color-bg-section); }
 html[data-work-preview-layout='true'] .work-panel { top: 0; }
 html[data-work-stage-layout='true'] .work-panel { border-radius: var(--radius-xlarge) 0 0 var(--radius-xlarge); }
 html[data-work-stage-layout='true']:not([data-work-stage-motion='true']) .work-panel { border-radius: 0; }
@@ -362,13 +362,19 @@ html[data-work-stage-layout='true']:not([data-work-stage-motion='true']) .work-p
 .impact-groups { display: grid; gap: var(--space-8); }
 .impact-group { display: grid; grid-template-columns: 284px minmax(0,1fr); gap: var(--space-6); }
 .impact-group h3 { align-self: start; }
+.impact-company-line,.impact-company-cap { display:contents; }
+@media(min-width:1024px) {
+  /* Impact alignment · shared Heading/L baseline, ex and cap metrics */
+  .impact-company-line { display:block; }
+  .impact-company-cap { display:inline-block; line-height:0; vertical-align:middle; translate:0 calc((1ex - 1cap) / 2); }
+}
 .impact-metrics { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: var(--space-8); margin: 0; }
 .stat { min-width: 0; }
 .stat dt { display: grid; gap: var(--space-1); }
 .stat-value { color: var(--color-interactive-accent); }
 .stat dd { margin: var(--space-1) 0 0; color: var(--color-text-secondary); }
-.about-details { --control-border: var(--color-text-primary); --focus-ring: var(--color-text-primary); --section-item-reveal-duration: 620; --section-item-reveal-interval: 160; position: relative; isolation: isolate; color: var(--color-text-primary); padding-block: var(--space-24); }
-.about-details::before { content: ''; position: absolute; inset: 0; z-index: var(--layer-behind); background: var(--color-section-bg-surface); border-radius: 0; }
+.about-details { --section-item-reveal-duration: 620; --section-item-reveal-interval: 160; position: relative; isolation: isolate; color: var(--color-text-primary); padding-block: var(--space-24); }
+.about-details::before { content: ''; position: absolute; inset: 0; z-index: var(--layer-behind); background: var(--color-bg-section); border-radius: 0; }
 html[data-work-stage-layout='true'] .about-details::before { left: max(0px, calc(var(--gutter) - var(--space-16))); border-radius: var(--radius-xlarge) 0 0 var(--radius-xlarge); }
 .about-details .section-heading { margin-bottom: var(--space-16); }
 .about-details .section-description { color: var(--color-text-secondary); }
@@ -413,7 +419,7 @@ html[data-work-stage-layout='true'] .about-details::before { left: max(0px, calc
 .footer-icon-pile-layer { position: absolute; top: calc(-1 * var(--pile-above) - 1px); bottom: 0; left: calc(-1 * var(--gutter-left)); right: calc(-1 * var(--gutter-right)); pointer-events: none; }
 .footer-icon-pile { position: absolute; top: var(--pile-above); left: var(--gutter-left); right: var(--gutter-right); height: 0; }
 .footer-icon-pile-rest { position: absolute; inset: auto 0 0; height: var(--pile-height); }
-.footer-icon-pile-rest svg { left: var(--pile-x); bottom: var(--pile-y); transform: rotate(var(--pile-angle)); position: absolute; width: var(--pile-icon-size); height: var(--pile-icon-size); max-width: none; color: var(--footer-pile-icon-color); }
+.footer-icon-pile-rest svg { left: var(--pile-x); bottom: var(--pile-y); transform: rotate(var(--pile-angle)); position: absolute; width: var(--pile-icon-size); height: var(--pile-icon-size); max-width: none; color: var(--color-footer-icon); }
 .footer-icon-pile canvas { position: absolute; left: calc(-1 * var(--pile-bleed)); width: calc(100% + var(--pile-bleed) * 2); max-width: none; display: none; }
 .footer-icon-pile[data-ready='true'] canvas { display: block; }
 .footer-icon-pile[data-ready='true'] .footer-icon-pile-rest { visibility: hidden; }
@@ -515,7 +521,7 @@ html[data-work-stage-layout='true'] .work-content { width: calc(100% - max(220px
 /* Case studies retain the website's canvas, type, artwork and floating controls. */
 html.case-study-open { overflow: hidden; scrollbar-gutter: stable; }
 .case-study-dialog { position: fixed; inset: 0; width: 100%; max-width: none; height: 100%; max-height: none; padding: 0; margin: 0; border: 0; overflow: hidden; background: transparent; color: var(--color-text-primary); }
-.case-study-dialog::backdrop { background: var(--backdrop-case); }
+.case-study-dialog::backdrop { background: var(--color-backdrop); }
 .case-study-dialog.is-closing { display: block; z-index: var(--layer-overlay); pointer-events: none; }
 .case-study-dialog.is-closing .case-study-panel { overflow: visible; }
 .case-study-dialog.is-closing .case-study-scroll { display: none; }

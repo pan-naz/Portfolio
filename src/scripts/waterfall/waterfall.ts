@@ -209,7 +209,7 @@ export function initializeWaterfall() {
     ratio = Math.min(devicePixelRatio || 1, 1.5);
     field.style.setProperty('--waterfall-bleed', `${horizontalBleed}px`);
     const style = getComputedStyle(field);
-    palette = createAccentPalette(style.getPropertyValue('--waterfall-icon-color').trim(), style.getPropertyValue('--color-text-primary').trim(), style.getPropertyValue('--color-bg-canvas').trim());
+    palette = createAccentPalette(style.getPropertyValue('--color-rain-icon').trim(), style.getPropertyValue('--color-text-primary').trim(), style.getPropertyValue('--color-bg-canvas').trim());
     if (renderer) renderer.resize(width + horizontalBleed * 2, height, ratio, palette);
     else {
       // Keep the original blank-canvas geometry before the deferred backend exists.

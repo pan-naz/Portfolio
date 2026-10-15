@@ -1,6 +1,6 @@
 import { visibleComponents } from './ds-components.ts';
 export const foundations = [
-  {id:'color',title:'Color',description:'Each colour once, and where it is used.'},
+  {id:'color',title:'Color',description:'Each color once, and where it is used.'},
   {id:'typography',title:'Typography',description:'Nine text styles, and how each one looks on desktop, tablet and phone.'},
   {id:'spacing-layout',title:'Spacing & layout',description:'One spacing scale, a radius scale and a responsive grid.'},
   {id:'motion',title:'Motion',description:'Shared durations and easing keep feedback consistent. Reduced motion skips decoration.'},

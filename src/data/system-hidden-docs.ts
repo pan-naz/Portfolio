@@ -2,8 +2,8 @@
 export const hiddenDocumentation = [
   {
     "section": "Accessibility",
-    "sha256": "f453cad65d7f82efdebafbc13dd3c7bef5ea4370d32c8995bd173a8f0e532e95",
-    "characters": 1221
+    "sha256": "a2c49779cb4e9e40f1a6c4fb50c1c2e00b097882dabbb5b27a2e3e254e4075d8",
+    "characters": 1227
   },
   {
     "section": "Writing",
@@ -12,8 +12,8 @@ export const hiddenDocumentation = [
   },
   {
     "section": "Wordmark",
-    "sha256": "b599be266c41ef1fcb2eaf16dda22afe863efa80eeb6d8b70fde0ad7aee2acb0",
-    "characters": 2237
+    "sha256": "b355587e5619b0abfc540dd22b80e822552c640de5de33d890ea67b22021bf0c",
+    "characters": 2236
   },
   {
     "section": "Before and after",
@@ -32,8 +32,8 @@ export const hiddenDocumentation = [
   },
   {
     "section": "Media",
-    "sha256": "909df261ebd16326c1dfd87b857462e2f0ff8aadf3ad9fcbb2a382a4067c70f7",
-    "characters": 395
+    "sha256": "a1d21676d58376c3c7336ed55df6d47d62c5f06fb82acf277b1b417fee8ec11b",
+    "characters": 394
   },
   {
     "section": "Tool card",
@@ -57,8 +57,8 @@ export const hiddenDocumentation = [
   },
   {
     "section": "Theme switch",
-    "sha256": "c7ec527d2c5fa32881a71e843bdc7569c6126e7dd0840d310c374c1ef4e49230",
-    "characters": 1201
+    "sha256": "5f24f3bb2cc2a8ef18d3800957a3862e3cc812b63eed9de680cd52f0cf9dfce9",
+    "characters": 1200
   },
   {
     "section": "Icon",

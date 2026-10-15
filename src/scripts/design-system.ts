@@ -105,7 +105,7 @@ const refreshValues=()=>{
  const tokenSource=(node:HTMLElement)=>node.dataset.dsTokenContext?view.querySelector<HTMLElement>('.ds-specimens '+node.dataset.dsTokenContext)||node:document.documentElement;
  for(const node of view.querySelectorAll<HTMLElement>('[data-ds-human-token]')){
   const name=node.dataset.dsHumanToken!,raw=getComputedStyle(tokenSource(node)).getPropertyValue('--'+name).trim();
-  if(/^(color-|control-border|focus-ring|backdrop)/.test(name)){probe.style.backgroundColor=raw;node.textContent=hex(getComputedStyle(probe).backgroundColor);}
+  if(/^(color-|color-border-control|color-focus-ring|backdrop)/.test(name)){probe.style.backgroundColor=raw;node.textContent=hex(getComputedStyle(probe).backgroundColor);}
   else if(/^(duration-|ease-|scale-)/.test(name))node.textContent=raw;
   else if(name.startsWith('icon-stroke-'))node.textContent=parseFloat(raw)+'px';
   else {probe.style.width=`var(--${name})`;node.textContent=getComputedStyle(probe).width;}

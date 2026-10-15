@@ -1,6 +1,8 @@
+import {foundationSourceCode} from '../src/data/system-code.ts';
+import {validateRenderedFoundationCode,validateRenderedThemeZones} from './validate-foundation-code.mjs';
 import {spacingLayoutSystem} from '../src/data/system-spacing-layout.ts';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync,readdirSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {visibleComponents,dsComponents} from '../src/data/ds-components.ts';
 import {componentPropSpecs} from '../src/data/system-props.ts';
@@ -83,5 +85,9 @@ console.log(`Final catalog verified: ${views.length} views, ten reusable entries
 const spaceModel=spacingLayoutSystem(model.tokens);
 for(const step of spaceModel.spaces){assert.ok(catalog.includes(`data-ds-space-uses="${step.name}">${step.uses} uses`),'Space count must match fresh source occurrences: '+step.name);assert.ok(catalog.includes(`height:var(--${step.name})`),'Scale bars must use the actual source token.');}
 assert.deepEqual([...catalog.matchAll(/data-ds-layout-columns="(\d+)"/g)].map(m=>Number(m[1])),spaceModel.layouts.flatMap(l=>[l.projects,l.metrics]));
-for(const name of ['Spacing','Layout: desktop / tablet / phone','Radius','Shadows: light','Shadows: dark'])assert.ok(catalog.includes('/* '+name+' */'),'Complete labelled geometry code: '+name);
+for(const name of ['spacing','layout','radius','shadows-light','shadows-dark'])assert.ok(catalog.includes('data-ds-code-source="'+name+'"'),'Complete labelled source code: '+name);
 for(const token of spaceModel.radius.map(c=>c.token).concat(spaceModel.shadows.map(s=>s.token)))assert.ok(catalog.includes('data-ds-'+(token.startsWith('radius')?'radius':'shadow')+'="'+token+'"'));
+
+assert.deepEqual(validateRenderedFoundationCode(catalog,foundationSourceCode(root).blocks),[]);
+const builtPages=directory=>readdirSync(directory,{withFileTypes:true}).flatMap(entry=>entry.isDirectory()?builtPages(resolve(directory,entry.name)):entry.name.endsWith('.html')?[resolve(directory,entry.name)]:[]);
+for(const file of builtPages(resolve(root,'dist')))assert.deepEqual(validateRenderedThemeZones(readFileSync(file,'utf8')),[],`All former theme classes carry their exact zone metadata: ${file}`);

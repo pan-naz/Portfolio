@@ -11,7 +11,7 @@ css.walkRules(rule => rules.push(rule));
 const value = (rule, property) => rule.nodes.find(node => node.type === 'decl' && node.prop === property)?.value.replace(/\s+/g, ' ').trim();
 const focus = rules.find(rule => rule.selector.includes(':where(button,') && rule.selector.includes(':focus-visible'));
 assert.ok(focus, 'The live catalog loads the real shared native-control focus rule');
-assert.equal(value(focus, 'outline'), '2px solid var(--focus-ring)');
+assert.equal(value(focus, 'outline'), '2px solid var(--color-focus-ring)');
 assert.equal(value(focus, 'outline-offset'), '4px');
 assert.ok(rules.some(rule => rule.selector.includes('.button:active') && /scale\(0?\.98\)/.test(value(rule, 'transform') || '')), 'Live pressed feedback comes from the shared Button styles');
 assert.ok(rules.some(rule => rule.selector.includes('.navigation-item') && rule.selector.includes('aria-pressed')), 'Selected filters retain their real pressed-state styling');
