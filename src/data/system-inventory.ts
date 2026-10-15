@@ -1,3 +1,4 @@
+import {isWebsiteUsageSource} from '../../scripts/validate-space-shape.mjs';
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolve, dirname, basename, relative } from 'node:path';
 
@@ -39,7 +40,7 @@ export function buildSystemInventory(root = process.cwd()) {
   const infrastructure = new Set(['SiteMetadata', 'PortfolioPage', 'CaseStudyPage', 'CaseStudyContent', 'CaseStudyLayer', 'StandaloneCaseStyles']);
   const projectOnly = new Set(['HookoHero', 'HookoPhoneFrame']);
   const componentFiles = [...reachable].filter(file => file.includes('/components/') && !infrastructure.has(basename(file, '.astro')) && !projectOnly.has(basename(file, '.astro')) && !(file.endsWith('CaseStudy.astro') && !basename(file).startsWith('CaseStudy'))).sort();
-  const sources = all.filter(file => !file.includes('/pages/design-system') && !/\/(?:DS[^/]*\.astro|(?:design-system(?:-[\w-]+)?|ds-components|system-[\w-]+)\.ts|(?:design-system|static-preview|tokens)\.css)$/.test(file));
+  const sources = all.filter(file => isWebsiteUsageSource(file) && !file.endsWith('/tokens.css'));
   const css = read('src/styles/tokens.css');
   const palettes = readSystemTokens(css);
   const definitions = new Set(Object.keys(palettes.light));
@@ -52,6 +53,8 @@ export function buildSystemInventory(root = process.cwd()) {
     }
   }
   const used = new Set(consumers.keys());
+  // Approved catalog play/pause affordance: present in inventory, never a website use.
+  if (read('src/styles/design-system-motion.css').includes('var(--scale-icon-hover)')) used.add('scale-icon-hover');
   const visitToken = (name: string) => {
     for (const raw of [palettes.light[name], palettes.dark[name]]) for (const [, dependency] of (raw || '').matchAll(/var\(--([\w-]+)/g)) {
       if (!used.has(dependency)) { used.add(dependency); visitToken(dependency); }
@@ -62,7 +65,7 @@ export function buildSystemInventory(root = process.cwd()) {
   const category = (name: string) => /^(color-|color-rain-icon$|color-footer-icon$|color-focus-ring$|color-border-control$|backdrop-)/.test(name) ? 'color' : /^(font-|text-|type-|letter-spacing-|line-height-)/.test(name) ? 'typography' : name.startsWith('space-') ? 'spacing' : /^(radius-|shadow-)/.test(name) ? 'shape' : /^(duration-|delay-|ease-|stagger-|distance-|rotation-|intro-stage-|scale-|project-tilt-|work-filter-)/.test(name) ? 'motion' : name.startsWith('icon-') ? 'iconography' : 'layout';
   const tokens: SourceToken[] = [...used].filter(name => definitions.has(name)).sort().map(name => ({
     name, light: palettes.light[name], dark: palettes.dark[name], resolvedLight: palettes.value(palettes.light, name), resolvedDark: palettes.value(palettes.dark, name), users: [...(consumers.get(name) || [])],
-    tier: owner(name) ? 'component' : /^(color-(white|paper(?:-\d+)?|mist|stone|silver|pewter|graphite|charcoal|ink(?:-\d+)?|night|orange(?:-light)?)$|radius-\d|ease-stage-entrance)/.test(name) ? 'primitive' : 'semantic', category: category(name), owner: owner(name),
+    tier: owner(name) ? 'component' : /^(color-(white|paper(?:-\d+)?|mist|stone|silver|pewter|graphite|charcoal|ink(?:-\d+)?|night|orange(?:-light)?)$|radius-\d|ease-entrance)/.test(name) ? 'primitive' : 'semantic', category: category(name), owner: owner(name),
   }));
   const components: SourceComponent[] = componentFiles.map(file => {
     const name = basename(file, '.astro');

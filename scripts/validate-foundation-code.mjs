@@ -2,7 +2,7 @@ import fs from'node:fs';import path from'node:path';import{createRequire}from'no
 const require=createRequire(import.meta.url),astro=path.dirname(require.resolve('astro/package.json')),vite=path.dirname(require.resolve('vite/package.json',{paths:[astro]})),postcss=require(require.resolve('postcss',{paths:[vite]}));
 export const tokenSectionOrder=['Color','Typography','Spacing','Layout','Radius','Shadows','Motion','Icons','Controls and layers','Component tokens'];
 export const themeSelectorExceptions=[{selector:"[data-fixed-shadow='light']",reason:'The two original artwork substrates keep isolated Light elevation without resetting project copy or surfaces.'}];
-export const codeLineLimits={paired:35,full:72};
+export const codeLineLimits={paired:60,full:80};
 const oldZoneAttributes=[['color','surface'],['color','section'],['shadow','theme']].map(parts=>'data-'+parts.join('-'));
 export function validateTokenSource(css){
  const errors=[],tree=postcss.parse(css),layer=tree.nodes.find(n=>n.type==='atrule'&&n.name==='layer'&&n.params==='system'),sections=(layer?.nodes||[]).filter(n=>n.type==='comment'&&tokenSectionOrder.includes(n.text.split(/\s*·\s*/)[0])).map(n=>n.text.split(/\s*·\s*/)[0]);
@@ -14,7 +14,7 @@ export function validateTokenSource(css){
  let paired=false;for(const [index,line]of css.split('\n').entries()){
   if(/^\/\* (Roles|Shared roles|Scoped surfaces|Styles|Tablet|Desktop|Spacing|Radius|Radius changes|Shadows|Scoped shadows) ·/.test(line))paired=true;
   else if(/^\/\* (Color|Palette|Typography|Font families|Layout|Tablet and desktop|Motion|Icons|Controls and layers|Component tokens|Component changes) ·/.test(line))paired=false;
-  if(line.length>codeLineLimits[paired?'paired':'full'])errors.push(`Source line ${index+1} exceeds ${paired?35:72} characters.`);
+  if(line.length>codeLineLimits[paired?'paired':'full'])errors.push(`Source line ${index+1} exceeds ${paired?60:80} characters.`);
  }
  if(/\n[ \t]*\n[ \t]*\n/.test(css))errors.push('tokens.css has double blank lines.');
  if(/\n[ \t]*\n[ \t]*}/.test(css))errors.push('tokens.css has a blank line before a closing brace.');

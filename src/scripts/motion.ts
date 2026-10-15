@@ -1,4 +1,8 @@
+import { readMotionToken } from './native-motion.ts';
 import type { ScrollEngine } from './scroll-engine';
+/** Section scroll · the exact Lenis default curve, without approximation. */
+export const easeSectionScroll = (t: number) =>
+  Math.min(1, 1.001 - 2 ** (-10 * t));
 let smoothScroll: ScrollEngine['lenis'] | undefined;
 let scrollPaused = false;
 export const pauseScroll = () => { scrollPaused = true; smoothScroll?.stop(); };
@@ -10,7 +14,7 @@ export const repositionWork = (top: number) => {
 };
 export function scrollToSection(target: HTMLElement) {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (smoothScroll) smoothScroll.scrollTo(target.id === 'top' ? 0 : target, { duration: .65, lerp: 0 });
+  if (smoothScroll) smoothScroll.scrollTo(target.id === 'top' ? 0 : target, { duration: readMotionToken(getComputedStyle(target), '--duration-section-scroll') / 1000, easing: easeSectionScroll, lerp: 0 });
   else if (target.id === 'top') window.scrollTo({ top: 0, behavior: reduced ? 'instant' : 'smooth' });
   else target.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth', block: 'start' });
 }

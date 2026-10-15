@@ -124,8 +124,8 @@ export function initializeHeaderMorph() {
   }
   function frame(time: number) {
     queued = 0;
-    progress = advancePill(progress, expanded, time - previousTime, reduced.matches, metrics?.enterDuration);
-    exit = advancePillExit(exit, expanded, time - previousTime, reduced.matches, metrics?.exitDuration);
+    progress = advancePill(progress, expanded, time - previousTime, reduced.matches, metrics?.enterDuration ?? readMotionToken(getComputedStyle(header), '--duration-header-enter'));
+    exit = advancePillExit(exit, expanded, time - previousTime, reduced.matches, metrics?.exitDuration ?? readMotionToken(getComputedStyle(header), '--duration-header-exit'));
     if (!expanded && exit === 1) progress = 0;
     previousTime = time;
     paint();

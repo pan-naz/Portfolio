@@ -129,7 +129,7 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
         if (current !== generation || headerDone) return;
         headerIntro = createNativeMotion([{
           element: header, keyframes: [{ opacity: 0 }, { opacity: 1 }],
-          duration: number('--duration-layout'), easing: 'linear',
+          duration: number('--duration-layout'), easing: tokens.getPropertyValue('--ease-linear').trim(),
         }], { paused: document.hidden, onComplete: () => {
           headerDone = true;
           startContent();
@@ -153,7 +153,7 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
       const roleOptions = {
         hold: number('--duration-role-hold'), exit: number('--duration-role-exit'),
         enter: number('--duration-title-reveal'), stagger: number('--stagger-title-reveal'),
-        distance: titleDistance, ease: easing,
+        distance: titleDistance, ease: easing, exitEase: tokens.getPropertyValue('--ease-role-swap').trim(),
       };
       roleMotion = createRoleAnimator(phrases, roleOptions);
       roleMotion.setPaused(true);

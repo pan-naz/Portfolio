@@ -32,7 +32,7 @@ export function initializeWorkStage(): WorkStageController | undefined {
   const tokens = getComputedStyle(section);
   const number = (name: string) => readMotionToken(tokens, name);
   const entranceEase = () => tokens.getPropertyValue('--ease-entrance').trim();
-  const stageEase = () => tokens.getPropertyValue('--ease-work-stage').trim();
+  const stageEase = () => tokens.getPropertyValue('--ease-entrance').trim();
   const sectionRevealRatio = number('--section-reveal-trigger-viewport-ratio');
   const expandViewportRatio = number('--work-stage-trigger-viewport-ratio');
   const collapseAtScrollY = number('--work-stage-collapse-scroll-y');

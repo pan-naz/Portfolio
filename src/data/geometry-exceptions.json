@@ -1,902 +1,1703 @@
 [
   {
+    "file": "src/components/HookoCaseStudy.astro",
+    "selector": "[inline-style-21950]",
+    "context": "",
+    "property": "max-width",
+    "value": "760px",
+    "kind": "size",
+    "reason": "Project-only Hooko outcome image keeps its supplied 760px maximum."
+  },
+  {
+    "file": "src/styles/case-study-decision-card.css",
+    "selector": ".case-study-decision-card--media",
+    "context": "@layer system",
+    "property": "grid-template-columns",
+    "value": "minmax(0, 1fr) 200px",
+    "kind": "size",
+    "reason": "Existing 200px media column in the decision-card composition."
+  },
+  {
+    "file": "src/styles/case-study-decision-card.css",
+    "selector": ".case-study-decision-card__media",
+    "context": "@layer system",
+    "property": "min-height",
+    "value": "260px",
+    "kind": "size",
+    "reason": "Existing 260px minimum for original figure compositions."
+  },
+  {
     "file": "src/styles/case-study-guides.css",
-    "line": 4,
     "selector": ".case-study-guides",
     "context": "@layer system",
     "property": "inset",
     "value": "calc(-1 * var(--case-content-top-inset, 0px)) auto 0 0",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "0px",
-        "number": 0
-      }
-    ],
-    "inline": false,
     "reason": "Dimensioned zero fallback in geometry expressions; preserve unchanged."
   },
   {
     "file": "src/styles/case-study-guides.css",
-    "line": 12,
     "selector": ".case-study-guides, .case-study-marker",
     "context": "@layer system > @supports (width: round(down, 100%, 4px))",
     "property": "margin-left",
     "value": "round(down, (100% - var(--case-guide-width)) / 2, 1px)",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "1px",
-        "number": 1
-      }
-    ],
-    "inline": false,
     "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
   },
   {
     "file": "src/styles/case-study-narrative.css",
-    "line": 45,
+    "selector": ".case-study-chapter__inner",
+    "context": "@layer system",
+    "property": "width",
+    "value": "min(1200px, calc(100% - var(--gutter-left) - var(--gutter-right)))",
+    "kind": "size",
+    "reason": "Existing 1200px shared narrative span."
+  },
+  {
+    "file": "src/styles/case-study-narrative.css",
+    "selector": ".case-study-heading",
+    "context": "@layer system",
+    "property": "max-width",
+    "value": "1100px",
+    "kind": "size",
+    "reason": "Existing 1100px chapter-title measure."
+  },
+  {
+    "file": "src/styles/case-study-narrative.css",
+    "selector": ".case-study-narrative .section-heading--stacked h2",
+    "context": "@layer system",
+    "property": "max-width",
+    "value": "1100px",
+    "kind": "size",
+    "reason": "Existing 1100px stacked narrative title measure."
+  },
+  {
+    "file": "src/styles/case-study-narrative.css",
     "selector": ".case-study-sticky",
     "context": "@layer system > @media (min-width: 768px)",
     "property": "top",
     "value": "min(calc(var(--space-6) + var(--safe-top)), calc(100dvh - var(--case-sticky-height, 0px) - var(--space-6) - var(--safe-bottom)))",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "0px",
-        "number": 0
-      }
-    ],
-    "inline": false,
     "reason": "Dimensioned zero fallback in geometry expressions; preserve unchanged."
   },
   {
     "file": "src/styles/case-study-service-tiles.css",
-    "line": 35,
+    "selector": ".case-study-service-tile h4",
+    "context": "@layer system",
+    "property": "max-width",
+    "value": "220px",
+    "kind": "size",
+    "reason": "Original Index service-tile product artwork: preserve title, stroke, tile and popover geometry."
+  },
+  {
+    "file": "src/styles/case-study-service-tiles.css",
+    "selector": ".case-study-service-tile h4::after",
+    "context": "@layer system",
+    "property": "height",
+    "value": "1px",
+    "kind": "size",
+    "reason": "Original Index service-tile product artwork: preserve title, stroke, tile and popover geometry."
+  },
+  {
+    "file": "src/styles/case-study-service-tiles.css",
+    "selector": ".case-study-service-tile p",
+    "context": "@layer system",
+    "property": "max-width",
+    "value": "220px",
+    "kind": "size",
+    "reason": "Original Index service-tile product artwork: preserve title, stroke, tile and popover geometry."
+  },
+  {
+    "file": "src/styles/case-study-service-tiles.css",
+    "selector": ".case-study-service-quote blockquote",
+    "context": "@layer system",
+    "property": "max-width",
+    "value": "220px",
+    "kind": "size",
+    "reason": "Original Index service-tile product artwork: preserve title, stroke, tile and popover geometry."
+  },
+  {
+    "file": "src/styles/case-study-service-tiles.css",
+    "selector": ".case-study-service-quote cite",
+    "context": "@layer system",
+    "property": "opacity",
+    "value": ".8",
+    "kind": "opacity",
+    "reason": "The .8 opacity is original Index product UI, not a portfolio opacity role."
+  },
+  {
+    "file": "src/styles/case-study-service-tiles.css",
+    "selector": ".case-study-service-popover",
+    "context": "@layer system",
+    "property": "z-index",
+    "value": "5",
+    "kind": "layer",
+    "reason": "Index product UI stacks its popover at 5 above local artwork; no shared layer equals it."
+  },
+  {
+    "file": "src/styles/case-study-service-tiles.css",
+    "selector": ".case-study-service-popover",
+    "context": "@layer system",
+    "property": "width",
+    "value": "min(360px, calc(100% - var(--space-4)))",
+    "kind": "size",
+    "reason": "Original Index product popover has a 360px maximum with the existing viewport gutter."
+  },
+  {
+    "file": "src/styles/case-study-service-tiles.css",
+    "selector": ".case-study-service-popover h4::after",
+    "context": "@layer system",
+    "property": "height",
+    "value": "1px",
+    "kind": "size",
+    "reason": "Original Index service-tile product artwork: preserve title, stroke, tile and popover geometry."
+  },
+  {
+    "file": "src/styles/case-study-service-tiles.css",
     "selector": ".case-study-service-popover li",
     "context": "@layer system",
     "property": "padding-left",
     "value": "calc(var(--space-4) + 2px)",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "2px",
-        "number": 2
-      }
-    ],
-    "inline": false,
     "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
   },
   {
     "file": "src/styles/case-study-service-tiles.css",
-    "line": 36,
     "selector": ".case-study-service-popover li::before",
     "context": "@layer system",
     "property": "top",
     "value": "10px",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "10px",
-        "number": 10
-      }
-    ],
-    "inline": false,
     "reason": "Existing control inset, line-height or pointer target geometry; token snapping would alter the control."
   },
   {
+    "file": "src/styles/case-study-service-tiles.css",
+    "selector": ".case-study-service-popover li::before",
+    "context": "@layer system",
+    "property": "width",
+    "value": "10px",
+    "kind": "size",
+    "reason": "Original Index service-tile product artwork: preserve title, stroke, tile and popover geometry."
+  },
+  {
+    "file": "src/styles/case-study-service-tiles.css",
+    "selector": ".case-study-service-popover li::before",
+    "context": "@layer system",
+    "property": "height",
+    "value": "1px",
+    "kind": "size",
+    "reason": "Original Index service-tile product artwork: preserve title, stroke, tile and popover geometry."
+  },
+  {
+    "file": "src/styles/case-study-service-tiles.css",
+    "selector": ".case-study-service-tile",
+    "context": "@layer system > @media (max-width: 560px)",
+    "property": "min-height",
+    "value": "150px",
+    "kind": "size",
+    "reason": "Original Index service-tile product artwork: preserve title, stroke, tile and popover geometry."
+  },
+  {
     "file": "src/styles/case-video-player.css",
-    "line": 16,
     "selector": ".case-video-seek input::-webkit-slider-thumb",
     "context": "@layer system",
     "property": "margin-top",
     "value": "-6px",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "-6px",
-        "number": -6
-      }
-    ],
-    "inline": false,
     "reason": "Existing control inset, line-height or pointer target geometry; token snapping would alter the control."
   },
   {
+    "file": "src/styles/case-video-player.css",
+    "selector": ".case-video-preview",
+    "context": "@layer system",
+    "property": "width",
+    "value": "var(--video-preview-width, 200px)",
+    "kind": "size",
+    "reason": "Existing 200px preview-sheet fallback; recording metadata may override it."
+  },
+  {
+    "file": "src/styles/datagpt-case-study.css",
+    "selector": ".dg-lede",
+    "context": "@layer project",
+    "property": "max-width",
+    "value": "720px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only datagpt artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/datagpt-case-study.css",
+    "selector": ".dg-copy-width",
+    "context": "@layer project",
+    "property": "max-width",
+    "value": "720px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only datagpt artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/datagpt-case-study.css",
+    "selector": ".dg-voice",
+    "context": "@layer project",
+    "property": "grid-template-columns",
+    "value": "40px minmax(0, 1fr)",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only datagpt artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/datagpt-case-study.css",
+    "selector": ".dg-avatar",
+    "context": "@layer project",
+    "property": "width",
+    "value": "40px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only datagpt artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/datagpt-case-study.css",
+    "selector": ".dg-avatar",
+    "context": "@layer project",
+    "property": "height",
+    "value": "40px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only datagpt artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/datagpt-case-study.css",
+    "selector": ".dg-competitor-heading .svg-asset",
+    "context": "@layer project",
+    "property": "width",
+    "value": "40px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only datagpt artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/datagpt-case-study.css",
+    "selector": ".dg-competitor-heading .svg-asset",
+    "context": "@layer project",
+    "property": "height",
+    "value": "40px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only datagpt artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/datagpt-case-study.css",
+    "selector": ".dg-dark-inner",
+    "context": "@layer project",
+    "property": "width",
+    "value": "min(1200px, calc(100% - var(--gutter-left) - var(--gutter-right)))",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only datagpt artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/datagpt-case-study.css",
+    "selector": ".dg-voice",
+    "context": "@layer project > @media (max-width: 767px)",
+    "property": "grid-template-columns",
+    "value": "32px minmax(0, 1fr)",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only datagpt artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/datagpt-case-study.css",
+    "selector": ".dg-avatar",
+    "context": "@layer project > @media (max-width: 767px)",
+    "property": "width",
+    "value": "32px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only datagpt artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/datagpt-case-study.css",
+    "selector": ".dg-avatar",
+    "context": "@layer project > @media (max-width: 767px)",
+    "property": "height",
+    "value": "32px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only datagpt artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/design-cup-case-study.css",
+    "selector": ".dc-landing",
+    "context": "@layer project",
+    "property": "max-width",
+    "value": "800px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only design-cup artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/design-cup-case-study.css",
+    "selector": ".dc-guide::after",
+    "context": "@layer project",
+    "property": "z-index",
+    "value": "-1",
+    "kind": "layer",
+    "project": true,
+    "reason": "Project-only design-cup artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/design-cup-case-study.css",
+    "selector": ".dc-lettering .case-study-media",
+    "context": "@layer project",
+    "property": "max-width",
+    "value": "476px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only design-cup artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/design-system-motion.css",
+    "selector": ".ds-motion-playhead",
+    "context": "@layer system",
+    "property": "width",
+    "value": "1px",
+    "kind": "size",
+    "reason": "One-pixel timing indicator, not layout spacing."
+  },
+  {
     "file": "src/styles/design-system.css",
-    "line": 30,
+    "selector": ".ds-tooltip-tool",
+    "context": "@layer system",
+    "property": "width",
+    "value": "180px",
+    "kind": "size",
+    "reason": "Original 180px tool-card specimen slot."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "selector": ".ds-nav-divider",
+    "context": "@layer system",
+    "property": "width",
+    "value": "1px",
+    "kind": "size",
+    "reason": "One-pixel navigation separator stroke."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "selector": "html[data-work-stage-layout='true'] .ds-sidebar",
+    "context": "@layer system",
+    "property": "width",
+    "value": "calc(240px + var(--safe-left))",
+    "kind": "size",
+    "reason": "Approved 240px catalog sidebar plus the safe-area gutter."
+  },
+  {
+    "file": "src/styles/design-system.css",
     "selector": "html[data-work-stage-layout='true'] .ds-main",
     "context": "@layer system",
     "property": "margin-left",
     "value": "calc(240px + var(--safe-left))",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "240px",
-        "number": 240
-      }
-    ],
-    "inline": false,
     "reason": "Approved 240px sidebar lane; changing it would move catalog content."
   },
   {
     "file": "src/styles/design-system.css",
-    "line": 78,
+    "selector": ".ds-canvas",
+    "context": "@layer system",
+    "property": "height",
+    "value": "300px",
+    "kind": "size",
+    "reason": "Approved 300/400px specimen viewport, not a spacing step."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "selector": ".ds-canvas",
+    "context": "@layer system",
+    "property": "max-height",
+    "value": "400px",
+    "kind": "size",
+    "reason": "Approved 300/400px specimen viewport, not a spacing step."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "selector": ":is(#project-card,#section-heading,#timeline-row,#navigation) .ds-canvas",
+    "context": "@layer system",
+    "property": "height",
+    "value": "400px",
+    "kind": "size",
+    "reason": "Approved 400px full-component specimen viewport."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "selector": ".ds-comparison-switch",
+    "context": "@layer system",
+    "property": "height",
+    "value": "60px",
+    "kind": "size",
+    "reason": "Original 60px-high /180px-wide comparison specimen slot."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "selector": ".ds-comparison-switch",
+    "context": "@layer system",
+    "property": "min-width",
+    "value": "180px",
+    "kind": "size",
+    "reason": "Original 60px-high /180px-wide comparison specimen slot."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "selector": ".ds-stat-composition",
+    "context": "@layer system",
+    "property": "max-width",
+    "value": "760px",
+    "kind": "size",
+    "reason": "Approved 760px statistics specimen composition."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "selector": ".ds-project-example",
+    "context": "@layer system",
+    "property": "width",
+    "value": "min(100%,880px)",
+    "kind": "size",
+    "reason": "Approved 880px genuine project specimen width."
+  },
+  {
+    "file": "src/styles/design-system.css",
     "selector": ".ds-name-switch::before",
     "context": "@layer system",
     "property": "top",
     "value": "1px",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "1px",
-        "number": 1
-      }
-    ],
-    "inline": false,
     "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
   },
   {
     "file": "src/styles/design-system.css",
-    "line": 78,
     "selector": ".ds-name-switch::before",
     "context": "@layer system",
     "property": "left",
     "value": "1px",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "1px",
-        "number": 1
-      }
-    ],
-    "inline": false,
     "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
   },
   {
     "file": "src/styles/design-system.css",
-    "line": 80,
     "selector": ".ds-name-toggle[aria-checked=true] .ds-name-switch::before",
     "context": "@layer system",
     "property": "right",
     "value": "1px",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "1px",
-        "number": 1
-      }
-    ],
-    "inline": false,
     "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
   },
   {
+    "file": "src/styles/design-system.css",
+    "selector": ".ds-foundation-row",
+    "context": "@layer system",
+    "property": "grid-template-columns",
+    "value": "minmax(0,1fr) 300px",
+    "kind": "size",
+    "reason": "Approved 300/240px foundation explanation lane."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "selector": ".ds-icon-grid",
+    "context": "@layer system",
+    "property": "grid-template-columns",
+    "value": "repeat(auto-fit,minmax(72px,1fr))",
+    "kind": "size",
+    "reason": "Approved 72px named-icon specimen cell."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "selector": ".ds-tile-visual",
+    "context": "@layer system",
+    "property": "height",
+    "value": "104px",
+    "kind": "size",
+    "reason": "Approved 104px Overview thumbnail viewport."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "selector": ".ds-tile-mini",
+    "context": "@layer system",
+    "property": "width",
+    "value": "320px",
+    "kind": "size",
+    "reason": "Approved 320px source width before uniform miniature scaling."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "selector": ".ds-tile-mini--section-heading,.ds-tile-mini--timeline-row",
+    "context": "@layer system",
+    "property": "width",
+    "value": "880px",
+    "kind": "size",
+    "reason": "Approved 880px source width for full-composition miniatures."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "selector": ".ds-tile-mini--statistic",
+    "context": "@layer system",
+    "property": "width",
+    "value": "240px",
+    "kind": "size",
+    "reason": "Approved 240px statistics miniature source width."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "selector": ".ds-project-tile",
+    "context": "@layer system",
+    "property": "width",
+    "value": "480px",
+    "kind": "size",
+    "reason": "Approved 480px project thumbnail source width."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "selector": ".ds-foundation-row",
+    "context": "@layer system > @media (max-width:1099px)",
+    "property": "grid-template-columns",
+    "value": "minmax(0,1fr) 240px",
+    "kind": "size",
+    "reason": "Approved 300/240px foundation explanation lane."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "selector": ".ds-canvas",
+    "context": "@layer system > @media (max-width:767px)",
+    "property": "height",
+    "value": "400px",
+    "kind": "size",
+    "reason": "Approved 300/400px specimen viewport, not a spacing step."
+  },
+  {
     "file": "src/styles/global.css",
-    "line": 27,
     "selector": ".project-surface:focus-visible",
     "context": "@layer system",
     "property": "box-shadow",
     "value": "0 0 0 calc(var(--space-1) + 2px) var(--color-bg-canvas)",
     "kind": "shadow",
-    "values": [
-      {
-        "raw": "2px",
-        "number": 2
-      }
-    ],
-    "inline": false,
     "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
   },
   {
     "file": "src/styles/global.css",
-    "line": 43,
+    "selector": ".sr-only",
+    "context": "@layer system",
+    "property": "width",
+    "value": "1px",
+    "kind": "size",
+    "reason": "One-pixel clipped accessible box; negative margin removes it from visible layout."
+  },
+  {
+    "file": "src/styles/global.css",
+    "selector": ".sr-only",
+    "context": "@layer system",
+    "property": "height",
+    "value": "1px",
+    "kind": "size",
+    "reason": "One-pixel clipped accessible box; negative margin removes it from visible layout."
+  },
+  {
+    "file": "src/styles/global.css",
     "selector": ".sr-only",
     "context": "@layer system",
     "property": "margin",
     "value": "-1px",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "-1px",
-        "number": -1
-      }
-    ],
-    "inline": false,
     "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
   },
   {
     "file": "src/styles/global.css",
-    "line": 51,
     "selector": ".button",
     "context": "@layer system",
     "property": "padding",
     "value": "calc(var(--space-3) - 1px) var(--space-6)",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "1px",
-        "number": 1
-      }
-    ],
-    "inline": false,
     "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
   },
   {
     "file": "src/styles/global.css",
-    "line": 107,
-    "selector": ".button--arrow-fill.button--small",
-    "context": "@layer system",
-    "property": "padding",
-    "value": "var(--button-orb-inset) var(--button-orb-inset) var(--button-orb-inset) 14px",
-    "kind": "spacing",
-    "values": [
-      {
-        "raw": "14px",
-        "number": 14
-      }
-    ],
-    "inline": false,
-    "reason": "Existing control inset, line-height or pointer target geometry; token snapping would alter the control."
-  },
-  {
-    "file": "src/styles/global.css",
-    "line": 113,
     "selector": ".icon-button--secondary.icon-button--small",
     "context": "@layer system",
     "property": "padding",
     "value": "calc((var(--control-height-small) - var(--icon-size-compact)) / 2 - 1px)",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "1px",
-        "number": 1
-      }
-    ],
-    "inline": false,
     "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
   },
   {
     "file": "src/styles/global.css",
-    "line": 178,
+    "selector": ".hero-backdrop",
+    "context": "@layer system",
+    "property": "height",
+    "value": "var(--waterfall-height, 800px)",
+    "kind": "size",
+    "reason": "Existing 800px rain-field fallback; decorative geometry, not a control size."
+  },
+  {
+    "file": "src/styles/global.css",
+    "selector": ".hero-waterfall",
+    "context": "@layer system",
+    "property": "width",
+    "value": "min(800px, 100%)",
+    "kind": "size",
+    "reason": "Existing 800px simulation field; changing it changes rain density."
+  },
+  {
+    "file": "src/styles/global.css",
     "selector": ".hero-waterfall-canvas",
     "context": "@layer system",
     "property": "left",
     "value": "calc(-1 * var(--waterfall-bleed, 160px))",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "160px",
-        "number": 160
-      }
-    ],
-    "inline": false,
     "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
   },
   {
     "file": "src/styles/global.css",
-    "line": 191,
-    "selector": ".navigation-item",
+    "selector": ".hero-waterfall-canvas",
     "context": "@layer system",
-    "property": "padding",
-    "value": "10px var(--navigation-item-padding-inline)",
-    "kind": "spacing",
-    "values": [
-      {
-        "raw": "10px",
-        "number": 10
-      }
-    ],
-    "inline": false,
-    "reason": "Existing control inset, line-height or pointer target geometry; token snapping would alter the control."
+    "property": "width",
+    "value": "calc(100% + var(--waterfall-bleed, 160px) * 2)",
+    "kind": "size",
+    "reason": "Existing 160px simulation bleed on both sides; preserves glyph and pointer coverage."
   },
   {
     "file": "src/styles/global.css",
-    "line": 203,
+    "selector": ".hero",
+    "context": "@layer system",
+    "property": "min-height",
+    "value": "max(800px, 100svh)",
+    "kind": "size",
+    "reason": "Existing 800px first-screen minimum and composed 208px header/intro position; preserve the approved hero."
+  },
+  {
+    "file": "src/styles/global.css",
     "selector": ".hero",
     "context": "@layer system",
     "property": "padding-block",
-    "value": "calc(208px + var(--safe-top)) 150px",
+    "value": "calc(208px + var(--safe-top)) var(--hero-bottom-desktop)",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "208px",
-        "number": 208
-      },
-      {
-        "raw": "150px",
-        "number": 150
-      }
-    ],
-    "inline": false,
-    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
+    "reason": "Existing 800px first-screen minimum and composed 208px header/intro position; preserve the approved hero."
   },
   {
     "file": "src/styles/global.css",
-    "line": 212,
     "selector": ".hero-cta-slot",
     "context": "@layer system",
-    "property": "margin-top",
-    "value": "28px",
-    "kind": "spacing",
-    "values": [
-      {
-        "raw": "28px",
-        "number": 28
-      }
-    ],
-    "inline": false,
-    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
+    "property": "min-width",
+    "value": "var(--cta-width, 0px)",
+    "kind": "size",
+    "reason": "Dimensioned zero fallback until the intro measures the real CTA."
   },
   {
     "file": "src/styles/global.css",
-    "line": 215,
-    "selector": ".hero-eyebrow",
+    "selector": ".hero-description",
     "context": "@layer system",
-    "property": "margin-bottom",
-    "value": "28px",
-    "kind": "spacing",
-    "values": [
-      {
-        "raw": "28px",
-        "number": 28
-      }
-    ],
-    "inline": false,
-    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
+    "property": "max-width",
+    "value": "600px",
+    "kind": "size",
+    "reason": "Existing 600/625px editorial text measure."
   },
   {
     "file": "src/styles/global.css",
-    "line": 232,
+    "selector": ".skill-tag",
+    "context": "@layer system",
+    "property": "min-height",
+    "value": "28px",
+    "kind": "size",
+    "reason": "Existing 28px tag height and optical 5/11px insets preserve the ticker."
+  },
+  {
+    "file": "src/styles/global.css",
     "selector": ".skill-tag",
     "context": "@layer system",
     "property": "padding",
     "value": "5px 11px",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "5px",
-        "number": 5
-      },
-      {
-        "raw": "11px",
-        "number": 11
-      }
-    ],
-    "inline": false,
     "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
   },
   {
     "file": "src/styles/global.css",
-    "line": 236,
     "selector": ".process-tags",
     "context": "@layer system",
     "property": "top",
     "value": "calc(108px + var(--safe-top))",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "108px",
-        "number": 108
-      }
-    ],
-    "inline": false,
     "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
   },
   {
     "file": "src/styles/global.css",
-    "line": 239,
     "selector": ".skill-marquee",
     "context": "@layer system",
     "property": "top",
     "value": "calc(230px + var(--safe-top))",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "230px",
-        "number": 230
-      }
-    ],
-    "inline": false,
     "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
   },
   {
     "file": "src/styles/global.css",
-    "line": 251,
+    "selector": ".skill-marquee",
+    "context": "@layer system",
+    "property": "height",
+    "value": "340px",
+    "kind": "size",
+    "reason": "Existing ticker viewport size/position, independent of title motion."
+  },
+  {
+    "file": "src/styles/global.css",
+    "selector": ".skill-marquee",
+    "context": "@layer system",
+    "property": "width",
+    "value": "180px",
+    "kind": "size",
+    "reason": "Existing ticker viewport size/position, independent of title motion."
+  },
+  {
+    "file": "src/styles/global.css",
     "selector": ".work-panel",
     "context": "@layer system",
     "property": "inset",
     "value": "calc(-1 * var(--work-preview-height)) auto 284px 0",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "284px",
-        "number": 284
-      }
-    ],
-    "inline": false,
     "reason": "Existing Work preview/filter lane and scroll coordinates; preserve geometry and triggers."
   },
   {
     "file": "src/styles/global.css",
-    "line": 270,
     "selector": ".work-rail",
     "context": "@layer system",
     "property": "top",
     "value": "366px",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "366px",
-        "number": 366
-      }
-    ],
-    "inline": false,
     "reason": "Existing Work preview/filter lane and scroll coordinates; preserve geometry and triggers."
   },
   {
     "file": "src/styles/global.css",
-    "line": 270,
     "selector": ".work-rail",
     "context": "@layer system",
-    "property": "left",
-    "value": "calc(var(--gutter) - 206px)",
-    "kind": "spacing",
-    "values": [
-      {
-        "raw": "206px",
-        "number": 206
-      }
-    ],
-    "inline": false,
-    "reason": "Existing Work preview/filter lane and scroll coordinates; preserve geometry and triggers."
+    "property": "width",
+    "value": "180px",
+    "kind": "size",
+    "reason": "Existing 366px Work coordinate,180px filter lane and 78px filter half-height."
   },
   {
     "file": "src/styles/global.css",
-    "line": 275,
-    "selector": ".section-navigation",
+    "selector": ".project-caption",
     "context": "@layer system",
-    "property": "top",
-    "value": "calc(112px + var(--safe-top))",
-    "kind": "spacing",
-    "values": [
-      {
-        "raw": "112px",
-        "number": 112
-      }
-    ],
-    "inline": false,
-    "reason": "Existing Work preview/filter lane and scroll coordinates; preserve geometry and triggers."
+    "property": "min-height",
+    "value": "136px",
+    "kind": "size",
+    "reason": "Existing 136px minimum keeps the project-card composition."
   },
   {
     "file": "src/styles/global.css",
-    "line": 318,
-    "selector": ".project",
+    "selector": ".impact-group",
     "context": "@layer system",
-    "property": "border-radius",
-    "value": "calc(var(--radius-large) + 2px)",
-    "kind": "radius",
-    "values": [
-      {
-        "raw": "2px",
-        "number": 2
-      }
-    ],
-    "inline": false,
-    "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
+    "property": "grid-template-columns",
+    "value": "284px minmax(0,1fr)",
+    "kind": "size",
+    "reason": "Existing 284/200px company identity lane beside the metrics."
   },
   {
     "file": "src/styles/global.css",
-    "line": 372,
     "selector": "html[data-work-stage-layout='true'] .about-details::before",
     "context": "@layer system",
     "property": "left",
     "value": "max(0px, calc(var(--gutter) - var(--space-16)))",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "0px",
-        "number": 0
-      }
-    ],
-    "inline": false,
     "reason": "Dimensioned zero fallback in geometry expressions; preserve unchanged."
   },
   {
     "file": "src/styles/global.css",
-    "line": 376,
     "selector": ".experience-row",
     "context": "@layer system",
-    "property": "padding-block",
-    "value": "20px",
-    "kind": "spacing",
-    "values": [
-      {
-        "raw": "20px",
-        "number": 20
-      }
-    ],
-    "inline": false,
-    "reason": "Existing approved section spacing or geometry; leave unchanged pending user review."
+    "property": "grid-template-columns",
+    "value": "160px 392px minmax(0,1fr) 80px",
+    "kind": "size",
+    "reason": "Original date, role, description and tenure column widths preserve the responsive timeline grid."
   },
   {
     "file": "src/styles/global.css",
-    "line": 393,
-    "selector": ".contact",
+    "selector": ".experience-row",
     "context": "@layer system",
-    "property": "margin-top",
-    "value": "120px",
-    "kind": "spacing",
-    "values": [
-      {
-        "raw": "120px",
-        "number": 120
-      }
-    ],
-    "inline": false,
-    "reason": "Existing approved section spacing or geometry; leave unchanged pending user review."
+    "property": "min-height",
+    "value": "90px",
+    "kind": "size",
+    "reason": "Existing 90px row minimum; approved padding does not change the minimum."
   },
   {
     "file": "src/styles/global.css",
-    "line": 408,
-    "selector": ".footer",
+    "selector": ".tool-card .svg-asset",
     "context": "@layer system",
-    "property": "margin-top",
-    "value": "128px",
-    "kind": "spacing",
-    "values": [
-      {
-        "raw": "128px",
-        "number": 128
-      }
-    ],
-    "inline": false,
-    "reason": "Existing footer/pile clearance and responsive margin; keep the current positions."
+    "property": "height",
+    "value": "min(70px, 35%)",
+    "kind": "size",
+    "reason": "Existing 70px /35% optical limit for genuine tool logos, unrelated to hero bottom padding."
   },
   {
     "file": "src/styles/global.css",
-    "line": 408,
-    "selector": ".footer",
+    "selector": ".contact-layout",
     "context": "@layer system",
-    "property": "padding-block",
-    "value": "var(--space-6) calc(40px + var(--safe-bottom))",
-    "kind": "spacing",
-    "values": [
-      {
-        "raw": "40px",
-        "number": 40
-      }
-    ],
-    "inline": false,
-    "reason": "Existing footer/pile clearance and responsive margin; keep the current positions."
+    "property": "grid-template-columns",
+    "value": "minmax(0, 720px) 1fr",
+    "kind": "size",
+    "reason": "Existing 720px title measure and 178px link-lane minimum."
   },
   {
     "file": "src/styles/global.css",
-    "line": 412,
+    "selector": ".contact-links",
+    "context": "@layer system",
+    "property": "min-width",
+    "value": "178px",
+    "kind": "size",
+    "reason": "Existing 178px intrinsic link lane in the Contact composition."
+  },
+  {
+    "file": "src/styles/global.css",
     "selector": ".footer-icon-pile-layer",
     "context": "@layer system",
     "property": "top",
     "value": "calc(-1 * var(--pile-above) - 1px)",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "1px",
-        "number": 1
-      }
-    ],
-    "inline": false,
     "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
   },
   {
     "file": "src/styles/global.css",
-    "line": 419,
     "selector": ".button--small",
     "context": "@layer system",
     "property": "padding",
-    "value": "6px 14px",
+    "value": "6px var(--button-padding-inline-small)",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "6px",
-        "number": 6
-      },
-      {
-        "raw": "14px",
-        "number": 14
-      }
-    ],
-    "inline": false,
-    "reason": "Existing control inset, line-height or pointer target geometry; token snapping would alter the control."
+    "reason": "Existing 6px block inset around the small label; the 14px inline inset is now named."
   },
   {
     "file": "src/styles/global.css",
-    "line": 423,
-    "selector": ".process-tags",
-    "context": "@layer system > @media (max-width: 1439px)",
-    "property": "margin",
-    "value": "0 var(--gutter-right) 36px var(--gutter-left)",
-    "kind": "spacing",
-    "values": [
-      {
-        "raw": "36px",
-        "number": 36
-      }
-    ],
-    "inline": false,
-    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
-  },
-  {
-    "file": "src/styles/global.css",
-    "line": 425,
-    "selector": ".hero",
-    "context": "@layer system > @media (max-width: 1439px)",
-    "property": "padding-bottom",
-    "value": "calc(150px + var(--space-8) + var(--space-2))",
-    "kind": "spacing",
-    "values": [
-      {
-        "raw": "150px",
-        "number": 150
-      }
-    ],
-    "inline": false,
-    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
-  },
-  {
-    "file": "src/styles/global.css",
-    "line": 426,
     "selector": ".hero-content",
     "context": "@layer system > @media (max-width: 1439px)",
     "property": "padding-right",
     "value": "130px",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "130px",
-        "number": 130
-      }
-    ],
-    "inline": false,
     "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
   },
   {
     "file": "src/styles/global.css",
-    "line": 433,
-    "selector": ".hero",
+    "selector": ".hero-description",
+    "context": "@layer system > @media (max-width: 1439px)",
+    "property": "max-width",
+    "value": "min(625px, 100%)",
+    "kind": "size",
+    "reason": "Existing 600/625px editorial text measure."
+  },
+  {
+    "file": "src/styles/global.css",
+    "selector": ".skill-marquee",
+    "context": "@layer system > @media (max-width: 1439px)",
+    "property": "width",
+    "value": "170px",
+    "kind": "size",
+    "reason": "Existing ticker viewport size/position, independent of title motion."
+  },
+  {
+    "file": "src/styles/global.css",
+    "selector": ".skill-marquee",
     "context": "@layer system > @media (max-width: 1023px)",
-    "property": "padding-bottom",
-    "value": "calc(70px + var(--space-8) + var(--space-2))",
-    "kind": "spacing",
-    "values": [
-      {
-        "raw": "70px",
-        "number": 70
-      }
-    ],
-    "inline": false,
-    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
+    "property": "height",
+    "value": "130px",
+    "kind": "size",
+    "reason": "Existing ticker viewport size/position, independent of title motion."
   },
   {
     "file": "src/styles/global.css",
-    "line": 439,
+    "selector": ".skill-marquee",
+    "context": "@layer system > @media (max-width: 1023px)",
+    "property": "max-width",
+    "value": "240px",
+    "kind": "size",
+    "reason": "Existing ticker viewport size/position, independent of title motion."
+  },
+  {
+    "file": "src/styles/global.css",
     "selector": ".hero",
     "context": "@layer system > @media (max-width: 767px)",
-    "property": "padding-bottom",
-    "value": "calc(70px + var(--space-8))",
-    "kind": "spacing",
-    "values": [
-      {
-        "raw": "70px",
-        "number": 70
-      }
-    ],
-    "inline": false,
-    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
+    "property": "min-height",
+    "value": "800px",
+    "kind": "size",
+    "reason": "Existing 800px first-screen minimum and composed 208px header/intro position; preserve the approved hero."
   },
   {
     "file": "src/styles/global.css",
-    "line": 442,
-    "selector": ".process-tags",
-    "context": "@layer system > @media (max-width: 767px)",
-    "property": "margin-bottom",
-    "value": "36px",
-    "kind": "spacing",
-    "values": [
-      {
-        "raw": "36px",
-        "number": 36
-      }
-    ],
-    "inline": false,
-    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
-  },
-  {
-    "file": "src/styles/global.css",
-    "line": 445,
-    "selector": ".work-panel",
-    "context": "@layer system > @media (max-width: 767px)",
-    "property": "bottom",
-    "value": "100px",
-    "kind": "spacing",
-    "values": [
-      {
-        "raw": "100px",
-        "number": 100
-      }
-    ],
-    "inline": false,
-    "reason": "Existing Work preview/filter lane and scroll coordinates; preserve geometry and triggers."
-  },
-  {
-    "file": "src/styles/global.css",
-    "line": 447,
-    "selector": ".work .section-heading, .impact .section-heading, .about-details .section-heading",
-    "context": "@layer system > @media (max-width: 767px)",
-    "property": "margin-bottom",
-    "value": "40px",
-    "kind": "spacing",
-    "values": [
-      {
-        "raw": "40px",
-        "number": 40
-      }
-    ],
-    "inline": false,
-    "reason": "Existing Work preview/filter lane and scroll coordinates; preserve geometry and triggers."
-  },
-  {
-    "file": "src/styles/global.css",
-    "line": 465,
-    "selector": ".tools-grid",
-    "context": "@layer system > @media (max-width: 767px)",
-    "property": "margin-top",
-    "value": "40px",
-    "kind": "spacing",
-    "values": [
-      {
-        "raw": "40px",
-        "number": 40
-      }
-    ],
-    "inline": false,
-    "reason": "Existing approved section spacing or geometry; leave unchanged pending user review."
-  },
-  {
-    "file": "src/styles/global.css",
-    "line": 470,
-    "selector": ".footer",
-    "context": "@layer system > @media (max-width: 767px)",
-    "property": "margin-top",
-    "value": "clamp(80px, calc(16vw - var(--gutter) * .32 + var(--space-6)), 128px)",
-    "kind": "spacing",
-    "values": [
-      {
-        "raw": "80px",
-        "number": 80
-      },
-      {
-        "raw": "128px",
-        "number": 128
-      }
-    ],
-    "inline": false,
-    "reason": "Existing footer/pile clearance and responsive margin; keep the current positions."
-  },
-  {
-    "file": "src/styles/global.css",
-    "line": 494,
-    "selector": "html[data-work-stage-layout='true'] .work-rail",
+    "selector": "html[data-work-stage-layout='true'] .work-content",
     "context": "@layer system",
-    "property": "left",
-    "value": "calc(max(var(--space-4), var(--gutter) - 206px) + var(--safe-left))",
-    "kind": "spacing",
-    "values": [
-      {
-        "raw": "206px",
-        "number": 206
-      }
-    ],
-    "inline": false,
-    "reason": "Existing Work preview/filter lane and scroll coordinates; preserve geometry and triggers."
+    "property": "width",
+    "value": "calc(100% - max(220px, var(--gutter)) - var(--gutter) - var(--safe-left) - var(--safe-right))",
+    "kind": "size",
+    "reason": "Existing 220px floating filter lane keeps desktop cards clear of the control."
   },
   {
     "file": "src/styles/global.css",
-    "line": 496,
     "selector": "html[data-work-stage-layout='true'] .work-content",
     "context": "@layer system",
     "property": "margin-left",
     "value": "calc(max(220px, var(--gutter)) + var(--safe-left))",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "220px",
-        "number": 220
-      }
-    ],
-    "inline": false,
     "reason": "Existing Work preview/filter lane and scroll coordinates; preserve geometry and triggers."
   },
   {
     "file": "src/styles/global.css",
-    "line": 555,
-    "selector": ":is(.project-media, .case-study-transition-artwork, .case-study-artwork)",
-    "context": "@layer system",
-    "property": "border-radius",
-    "value": "calc(var(--radius-large) + 2px)",
-    "kind": "radius",
-    "values": [
-      {
-        "raw": "2px",
-        "number": 2
-      }
-    ],
-    "inline": false,
-    "reason": "Existing stroke or pixel-grid compensation; rounding it to the spacing scale would misalign the control."
+    "selector": ".experience-row",
+    "context": "@layer system > @media (min-width: 768px) and (max-width: 1327px)",
+    "property": "grid-template-columns",
+    "value": "120px minmax(0,1fr) minmax(0,1.3fr) var(--space-16)",
+    "kind": "size",
+    "reason": "Original date, role, description and tenure column widths preserve the responsive timeline grid."
   },
   {
     "file": "src/styles/global.css",
-    "line": 562,
+    "selector": ".impact-group",
+    "context": "@layer system > @media (min-width: 768px) and (max-width: 1327px)",
+    "property": "grid-template-columns",
+    "value": "200px minmax(0,1fr)",
+    "kind": "size",
+    "reason": "Existing 284/200px company identity lane beside the metrics."
+  },
+  {
+    "file": "src/styles/global.css",
+    "selector": ".contact-layout",
+    "context": "@layer system > @media (min-width: 768px) and (max-width: 1327px)",
+    "property": "grid-template-columns",
+    "value": "minmax(0, 2fr) minmax(178px, 1fr)",
+    "kind": "size",
+    "reason": "Existing 720px title measure and 178px link-lane minimum."
+  },
+  {
+    "file": "src/styles/global.css",
+    "selector": ".case-study-content",
+    "context": "@layer system",
+    "property": "max-width",
+    "value": "1328px",
+    "kind": "size",
+    "reason": "Existing 1328px maximum case-study span."
+  },
+  {
+    "file": "src/styles/global.css",
     "selector": ".case-media-frame.media-crop",
     "context": "@layer system",
     "property": "border-radius",
     "value": "var(--case-media-radius, 0px)",
     "kind": "radius",
-    "values": [
-      {
-        "raw": "0px",
-        "number": 0
-      }
-    ],
-    "inline": false,
     "reason": "Dimensioned zero fallback in geometry expressions; preserve unchanged."
   },
   {
+    "file": "src/styles/gutsul-made-case-study.css",
+    "selector": ".gutsul-ornament",
+    "context": "@layer project",
+    "property": "height",
+    "value": "24px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only gutsul-made artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/gutsul-made-case-study.css",
+    "selector": ".gutsul-ornament .svg-asset",
+    "context": "@layer project",
+    "property": "width",
+    "value": "8192px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only gutsul-made artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/gutsul-made-case-study.css",
+    "selector": ".gutsul-ornament .svg-asset",
+    "context": "@layer project",
+    "property": "height",
+    "value": "24px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only gutsul-made artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/gutsul-made-case-study.css",
+    "selector": ".gutsul-diamonds li::before",
+    "context": "@layer project",
+    "property": "left",
+    "value": "3px",
+    "kind": "spacing",
+    "project": true,
+    "reason": "Project-only Gutsul diamond: 3px inset and 7px diamond preserve the original artwork."
+  },
+  {
+    "file": "src/styles/gutsul-made-case-study.css",
+    "selector": ".gutsul-diamonds li::before",
+    "context": "@layer project",
+    "property": "width",
+    "value": "7px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only Gutsul diamond: 3px inset and 7px diamond preserve the original artwork."
+  },
+  {
+    "file": "src/styles/gutsul-made-case-study.css",
+    "selector": ".gutsul-diamonds li::before",
+    "context": "@layer project",
+    "property": "height",
+    "value": "7px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only Gutsul diamond: 3px inset and 7px diamond preserve the original artwork."
+  },
+  {
+    "file": "src/styles/gutsul-made-case-study.css",
+    "selector": ".gutsul-phones > *",
+    "context": "@layer project",
+    "property": "width",
+    "value": "min(100%, 207px)",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only gutsul-made artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/gutsul-made-case-study.css",
+    "selector": ".gutsul-plate",
+    "context": "@layer project",
+    "property": "min-height",
+    "value": "220px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only gutsul-made artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/gutsul-made-case-study.css",
+    "selector": ".gutsul-icons .case-study-media",
+    "context": "@layer project",
+    "property": "width",
+    "value": "min(100%, 753px)",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only gutsul-made artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/gutsul-made-case-study.css",
+    "selector": ".gutsul-palette span",
+    "context": "@layer project",
+    "property": "width",
+    "value": "56px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only gutsul-made artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/gutsul-made-case-study.css",
+    "selector": ".gutsul-palette span",
+    "context": "@layer project",
+    "property": "height",
+    "value": "56px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only gutsul-made artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/gutsul-made-case-study.css",
+    "selector": ".gutsul-palette span",
+    "context": "@layer project > @media (max-width: 767px)",
+    "property": "width",
+    "value": "40px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only gutsul-made artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/gutsul-made-case-study.css",
+    "selector": ".gutsul-palette span",
+    "context": "@layer project > @media (max-width: 767px)",
+    "property": "height",
+    "value": "40px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only gutsul-made artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/hooko-artwork.css",
+    "selector": ".hooko-phone__island",
+    "context": "@layer project",
+    "property": "z-index",
+    "value": "3",
+    "kind": "layer",
+    "project": true,
+    "reason": "Project-only hooko-artwork artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/hooko-artwork.css",
+    "selector": ".hooko-phone__home",
+    "context": "@layer project",
+    "property": "z-index",
+    "value": "3",
+    "kind": "layer",
+    "project": true,
+    "reason": "Project-only hooko-artwork artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/hooko-artwork.css",
+    "selector": ".hooko-hero__front",
+    "context": "@layer project",
+    "property": "z-index",
+    "value": "2",
+    "kind": "layer",
+    "project": true,
+    "reason": "Project-only hooko-artwork artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/hooko-artwork.css",
+    "selector": ".hooko-hero__back",
+    "context": "@layer project",
+    "property": "z-index",
+    "value": "1",
+    "kind": "layer",
+    "project": true,
+    "reason": "Project-only hooko-artwork artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/hooko-case-study.css",
+    "selector": ".hk-heading-description",
+    "context": "@layer project",
+    "property": "max-width",
+    "value": "720px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only hooko artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/hooko-case-study.css",
+    "selector": ".hk-demo-layout",
+    "context": "@layer project",
+    "property": "grid-template-columns",
+    "value": "minmax(0, 320px) minmax(0, 1fr)",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only hooko artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/hooko-case-study.css",
+    "selector": ".hk-demo-phone",
+    "context": "@layer project",
+    "property": "width",
+    "value": "min(100%, 320px)",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only hooko artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/hooko-case-study.css",
+    "selector": ".hk-band-inner",
+    "context": "@layer project",
+    "property": "width",
+    "value": "min(1200px, calc(100% - var(--gutter-left) - var(--gutter-right)))",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only hooko artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/hooko-case-study.css",
+    "selector": ".hk-svc svg",
+    "context": "@layer project",
+    "property": "width",
+    "value": "12px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only hooko artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/hooko-case-study.css",
+    "selector": ".hk-svc svg",
+    "context": "@layer project",
+    "property": "height",
+    "value": "12px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only hooko artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/hooko-case-study.css",
+    "selector": ".hk-meta-row",
+    "context": "@layer project",
+    "property": "grid-template-columns",
+    "value": "100px minmax(0, 1fr) auto",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only hooko artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/hooko-case-study.css",
+    "selector": ".hk-demo-phone",
+    "context": "@layer project > @media (max-width: 1279px)",
+    "property": "width",
+    "value": "min(280px, 72vw)",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only hooko artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/index-law-firm-case-study.css",
+    "selector": ".index-palette > li > div:last-child",
+    "context": "@layer project",
+    "property": "gap",
+    "value": "2px",
+    "kind": "spacing",
+    "project": true,
+    "reason": "Project-only Index palette: 2px gap belongs to its original brand specimen."
+  },
+  {
+    "file": "src/styles/index-law-firm-case-study.css",
+    "selector": ".index-logo-card .svg-asset",
+    "context": "@layer project",
+    "property": "width",
+    "value": "min(100%, 220px)",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only index-law-firm artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/kitchen-chatbot-case-study.css",
+    "selector": ".kc-dish--selected",
+    "context": "@layer project",
+    "property": "box-shadow",
+    "value": "inset 0 0 0 1px var(--kc-teal)",
+    "kind": "shadow",
+    "project": true,
+    "reason": "Project-only kitchen-chatbot artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/peak-hotel-case-study.css",
+    "selector": ".peak-lede",
+    "context": "@layer project",
+    "property": "max-width",
+    "value": "720px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only peak-hotel artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/peak-hotel-case-study.css",
+    "selector": ".peak-button",
+    "context": "@layer project",
+    "property": "max-width",
+    "value": "618px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only peak-hotel artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/pet-care-case-study.css",
+    "selector": ".pc-main-preview :is(picture, img)",
+    "context": "@layer project",
+    "property": "max-width",
+    "value": "360px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only pet-care artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/pet-care-case-study.css",
+    "selector": ".pc-phone--physical",
+    "context": "@layer project",
+    "property": "max-width",
+    "value": "420px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only pet-care artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/pet-care-case-study.css",
+    "selector": ".pc-phone--emotional",
+    "context": "@layer project",
+    "property": "max-width",
+    "value": "480px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only pet-care artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/pet-care-case-study.css",
+    "selector": ".pc-phone--needs",
+    "context": "@layer project",
+    "property": "max-width",
+    "value": "460px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only pet-care artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/pet-care-case-study.css",
+    "selector": ".pc-type-plate .case-study-media",
+    "context": "@layer project",
+    "property": "max-width",
+    "value": "340px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only pet-care artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/pet-care-case-study.css",
+    "selector": ".pc-brand .svg-asset",
+    "context": "@layer project",
+    "property": "width",
+    "value": "88px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only pet-care artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/pet-care-case-study.css",
+    "selector": ".pc-brand .svg-asset",
+    "context": "@layer project",
+    "property": "height",
+    "value": "88px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only pet-care artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/promshyna-case-study.css",
+    "selector": ".promshyna-specs > div",
+    "context": "@layer project",
+    "property": "grid-template-columns",
+    "value": "132px minmax(0, 1fr)",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only promshyna artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/promshyna-case-study.css",
+    "selector": ".promshyna-rail::before, .promshyna-rail::after",
+    "context": "@layer project",
+    "property": "width",
+    "value": "9px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only PromShyna delivery rail: 9px edge and 56px source rail preserve the artwork."
+  },
+  {
+    "file": "src/styles/promshyna-case-study.css",
+    "selector": ".promshyna-rail::before",
+    "context": "@layer project",
+    "property": "left",
+    "value": "calc(50% - 9px)",
+    "kind": "spacing",
+    "project": true,
+    "reason": "Project-only PromShyna delivery rail: 9px edge and 56px source rail preserve the artwork."
+  },
+  {
+    "file": "src/styles/promshyna-case-study.css",
+    "selector": ".promshyna-badge",
+    "context": "@layer project",
+    "property": "z-index",
+    "value": "1",
+    "kind": "layer",
+    "project": true,
+    "reason": "Project-only promshyna artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/promshyna-case-study.css",
+    "selector": ".promshyna-badge",
+    "context": "@layer project",
+    "property": "width",
+    "value": "42px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only promshyna artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/promshyna-case-study.css",
+    "selector": ".promshyna-badge",
+    "context": "@layer project",
+    "property": "height",
+    "value": "60px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only promshyna artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/promshyna-case-study.css",
+    "selector": ".promshyna-brand-plate",
+    "context": "@layer project",
+    "property": "height",
+    "value": "200px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only promshyna artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/team-sternfit-case-study.css",
+    "selector": ".sternfit-signature",
+    "context": "@layer project",
+    "property": "width",
+    "value": "180px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only team-sternfit artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/team-sternfit-case-study.css",
+    "selector": ".sternfit-pair .case-study-media",
+    "context": "@layer project",
+    "property": "max-width",
+    "value": "285px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only team-sternfit artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/telegram-file-picker-case-study.css",
+    "selector": ".tg-window",
+    "context": "@layer project",
+    "property": "width",
+    "value": "min(100%, 1000px)",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only telegram-file-picker artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/voximplant-case-study.css",
+    "selector": ".vox-copy-narrow",
+    "context": "@layer project",
+    "property": "max-width",
+    "value": "610px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only voximplant artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/voximplant-case-study.css",
+    "selector": ".vox-goal",
+    "context": "@layer project",
+    "property": "min-height",
+    "value": "360px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only voximplant artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/voximplant-case-study.css",
+    "selector": ".vox-goal p:last-child",
+    "context": "@layer project",
+    "property": "max-width",
+    "value": "420px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only voximplant artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/voximplant-case-study.css",
+    "selector": ".vox-audience-intro",
+    "context": "@layer project",
+    "property": "max-width",
+    "value": "560px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only voximplant artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/voximplant-case-study.css",
+    "selector": ".vox-persona-icon",
+    "context": "@layer project",
+    "property": "width",
+    "value": "56px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only voximplant artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/voximplant-case-study.css",
+    "selector": ".vox-persona-icon",
+    "context": "@layer project",
+    "property": "height",
+    "value": "56px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only voximplant artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/voximplant-case-study.css",
+    "selector": ".vox-persona-icon svg",
+    "context": "@layer project",
+    "property": "width",
+    "value": "56px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only voximplant artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/voximplant-case-study.css",
+    "selector": ".vox-persona-icon svg",
+    "context": "@layer project",
+    "property": "height",
+    "value": "56px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only voximplant artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/voximplant-case-study.css",
+    "selector": ".vox-hypotheses li",
+    "context": "@layer project",
+    "property": "grid-template-columns",
+    "value": "44px minmax(0, 1fr)",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only voximplant artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/voximplant-case-study.css",
+    "selector": ".vox-solution-stats span",
+    "context": "@layer project",
+    "property": "max-width",
+    "value": "230px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only voximplant artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/voximplant-case-study.css",
+    "selector": ".vox-product-feature > :is(p, ul)",
+    "context": "@layer project",
+    "property": "max-width",
+    "value": "620px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only voximplant artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/voximplant-case-study.css",
+    "selector": ".vox-chapter-head > div > p",
+    "context": "@layer project",
+    "property": "max-width",
+    "value": "610px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only voximplant artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/voximplant-case-study.css",
+    "selector": ".vox-goal",
+    "context": "@layer project > @media (max-width: 767px)",
+    "property": "min-height",
+    "value": "260px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only voximplant artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/voximplant-case-study.css",
+    "selector": ".vox-hypotheses li",
+    "context": "@layer project > @media (max-width: 767px)",
+    "property": "grid-template-columns",
+    "value": "36px minmax(0, 1fr)",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only voximplant artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/voximplant-case-study.css",
+    "selector": ".vox-solution-stats > div",
+    "context": "@layer project > @media (max-width: 767px)",
+    "property": "grid-template-columns",
+    "value": "72px minmax(0, 1fr)",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only voximplant artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/yellow-leaf-case-study.css",
+    "selector": ".yellow-construction",
+    "context": "@layer project",
+    "property": "max-width",
+    "value": "300px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only yellow-leaf artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/datagpt-case-study.css",
+    "selector": ".dg-case",
+    "context": "@layer project",
+    "property": "--dg-bubble-cut",
+    "value": "4px",
+    "kind": "radius",
+    "project": true,
+    "reason": "Project-only datagpt artwork geometry; preserve its supplied composition, not a system token."
+  },
+  {
+    "file": "src/styles/design-system.css",
+    "selector": ".ds-type-table",
+    "context": "@layer system",
+    "property": "--ds-type-columns",
+    "value": "minmax(210px,.9fr) repeat(3,minmax(0,1fr))",
+    "kind": "size",
+    "reason": "Approved 210px text-info lane in the Typography grid; samples own the remaining columns."
+  },
+  {
     "file": "src/styles/global.css",
-    "line": 76,
     "selector": ".button--arrow-fill",
     "context": "@layer system",
     "property": "--button-orb-inset",
     "value": "5px",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "5px",
-        "number": 5
-      }
-    ],
-    "inline": false,
-    "reason": "The5px inset centres the orb and matches its optical frame; a nearby spacing step would move the orb and alter the fill mask."
+    "reason": "The 5px inset centres the orb and matches its optical frame; a nearby spacing step would move the orb and alter the fill mask."
   },
   {
     "file": "src/styles/global.css",
-    "line": 270,
+    "selector": ".button--arrow-fill.button--small",
+    "context": "@layer system",
+    "property": "--button-orb",
+    "value": "26px",
+    "kind": "size",
+    "reason": "Existing 26px orb fits the 36px small button with its 4px inset."
+  },
+  {
+    "file": "src/styles/global.css",
     "selector": ".work-rail",
     "context": "@layer system",
     "property": "--work-filter-half-height",
     "value": "78px",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "78px",
-        "number": 78
-      }
-    ],
-    "inline": false,
-    "reason": "The78px half-height centres the existing side-filter control; a scale replacement would move the whole control."
+    "reason": "The 78px half-height centres the existing side-filter control; a scale replacement would move the whole control."
   },
   {
     "file": "src/styles/global.css",
-    "line": 537,
     "selector": ".case-study-media--floating",
     "context": "@layer system",
     "property": "--media-stroke-half",
     "value": "2px",
     "kind": "spacing",
-    "values": [
-      {
-        "raw": "2px",
-        "number": 2
-      }
-    ],
-    "inline": false,
-    "reason": "The2px half-stroke keeps the4px border centred on the original media edge; a scale replacement would shift the frame."
+    "reason": "The 2px half-stroke keeps the 4px border centred on the original media edge; a scale replacement would shift the frame."
+  },
+  {
+    "file": "src/styles/hooko-case-study.css",
+    "selector": ".hk-demo-layout",
+    "context": "@layer project",
+    "property": "--thumb-width",
+    "value": "136px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only Hooko thumbnails: 136px desktop /104px compact slots preserve the product walkthrough."
+  },
+  {
+    "file": "src/styles/hooko-case-study.css",
+    "selector": ".hk-demo-layout",
+    "context": "@layer project > @media (max-width: 1279px)",
+    "property": "--thumb-width",
+    "value": "104px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only Hooko thumbnails: 136px desktop /104px compact slots preserve the product walkthrough."
+  },
+  {
+    "file": "src/styles/promshyna-case-study.css",
+    "selector": ".case-study-content--promshyna",
+    "context": "@layer project",
+    "property": "--promshyna-rail",
+    "value": "56px",
+    "kind": "spacing",
+    "project": true,
+    "reason": "Project-only PromShyna delivery rail: 9px edge and 56px source rail preserve the artwork."
   }
 ]

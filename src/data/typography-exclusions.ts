@@ -47,7 +47,7 @@ export const typographyCssExclusions=[
   {
     "file": "src/styles/blaustrom-case-study.css",
     "selector": ".blaustrom-palette code",
-    "reason": "Existing developer/project colour code treatment; no prose is excluded."
+    "reason": "Existing developer code treatment; the empty Code grid uses the same font so its 60ch column minimum measures the actual code. No prose is excluded."
   },
   {
     "file": "src/styles/blaustrom-case-study.css",
@@ -186,7 +186,7 @@ export const typographyCssExclusions=[
   },
   {
     "file": "src/styles/design-system.css",
-    "selector": ".ds-main code,.ds-main pre",
+    "selector": ".ds-main code,.ds-main pre,.ds-code-columns",
     "reason": "Existing developer/project colour code treatment; no prose is excluded."
   },
   {

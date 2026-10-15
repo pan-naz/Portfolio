@@ -1,11 +1,11 @@
 ---
 import IconButton from './IconButton.astro';
 import Icon from './Icon.astro';
-import Button from './Button.astro';
+import SegmentedControl from './SegmentedControl.astro';
 interface Props { appearance?: 'icon' | 'segmented'; }
 const { appearance = 'icon' } = Astro.props;
 ---
-{appearance === 'segmented' ? <div class="theme-toggle-group" data-theme-control role="group" aria-label="Color theme"><Button class="theme-icon-control" data-ds-chrome appearance="catalog" size="small" data-theme-choice="light" aria-pressed="true"><Icon name="sun" class="theme-icon-glyph"/><span>Light</span></Button><Button class="theme-icon-control" data-ds-chrome appearance="catalog" size="small" data-theme-choice="dark" aria-pressed="false"><Icon name="moon" class="theme-icon-glyph"/><span>Dark</span></Button></div> : <IconButton class="theme-toggle theme-icon-control" label="Switch to dark theme" title="Switch theme">
+{appearance === 'segmented' ? <SegmentedControl theme label="Color theme" attribute="data-theme-choice" choices={[{value:'light',label:'Light',icon:'sun'},{value:'dark',label:'Dark',icon:'moon'}]}/> : <IconButton class="theme-toggle theme-icon-control" label="Switch to dark theme" title="Switch theme">
   <span class="theme-toggle-glyph theme-icon-glyph" aria-hidden="true">
   <Icon name="sun" class="theme-sun" />
   <Icon name="moon" class="theme-moon" />

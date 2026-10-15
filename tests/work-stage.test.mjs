@@ -55,8 +55,8 @@ assert.ok(tokens.includes('--hero-visual-gutter: calc(var(--hero-gutter) - var(-
 assert.ok(tokens.includes('--work-preview-height: 200px') && tokens.includes('--duration-work-stage: 800ms'));
 const tokenDefinitions = Object.fromEntries([...tokens.matchAll(/--([\w-]+):\s*([^;]+);/g)].map(([, name, value]) => [name, value.trim()]));
 const tokenValue = name => tokenDefinitions[name].startsWith('var(') ? tokenValue(tokenDefinitions[name].slice(6, -1)) : tokenDefinitions[name];
-assert.equal(tokenValue('ease-work-stage'), 'cubic-bezier(.22, .61, .36, 1)', 'The shared stage curve keeps its exact value through aliases');
-assert.ok(source.includes("const stageEase = () => tokens.getPropertyValue('--ease-work-stage').trim()"), 'Both stage directions consume the same gentle easing curve');
+assert.equal(tokenValue('ease-entrance'), 'cubic-bezier(.22, .61, .36, 1)', 'The shared stage curve keeps its exact value through aliases');
+assert.ok(source.includes("const stageEase = () => tokens.getPropertyValue('--ease-entrance').trim()"), 'Both stage directions consume the same gentle easing curve');
 assert.ok(tokens.includes('--section-reveal-trigger-viewport-ratio: .9') && tokens.includes('--work-stage-trigger-viewport-ratio: .02') && tokens.includes('--work-stage-collapse-scroll-y: 1'));
 assert.ok(tokens.includes('--radius-xlarge: clamp(40px, 5.8vw, 100px)'), 'Both dark chapter surfaces share a fluid compact-screen radius');
 assert.ok(!source.includes('radiusDelay') && !tokens.includes('--duration-work-stage-radius'), 'No second radius phase or timer remains');

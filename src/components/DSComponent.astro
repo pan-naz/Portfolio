@@ -3,7 +3,7 @@ import type {SourceComponent} from '../data/system-inventory';
 import {dsComponents} from '../data/ds-components';import {componentPresentation} from '../data/system-presentation';
 import {componentPropSpecs} from '../data/system-props';import {componentVariants} from '../data/system-variants';
 import {caseStudyMotionTokens,caseStudyPresentationTokens} from '../scripts/case-study/case-study-motion';
-import {tokenCode} from '../data/system-human';
+import {foundationSourceCode} from '../data/system-code';
 import DSPreview from './DSPreview.astro';import DSTabs from './DSTabs.astro';import DSTokenNames from './DSTokenNames.astro';
 interface Props {component:SourceComponent;inventory:ReturnType<typeof import('../data/system-inventory').buildSystemInventory>;}
 const {component,inventory}=Astro.props,entry=dsComponents.find(item=>item.file===component.file)!,id=entry.section,presentation=componentPresentation[component.name],tabs=`${id}-canvas`;
@@ -21,7 +21,7 @@ const extraTokens=component.name==='ProjectCard'?inventory.tokens.filter(token=>
    <section><p class="ds-code-label ds-code-comment" data-typography-exclusion="developer-code">/* Options: {component.file} */</p><div class="ds-props-table"><table><thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>{props.map(prop=><tr data-ds-prop={prop.name}><th scope="row"><code>{prop.name}</code></th><td><code>{prop.type}</code></td><td><code>{prop.default}</code></td><td>{prop.description}</td></tr>)}</tbody></table></div></section>
    <section><p class="ds-code-label ds-code-comment" data-typography-exclusion="developer-code">/* Helpers and website consumers */</p><p>{helpers.join(', ')||'No composed Astro helpers.'}</p><ul>{[...new Set(component.usages.map(usage=>usage.file))].map(file=><li><code>{file}</code></li>)}</ul></section>
    <section><p class="ds-code-label ds-code-comment" data-typography-exclusion="developer-code">/* Used source variants */</p>{componentVariants(component).map(value=><p data-ds-variant={`${component.name}:${value}`}><code>{value}</code></p>)}</section>
-   {extraTokens.length>0&&<section><p class="ds-code-label ds-code-comment" data-typography-exclusion="developer-code">/* Case-study transition contract */</p><pre><code>{tokenCode(extraTokens)}</code></pre>{extraTokens.map(token=><span data-ds-token={token.name}/>)}</section>}
+   {extraTokens.length>0&&<section><p class="ds-code-label ds-code-comment" data-typography-exclusion="developer-code">/* Case-study transition contract */</p><pre><code>{foundationSourceCode().blocks.find(block=>block.key==='motion')!.source}</code></pre><p class="ds-code-label ds-code-comment" data-typography-exclusion="developer-code">/* Component presentation: src/styles/tokens.css */</p><pre><code>{foundationSourceCode().projectFit}</code></pre>{extraTokens.map(token=><span data-ds-token={token.name}/>)}</section>}
   </div>
  </div>
  <div class="ds-specs-card">

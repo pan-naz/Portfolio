@@ -50,7 +50,7 @@ class HostMock {
   querySelector(selector) { return this.popovers.find(pop => selector.includes('"' + pop.dataset.serviceTile + '"')); }
   getBoundingClientRect() { return { left: 64, right: 1216, top: 200, bottom: 1640, width: 1152 }; }
 }
-const mockedNames = ['HTMLElement', 'customElements', 'matchMedia', 'window', 'document', 'innerWidth', 'innerHeight', 'ResizeObserver', 'requestAnimationFrame', 'cancelAnimationFrame', 'setTimeout', 'clearTimeout'];
+const mockedNames = ['HTMLElement', 'customElements', 'matchMedia', 'window', 'document', 'innerWidth', 'innerHeight', 'ResizeObserver', 'requestAnimationFrame', 'cancelAnimationFrame', 'setTimeout', 'clearTimeout', 'getComputedStyle'];
 const originals = mockedNames.map(name => [name, Object.hasOwn(globalThis, name), globalThis[name]]);
 let ServiceTiles;
 globalThis.HTMLElement = HostMock;
@@ -69,6 +69,7 @@ assert.ok(belowControl.top + grid.top >= 76, 'Long details remain clear of the s
 
 // Exercise the actual component: mixed mouse/keyboard ownership, hoverable
 // details and repeated modal removal must not lose the active popover or leak.
+globalThis.getComputedStyle=()=>({getPropertyValue:name=>name==='--delay-service-tooltip'?'160ms':''});
 const timers = new Map(), frames = new Map(); let job = 0, observers = 0;
 globalThis.matchMedia = () => ({ matches: true });
 globalThis.window = new EventTargetMock();
@@ -77,7 +78,7 @@ globalThis.innerWidth = 1280; globalThis.innerHeight = 720;
 globalThis.ResizeObserver = class { observe() { observers++; } disconnect() { observers--; } };
 globalThis.requestAnimationFrame = callback => { frames.set(++job, callback); return job; };
 globalThis.cancelAnimationFrame = id => frames.delete(id);
-globalThis.setTimeout = callback => { timers.set(++job, callback); return job; };
+globalThis.setTimeout = (callback,delay) => { assert.equal(delay,160,'Token-based popover delay remains exactly 160ms');timers.set(++job, callback); return job; };
 globalThis.clearTimeout = id => timers.delete(id);
 try {
   const widget = new ServiceTiles(); widget.connectedCallback();

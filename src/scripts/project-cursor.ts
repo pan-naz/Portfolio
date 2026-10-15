@@ -1,3 +1,4 @@
+import { readMotionToken } from './native-motion';
 import { refreshViewportPointer, watchViewportPointer, type ViewportPointer } from './viewport-pointer';
 
 export function initializeProjectCursor() {
@@ -42,8 +43,8 @@ export function initializeProjectCursor() {
       active.classList.add('is-cursor-active');
       rotation?.cancel();
       if (plus && !reducedMotion.matches) {
-        rotation = plus.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(180deg)' }], {
-          duration: 350, easing: 'ease-in-out', iterations: 1,
+        rotation = plus.animate([{ transform: 'rotate(0deg)' }, { transform: `rotate(${readMotionToken(getComputedStyle(cursor), '--rotation-icon-turn')}deg)` }], {
+          duration: readMotionToken(getComputedStyle(cursor), '--duration-close-turn'), easing: getComputedStyle(cursor).getPropertyValue('--ease-in-out').trim(), iterations: 1,
         });
       }
     }

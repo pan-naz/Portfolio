@@ -25,30 +25,54 @@ const context=node=>{const parts=[];for(let p=node.parent;p;p=p.parent)if(p.type
 const isProject=node=>{for(let p=node.parent;p;p=p.parent)if(p.type==='atrule'&&p.name==='layer'&&p.params==='project')return true;return false;};
 export function auditGeometry(root=process.cwd()){
  const records=[],locals=[],references=new Map();
+ // Read actual component roles, so a future token-value change cannot leave a
+ // stale numeric duplicate check. Equal numbers in unrelated roles stay separate.
+ const spacing={...spacingScale},sizes={...spacingScale},layers={},opacities={},radii={...radiusScale};
+ const tokenTree=postcss.parse(fs.readFileSync(path.join(root,'src/styles/tokens.css'),'utf8'));
+ tokenTree.walkDecls(decl=>{
+  const name=decl.prop.slice(2),px=decl.value.match(/^(-?[\d.]+)px$/),unitless=decl.value.match(/^(-?[\d.]+)$/);
+  if(px){
+   if(/^(?:header-clearance|scroll-clearance|work-rail-offset|hero-bottom-(?:desktop|compact)|button-padding-inline-small)$/.test(name))spacing[Number(px[1])]=name;
+   if(/^(?:control-(?:height(?:-small)?|icon)|icon-size(?:-compact)?|header-height|player-(?:thumb-size|track-height)|navigation-dot-size|project-logo-size)$/.test(name))sizes[Number(px[1])]=name;
+   if(name==='media-frame-radius-outset')radii[Number(px[1])]=name;
+  }
+  if(unitless&&name.startsWith('layer-'))layers[Number(unitless[1])]=name;
+  if(unitless&&name.startsWith('opacity-'))opacities[Number(unitless[1])]=name;
+ });
  const remember=(name,kind)=>{if(!references.has(name)||kind==='spacing')references.set(name,kind);};
- const scan=(decl,source,kind)=>{const value=decl.value.replace(/(?:rgb|rgba|hsl|hsla)\([^)]*\)/g,'__colour__'),scale=kind==='radius'?radiusScale:spacingScale,values=[...value.matchAll(/(?<![\w.])-?\d*\.?\d+px\b/g)].map(m=>({raw:m[0],number:parseFloat(m[0]),token:scale[Math.abs(parseFloat(m[0]))]}));if(values.length)records.push({file:source.file,line:source.offset+decl.source.start.line,selector:decl.parent.selector,context:context(decl),property:decl.prop,value:decl.value,kind,values,inline:Boolean(source.inline)});};
+ const scan=(decl,source,kind)=>{
+  const value=decl.value.replace(/(?:rgb|rgba|hsl|hsla)\([^)]*\)/g,'__colour__');
+  const scale=kind==='radius'?radii:kind==='size'?sizes:kind==='layer'?layers:kind==='opacity'?opacities:kind==='shadow'?spacingScale:spacing;
+  const pattern=kind==='layer'||kind==='opacity'?/(?<![\w.-])-?\d*\.?\d+\b/g:/(?<![\w.])-?\d*\.?\d+px\b/g;
+  const values=[...value.matchAll(pattern)].map(m=>{const number=parseFloat(m[0]),token=scale[kind==='layer'?number:Math.abs(number)];return{raw:m[0],number,token};});
+  if(values.length)records.push({file:source.file,line:source.offset+decl.source.start.line,selector:decl.parent.selector,context:context(decl),property:decl.prop,value:decl.value,kind,values,inline:Boolean(source.inline),...(isProject(decl)?{project:true}:{})});
+ };
  for(const source of styleSources(root)){
   if(source.file.endsWith('/tokens.css'))continue;
   const tree=postcss.parse(source.css);
   tree.walkDecls(decl=>{
-   if(isProject(decl))return;
-   const kind=/^(padding|margin|gap|row-gap|column-gap|inset|top|right|bottom|left)(-|$)/.test(decl.prop)?'spacing':/^border.*radius$/.test(decl.prop)?'radius':decl.prop==='box-shadow'?'shadow':null;
+   const kind=/^(padding|margin|scroll-padding|gap|row-gap|column-gap|inset|top|right|bottom|left)(-|$)/.test(decl.prop)?'spacing':/^border.*radius$/.test(decl.prop)?'radius':decl.prop==='box-shadow'?'shadow':/^(?:(?:(?:min|max)-)?(?:width|height)|grid-template-(?:columns|rows))$/.test(decl.prop)?'size':decl.prop==='z-index'?'layer':decl.prop==='opacity'?'opacity':null;
    if(decl.prop.startsWith('--'))locals.push({decl,source});
    if(!kind)return;
    for(const m of decl.value.matchAll(/var\((--[\w-]+)/g))remember(m[1],kind);
    scan(decl,source,kind);
   });
  }
- // Follow local geometry aliases transitively. Core token definitions and
- // project-layer artwork are excluded; aliases cannot hide raw duplicates.
+ // Follow local geometry aliases transitively. Core definitions are excluded;
+ // project-layer artwork stays scoped and needs a reviewed reason.
  for(let pass=0;pass<=locals.length;pass++)for(const {decl} of locals)if(references.has(decl.prop))for(const m of decl.value.matchAll(/var\((--[\w-]+)/g))remember(m[1],references.get(decl.prop));
  for(const {decl,source} of locals)if(references.has(decl.prop))scan(decl,source,references.get(decl.prop));
  return records;
 }
+/** Count website/shared consumers, never the catalog's own presentation. */
+export function isWebsiteUsageSource(file){
+ const name=file.replaceAll('\\','/');
+ return /\.(css|astro|ts|js)$/.test(name)&&!/(?:^|\/)(?:DS[^/]*\.astro|DSLayout\.astro|(?:design-system(?:-[\w-]+)?|ds-components|system-[\w-]+)\.(?:css|ts|js)|static-preview\.css)(?:$|\/)/.test(name)&&!name.includes('/pages/design-system/');
+}
 export function spaceUsageCounts(root=process.cwd()){
  const counts=Object.fromEntries(Object.values(spacingScale).map(name=>[name,0]));
- for(const file of walk(path.join(root,'src')).filter(f=>/\.(css|astro|ts|js)$/.test(f))){
-  const text=fs.readFileSync(file,'utf8').replace(/\/\*[\s\S]*?\*\//g,'');
+ for(const file of walk(path.join(root,'src')).filter(isWebsiteUsageSource)){
+  const text=fs.readFileSync(file,'utf8').replace(/\/\*[\s\S]*?\*\//g,'').replace(/<!--[\s\S]*?-->/g,'').replace(/^\s*\/\/.*$/gm,'');
   for(const [,name] of text.matchAll(/var\(--(space-\d+)\b/g))if(name in counts)counts[name]++;
  }
  return counts;
@@ -61,8 +85,14 @@ export function validateGeometry(root=process.cwd(),allowlist){
  const tokenCss=postcss.parse(fs.readFileSync(path.join(root,'src/styles/tokens.css'),'utf8')),shadows=[];
  tokenCss.walkDecls(/^--shadow-/,decl=>shadows.push(normalize(decl.value)));
  for(const r of auditGeometry(root)){
-  if((r.kind==='shadow'&&shadows.includes(normalize(r.value)))||(r.kind!=='shadow'&&r.values.some(v=>v.token)))errors.push(`Exact token equivalent remains: ${r.file}:${r.line} ${r.selector} ${r.property}: ${r.value}`);
-  const entry=keys.get(key(r));if(!entry?.reason)errors.push(`Unlisted off-scale geometry: ${r.file}:${r.line} ${r.selector} ${r.property}: ${r.value}`);
+  const entry=keys.get(key(r));
+  // Project artwork keeps its own coordinates, even when a number happens to
+  // equal a UI token. Only individually documented artwork may use this exemption.
+  const artwork=r.project&&entry?.project&&entry?.reason;
+  if(!artwork&&((r.kind==='shadow'&&shadows.includes(normalize(r.value)))||(r.kind!=='shadow'&&r.values.some(v=>v.token))))errors.push(`Exact token equivalent remains: ${r.file}:${r.line} ${r.selector} ${r.property}: ${r.value}`);
+  // Zero/one are visibility endpoints, not opacity roles or off-scale spacing.
+  if(r.kind==='opacity'&&/^(?:0|1)$/.test(r.value))continue;
+  if(!entry?.reason)errors.push(`Unlisted off-scale geometry: ${r.file}:${r.line} ${r.selector} ${r.property}: ${r.value}`);
  }
  return errors;
 }

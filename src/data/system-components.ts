@@ -2,6 +2,9 @@
 export type ComponentKind = 'reusable-ui' | 'page-section' | 'case-study' | 'internal-helper';
 export interface ComponentClassification { file: string; kind: ComponentKind; group?: string; title?: string; reason: string; documentedHidden?: string; }
 export const componentManifest: ComponentClassification[] = [
+ {file:'src/components/SegmentedControl.astro',kind:'internal-helper',reason:'Shared segmented Button group used by the existing theme switch and catalog playback control.'},
+ {file:'src/components/DSMotion.astro',kind:'internal-helper',reason:'Source-derived Motion foundation demonstrations and timelines.'},
+ {file:'src/components/DSMotionCurve.astro',kind:'internal-helper',reason:'Source-derived curve chart shared by the Motion foundation and its Overview cover.'},
   { file: 'src/components/DeferredVideo.astro', kind: 'internal-helper', reason: 'Native video markup, deferred poster delivery and identical noscript fallback for real website media.' },
   {file:'src/components/DSDashboard.astro',kind:'internal-helper',reason:'Catalog dashboard composed from real shared specimens.'},
   {file:'src/components/DSTokenNames.astro',kind:'internal-helper',reason:'Fixed-size human/source label slots and their switch using the existing catalog Button appearance.'},

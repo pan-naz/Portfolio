@@ -12,6 +12,7 @@ interface RoleMotionOptions {
   stagger: number;
   distance: number;
   ease: string;
+  exitEase: string;
 }
 
 /** Use the same per-letter fade-and-rise recipe as every other title. */
@@ -49,7 +50,7 @@ export function createRoleAnimator(roles: RoleLayer[], options: RoleMotionOption
     motion = createNativeMotion([{
       element: roles[index].phrase,
       keyframes: [{ opacity: 1 }, { opacity: 0 }],
-      delay: options.hold, duration: options.exit, easing: 'cubic-bezier(.37, 0, .63, 1)',
+      delay: options.hold, duration: options.exit, easing: options.exitEase,
     }], { paused, onComplete: () => {
       if (disposed) return;
       index = (index + 1) % roles.length;

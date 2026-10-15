@@ -24,7 +24,7 @@ export function validateCatalogTypographyLayout(css,catalog,toggle){
  if(!catalog.includes("['ds-type-sample-slot','text-'+style.id]")||!catalog.includes("style={deviceScope(style,'desktop')}")||!catalog.includes('data-type-sample={style.id} style={deviceScope(style,device)}'))errors.push('Catalog sample slots must read the Desktop cap metric, retaining each device sample role.');
  if(css.includes('.ds-type-device-first')||catalog.includes('ds-type-device-first'))errors.push('Stacked radius must use device hooks, never a first-style class.');
  if(!catalog.includes('data-type-device={device}')||!catalog.includes("index===typography.length-1&&'ds-type-device-last'"))errors.push('Preserve device hooks and desktop column endings.');
- for(const [mode,icon,label] of [['light','sun','Light'],['dark','moon','Dark']])if(!new RegExp(`data-theme-choice="${mode}"[^>]*><Icon name="${icon}" class="theme-icon-glyph"\\s*/><span>${label}</span>`).test(toggle))errors.push(`Theme segment ${mode} must use the shared decorative ${icon} before its existing label.`);
+ for(const [mode,icon,label] of [['light','sun','Light'],['dark','moon','Dark']])if(!toggle.includes(`{value:'${mode}',label:'${label}',icon:'${icon}'}`)||!toggle.includes('<SegmentedControl theme'))errors.push(`Theme segment ${mode} must use the shared decorative ${icon} before its existing label.`);
  requireValue(shared,'.theme-toggle-group .button','gap','var(--space-2)');
  requireValue(shared,'.theme-toggle-group .button > span','text-box-trim','trim-both');
  requireValue(shared,'.theme-toggle-group .button > span','text-box-edge','text');
@@ -36,7 +36,7 @@ export function validateCatalogTypographyLayout(css,catalog,toggle){
 export const approvedTypography={
  'heading-xl':['Funnel Display',400,.909091,[4.75,-.048],[3,-.046],[2.5,-.045]],
  'heading-l':['Funnel Display',400,1.142857,[3.5,-.047],[2.25,-.044],[1.625,-.042]],
- 'heading-m':['Funnel Display',500,1.333333,[1.5,-.04],[1.375,-.038],[1.375,-.038]],
+ 'heading-m':['Funnel Display',500,1.333333,[1.5,-.036],[1.375,-.034],[1.375,-.034]],
  'body-l':['Urbanist',400,1.5,[1.25,0],[1.125,0],[1.125,0]],
  'body-m':['Urbanist',400,1.5,[1,0],[1,0],[1,0]],
  'body-m-strong':['Urbanist',500,1.5,[1,0],[1,0],[1,0]],

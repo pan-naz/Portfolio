@@ -7,6 +7,7 @@ export type CodeColumns=CodeBlock[][];
 export function foundationSourceCode(root=process.cwd()){
  const tokens=readFileSync(resolve(root,'src/styles/tokens.css'),'utf8');
  const typography=readFileSync(resolve(root,'src/styles/typography.css'),'utf8');
+ const scroll=readFileSync(resolve(root,'src/scripts/motion.ts'),'utf8');
  const slice=(text:string,start:string,end:string)=>{const a=text.indexOf('/* '+start+' ·'),b=text.indexOf('/* '+end+' ·',a+1);if(a<0||b<0)throw Error('Missing source section '+start+' / '+end);return text.slice(a,b).trim();};
  const block=(key:string,start:string,end:string):CodeBlock=>({key,source:slice(tokens,start,end)});
  const code={
@@ -23,6 +24,7 @@ export function foundationSourceCode(root=process.cwd()){
   shadowLight:{key:'shadows-light',source:tokens.slice(tokens.indexOf('/* Shadows · light'),tokens.indexOf('/* Shadows · dark')).trim()},
   shadowDark:{key:'shadows-dark',source:tokens.slice(tokens.indexOf('/* Shadows · dark'),tokens.indexOf('/* Motion ·')).trim()},
   motion:block('motion','Motion','Icons'),
+  scrollCurve:{key:'motion-scroll-curve',source:scroll.slice(scroll.indexOf('/** Section scroll ·'),scroll.indexOf('let smoothScroll:')).trim()},
   icons:block('icons','Icons','Controls and layers'),
   use:{key:'type-use',source:typography.slice(typography.indexOf('/* Use a style ·'),typography.indexOf('/* heading-l ·')).trim()+'\n\n<h2 class="text-heading-l">\n  Projects\n</h2>'},
  };
@@ -30,9 +32,9 @@ export function foundationSourceCode(root=process.cwd()){
   color:[[[code.palette]],[[code.light],[code.dark]]],
   typography:[[[code.families]],[[code.styles],[code.tablet,code.desktop,code.use]]],
   'spacing-layout':[[[code.spacing],[code.radius]],[[code.layout]],[[code.shadowLight],[code.shadowDark]]],
-  motion:[[[code.motion]]],icons:[[[code.icons]]],
+  motion:[[[code.motion]],[[code.scrollCurve]]],icons:[[[code.icons]]],
  };
- return{groups,blocks:Object.values(code)};
+ return{groups,blocks:Object.values(code),projectFit:tokens.match(/^  --case-hero-fit:[^;]+;/m)![0]};
 }
 export function codeSegments(source:string){
  const parts:{text:string;comment:boolean}[]=[],pattern=/\/\*[\s\S]*?\*\//g;let from=0;

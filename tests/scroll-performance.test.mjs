@@ -1,3 +1,4 @@
+import {readMotionToken} from '../src/scripts/native-motion.ts';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import ts from 'typescript';
@@ -11,7 +12,8 @@ class Lenis {
   start() { this.stopped = false; } destroy() { this.destroyed = true; }
   scrollTo(...args) { this.travel = args; }
 }
-globalThis.scrollMocks = { gsap, Lenis };
+globalThis.scrollMocks = { gsap, Lenis, readMotionToken };
+globalThis.getComputedStyle=()=>({getPropertyValue:name=>name==='--duration-section-scroll'?'650ms':''});
 globalThis.window = {
   scrollY: 400,
   matchMedia: query => {
@@ -32,6 +34,7 @@ let engineSource = readFileSync('src/scripts/scroll-engine.ts', 'utf8').replace(
 const { createScrollEngine } = await import(url(compile('const {gsap, Lenis} = globalThis.scrollMocks;\n'+engineSource)));
 globalThis.loadScrollEngine = async () => { loads++; return { createScrollEngine }; };
 let source = readFileSync('src/scripts/motion.ts', 'utf8').replace(/^import .*;\n/gm, '').replace("import('./scroll-engine')", 'globalThis.loadScrollEngine()');
+source='const {readMotionToken}=globalThis.scrollMocks;\n'+source;
 const { initializeMotion, initializeSmoothScroll, scrollToSection, repositionWork, pauseScroll, resumeScroll } = await import(url(compile(source)));
 Object.defineProperty(globalThis, 'navigator', { configurable: true, value: { userAgent: 'iPad Safari' } });
 initializeMotion(); await Promise.resolve();
