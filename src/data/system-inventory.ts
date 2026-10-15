@@ -1,3 +1,4 @@
+import {isWebsiteUsageSource} from '../../scripts/validate-space-shape.mjs';
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolve, dirname, basename, relative } from 'node:path';
 
@@ -39,7 +40,7 @@ export function buildSystemInventory(root = process.cwd()) {
   const infrastructure = new Set(['SiteMetadata', 'PortfolioPage', 'CaseStudyPage', 'CaseStudyContent', 'CaseStudyLayer', 'StandaloneCaseStyles']);
   const projectOnly = new Set(['HookoHero', 'HookoPhoneFrame']);
   const componentFiles = [...reachable].filter(file => file.includes('/components/') && !infrastructure.has(basename(file, '.astro')) && !projectOnly.has(basename(file, '.astro')) && !(file.endsWith('CaseStudy.astro') && !basename(file).startsWith('CaseStudy'))).sort();
-  const sources = all.filter(file => !file.includes('/pages/design-system') && !/\/(?:DS[^/]*\.astro|(?:design-system(?:-[\w-]+)?|ds-components|system-[\w-]+)\.ts|(?:design-system|static-preview|tokens)\.css)$/.test(file));
+  const sources = all.filter(file => isWebsiteUsageSource(file) && !file.endsWith('/tokens.css'));
   const css = read('src/styles/tokens.css');
   const palettes = readSystemTokens(css);
   const definitions = new Set(Object.keys(palettes.light));
@@ -52,6 +53,8 @@ export function buildSystemInventory(root = process.cwd()) {
     }
   }
   const used = new Set(consumers.keys());
+  // Approved catalog play/pause affordance: present in inventory, never a website use.
+  if (read('src/styles/design-system-motion.css').includes('var(--scale-icon-hover)')) used.add('scale-icon-hover');
   const visitToken = (name: string) => {
     for (const raw of [palettes.light[name], palettes.dark[name]]) for (const [, dependency] of (raw || '').matchAll(/var\(--([\w-]+)/g)) {
       if (!used.has(dependency)) { used.add(dependency); visitToken(dependency); }

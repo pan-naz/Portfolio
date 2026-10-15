@@ -45,10 +45,15 @@ export function auditGeometry(root=process.cwd()){
  for(const {decl,source} of locals)if(references.has(decl.prop))scan(decl,source,references.get(decl.prop));
  return records;
 }
+/** Count website/shared consumers, never the catalog's own presentation. */
+export function isWebsiteUsageSource(file){
+ const name=file.replaceAll('\\','/');
+ return /\.(css|astro|ts|js)$/.test(name)&&!/(?:^|\/)(?:DS[^/]*\.astro|DSLayout\.astro|(?:design-system(?:-[\w-]+)?|ds-components|system-[\w-]+)\.(?:css|ts|js)|static-preview\.css)(?:$|\/)/.test(name)&&!name.includes('/pages/design-system/');
+}
 export function spaceUsageCounts(root=process.cwd()){
  const counts=Object.fromEntries(Object.values(spacingScale).map(name=>[name,0]));
- for(const file of walk(path.join(root,'src')).filter(f=>/\.(css|astro|ts|js)$/.test(f))){
-  const text=fs.readFileSync(file,'utf8').replace(/\/\*[\s\S]*?\*\//g,'');
+ for(const file of walk(path.join(root,'src')).filter(isWebsiteUsageSource)){
+  const text=fs.readFileSync(file,'utf8').replace(/\/\*[\s\S]*?\*\//g,'').replace(/<!--[\s\S]*?-->/g,'').replace(/^\s*\/\/.*$/gm,'');
   for(const [,name] of text.matchAll(/var\(--(space-\d+)\b/g))if(name in counts)counts[name]++;
  }
  return counts;

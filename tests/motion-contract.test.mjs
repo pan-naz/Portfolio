@@ -1,5 +1,6 @@
+import fs from 'node:fs';
 import assert from'node:assert/strict';
-import {validateMotionCss,validateMotionScript,validateMotionContract,motionTimingAllowlist}from'../scripts/validate-motion.mjs';
+import {validateMotionCss,validateMotionScript,validateMotionContract,motionTimingAllowlist,validateMotionDemoTriggers,validateMotionCurveBindings,readMotionSourceCurves}from'../scripts/validate-motion.mjs';
 import {easeSectionScroll}from'../src/scripts/motion.ts';
 assert.deepEqual(validateMotionContract(),[]);
 for(const css of ['a{transition:opacity 100ms ease-out}','a{animation:rise 1s linear}','a{transition-timing-function:cubic-bezier(.2,.3,.4,1)}'])assert(validateMotionCss(css).length);
@@ -11,3 +12,13 @@ assert.deepEqual(validateMotionScript('node.animate([],{duration:readMotionToken
 assert(motionTimingAllowlist.every(item=>item.reason.length>20));
 for(let i=0;i<=100;i++){const t=i/100;assert.equal(easeSectionScroll(t),Math.min(1,1.001-2**(-10*t)),'Section scroll keeps the exact independent Lenis curve');}
 console.log('PASS: typed CSS/JS timing and easing fail, reduced zero is scoped, and section scroll remains mathematically identical.');
+
+const client=fs.readFileSync('src/scripts/design-system-motion.ts','utf8'),model=fs.readFileSync('src/data/system-motion.ts','utf8');
+assert.deepEqual(validateMotionDemoTriggers(client),[]);
+for(const event of ['pointerenter','click','focus'])assert(validateMotionDemoTriggers(client+`\ndemo.addEventListener('${event}',play);`).length);
+assert.equal(readMotionSourceCurves().filterOut,'ease-in');
+assert.deepEqual(validateMotionCurveBindings(model,client),[]);
+assert(validateMotionCurveBindings(model.replace('curve:sourceCurves.filterOut',"curve:'ease-out'"),client).length);
+assert(validateMotionCurveBindings(model,client+"sourceCurve('invented')").length);
+
+assert(validateMotionCurveBindings(model.replace('curve:sourceCurves.filterOut','curve:sourceCurves.arrow'),client).length,'A real but incorrect easing must fail for the specific step');

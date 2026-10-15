@@ -1,6 +1,6 @@
 ---
 import {curveGeometry} from '../data/system-motion';
-interface Props {value:string;cover?:boolean;}
-const {value,cover=false}=Astro.props,curve=curveGeometry(value);
+interface Props {value:string;cover?:boolean;chip?:boolean;}
+const {value,cover=false,chip=false}=Astro.props,curve=curveGeometry(value);
 ---
-<svg role="img" class:list={['ds-motion-curve',cover&&'ds-motion-curve--cover']} viewBox="0 0 120 80" aria-hidden="true"><path class="ds-motion-guides" d="M12 12V68H108M12 20H108"/><path class="ds-motion-curve-line" d={curve.path}/>{curve.dots.map((point,index)=><circle cx={point.x} cy={point.y} r={cover?2+index/3:2} style={`opacity:${(index+1)/curve.dots.length}`}/>)}</svg>
+<svg role="img" class:list={['ds-motion-curve',cover&&'ds-motion-curve--cover']} viewBox={chip?"10 10 100 60":"0 0 120 80"} aria-hidden="true"><path class="ds-motion-guides" d="M12 12V68H108M12 20H108"/><path class="ds-motion-curve-line" d={curve.path}/>{curve.dots.map((point,index)=><circle cx={point.x} cy={point.y} r={cover?2+index/3:2} style={`opacity:${(index+1)/curve.dots.length}`}/>)}</svg>
