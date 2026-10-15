@@ -9,11 +9,11 @@ export function validateHoverSource(root=process.cwd()){
 /** Both theme-control appearances share one set of motion declarations. */
 export function validateThemeIconMotion(css,toggle){
  const errors=[],rules=[];postcss.parse(css).walkRules(rule=>{if((rule.selector.includes('theme-icon-glyph')||rule.selector.includes('theme-toggle-group')&&rule.selector.includes('.icon'))&&rule.nodes.some(node=>node.type==='decl'&&node.prop==='transform'))rules.push(rule);});
- if(toggle!==undefined&&((toggle.match(/class="theme-icon-control"/g)||[]).length!==2||!toggle.includes('class="theme-toggle theme-icon-control"')||(toggle.match(/class="theme-icon-glyph"/g)||[]).length!==2||!toggle.includes('class="theme-toggle-glyph theme-icon-glyph"')))errors.push('Both theme-control appearances must bind the shared control/glyph motion hooks.');
+ if(toggle!==undefined&&(!toggle.includes('<SegmentedControl theme')||!toggle.includes("icon:'sun'")||!toggle.includes("icon:'moon'")||!toggle.includes('class="theme-toggle theme-icon-control"')||!toggle.includes('class="theme-toggle-glyph theme-icon-glyph"')))errors.push('Both theme-control appearances must bind the shared control/glyph motion hooks.');
  const contracts=[
   [['.theme-icon-glyph'],{'transform-origin':'center',transform:'translateY(0) rotate(0deg) scale(1)',transition:'transform var(--duration-toggle-return) var(--ease-toggle-rotation)'}],
-  [['.theme-icon-control:hover .theme-icon-glyph'],{transform:'rotate(180deg)','transition-duration':'var(--duration-toggle-enter)'}],
-  [['.theme-icon-control:active .theme-icon-glyph'],{transform:'translateY(0) rotate(0deg) scale(.92)','transition-duration':'100ms','transition-timing-function':'ease-out'}],
+  [['.theme-icon-control:hover .theme-icon-glyph'],{transform:'rotate(var(--rotation-icon-turn))','transition-duration':'var(--duration-toggle-enter)'}],
+  [['.theme-icon-control:active .theme-icon-glyph'],{transform:'translateY(0) rotate(0deg) scale(var(--scale-press))','transition-duration':'var(--duration-press)','transition-timing-function':'var(--ease-out)'}],
   [['.theme-icon-control .theme-icon-glyph'],{transform:'none',transition:'none'}],
  ];
  if(rules.length!==contracts.length)errors.push('Theme icon motion must have one shared base, hover, press and reduced-motion rule, without copies.');

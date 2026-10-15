@@ -62,7 +62,7 @@ export function buildSystemInventory(root = process.cwd()) {
   const category = (name: string) => /^(color-|color-rain-icon$|color-footer-icon$|color-focus-ring$|color-border-control$|backdrop-)/.test(name) ? 'color' : /^(font-|text-|type-|letter-spacing-|line-height-)/.test(name) ? 'typography' : name.startsWith('space-') ? 'spacing' : /^(radius-|shadow-)/.test(name) ? 'shape' : /^(duration-|delay-|ease-|stagger-|distance-|rotation-|intro-stage-|scale-|project-tilt-|work-filter-)/.test(name) ? 'motion' : name.startsWith('icon-') ? 'iconography' : 'layout';
   const tokens: SourceToken[] = [...used].filter(name => definitions.has(name)).sort().map(name => ({
     name, light: palettes.light[name], dark: palettes.dark[name], resolvedLight: palettes.value(palettes.light, name), resolvedDark: palettes.value(palettes.dark, name), users: [...(consumers.get(name) || [])],
-    tier: owner(name) ? 'component' : /^(color-(white|paper(?:-\d+)?|mist|stone|silver|pewter|graphite|charcoal|ink(?:-\d+)?|night|orange(?:-light)?)$|radius-\d|ease-stage-entrance)/.test(name) ? 'primitive' : 'semantic', category: category(name), owner: owner(name),
+    tier: owner(name) ? 'component' : /^(color-(white|paper(?:-\d+)?|mist|stone|silver|pewter|graphite|charcoal|ink(?:-\d+)?|night|orange(?:-light)?)$|radius-\d|ease-entrance)/.test(name) ? 'primitive' : 'semantic', category: category(name), owner: owner(name),
   }));
   const components: SourceComponent[] = componentFiles.map(file => {
     const name = basename(file, '.astro');

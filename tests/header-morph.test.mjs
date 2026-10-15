@@ -1,6 +1,11 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { advancePill, advancePillExit, nextPillState, pillDockOffset, pillDuration, pillExitDuration, pillExitY, pillReturnViewportBuffer, pillShape, pillLabels, pillGeometry } from '../src/scripts/header-morph/header-morph-model.ts';
+import { advancePill as stepEntry, advancePillExit as stepExit, nextPillState, pillDockOffset, pillExitY, pillReturnViewportBuffer, pillShape, pillLabels, pillGeometry } from '../src/scripts/header-morph/header-morph-model.ts';
+const tokens=readFileSync(new URL('../src/styles/tokens.css',import.meta.url),'utf8');
+const duration=name=>Number(tokens.match(new RegExp('--'+name+':\\s*(\\d+)ms'))[1]);
+const pillDuration=duration('duration-header-enter'),pillExitDuration=duration('duration-header-exit');
+const advancePill=(progress,expanded,elapsed,reduced=false)=>stepEntry(progress,expanded,elapsed,reduced,pillDuration);
+const advancePillExit=(progress,expanded,elapsed,reduced=false)=>stepExit(progress,expanded,elapsed,reduced,pillExitDuration);
 const source = readFileSync(new URL('../src/scripts/header-morph/header-morph.ts', import.meta.url), 'utf8');
 const trigger = 520;
 const desktopSpacing = pillGeometry(1280, 218, 172);

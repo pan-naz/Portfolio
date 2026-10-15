@@ -1,0 +1,39 @@
+import {readFileSync} from 'node:fs';
+import {easeSectionScroll} from '../scripts/motion';
+export interface MotionValue {label:string;token?:string;kind?:'curve'|'percent'|'angle'|'maximum';text?:string;}
+export interface MotionStep {label:string;duration:string;delay?:string;stagger?:string;distance?:string;count?:number;}
+export const motionCurves=[['Entrance','ease-entrance'],['Project travel','ease-case-travel'],['Filter','ease-filter-enter'],['Button fill','ease-button-fill'],['Rotation','ease-toggle-rotation'],['Header pill','ease-header-pill'],['Role swap','ease-role-swap'],['Scroll','ease-section-scroll'],['Ease out','ease-out'],['Ease in-out','ease-in-out'],['Linear','ease-linear'],['Spring','ease-spring-wave']] as const;
+export const motionCards:{id:string;name:string;description:string;wide?:boolean;values?:MotionValue[];steps?:MotionStep[];curves?:string[]}[]=[
+ {id:'logo',name:'Logo wave',description:'Letters lift one after another, then spring back.',values:[{label:'Settles',token:'duration-logo-wave'},{label:'Stagger',token:'stagger-title-reveal'},{label:'Lift',token:'distance-icon-shift'},{label:'Scale',token:'scale-logo-wave'},{label:'Curve',token:'ease-spring-wave',kind:'curve'}]},
+ {id:'button',name:'Button fill',description:'The dark fill grows from the arrow and covers the button.',values:[{label:'Duration',token:'duration-button-fill'},{label:'Curve',token:'ease-button-fill',kind:'curve'}]},
+ {id:'arrow',name:'Arrow shift',description:'Arrows and icon layers move {distance-icon-shift} on hover.',values:[{label:'Duration',token:'duration-fast'},{label:'Distance',token:'distance-icon-shift'},{label:'Curve',token:'ease-out',kind:'curve'}]},
+ {id:'tooltip',name:'Tooltip',description:'Fades in while growing from {scale-tooltip-start:%} to full size.',values:[{label:'Fade',token:'duration-tooltip-opacity'},{label:'Grow',token:'duration-tooltip-scale'},{label:'Starts at',token:'scale-tooltip-start',kind:'percent'},{label:'Curve',token:'ease-entrance',kind:'curve'}]},
+ {id:'theme',name:'Theme switch',description:'The icon turns as the theme changes.',values:[{label:'Turn',token:'duration-toggle-enter'},{label:'Press',token:'duration-press'},{label:'Curve',token:'ease-toggle-rotation',kind:'curve'}]},
+ {id:'tilt',name:'Card tilt',description:'Project cards tilt toward the pointer.',values:[{label:'Angle',token:'project-tilt-angle',kind:'maximum'},{label:'Depth',token:'project-tilt-perspective'},{label:'Timing',text:'Follows the pointer'}]},
+ {id:'project',name:'Opening a project',wide:true,description:'The card travels into the page; the caption and copy follow.',steps:[{label:'Card travels',duration:'duration-case-open'},{label:'Radius',duration:'duration-case-radius'},{label:'Caption out',duration:'duration-case-caption-exit'},{label:'Caption in',duration:'duration-case-caption-enter',delay:'delay-case-caption-enter'},{label:'Copy in · rise {distance-case-copy}',duration:'duration-case-body-enter',delay:'delay-case-body-enter',distance:'distance-case-copy'},{label:'Closing',duration:'duration-case-close'}],curves:['ease-case-travel','ease-in-out','ease-entrance']},
+ {id:'header',name:'Header pill',description:'The floating menu grows when you scroll down.',values:[{label:'Grow',token:'duration-header-enter'},{label:'Shrink',token:'duration-header-exit'},{label:'Curve',token:'ease-header-pill',kind:'curve'}]},
+ {id:'text',name:'Text reveal',wide:true,description:'Titles rise letter by letter and copy line by line as a section enters.',steps:[{label:'Title letters · rise {distance-title-reveal}',duration:'duration-title-reveal',stagger:'stagger-title-reveal',distance:'distance-title-reveal',count:5},{label:'Copy lines · rise {distance-text-reveal}',duration:'duration-copy-reveal',stagger:'stagger-copy-reveal',distance:'distance-text-reveal',count:3},{label:'Tags',duration:'duration-entrance',stagger:'stagger-tag-reveal',count:3}],curves:['ease-entrance']},
+ {id:'role',name:'Hero role',description:'The role under the main headline fades out and the next one rises in.',values:[{label:'Holds',token:'duration-role-hold'},{label:'Fades',token:'duration-role-exit'},{label:'Curve',token:'ease-role-swap',kind:'curve'}]},
+ {id:'filter',name:'Filter',wide:true,description:'Cards shrink out, the grid moves and new cards rise in.',steps:[{label:'Cards out · to {scale-filter-exit:%}',duration:'duration-filter-exit'},{label:'Grid moves',duration:'duration-filter-layout'},{label:'Cards in · from {scale-filter:%}, {distance-filter-enter}',duration:'duration-filter-enter',delay:'delay-filter-enter',distance:'distance-filter-enter'}],curves:['ease-out','ease-filter-enter']},
+ {id:'skills',name:'Skills ticker',description:'Hero skills scroll up in a slow loop.',values:[{label:'Loop',token:'duration-skills-loop'},{label:'Curve',token:'ease-linear',kind:'curve'}]},
+ {id:'other',name:'Other timings',wide:true,description:'Smaller moves that share the tokens above.'},
+ {id:'scroll',name:'Section scroll',description:'Menu links glide to their section.',values:[{label:'Duration',token:'duration-section-scroll'},{label:'Curve',token:'ease-section-scroll',kind:'curve'}]},
+];
+export const otherTimings=[{name:'Menu links and active dot',token:'duration-navigation',curve:'ease-entrance'},{name:'Work stage',token:'duration-work-stage',curve:'ease-entrance'},{name:'Page fade-in',token:'duration-layout',curve:'ease-linear'},{name:'Tool card icons',token:'duration-tool-icon',curve:'ease-entrance'},{name:'About list',token:'duration-about-reveal',stagger:'stagger-about-reveal',curve:'ease-entrance'},{name:'Close button turn',token:'duration-close-turn',curve:'ease-toggle-rotation'}];
+export const reducedMotionCopy='When reduced motion is on, decoration is skipped (logo wave, card tilt, text reveals, skills ticker, smooth scroll), things appear in place and demos show their end state.';
+export function motionTokenSource(){return Object.fromEntries([...readFileSync('src/styles/tokens.css','utf8').matchAll(/--([\w-]+):\s*([^;]+);/g)].map(([,name,value])=>[name,value.trim().replace(/\s+/g,' ')]));}
+export const milliseconds=(value:string)=>parseFloat(value)*(value.endsWith('ms')?1:value.endsWith('s')?1000:1);
+export const curveName=(name:string)=>motionCurves.find(([,token])=>token===name)?.[0]||name;
+export function motionValue(token:string,raw:string,kind?:MotionValue['kind']){if(kind==='curve')return curveName(token);if(kind==='percent')return Number((parseFloat(raw)*100).toFixed(3))+'%';if(kind==='maximum')return 'Up to '+raw+'°';if(/(?:ms|s)$/.test(raw)&&milliseconds(raw)>=1000)return Number((milliseconds(raw)/1000).toPrecision(2))+'s';return raw;}
+/** Curve samples use elapsed time on x, rather than Bezier parameter spacing. */
+export function easingAt(value:string,time:number):number{
+ if(value==='scroll')return easeSectionScroll(time);
+ if(value.startsWith('linear(')){
+  const stops=[...value.matchAll(/(-?[\d.]+)\s+([\d.]+)%/g)].map(([,v,t])=>[+t/100,+v]);const i=stops.findIndex(([t])=>t>=time);if(i<=0)return stops[0][1];const [x,a]=stops[i-1],[y,b]=stops[i];return a+(b-a)*(time-x)/(y-x);
+ }
+ const keywords:Record<string,number[]>={'ease-out':[0,0,.58,1],'ease-in-out':[.42,0,.58,1],'ease-in':[.42,0,1,1]};
+ const p=value.match(/cubic-bezier\(([^)]+)\)/)?.[1].split(',').map(Number)||keywords[value];if(!p)return time;
+ const cubic=(t:number,a:number,b:number)=>3*(1-t)**2*t*a+3*(1-t)*t*t*b+t**3;
+ let low=0,high=1;for(let i=0;i<32;i++){const mid=(low+high)/2;if(cubic(mid,p[0],p[2])<time)low=mid;else high=mid;}return cubic((low+high)/2,p[1],p[3]);
+}
+export function curveGeometry(value:string){const point=(t:number)=>({x:12+t*96,y:68-easingAt(value,t)*48});return{path:Array.from({length:101},(_,i)=>{const p=point(i/100);return(i?'L':'M')+p.x.toFixed(3)+' '+p.y.toFixed(3);}).join(' '),dots:Array.from({length:6},(_,i)=>point(i/5))};}

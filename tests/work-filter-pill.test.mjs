@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { initializeWorkFilterPill } from '../src/scripts/work-filter/work-filter-pill.ts';
-import { pillDuration, pillExitDuration } from '../src/scripts/header-morph/header-morph-model.ts';
 
 let width=390, top=300, bottom=3000, reads=0, serial=0, observers=0;
 const frames=new Map();
@@ -38,7 +37,7 @@ delete root.dataset.workStageLayout;top=-100;window.dispatchEvent(new Event('wor
 window.dispatchEvent(new Event('scroll'));pill.destroy();assert.equal(frames.size,0);assert.equal(observers,0);assert.equal(wrapper.inert,true);
 window.dispatchEvent(new Event('scroll'));assert.equal(frames.size,0);
 const css=readFileSync(new URL('../src/styles/tokens.css',import.meta.url),'utf8').replace(/\s+/g,' ');
-assert.ok(css.includes(`--duration-header-enter: ${pillDuration}ms`));assert.ok(css.includes(`--duration-header-exit: ${pillExitDuration}ms`));
+assert.ok(css.includes(`--duration-header-enter: 560ms`));assert.ok(css.includes(`--duration-header-exit: 240ms`));
 // Bezier x(t)=t for controls at 1/3 and 2/3; y(t) exactly equals the
 // desktop's existing smooth(t), rather than introducing another motion curve.
 assert.ok(css.includes('--ease-header-pill: cubic-bezier(.3333333333333333, 0, .6666666666666666, 1)'));

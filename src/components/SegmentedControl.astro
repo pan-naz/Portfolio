@@ -1,0 +1,10 @@
+---
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+import type {IconName} from '../data/icons';
+interface Props {label:string;attribute:string;choices:{value:string;label:string;icon?:IconName}[];class?:string;theme?:boolean;}
+const {label,attribute,choices,class:className,theme=false}=Astro.props;
+---
+<div class:list={['theme-toggle-group',className]} data-theme-control={theme||undefined} role="group" aria-label={label}>
+ {choices.map((choice,index)=><Button class:list={{'theme-icon-control':Boolean(choice.icon)}} data-ds-chrome appearance="catalog" size="small" {...{[attribute]:choice.value}} aria-pressed={index===0?'true':'false'}>{choice.icon&&<Icon name={choice.icon} class="theme-icon-glyph"/>}<span>{choice.label}</span></Button>)}
+</div>

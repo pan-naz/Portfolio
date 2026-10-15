@@ -1,6 +1,6 @@
 @layer system, project;
 @layer system {
-.case-video-controls { position: absolute; z-index: var(--layer-raised); inset: auto var(--space-4) var(--space-4); display: flex; align-items: center; gap: var(--space-2); padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1); border-radius: var(--radius-full); color: var(--color-text-primary); background: var(--color-bg-surface); box-shadow: var(--shadow-small); opacity: 0; pointer-events: none; transition: opacity var(--duration-fast) ease-out; }
+.case-video-controls { position: absolute; z-index: var(--layer-raised); inset: auto var(--space-4) var(--space-4); display: flex; align-items: center; gap: var(--space-2); padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1); border-radius: var(--radius-full); color: var(--color-text-primary); background: var(--color-bg-surface); box-shadow: var(--shadow-small); opacity: 0; pointer-events: none; transition: opacity var(--duration-fast) var(--ease-out); }
 .case-video-player[data-audio-controls] .case-video-controls { padding-inline-end: var(--space-1); }
 .case-video-controls[hidden], .case-video-controls [hidden] { display: none; }
 @media (hover: hover) and (pointer: fine) {

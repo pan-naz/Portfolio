@@ -197,7 +197,7 @@ export function initializeWorkFilter(onChange?: () => void, onReposition?: (top:
           // Masonry places cards in top-to-bottom order, breaking ties left to right.
           // Keep every handoff at 50%, including the final cards in longer collections.
           delay: entering ? number('--delay-filter-enter') + index * enterDuration / 2 : 0,
-          easing: entering ? tokens.getPropertyValue('--ease-filter-enter').trim() : 'ease-in', fill: 'both',
+          easing: entering ? tokens.getPropertyValue('--ease-filter-enter').trim() : tokens.getPropertyValue('--ease-in').trim(), fill: 'both',
         }));
       });
     });

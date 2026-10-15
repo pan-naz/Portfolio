@@ -37,7 +37,7 @@ const makeRoles = () => ['System thinker', 'AI builder', 'Web designer', 'App de
   phrase: element(), letters: [...text.replaceAll(' ', '')].map(element),
 }));
 const live = () => allocated.filter(animation => !animation.cancelled);
-const options = { hold: 1000, exit: 450, enter: 900, stagger: 35, distance: 16, ease: 'cubic-bezier(.22, .61, .36, 1)' };
+const options = { hold: 1000, exit: 450, enter: 900, stagger: 35, distance: 16, exitEase: 'cubic-bezier(.37, 0, .63, 1)', ease: 'cubic-bezier(.22, .61, .36, 1)' };
 const roles = makeRoles();
 const initialEffects = roleRevealEffects(roles[0], options, 1350);
 assert.deepEqual(initialEffects.slice(1), revealEffects(roles[0].letters, {

@@ -2,22 +2,19 @@
 import {paletteColors,colorRoles,strokeCards,paletteTokenNames} from '../data/system-colors';
 import {contrastRatio} from '../../scripts/text-contrast';
 import {foundations} from '../data/design-system';import {typographySystem} from '../data/system-typography';
-import {humanToken} from '../data/system-human';
 import {foundationSourceCode,codeSegments} from '../data/system-code';
 import {spacingLayoutSystem} from '../data/system-spacing-layout';
 import {caseStudyMotionTokens,caseStudyPresentationTokens} from '../scripts/case-study/case-study-motion';
-import Button from './Button.astro';import Icon from './Icon.astro';import IconButton from './IconButton.astro';import TextLink from './TextLink.astro';import DSTabs from './DSTabs.astro';import DSTokenNames from './DSTokenNames.astro';
+import Button from './Button.astro';import Icon from './Icon.astro';import DSTabs from './DSTabs.astro';import DSTokenNames from './DSTokenNames.astro';
 import type {IconName} from '../data/icons';
-import Logo from './Logo.astro';
+import DSMotion from './DSMotion.astro';import SegmentedControl from './SegmentedControl.astro';
 import {readFileSync} from 'node:fs';
 interface Props {inventory:ReturnType<typeof import('../data/system-inventory').buildSystemInventory>;}
 const {inventory}=Astro.props;
-const waveValue=(name:string)=>inventory.tokens.find(token=>token.name===name)!.resolvedLight;
-const springSource=readFileSync('src/styles/tokens.css','utf8').match(/stiffness (\d+), damping (\d+), mass (\d+)/)!;
 
 const caseNames=[...caseStudyMotionTokens,...caseStudyPresentationTokens].map(item=>item.name.slice(2));
 const categories:Record<string,string[]>={color:['color'],typography:['typography'],'spacing-layout':['spacing','shape','layout'],motion:['motion'],icons:['iconography']};
-const tokensFor=(id:string)=>inventory.tokens.filter(token=>categories[id].includes(token.category)&&!caseNames.includes(token.name));
+const tokensFor=(id:string)=>inventory.tokens.filter(token=>categories[id].includes(token.category)&&(id==='motion'||!caseNames.includes(token.name)));
 const colorValue=(name:string)=>inventory.tokens.find(token=>token.name===name)!.resolvedLight;
 const stripText=(token:string)=>contrastRatio(colorValue('color-ink'),colorValue(token))>=contrastRatio(colorValue('color-paper'),colorValue(token))?'color-ink':'color-paper';
 const globalStyles=readFileSync('src/styles/global.css','utf8');
@@ -26,17 +23,13 @@ const strokeValue=(role:string,mode:'light'|'dark')=>{const token=inventory.toke
 const foundationCode=foundationSourceCode().groups;
 const typeSystem=typographySystem(),typography=typeSystem.styles;
 const spaceSystem=spacingLayoutSystem(inventory.tokens);
-const durationNames=['duration-fast','duration-navigation','duration-button-fill','duration-work-stage','duration-copy-reveal'];
-const durations=durationNames.map(name=>inventory.tokens.find(token=>token.name===name)).filter(Boolean);
-const easings=['ease-icon-shift','ease-entrance','ease-close'].map(name=>inventory.tokens.find(token=>token.name===name)).filter(Boolean);
 const typeDevices=['desktop','tablet','phone'] as const;
 const deviceNames={desktop:'Desktop',tablet:'Tablet',phone:'Phone'};
 const deviceScope=(style:typeof typography[number],device:typeof typeDevices[number])=>`--text-${style.id}:${style.devices[device].size};--letter-spacing-${style.id}:${style.devices[device].spacing}`;
 const typePercent=(value:number)=>Number((value*100).toFixed(2));
-const easePath=(value:string)=>{const n=value.match(/cubic-bezier\(([^)]+)\)/)?.[1].split(',').map(Number)||[0,0,1,1];return `M 2 78 C ${2+n[0]*156} ${78-n[1]*76}, ${2+n[2]*156} ${78-n[3]*76}, 158 2`;};
 ---
 {foundations.map(item=>{const tabs=`${item.id}-canvas`,tokens=item.id==='color'?[...new Map([...paletteTokenNames,...colorRoles,...tokensFor(item.id).map(token=>token.name)].map(name=>[name,inventory.tokens.find(token=>token.name===name)!])).values()].filter(Boolean):tokensFor(item.id);return <section id={item.id} class="ds-view ds-foundation-view" data-ds-view data-title={item.title} data-description={item.description} data-group="Foundations" hidden>
- <div class="ds-stage" data-ds-card><div class="ds-stage-bar"><DSTabs id={tabs} labels={['Preview','Code']}/><DSTokenNames/></div>
+ <div class="ds-stage" data-ds-card><div class="ds-stage-bar"><DSTabs id={tabs} labels={['Preview','Code']}/>{item.id==='motion'&&<SegmentedControl label="Playback speed" attribute="data-motion-speed" class="ds-motion-speed" choices={[{value:'1',label:'1×'},{value:'0.5',label:'0.5×'},{value:'0.25',label:'0.25×'}]}/>}<DSTokenNames/></div>
   <div class="ds-foundation-rows" id={`${tabs}-panel-0`} role="tabpanel" aria-labelledby={`${tabs}-tab-0`}>
    {item.id==='color'&&<div class="ds-colors">
     <div class="ds-color-strip" aria-label="Shared palette">{paletteColors.map(color=><div style={`background:var(--${color.token});color:var(--${color.stripText||stripText(color.token)})`}><span>{color.name}</span></div>)}</div>
@@ -87,7 +80,7 @@ const easePath=(value:string)=>{const n=value.match(/cubic-bezier\(([^)]+)\)/)?.
      <strong><DSTokenNames label={shadow.name} token={'--'+shadow.token}/></strong><p>{shadow.use}</p><div class="ds-shadow-values">{(['light','dark'] as const).map(mode=><p><Icon name={mode==='light'?'sun':'moon'}/><code>{shadow[mode]}</code></p>)}</div>
     </article>)}</div></section>
    </div>}
-   {item.id==='motion'&&<><article class="ds-foundation-row" data-ds-logo-wave><div class="ds-specimens ds-inline-controls"><a href="/#top" aria-label="naz.wtf — home"><Logo /></a><a href="/#top" aria-label="naz.wtf — home"><Logo compact /></a></div><div class="ds-meta"><strong>Logo wave</strong><span>Hover or keyboard-focus a mark. Letters lift in order, then spring back together on leave.</span>{[['Lift','distance-icon-shift'],['Scale','scale-logo-wave'],['Stagger','stagger-title-reveal']].map(([label,name])=><span><DSTokenNames label={label} token={'--'+name}/> · {waveValue(name)}</span>)}<span><DSTokenNames label="Spring" token="--ease-spring-wave"/> · {springSource[1]} stiffness · {springSource[2]} damping · {springSource[3]} mass</span><span><DSTokenNames label="Settle time" token="--duration-logo-wave"/> · {waveValue('duration-logo-wave')}</span><span>No touch or reduced motion.</span></div></article><article class="ds-foundation-row"><div class="ds-specimens ds-inline-controls"><TextLink href="/design-system/">Design system</TextLink><IconButton href="/design-system/" icon="layers" label="Design system" variant="secondary" size="small" /></div><div class="ds-meta"><strong>Arrow shift · Layers lift</strong><span>Hover or focus to lift the layers. Mouse hover shifts the arrow.</span>{[['Lift','distance-icon-shift'],['Duration','duration-fast'],['Easing','ease-icon-shift']].map(([label,name])=><span><DSTokenNames label={label} token={'--'+name}/> · <span data-ds-human-token={name}/></span>)}</div></article><article class="ds-foundation-row"><div class="ds-duration-scale">{durations.map(token=><div><DSTokenNames label={humanToken(token!.name.replace('duration-',''))} token={'--'+token!.name}/><span class="ds-duration-bar" style={`width:${Math.min(180,parseFloat(token!.resolvedLight)/5)}px`}/><span>{token!.resolvedLight}</span></div>)}</div><div class="ds-meta"><strong>Durations</strong><span>Brief feedback through text entrances.</span><span>Respect reduced motion and pause hidden decoration.</span></div></article>{easings.map(token=><article class="ds-foundation-row"><div class="ds-easing-specimen"><svg role="img" aria-label={`${humanToken(token!.name)} easing curve`} viewBox="0 0 160 80"><path d={easePath(token!.resolvedLight)} fill="none" stroke="currentColor" stroke-width="2"/></svg></div><div class="ds-meta"><strong><DSTokenNames label={humanToken(token!.name.replace('ease-',''))} token={'--'+token!.name}/></strong><span>{token!.name==='ease-out'?'Fast start, smooth stop.':token!.name==='ease-entrance'?'Content and navigation entrances.':'Closing travel settles softly.'}</span></div></article>)}</>}
+   {item.id==='motion'&&<DSMotion/>}
    {item.id==='icons'&&<><article class="ds-foundation-row"><ul class="ds-icon-grid">{inventory.iconNames.map(name=><li data-ds-icon={name}><Icon name={name as IconName}/><span>{name.replaceAll('-',' ')}</span></li>)}</ul><div class="ds-meta"><strong>Interface icons</strong><span><DSTokenNames label="Size" token="--icon-size"/> · <span data-ds-human-token="icon-size"/></span><span><DSTokenNames label="Compact" token="--icon-size-compact"/> · <span data-ds-human-token="icon-size-compact"/></span><span>Menus, media controls and destinations.</span></div></article><article class="ds-foundation-row"><div class="ds-icon-strokes"><Icon name="arrow"/><Icon name="arrow" class="icon--strong"/></div><div class="ds-meta"><strong>Stroke</strong><span><DSTokenNames label="Regular" token="--icon-stroke-regular"/> · <span data-ds-human-token="icon-stroke-regular"/></span><span><DSTokenNames label="Strong" token="--icon-stroke-strong"/> · <span data-ds-human-token="icon-stroke-strong"/></span><span>Rounded caps and joins.</span></div></article></>}
   </div>
   <div class="ds-code" id={`${tabs}-panel-1`} role="tabpanel" aria-labelledby={`${tabs}-tab-1`} hidden>

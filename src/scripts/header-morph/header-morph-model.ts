@@ -1,5 +1,3 @@
-export const pillDuration = 560;
-export const pillExitDuration = 240;
 export const pillReturnViewportBuffer = 0;
 export function nextPillState(
   scroll: number,
@@ -21,14 +19,14 @@ export function nextPillState(
   }
   return { expanded: expanded || scroll >= trigger, releasing: false };
 }
-export function advancePill(progress: number, expanded: boolean, elapsed: number, reduced = false, duration = pillDuration) {
+export function advancePill(progress: number, expanded: boolean, elapsed: number, reduced: boolean, duration: number) {
   // Exiting never reverses the capsule's geometry.
   if (!expanded) return progress;
   if (reduced) return 1;
   const step = Math.max(0, elapsed) / duration;
   return Math.min(1, progress + step);
 }
-export function advancePillExit(exit: number, expanded: boolean, elapsed: number, reduced = false, duration = pillExitDuration) {
+export function advancePillExit(exit: number, expanded: boolean, elapsed: number, reduced: boolean, duration: number) {
   if (reduced) return expanded ? 0 : 1;
   const step = Math.max(0, elapsed) / duration;
   return expanded ? Math.max(0, exit - step) : Math.min(1, exit + step);

@@ -1,0 +1,44 @@
+---
+import {motionCards,motionCurves,otherTimings,reducedMotionCopy,motionTokenSource,milliseconds,motionValue} from '../data/system-motion';
+import Chip from './Chip.astro';import Logo from './Logo.astro';import Arrow from './Arrow.astro';import Button from './Button.astro';import IconButton from './IconButton.astro';import Icon from './Icon.astro';import ThemeToggle from './ThemeToggle.astro';import Tooltip from './Tooltip.astro';import DSTokenNames from './DSTokenNames.astro';import DSMotionCurve from './DSMotionCurve.astro';
+import '../styles/design-system-motion.css';
+const tokens=motionTokenSource(),raw=(name:string)=>name==='ease-section-scroll'?'scroll':tokens[name],value=(name:string,kind?:Parameters<typeof motionValue>[2])=>motionValue(name,raw(name),kind);
+const endTime=(steps:NonNullable<typeof motionCards[number]['steps']>)=>Math.ceil((Math.max(...steps.map(step=>milliseconds(raw(step.duration))+(step.delay?milliseconds(raw(step.delay)):0)+(step.stagger?milliseconds(raw(step.stagger))*(step.count!-1):0)))+(steps.some(step=>step.stagger)?0:1))/100)*100;
+const copy=(text:string)=>text.replace(/\{([\w-]+)(:%)?\}/g,(_,name,percent)=>percent?motionValue(name,raw(name),'percent'):raw(name));
+const ticks=(end:number)=>{const step=Math.ceil(end/800)*100;return Array.from({length:Math.floor(end/step)+1},(_,i)=>i*step);};
+---
+<div class="ds-motion-catalog text-body-s" data-motion-catalog>
+ <section><p class="text-label-m ds-motion-section-title">What moves</p><div class="ds-motion-grid">
+ {motionCards.map(card=><article class:list={['ds-motion-card',card.wide&&'ds-motion-wide']} data-motion-card={card.id} data-motion-name={card.name}>
+  {card.id!=='other'&&<div class="ds-motion-demo" data-motion-demo>
+   <div class="ds-motion-art" inert aria-hidden="true">
+    {card.id==='logo'&&<Logo/>}
+    {card.id==='button'&&<Button arrow="up">Get in touch</Button>}
+    {card.id==='arrow'&&<IconButton label="Arrow shift" variant="secondary"><Arrow direction="up"/></IconButton>}
+    {card.id==='tooltip'&&<div class="ds-motion-bubble"><Tooltip id="motion-tooltip" label="Copied"/></div>}
+    {card.id==='theme'&&<ThemeToggle/>}
+    {card.id==='tilt'&&<span class="ds-motion-tilt"/>}
+    {card.id==='project'&&<div class="ds-motion-project"><span data-motion-panel/><span data-motion-artwork/><span data-motion-caption/></div>}
+    {card.id==='header'&&<div class="ds-motion-header"><span/><span/><span/></div>}
+    {card.id==='text'&&<p class="text-heading-l ds-motion-letters">{[...'Projects'].map(letter=><span data-motion-letter>{letter}</span>)}</p>}
+    {card.id==='role'&&<div class="ds-motion-role"><p class="text-body-l" data-motion-old-role>Product designer</p><p class="text-body-l">{[...'Design engineer'].map(letter=><span data-motion-role-letter>{letter===' '?'\u00a0':letter}</span>)}</p></div>}
+    {card.id==='filter'&&<div class="ds-motion-filter">{[0,1,2].map(i=><span data-motion-filter-item={i}/>)}</div>}
+    {card.id==='skills'&&<div class="ds-motion-skills"><div data-motion-skill-track>{['Product design','Design systems','Prototyping','Motion','Product design','Design systems','Prototyping','Motion'].map(label=><Chip label={label}/>)}</div></div>}
+    {card.id==='scroll'&&<div class="ds-motion-scroll"><span data-motion-scroll-content/><i data-motion-scroll-thumb/></div>}
+   </div>
+   <IconButton class="ds-motion-replay" size="small" variant="secondary" label={`Play ${card.name}`} data-motion-replay><Icon name="play" class="ds-motion-play"/><Icon name="pause" class="ds-motion-pause"/><svg role="img" class="ds-motion-progress" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="17" pathLength="1"/></svg></IconButton>
+  </div>}
+  <p class="text-body-m-strong ds-motion-name">{card.name}</p><p class="text-body-s ds-motion-description">{copy(card.description)}</p>
+  {card.values&&<dl class="ds-motion-values">{card.values.map(row=><div><dt>{row.token?<DSTokenNames label={row.label} token={'--'+row.token}/>:row.label}</dt><dd data-motion-value={row.token}>{row.token?value(row.token,row.kind):row.text}</dd></div>)}</dl>}
+  {card.steps&&<><div class="ds-motion-timeline" data-motion-timeline data-motion-end={endTime(card.steps)}>
+   {card.steps.map(step=>{const end=endTime(card.steps!),duration=milliseconds(raw(step.duration)),delay=step.delay?milliseconds(raw(step.delay)):0,stagger=step.stagger?milliseconds(raw(step.stagger)):0;return <div class="ds-motion-step" data-motion-step={step.duration}><span class="ds-motion-step-label"><DSTokenNames label={copy(step.label)} token={'--'+step.duration}/></span><div class="ds-motion-track"><i class="ds-motion-delay" style={`width:${delay/end*100}%`}/>{[...Array(step.stagger?step.count:1)].map((_,i)=><span style={`left:${(delay+i*stagger)/end*100}%;width:${duration/end*100}%;opacity:${1-i/(step.count||1)}`} />)}</div><span class="ds-motion-step-value">{value(step.duration)}{step.delay?' · after '+value(step.delay):step.stagger?' · '+value(step.stagger)+' apart':''}</span></div>;})}
+   <div class="ds-motion-axis text-label-s"><span/><div>{ticks(endTime(card.steps)).map((tick,index,list)=><span style={`left:${tick/endTime(card.steps!)*100}%`}>{tick}{index===list.length-1?'ms':''}</span>)}</div><span/></div>
+   <div class="ds-motion-playhead" data-motion-playhead aria-hidden="true" hidden><i/><span class="text-label-s" data-motion-time></span></div>
+  </div><div class="ds-motion-curve-chips">{card.curves!.map(name=><span><DSMotionCurve value={raw(name)}/><DSTokenNames label={value(name,'curve')} token={'--'+name}/></span>)}</div></>}
+  {card.id==='other'&&<div class="ds-motion-other">{otherTimings.map(row=><div><span><DSTokenNames label={row.name} token={'--'+row.token}/></span><span>{value(row.token)}{row.stagger?' · '+value(row.stagger)+' apart':''}</span><span><DSTokenNames label={value(row.curve,'curve')} token={'--'+row.curve}/></span></div>)}</div>}
+ </article>)}
+ </div></section>
+ <section><p class="text-label-m ds-motion-section-title">Easing curves</p><div class="ds-motion-curves">{motionCurves.map(([name,token])=><article class="ds-motion-curve-card" data-motion-curve={token}><div inert aria-hidden="true"><DSMotionCurve value={raw(token)}/></div><p class="text-body-s"><DSTokenNames label={name} token={'--'+token}/></p></article>)}</div></section>
+ <aside class="ds-motion-reduced"><p class="text-body-m-strong">Reduced motion</p><p class="text-body-s">{reducedMotionCopy}</p></aside>
+</div>
+<script>import '../scripts/design-system-motion';</script>

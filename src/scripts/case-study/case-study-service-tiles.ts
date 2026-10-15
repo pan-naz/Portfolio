@@ -1,3 +1,4 @@
+import {readMotionToken} from '../native-motion.ts';
 interface Bounds { left: number; top: number; right: number; bottom: number; width: number; }
 /** Anchor to the tile, keeping the complete popover inside its grid and viewport. */
 export function servicePopoverPosition(tile: Bounds, grid: Bounds, size: { width: number; height: number }, viewport: { width: number; height: number; topInset?: number }) {
@@ -64,7 +65,7 @@ class CaseStudyServiceTiles extends HTMLElement {
     const deferHide = () => {
       cancelHide();
       if (!tile || interacting()) return;
-      hideTimer = setTimeout(() => { hideTimer = undefined; if (!interacting()) hide(); }, 160);
+      hideTimer = setTimeout(() => { hideTimer = undefined; if (!interacting()) hide(); }, readMotionToken(getComputedStyle(tile ?? this), '--delay-service-tooltip'));
     };
     this.querySelectorAll<HTMLElement>('[data-service-tile]').forEach(item => {
       item.addEventListener('pointerenter', event => { if (event.pointerType === 'mouse' && fine.matches) show(item); }, { signal });

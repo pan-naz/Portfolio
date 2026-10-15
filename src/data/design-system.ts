@@ -3,7 +3,7 @@ export const foundations = [
   {id:'color',title:'Color',description:'Each color once, and where it is used.'},
   {id:'typography',title:'Typography',description:'Nine text styles, and how each one looks on desktop, tablet and phone.'},
   {id:'spacing-layout',title:'Spacing & layout',description:'One spacing scale, a radius scale and a responsive grid.'},
-  {id:'motion',title:'Motion',description:'Shared durations and easing keep feedback consistent. Reduced motion skips decoration.'},
+  {id:'motion',title:'Motion',description:'Every animation on the site: how long it takes, how it eases and where it is used.'},
   {id:'icons',title:'Icons',description:'The interface icons used on the portfolio, drawn from the live geometry.'},
 ];
 export const dsGroups = [

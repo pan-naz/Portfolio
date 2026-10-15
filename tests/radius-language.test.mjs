@@ -8,5 +8,5 @@ const copy='upper-left '+word,allowed={file:'story',needle:copy,reason:'Actual p
 assert.deepEqual(validateRadiusLanguage({story:copy},[allowed]),[]);
 assert(validateRadiusLanguage({other:copy},[allowed]).length,'A positional exception is file-scoped');
 assert(validateRadiusLanguage({story:word+' scale'},[allowed]).length,'A positional exception cannot excuse scale language');
-const tokens=fs.readFileSync('src/styles/tokens.css','utf8');assert(tokens.includes('--duration-case-radius: 260ms'));assert(tokens.includes('--ease-case-radius: ease-in-out'));
+const tokens=fs.readFileSync('src/styles/tokens.css','utf8');assert(tokens.includes('--duration-case-radius: 260ms'));assert(tokens.includes('--ease-in-out: ease-in-out'));
 console.log('Radius terminology rejects retired labels/tokens while preserving narrow positional geometry exceptions.');

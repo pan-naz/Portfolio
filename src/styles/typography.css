@@ -6,16 +6,11 @@
 /* Use a style ·
    src/styles/typography.css */
 .text-heading-xl {
-  font-family:
-    var(--font-heading-xl);
-  font-size:
-    var(--text-heading-xl);
-  font-weight:
-    var(--font-weight-heading-xl);
-  line-height:
-    var(--line-height-heading-xl);
-  letter-spacing:
-  var(--letter-spacing-heading-xl);
+  font-family: var(--font-heading-xl);
+  font-size: var(--text-heading-xl);
+  font-weight: var(--font-weight-heading-xl);
+  line-height: var(--line-height-heading-xl);
+  letter-spacing: var(--letter-spacing-heading-xl);
 }
 
 /* Same for .text-heading-l
@@ -166,7 +161,7 @@ body,
 :where(.ds-props-table th,.ds-props-table td),
 :where(.ds-props-table th),
 :where(.ds-meta),
-:where(.ds-spacing-scale,.ds-duration-scale),
+:where(.ds-spacing-scale),
 :where(.ds-shape-grid),
 :where(.ds-icon-grid li),
 :where(.ds-tile-link > span),

@@ -13,7 +13,8 @@ const focus = rules.find(rule => rule.selector.includes(':where(button,') && rul
 assert.ok(focus, 'The live catalog loads the real shared native-control focus rule');
 assert.equal(value(focus, 'outline'), '2px solid var(--color-focus-ring)');
 assert.equal(value(focus, 'outline-offset'), '4px');
-assert.ok(rules.some(rule => rule.selector.includes('.button:active') && /scale\(0?\.98\)/.test(value(rule, 'transform') || '')), 'Live pressed feedback comes from the shared Button styles');
+assert.ok(rules.some(rule => rule.selector.includes('.button:active') && value(rule, 'transform') === 'scale(var(--scale-button-press))'), 'Live pressed feedback comes from the shared Button styles');
+let press;css.walkDecls('--scale-button-press',decl=>press=decl.value);assert.equal(Number(press),.98,'The shared press token preserves the original scale');
 assert.ok(rules.some(rule => rule.selector.includes('.navigation-item') && rule.selector.includes('aria-pressed')), 'Selected filters retain their real pressed-state styling');
 assert.ok(!catalog.includes('data-ds-preview-state') && !css.toString().includes('html[data-static]'), 'Live specimens never substitute frozen state styles');
 console.log('The compiled live catalog keeps real shared focus, press and selected-filter feedback.');

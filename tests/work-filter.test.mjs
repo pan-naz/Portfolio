@@ -29,7 +29,7 @@ const css = read('../src/styles/global.css');
 const tokens = read('../src/styles/tokens.css');
 assert.ok(/\.navigation-item-indicator\s*\{[^}]*width: 6px[^}]*height: 6px/.test(css));
 assert.ok(/\.navigation-item\s*\{[^}]*--navigation-item-shift: var\(--space-3\)/.test(css));
-assert.ok(/\.navigation-item-indicator\s*\{[^}]*opacity: 0[^}]*translate3d\(-6px,-50%,0\) scale\(0\)/.test(css));
+assert.ok(/\.navigation-item-indicator\s*\{[^}]*opacity: 0[^}]*translate3d\(calc\(var\(--distance-navigation-dot\) \* -1\),-50%,0\) scale\(0\)/.test(css));
 assert.ok(/\.navigation-item-indicator\s*\{[^}]*transform-origin: 50% 50%[^}]*var\(--duration-navigation\)/.test(css));
 assert.ok(tokens.includes('--duration-navigation: 420ms'));
 assert.ok(/\.navigation-item-indicator\s*\{[^}]*var\(--duration-navigation\) var\(--ease-entrance\)/.test(css));

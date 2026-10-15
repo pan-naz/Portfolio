@@ -12,8 +12,8 @@ const css=readFileSync('src/styles/global.css','utf8'),logo=readFileSync('src/co
 assert.deepEqual(validateThemeIconMotion(css),[]);
 const theme=readFileSync('src/components/ThemeToggle.astro','utf8');
 assert.deepEqual(validateThemeIconMotion(css,theme),[]);
-assert(validateThemeIconMotion(css,theme.replace('class="theme-icon-control"','')).length,'Reject a segment disconnected from the shared motion');
-for(const [from,to]of [['var(--duration-toggle-enter)','600ms'],['var(--duration-toggle-return)','600ms'],['var(--ease-toggle-rotation)','ease-out'],['.theme-icon-control:hover .theme-icon-glyph','.theme-toggle:hover .theme-icon-glyph'],['scale(.92)','scale(.9)']])assert(validateThemeIconMotion(css.replaceAll(from,to)).length,'Reject changed/shared theme motion: '+to);
+assert(validateThemeIconMotion(css,theme.replace("icon:'sun'",'')).length,'Reject a segment disconnected from the shared motion');
+for(const [from,to]of [['var(--duration-toggle-enter)','600ms'],['var(--duration-toggle-return)','600ms'],['var(--ease-toggle-rotation)','ease-out'],['.theme-icon-control:hover .theme-icon-glyph','.theme-toggle:hover .theme-icon-glyph'],['scale(var(--scale-press))','scale(.9)']])assert(validateThemeIconMotion(css.replaceAll(from,to)).length,'Reject changed/shared theme motion: '+to);
 assert(validateThemeIconMotion(css+' .theme-toggle-group .icon {transform:rotate(180deg);}').length,'Reject a copied segmented motion rule');
 assert.deepEqual(validateLogoWave(css,logo,tokens),[]);
 for(const [from,to] of [

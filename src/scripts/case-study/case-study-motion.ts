@@ -16,7 +16,7 @@ export const caseStudyMotionTokens = [
 
 export const caseStudyPresentationTokens = [
   { name: '--ease-case-travel', label: 'Panel, hero and control easing' },
-  { name: '--ease-case-radius', label: 'Radius finish easing' },
+  { name: '--ease-in-out', label: 'Radius finish easing' },
   { name: '--case-hero-fit', label: 'Card, traveling and settled hero fit' },
 ] as const;
 
@@ -26,7 +26,7 @@ export function readCaseStudyMotion(tokens: Pick<CSSStyleDeclaration, 'getProper
   return {
     ...timings,
     travelEasing: tokens.getPropertyValue('--ease-case-travel').trim(),
-    radiusEasing: tokens.getPropertyValue('--ease-case-radius').trim(),
+    radiusEasing: tokens.getPropertyValue('--ease-in-out').trim(),
     controlInset: readMotionToken(tokens, '--space-4'),
     controlSize: readMotionToken(tokens, '--control-icon'),
   };

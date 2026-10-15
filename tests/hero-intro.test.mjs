@@ -53,7 +53,7 @@ assert.ok(source.includes('revealEffects([eyebrow]') && source.includes('revealE
 assert.ok(source.includes('rightTags.flatMap(tag => revealEffects([tag]'), 'Tag entrances share the same native recipe');
 assert.ok(source.includes('timing.tagsStart + Number(tag.style.getPropertyValue') && source.includes('* tagStagger'));
 assert.ok(source.includes('headerIntro = createNativeMotion') && source.includes("number('--duration-layout')"), 'Header uses the existing 500ms layout duration');
-assert.ok(source.includes("duration: number('--duration-layout'), easing: 'linear'") && !source.includes("delay: number('--duration-fast'), duration: number('--duration-layout')"), 'Header begins immediately and fades at a steady rate');
+assert.ok(source.includes("duration: number('--duration-layout'), easing: tokens.getPropertyValue('--ease-linear').trim()") && !source.includes("delay: number('--duration-fast'), duration: number('--duration-layout')"), 'Header begins immediately and fades at a steady rate');
 assert.ok(source.includes('headerFrame = requestAnimationFrame(() => {') && source.includes('cancelAnimationFrame(headerFrame)'), 'Header clock starts on the first paint frame and stale starts are cancelled');
 assert.ok(source.includes('value && !document.hidden && window.scrollY > 0'), 'An initial observer update cannot skip the header fade');
 assert.ok(source.indexOf('headerIntro = createNativeMotion') < source.indexOf('document.fonts.ready.then'), 'Header starts before font measurement');
