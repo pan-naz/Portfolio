@@ -31,7 +31,7 @@ for (const id of ['afterlight', 'still-life', 'soft-focus', 'slow-sunday', 'desk
   assert.ok(!existsSync(new URL(`../dist/case-studies/${id}/index.html`, import.meta.url)), 'Fictional routes are removed');
 }
 const css = readFileSync(new URL('../src/styles/global.css', import.meta.url), 'utf8');
-assert.ok(css.includes('transition: transform var(--duration-close-turn) var(--ease-toggle-rotation)') && css.includes('.icon-button:hover svg > g { transform: rotate(var(--rotation-icon-turn)); }'), 'Close glyph turns on hover and transitions back to its resting angle on hover-out');
+assert.ok(css.includes('transition: transform var(--duration-close-turn) var(--ease-toggle-rotation)') && /\.icon-button:hover svg > g[^{}]*\{ transform: rotate\(var\(--rotation-icon-turn\)\); }/.test(css), 'Close glyph turns on hover and transitions back to its resting angle on hover-out');
 assert.ok(!css.includes('@keyframes case-close-half-turn'), 'Close hover does not use a one-way fill animation');
 const textFromMarkup = markup => markup.replace(/<[^>]*>/g, '').replace(/&(amp|lt|gt|quot|apos|nbsp|#\d+|#x[\da-f]+);/gi, (_, entity) => {
   if (entity.startsWith('#')) return String.fromCodePoint(entity[1].toLowerCase() === 'x' ? parseInt(entity.slice(2), 16) : parseInt(entity.slice(1), 10));

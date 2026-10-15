@@ -1,3 +1,4 @@
+import {validateIcons} from './validate-icons.mjs';
 import {validateMotionContract} from './validate-motion.mjs';
 import {validateFoundationCodeContract} from './validate-foundation-code.mjs';
 import {validateRadiusContract} from './validate-radius-language.mjs';
@@ -185,7 +186,7 @@ export function validateHiddenDocumentation(records, text) {
   }
   return failures;
 }
-const errors = [...validateMotionContract(root),...validate(registry),...validateColors(),...validateSpaceShape(root),...validateRadiusContract(),...validateFoundationCodeContract(root)];
+const errors = [...validateIcons(root),...validateMotionContract(root),...validate(registry),...validateColors(),...validateSpaceShape(root),...validateRadiusContract(),...validateFoundationCodeContract(root)];
 errors.push(...validateLogoWave(read('src/styles/global.css'), read('src/components/Logo.astro'), read('src/styles/tokens.css'), filesUnder('src/scripts').filter(file=>file.endsWith('.ts')&&file!=='src/scripts/design-system-motion.ts').map(read).join('\n')));
 if(JSON.stringify(visibleComponents.map(item=>item.name).sort())!==JSON.stringify([...expectedVisible].sort()))errors.push('Visible catalog must contain exactly the approved ten components');
 for(const [file,key] of Object.entries(hiddenKeys))if(componentManifest.find(item=>item.file===file)?.documentedHidden!==key)errors.push('Missing documented-hidden classification: '+file);

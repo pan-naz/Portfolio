@@ -1,3 +1,4 @@
+import {validateRenderedIcons} from './validate-icons.mjs';
 import {foundationSourceCode} from '../src/data/system-code.ts';
 import {validateRenderedFoundationCode,validateRenderedThemeZones} from './validate-foundation-code.mjs';
 import {spacingLayoutSystem} from '../src/data/system-spacing-layout.ts';
@@ -10,6 +11,7 @@ import {buildSystemInventory} from '../src/data/system-inventory.ts';
 import {validateInventoryCoverage,validateVariantCoverage,validateRenderedComponentNames,validateOverviewHiddenEntries} from './validate-design-system.mjs';
 const root=resolve(import.meta.dirname,'..'),read=file=>readFileSync(resolve(root,file),'utf8');
 const catalog=read('dist/design-system/index.html'),home=read('dist/index.html');
+assert.deepEqual(validateRenderedIcons(catalog),[]);
 const styles=html=>[...html.matchAll(/<link[^>]*href="([^"]+\.css)"[^>]*>/g)].map(([,file])=>read('dist'+file)).concat([...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map(([,css])=>css)).join('\n');
 assert.equal((catalog.match(/\bdata-theme-control/g)||[]).length,1,'Only the header controls the page theme');
 assert.equal((catalog.match(/<[a-z][^>]*\sdata-theme=/g)||[]).length,2,'Page theme plus the shared fixed-dark media control specimen');

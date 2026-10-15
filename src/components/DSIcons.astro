@@ -1,0 +1,40 @@
+---
+import {iconGroups,iconLabels,iconWeights,decorativeIcons,decorativeIconCount} from '../data/system-icons';
+import Icon from './Icon.astro';
+import IconButton from './IconButton.astro';
+import Button from './Button.astro';
+import TextLink from './TextLink.astro';
+import DSTokenNames from './DSTokenNames.astro';
+interface Props {inventory:ReturnType<typeof import('../data/system-inventory').buildSystemInventory>;}
+const {inventory}=Astro.props;
+const value=(name:string)=>inventory.tokens.find(token=>token.name===name)!.resolvedLight;
+---
+<div class="ds-icons">
+ <section class="ds-icons-section"><p class="text-label-m">Interface icons</p>
+  <div class="ds-icons-groups">{iconGroups.map(group=><article class="ds-icons-card" data-ds-icon-group={group.title}>
+   <div class="ds-icons-copy"><p class="text-body-m-strong">{group.title}</p><p class="text-body-s">{group.description}</p></div>
+   <ul class="ds-icons-grid">{group.icons.map(name=><li data-ds-icon={name}>
+    <div class:list={["ds-icon-control",(name==='sun'||name==='moon')&&'theme-icon-control']} tabindex="0" role="img" aria-label={iconLabels[name]} data-icon-sample data-icon-hover={name==='sun'||name==='moon'?'theme':name}><Icon name={name} class={name==='arrow'?'arrow':name==='sun'||name==='moon'?'theme-icon-glyph':undefined}/></div>
+    <span class="text-body-s"><DSTokenNames label={iconLabels[name]} token={name}/></span>
+   </li>)}</ul>
+  </article>)}</div>
+ </section>
+ <section class="ds-icons-section"><p class="text-label-m">Size</p><div class="ds-icons-sizes">
+  {['icon-size','icon-size-compact'].map((token,index)=><article class="ds-icons-card">
+   <div class="ds-icons-sample" inert aria-hidden="true">{index===0?<Button href="/design-system/" variant="secondary" arrow="up">Design system</Button>:<IconButton href="/design-system/" label="Design system" variant="secondary" size="small" icon="layers"/>}<Icon name="arrow" size={Number.parseFloat(value(token))}/></div>
+   <div class="ds-icons-copy"><p class="text-body-m-strong"><DSTokenNames label={`${index===0?'Default':'Compact'} · ${value(token)}`} token={'--'+token}/></p><p class="text-body-s">{index===0?'Buttons, links, theme switch, media controls.':'Small icon buttons and text links.'}</p></div>
+  </article>)}
+ </div></section>
+ <section class="ds-icons-section"><p class="text-label-m">Line weight</p><div class="ds-icons-weights">
+  {iconWeights.map(weight=><article class="ds-icons-card"><div class="ds-icons-sample ds-icons-weight" style={`--ds-icon-stroke:var(--${weight.token})`} inert aria-hidden="true"><Icon name="arrow"/><Icon name="plus"/><Icon name="sun"/></div><div class="ds-icons-copy"><p class="text-body-m-strong"><DSTokenNames label={`${weight.name} · ${value(weight.token)}`} token={'--'+weight.token}/></p><p class="text-body-s">{weight.description}</p></div></article>)}
+ </div></section>
+ <section class="ds-icons-section"><p class="text-label-m">Color</p><div class="ds-icons-colors">
+  <article class="ds-icons-card"><div class="ds-icons-sample" inert aria-hidden="true"><Icon name="arrow"/><Icon name="arrow" class="ds-icon-secondary"/><Icon name="arrow" class="ds-icon-accent"/></div><div class="ds-icons-copy"><p class="text-body-m-strong"><DSTokenNames label="Follows the text" token="--color-text-primary"/></p><p class="text-body-s">Icons take the color of the text around them.</p></div></article>
+  <article class="ds-icons-card"><div class="ds-icons-sample" inert aria-hidden="true"><Icon name="layers"/></div><div class="ds-icons-copy"><p class="text-body-m-strong"><DSTokenNames label="One accent" token="--color-interactive-accent"/></p><p class="text-body-s">Only the top of Layers uses the accent color.</p></div></article>
+  <article class="ds-icons-card"><div class="ds-icons-sample ds-icons-zones" inert aria-hidden="true">{(['light','dark'] as const).map(theme=><div data-color-zone={theme}><Icon nodes={decorativeIcons[0].nodes}/></div>)}</div><div class="ds-icons-copy"><p class="text-body-m-strong"><DSTokenNames label="Rain and footer" token="--color-rain-icon · --color-footer-icon"/></p><p class="text-body-s">Ink / Stone for the rain, Silver / Pewter for the footer pile.</p></div></article>
+ </div></section>
+ <section class="ds-icons-section"><p class="text-label-m">Decorative library</p><article class="ds-icons-card">
+  <div class="ds-icons-library" inert aria-hidden="true">{decorativeIcons.map(icon=><Icon nodes={icon.nodes} data-ds-decoration={icon.name}/>)}</div>
+  <div class="ds-icons-copy"><p class="text-body-m-strong" data-ds-library-count={decorativeIconCount}>{decorativeIconCount.toLocaleString('en-US')} Lucide icons</p><p class="text-body-s">The hero rain and the footer pile. Decoration only, never a button or link. Lucide, <TextLink href="/licenses/lucide.txt" inline>ISC license</TextLink>.</p></div>
+ </article></section>
+</div>

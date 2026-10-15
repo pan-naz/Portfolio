@@ -29,6 +29,7 @@
 .pc-prize-copy { display: grid; gap: var(--space-1); min-width: 0; }
 .pc-prize-place { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-2); color: var(--color-text-secondary); }
 .pc-prize--won { --color-interactive-accent: var(--pc-pink); }
+.pc-prize-glyph { width: calc(var(--icon-size) * 4 / 3); height: calc(var(--icon-size) * 4 / 3); }
 .pc-prize--won .pc-prize-place, .pc-prize--won .pc-prize-icon { color: var(--pc-pink); }
 .pc-prize--won .pc-prize-icon { background: color-mix(in srgb, var(--pc-pink) 8%, var(--color-bg-surface)); }
 .pc-research-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: var(--grid-gap); }

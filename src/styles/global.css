@@ -46,8 +46,9 @@ picture:has(+ noscript > picture) > img[data-deferred-image], img[data-deferred-
 
 .icon { width: var(--icon-size); height: var(--icon-size); flex-shrink: 0; stroke-width: var(--icon-stroke-regular); stroke-linecap: var(--icon-linecap); stroke-linejoin: var(--icon-linejoin); }
 .icon--strong { stroke-width: var(--icon-stroke-strong); }
+.icon--close { transform: rotate(var(--rotation-icon-close)); }
 .arrow { width: var(--icon-size); height: var(--icon-size); flex-shrink: 0; transition: transform var(--duration-fast) var(--ease-out); }
-.arrow--up { rotate: -45deg; }
+.arrow--up { rotate: calc(-1 * var(--rotation-icon-close)); }
 .button { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-3); min-height: var(--control-height); padding: calc(var(--space-3) - 1px) var(--space-6); border-radius: var(--radius-full); border: 1px solid transparent; transition: background-color var(--duration-fast), color var(--duration-fast), transform var(--duration-fast); }
 .hit-area::after { content: ''; opacity: 0; position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; min-width: var(--control-icon); min-height: var(--control-icon); transform: translate(-50%, -50%); }
 .button.hit-area::after { top: auto; left: auto; width: var(--control-icon); height: var(--control-icon); transform: none; }
@@ -70,7 +71,7 @@ picture:has(+ noscript > picture) > img[data-deferred-image], img[data-deferred-
 .button--comparison.button--secondary:is(:focus-visible) { color: var(--color-text-primary); background: var(--color-bg-surface-subtle); }
 /* The SVG's rotate property turns its local X-axis toward the arrow tip. */
 @media (hover: hover) and (pointer: fine) {
-.button:hover .arrow { transform: translateX(var(--distance-icon-shift)); }
+.button:hover .arrow, [data-icon-hover='arrow']:is(:hover, :focus-visible) .arrow { transform: translateX(var(--distance-icon-shift)); }
 }
 .button:active { transform: scale(var(--scale-button-press)); }
 .button--arrow-fill { --button-orb: var(--control-height-small); --button-orb-inset: 5px; --button-arrow-enter-x: calc(var(--distance-button-arrow) * -1); --button-arrow-enter-y: 0px; --button-arrow-exit-x: var(--distance-button-arrow); --button-arrow-exit-y: 0px; position: relative; isolation: isolate; overflow: hidden; gap: var(--space-3); padding: var(--button-orb-inset) var(--button-orb-inset) var(--button-orb-inset) var(--space-6); white-space: nowrap; }
@@ -112,16 +113,16 @@ picture:has(+ noscript > picture) > img[data-deferred-image], img[data-deferred-
 .icon-button--secondary { border: 1px solid var(--color-border-control); }
 .icon-button--secondary.icon-button--small { padding: calc((var(--control-height-small) - var(--icon-size-compact)) / 2 - 1px); }
 .icon-button--secondary > .icon { overflow: visible; }
-.icon-button [data-icon-layer] { transition: transform var(--duration-fast) var(--ease-out); }
+.icon-button [data-icon-layer], [data-icon-hover='layers'] [data-icon-layer] { transition: transform var(--duration-fast) var(--ease-out); }
 @media (hover: hover) and (pointer: fine) {
   .icon-button--secondary:hover { background: transparent; }
-  .icon-button:hover [data-icon-layer='top'] { transform: translateY(calc(-1 * var(--icon-layer-shift, var(--distance-icon-shift)))); }
-  .icon-button:hover [data-icon-layer='bottom'] { transform: translateY(var(--icon-layer-shift, var(--distance-icon-shift))); }
+  .icon-button:hover [data-icon-layer='top'], [data-icon-hover='layers']:hover [data-icon-layer='top'] { transform: translateY(calc(-1 * var(--icon-layer-shift, var(--distance-icon-shift)))); }
+  .icon-button:hover [data-icon-layer='bottom'], [data-icon-hover='layers']:hover [data-icon-layer='bottom'] { transform: translateY(var(--icon-layer-shift, var(--distance-icon-shift))); }
 }
-.icon-button:focus-visible [data-icon-layer='top'] { transform: translateY(calc(-1 * var(--icon-layer-shift, var(--distance-icon-shift)))); }
-.icon-button:focus-visible [data-icon-layer='bottom'] { transform: translateY(var(--icon-layer-shift, var(--distance-icon-shift))); }
+.icon-button:focus-visible [data-icon-layer='top'], [data-icon-hover='layers']:focus-visible [data-icon-layer='top'] { transform: translateY(calc(-1 * var(--icon-layer-shift, var(--distance-icon-shift)))); }
+.icon-button:focus-visible [data-icon-layer='bottom'], [data-icon-hover='layers']:focus-visible [data-icon-layer='bottom'] { transform: translateY(var(--icon-layer-shift, var(--distance-icon-shift))); }
 @media (prefers-reduced-motion: reduce) {
-  .icon-button [data-icon-layer] { transform: none !important; transition: none; }
+  .icon-button [data-icon-layer], [data-icon-hover='layers'] [data-icon-layer] { transform: none !important; transition: none; }
 }
 .icon-button[data-magnet-ready='true'] { will-change: translate; }
 @media (hover: hover) and (pointer: fine) {
@@ -133,7 +134,7 @@ picture:has(+ noscript > picture) > img[data-deferred-image], img[data-deferred-
 .theme-toggle-glyph { display: grid; place-items: center; width: var(--icon-size); height: var(--icon-size); }
 .theme-icon-glyph { transform-origin: center; transform: translateY(0) rotate(0deg) scale(1); transition: transform var(--duration-toggle-return) var(--ease-toggle-rotation); }
 @media (hover: hover) and (pointer: fine) {
-  .theme-icon-control:hover .theme-icon-glyph { transform: rotate(var(--rotation-icon-turn)); transition-duration: var(--duration-toggle-enter); }
+  .theme-icon-control:hover .theme-icon-glyph, [data-icon-hover='theme']:focus-visible .theme-icon-glyph { transform: rotate(var(--rotation-icon-turn)); transition-duration: var(--duration-toggle-enter); }
 }
 .theme-icon-control:active .theme-icon-glyph { transform: translateY(0) rotate(0deg) scale(var(--scale-press)); transition-duration: var(--duration-press); transition-timing-function: var(--ease-out); }
 @media (prefers-reduced-motion: reduce) {
@@ -485,7 +486,7 @@ html[data-work-stage-layout='true'] .about-details::before { left: max(0px, calc
   .skill-marquee { mask-image: none; height: auto; }
   .skill-group[aria-hidden] { display: none; }
   @media (hover: hover) and (pointer: fine) {
-  .button:hover .arrow, .text-link:hover .arrow { transform: none; }
+  .button:hover .arrow, .text-link:hover .arrow, [data-icon-hover='arrow']:is(:hover, :focus-visible) .arrow { transform: none; }
 }
   .button:active { transform: none; }
   .tool-card.is-pointer-hovered .svg-asset, .tool-card:focus-visible .svg-asset { transform: none; }
@@ -581,10 +582,10 @@ html.case-study-open { overflow: hidden; scrollbar-gutter: stable; }
 @media (hover: hover) and (pointer: fine) {
 :is(.project-cursor.is-case-control, .case-study-direct-close) .icon-button:not(.icon-button--secondary):hover { background: var(--color-bg-surface); }
 }
-:is(.project-cursor.is-case-control, .case-study-direct-close) svg > g { transform-box: fill-box; transform-origin: center; transform: rotate(0deg); }
+:is(.project-cursor.is-case-control, .case-study-direct-close) svg > g, [data-icon-hover='close'] svg > g { transform-box: fill-box; transform-origin: center; transform: rotate(0deg); }
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  :is(.project-cursor.is-case-control, .case-study-direct-close) svg > g { transition: transform var(--duration-close-turn) var(--ease-toggle-rotation); }
-  :is(.project-cursor.is-case-control, .case-study-direct-close) .icon-button:hover svg > g { transform: rotate(var(--rotation-icon-turn)); }
+  :is(.project-cursor.is-case-control, .case-study-direct-close) svg > g, [data-icon-hover='close'] svg > g { transition: transform var(--duration-close-turn) var(--ease-toggle-rotation); }
+  :is(.project-cursor.is-case-control, .case-study-direct-close) .icon-button:hover svg > g, [data-icon-hover='close']:is(:hover, :focus-visible) svg > g { transform: rotate(var(--rotation-icon-turn)); }
 }
 
 }

@@ -6,7 +6,7 @@ import {foundationSourceCode,codeSegments} from '../data/system-code';
 import {spacingLayoutSystem} from '../data/system-spacing-layout';
 import {caseStudyMotionTokens,caseStudyPresentationTokens} from '../scripts/case-study/case-study-motion';
 import Button from './Button.astro';import Icon from './Icon.astro';import DSTabs from './DSTabs.astro';import DSTokenNames from './DSTokenNames.astro';
-import type {IconName} from '../data/icons';
+import DSIcons from './DSIcons.astro';
 import DSMotion from './DSMotion.astro';import SegmentedControl from './SegmentedControl.astro';
 import {readFileSync} from 'node:fs';
 interface Props {inventory:ReturnType<typeof import('../data/system-inventory').buildSystemInventory>;}
@@ -81,7 +81,7 @@ const typePercent=(value:number)=>Number((value*100).toFixed(2));
     </article>)}</div></section>
    </div>}
    {item.id==='motion'&&<DSMotion/>}
-   {item.id==='icons'&&<><article class="ds-foundation-row"><ul class="ds-icon-grid">{inventory.iconNames.map(name=><li data-ds-icon={name}><Icon name={name as IconName}/><span>{name.replaceAll('-',' ')}</span></li>)}</ul><div class="ds-meta"><strong>Interface icons</strong><span><DSTokenNames label="Size" token="--icon-size"/> · <span data-ds-human-token="icon-size"/></span><span><DSTokenNames label="Compact" token="--icon-size-compact"/> · <span data-ds-human-token="icon-size-compact"/></span><span>Menus, media controls and destinations.</span></div></article><article class="ds-foundation-row"><div class="ds-icon-strokes"><Icon name="arrow"/><Icon name="arrow" class="icon--strong"/></div><div class="ds-meta"><strong>Stroke</strong><span><DSTokenNames label="Regular" token="--icon-stroke-regular"/> · <span data-ds-human-token="icon-stroke-regular"/></span><span><DSTokenNames label="Strong" token="--icon-stroke-strong"/> · <span data-ds-human-token="icon-stroke-strong"/></span><span>Rounded caps and joins.</span></div></article></>}
+   {item.id==='icons'&&<DSIcons inventory={inventory}/>}
   </div>
   <div class="ds-code" id={`${tabs}-panel-1`} role="tabpanel" aria-labelledby={`${tabs}-tab-1`} hidden>
    {foundationCode[item.id].map(columns=><div class:list={['ds-code-columns',columns.length===1&&'ds-code-single']}>
