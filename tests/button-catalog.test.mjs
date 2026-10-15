@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {validateButtonCatalog} from '../scripts/validate-button.mjs';
-import {buttonGroups,buttonProps,buttonUsage,buttonTokens,buttonTokenGroups} from '../src/data/system-button.ts';
+import {validateButtonCatalog,missingUsageNames} from '../scripts/validate-button.mjs';
+import {buttonGroups,buttonStateGroups,buttonProps,buttonUsage,buttonTokens,buttonTokenGroups} from '../src/data/system-button.ts';
 import {buildSystemInventory} from '../src/data/system-inventory.ts';
 assert.deepEqual(validateButtonCatalog(),[]);
 const model=buildSystemInventory();
@@ -12,6 +12,9 @@ for(const name of ['Button','IconButton','TextLink']){
  assert(buttonUsage(name).includes('import '+name));
 }
 assert.deepEqual(buttonGroups.map(group=>group.cards.length),[5,4,4]);
+assert.deepEqual(buttonStateGroups.map(group=>group.cards.length),[3,4,3]);
+assert.deepEqual(missingUsageNames(buttonUsage('TextLink')),[]);
+assert.deepEqual(missingUsageNames(buttonUsage('TextLink').replace(/const mascotName = [^;]+;/,'')),["Cannot find name 'mascotName'."]);
 const scroll=readFileSync('src/scripts/smooth-scroll.ts','utf8');
 assert(scroll.includes("surface.matches('[data-ds-nav-scroll]')")&&scroll.includes('!canMove')&&scroll.includes('wheelOwner = owner'));
 assert(!readFileSync('src/components/IconButton.astro','utf8').includes('className.includes'));

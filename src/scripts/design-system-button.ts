@@ -36,18 +36,32 @@ if(states){
     for(const card of cards)metadata.push({element:card,heights});
    }
   }
-  for(const group of groups){
-   const units=[...group.querySelectorAll<HTMLElement>('.ds-button-state-column')];
-   for(const unit of units){
-    const art=[...unit.querySelectorAll<HTMLElement>('.ds-button-state-art')];
-    if(!art.length||!unit.clientWidth)continue;
-    const width=Math.max(...art.map(element=>element.offsetWidth));
-    const available=Math.min(...art.map(element=>element.parentElement!.clientWidth));
-    const focus=unit.querySelector<HTMLElement>('[data-ds-state="focus"]')!;
-    const computed=getComputedStyle(focus),ring=(parseFloat(computed.outlineWidth)+parseFloat(computed.outlineOffset))*2;
-    const scale=Math.min(1,(available-ring)/width);
-    for(const element of art)writes.push({element,scale});
-   }
+  const section=states.querySelector<HTMLElement>('.ds-button-state-section')!;
+  const visible=groups.filter(group=>group.clientWidth);
+  const paintWidth=(group:HTMLElement)=>Math.max(...[...group.querySelectorAll<HTMLElement>('.ds-button-state-art')].map(art=>{
+   const ring=Math.max(0,...[...art.querySelectorAll<HTMLElement>('[data-ds-state]')].map(control=>{
+    const style=getComputedStyle(control);
+    return style.outlineStyle==='none'?0:parseFloat(style.outlineWidth)+parseFloat(style.outlineOffset);
+   }));
+   return art.offsetWidth+ring*2;
+  }));
+  // Keep real sizes comparable: one scale per block, or cards for the entire section.
+  const stacked=visible.some(group=>{
+   const style=getComputedStyle(group),token=(name:string)=>parseFloat(style.getPropertyValue(name));
+   const column=(group.clientWidth-token('--space-6')*2-token('--space-16')-token('--space-3')*4)/4;
+   return column/paintWidth(group)<.8;
+  });
+  const layout=stacked?'stacked':'grid';
+  if(visible.length&&section.dataset.layout!==layout){section.dataset.layout=layout;schedule();return;}
+  const labelsAbove=stacked&&visible.some(group=>{
+   const available=Math.min(...[...group.querySelectorAll<HTMLElement>('.ds-button-state-cell')].map(cell=>cell.clientWidth-cell.querySelector<HTMLElement>(':scope > span')!.offsetWidth-parseFloat(getComputedStyle(cell).columnGap)));
+   return available/paintWidth(group)<.8;
+  });
+  const labels=labelsAbove?'above':'beside';
+  if(visible.length&&section.dataset.labels!==labels){section.dataset.labels=labels;schedule();return;}
+  for(const group of visible){
+   const available=Math.min(...[...group.querySelectorAll<HTMLElement>('.ds-button-state-example')].map(example=>example.clientWidth));
+   writes.push({element:group,scale:Math.max(.8,Math.min(1,available/paintWidth(group)))});
   }
   const write=(element:HTMLElement,name:string,value:string)=>{if(element.style.getPropertyValue(name)!==value)element.style.setProperty(name,value);};
   for(const art of states.querySelectorAll<HTMLElement>('.ds-button-stage-art')){
@@ -59,7 +73,7 @@ if(states){
    const scale=Math.min(1,(cover.parentElement!.clientWidth-room)/cover.offsetWidth,(cover.parentElement!.clientHeight-room)/cover.offsetHeight);
    write(cover,'--ds-cover-fit',String(scale));
   }
-  for(const {element,scale} of writes)write(element,'--ds-specimen-fit',String(scale));
+  for(const {element,scale} of writes)write(element,element.matches('.ds-button-states')?'--ds-state-scale':'--ds-specimen-fit',String(scale));
   for(const {element,heights} of metadata)write(element,'--ds-button-value-rows',heights.map(height=>height+'px').join(' '));
  };
  let pending=false;

@@ -26,6 +26,15 @@ export function specimenVariants(component,source){
  };visit(ast);return [...values].sort();
 }
 
+/** Ask TypeScript's binder about the complete, copyable Astro Usage example. */
+export function missingUsageNames(usage){
+ const [,frontmatter,...body]=usage.split('---'),file='button-usage.tsx';
+ const source=ts.createSourceFile(file,frontmatter+'\nconst specimen = (<>\n'+body.join('---')+'\n</>);',ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);
+ const options={noEmit:true,noLib:true,noResolve:true,types:[],jsx:ts.JsxEmit.Preserve,target:ts.ScriptTarget.Latest};
+ const host=ts.createCompilerHost(options);host.getSourceFile=name=>name===file?source:undefined;
+ return ts.createProgram([file],options,host).getSemanticDiagnostics().filter(diagnostic=>diagnostic.code===2304).map(diagnostic=>ts.flattenDiagnosticMessageText(diagnostic.messageText,' '));
+}
+
 export function validateButtonCatalog(root=process.cwd()){
  const read=file=>fs.readFileSync(root+'/'+file,'utf8'),errors=[];
  const expected=['Button','Chip','Navigation','Project card','Section heading','Statistic','Timeline row','Tooltip'];
@@ -37,6 +46,7 @@ export function validateButtonCatalog(root=process.cwd()){
   if(props.length!==component.props.length||props.some(prop=>!prop.description||/Optional .* input\.|Required .* input\./.test(prop.description)))errors.push(name+' requires one clear description for every source prop.');
   if(/['"]catalog['"]/.test(component.source)||/className\.(?:includes|match|startsWith)/.test(component.source))errors.push(name+' cannot have catalog options or infer behavior from class names.');
   const usage=buttonUsage(name);
+  for(const missing of missingUsageNames(usage))errors.push(name+' Usage: '+missing);
   const specimens=specimenVariants(component,read('src/components/DSButtonSpecimen.astro'));
   const used=componentVariants(component);
   for(const variant of used)if(!specimens.includes(variant))errors.push(name+' website variant has no real specimen: '+variant);
@@ -66,13 +76,19 @@ export function validateButtonCatalog(root=process.cwd()){
  if(!css.includes('.ds-button-state-cell { min-width:0;'))errors.push('State rows must shrink to their card, never to unwrapped content.');
  if(!css.includes('transform:rotate(calc(var(--rotation-icon-close) / 2))')||!page.includes('ds-button-turn')||!page.includes('ds-button-state-name--phone text-body-m-strong'))errors.push('Close mid-turn and phone state names must use shared tokens/styles.');
  if(!states.includes("querySelectorAll('.ds-button-values > div').length")||!states.includes('.ds-button-stage-art'))errors.push('Fit every metadata row and the unwrapped secondary-arrow specimen.');
- if(!page.includes('buttonStateGroups.map')||!page.includes('buttonStates.map')||buttonStates.length!==4||buttonStateGroups.flatMap(group=>group.cards).length!==13)errors.push('States need all thirteen real variants in three groups and four states.');
+ if(!page.includes('buttonStateGroups.map')||!page.includes('buttonStates.map')||buttonStates.length!==4||JSON.stringify(buttonStateGroups.map(group=>group.cards.map(card=>card.id)))!==JSON.stringify([['primary','secondary','toggle'],['raised','plain','layers','media'],['link-default','link-accent','link-compact']]))errors.push('States need exactly the reviewed three/four/three variants.');
+ if(/>States<\//.test(page)||JSON.stringify(buttonStateGroups.map(group=>group.name))!==JSON.stringify(['Button states','Icon button states','Text link states']))errors.push('Each State block has one plain label, with no separate States heading.');
  if(!page.includes('inert aria-hidden="true"')||!read('src/components/DSDashboard.astro').includes('ds-button-cover'))errors.push('Button stages and Overview cover must be inert.');
  if(!read('src/scripts/design-system.ts').includes("['icon-button','text-link']"))errors.push('Retired action hashes must redirect to Button.');
  const global=read('src/styles/global.css');
  if(/:is\(\.project-cursor\.is-case-control, \.case-study-direct-close\)/.test(global)||!global.includes(".icon-button--raised[data-icon='close']:hover svg > g")||!global.includes('.icon-button--raised:hover'))errors.push('Raised owns white hover and the close turn.');
- if(!css.includes('grid-template-columns:var(--space-16) repeat(5,minmax(0,1fr))')||!page.includes('ds-button-state-labels'))errors.push('States require one shared label plus five-column grid.');
- if(!read('src/components/DSDashboard.astro').includes('<DSButtonSpecimen id="toggle" cover/>')||!read('src/components/DSButtonSpecimen.astro').includes('state||cover?'))errors.push('The cover needs only the control pair, never comparison artwork.');
+ if(!css.includes('grid-template-columns:var(--space-16) repeat(4,minmax(0,1fr))')||!page.includes('ds-button-state-labels'))errors.push('States require one label plus four equal columns.');
+ const specimen=read('src/components/DSButtonSpecimen.astro');
+ if(!read('src/components/DSDashboard.astro').includes('<DSButtonSpecimen id="toggle" cover/>')||!specimen.includes(':cover?<div class="case-comparison-controls"'))errors.push('The cover needs only the control pair, never comparison artwork.');
+ if(!specimen.includes("state?<Button")||specimen.includes('ds-media-backdrop')||!specimen.includes('{!state&&<div data-ds-example="icon-sound"')||/hidden=\{state==='active'\}/.test(specimen))errors.push('Toggle States show Before only; Media shows the native pill, with play only in all four States.');
+ if(!css.includes('.ds-button-view .ds-stage-bar > .ds-tabs { margin-inline-start:0; }'))errors.push('Button tabs must use the same left inset in Preview and Code.');
+ if(css.includes('.ds-button-cover > div')||!css.includes('.ds-button-cover-icons {')||!read('src/components/DSDashboard.astro').includes('class="ds-button-cover-icons"'))errors.push('Cover icon-row spacing must never override the genuine comparison gap.');
+ if(!states.includes("writes.push({element:group,scale:")||!states.includes("section.dataset.layout=layout")||!states.includes("column/paintWidth(group)<.8")||!css.includes('transform:scale(var(--ds-state-scale,1))'))errors.push('States require one block-wide scale, a minimum of80%, and whole-section card fallback.');
  if(!css.includes('.ds-tile-visual:has(> .ds-button-cover) { overflow:visible; }'))errors.push('The cover must not clip native shadows at the preview separator.');
  if(!states.includes('--ds-cover-fit'))errors.push('Cover must fit its actual tile with token-sized clearance.');
  if(!css.includes('.ds-button-stage:has(> p) { padding:var(--space-6); }'))errors.push('Inline prose keeps an unscaled Space6 inset.');

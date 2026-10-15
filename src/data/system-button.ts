@@ -25,7 +25,10 @@ export const buttonGroups=[
  ]},
 ] as const;
 export type ButtonSpecimenId=typeof buttonGroups[number]['cards'][number]['id']|'close';
-export const buttonStateGroups=buttonGroups;
+export const buttonStateGroups=buttonGroups.map((group,index)=>({
+ name:['Button states','Icon button states','Text link states'][index],
+ cards:group.cards.filter(card=>!['small','outside','link-inline'].includes(card.id)),
+}));
 export const buttonStates=['Default','Hover','Focus','Active'] as const;
 const componentDescriptions:Record<string,Record<string,string>>={
  Button:{href:'Link destination. Without it, renders a button.',variant:'Filled or outlined.',size:'48px or 36px tall.',arrow:'Adds the destination arrow. On primary it sits in the circle that fills the button.',download:'Downloads the file instead of opening it.',appearance:'Comparison makes a two-choice toggle. Pair it with aria-pressed.'},
@@ -60,7 +63,7 @@ const examples=(file:string,component:string,indices:number[])=>{
 };
 export function buttonUsage(name:string){
  const importLine=`import ${name} from '../components/${name}.astro';`;
- let context=name==='Button'?"import {profile,cvUrl} from '../data/portfolio';\nimport {squareChallenge} from '../data/square-case-study';":name==='TextLink'?"import {profile,hookoSiteUrl} from '../data/portfolio';\n"+read('VoximplantCaseStudy').match(/const productUrl = [^;]+;/)![0]:"const returnUrl = "+read('CaseStudyPage').match(/project.category === 'selected' \? ('[^']+')/)![1]+';';
+ let context=name==='Button'?"import {profile,cvUrl} from '../data/portfolio';\nimport {squareChallenge} from '../data/square-case-study';":name==='TextLink'?"import {profile,hookoSiteUrl} from '../data/portfolio';\n"+read('VoximplantCaseStudy').match(/const productUrl = [^;]+;/)![0]+'\n'+read('KitchenChatbotCaseStudy').match(/const mascotName = [^;]+;/)![0]:"const returnUrl = "+read('CaseStudyPage').match(/project.category === 'selected' \? ('[^']+')/)![1]+';';
  let entries=name==='Button'?[
   ...examples('ContactSection','Button',[0,1]),...examples('AboutSection','Button',[0]),...examples('SquareCaseStudy','Button',[0]),...examples('CaseStudyComparison','Button',[0,1]),
  ]:name==='IconButton'?[

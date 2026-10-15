@@ -15,8 +15,8 @@ export function validateRadiusContract(){
  const tokens=sources['src/styles/tokens.css'],global=sources['src/styles/global.css'],preview=sources['src/components/DSButtonSpecimen.astro'];
  if(!sources['src/components/AboutSection.astro'].includes('data-color-zone="dark" data-zone-keep="section large-shadow"')||!/\[data-zone-keep~='large-shadow'\]\s*\{\s*--shadow-large:\s*inherit;\s*}/.test(tokens))errors.push('About must resolve only Small from the existing Dark shadow definition.');
  if(!/\.tool-card\s*\{[^}]*border:\s*0[^}]*padding:calc\(var\(--space-1\) \/ 4\)[^}]*box-shadow:var\(--shadow-small\)/.test(global))errors.push('Logo cards must keep their content inset, remove the border and use Small.');
- if(!preview.includes('class="ds-media-backdrop"')||!sources['src/styles/design-system.css'].includes('background:var(--color-bg-section); border-radius:var(--radius-medium)'))errors.push('Media specimens need the token-based section surface and medium radius.');
+ if(preview.includes('class="ds-media-backdrop"')||!preview.includes('class="case-video-controls ds-media-controls"'))errors.push('Button Media specimens use only the genuine video-control pill, without an artwork backdrop.');
  if(!sources['src/styles/tooltip.css'].includes('[data-tooltip-target]:focus-visible .tooltip')||!sources['src/styles/tooltip.css'].includes('[data-tooltip-target].is-pointer-hovered .tooltip'))errors.push('The inset tool-card Tooltip must retain hover and keyboard visibility.');
- if(!sources['src/styles/design-system.css'].includes('.ds-media-backdrop .ds-media-controls {')||!sources['src/styles/design-system.css'].includes('position:static; opacity:1; pointer-events:auto;'))errors.push('Media specimens must keep their controls visible and in the backdrop flow, irrespective of stylesheet order.');
+ if(!sources['src/styles/design-system-button.css'].includes('.ds-button-view .ds-media-controls {')||!sources['src/styles/design-system-button.css'].includes('position:static; opacity:1; pointer-events:auto;'))errors.push('Button Media specimens must keep their native pill visible and in the specimen flow.');
  return errors;
 }

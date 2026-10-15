@@ -23,8 +23,8 @@ const exampleNames:Record<string,string>={primary:'primary',secondary:'secondary
      <dl class="ds-button-values text-body-s"><div><dt>Used in</dt><dd>{card.used}</dd></div><div><dt>{index===2?'Style':'Size'}</dt><dd>{card.value}</dd></div></dl>
     </article>)}</div>
    </section>)}
-   <section class="ds-button-group"><p class="text-label-m">States</p>
-    {buttonStateGroups.map(group=><section class="ds-button-state-group"><p class="text-label-m ds-button-secondary">{group.name}</p><div class="ds-button-states">
+   <section class="ds-button-group ds-button-state-section">
+    {buttonStateGroups.map(group=><section class="ds-button-group ds-button-state-group"><p class="text-label-m">{group.name}</p><div class="ds-button-states">
      <div class="ds-button-state-labels text-body-s ds-button-secondary" aria-hidden="true"><span/>{buttonStates.map(state=><span>{state}</span>)}</div>
      {group.cards.map(card=><div class="ds-button-state-column"><p><span class="ds-button-state-name--desktop text-body-s ds-button-secondary">{card.name}</span><span class="ds-button-state-name--phone text-body-m-strong">{card.name}</span></p>{buttonStates.map(state=><div class="ds-button-state-cell"><span class="text-body-s ds-button-secondary">{state}</span><div class="ds-button-state-example" inert aria-hidden="true"><div class="ds-button-state-art" data-button-state={state.toLowerCase()}><DSButtonSpecimen id={card.id==='raised'?'close':card.id} state={state.toLowerCase()}/>{card.id==='raised'&&state==='Hover'&&<Icon nodes={[["path",{d:"M1 2a20 20 0 0 1 20 20m-5-5 5 5 5-5"}]]} class="ds-button-turn"/>}</div></div></div>)}</div>)}
     </div></section>)}
