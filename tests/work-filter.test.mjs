@@ -27,14 +27,15 @@ assert.ok(links.includes("import NavigationItem from './NavigationItem.astro'"))
 assert.ok(item.includes('navigation-item-indicator') && item.includes('navigation-item-label') && item.includes('aria-pressed'));
 const css = read('../src/styles/global.css');
 const tokens = read('../src/styles/tokens.css');
-assert.ok(/\.navigation-item-indicator\s*\{[^}]*width: 6px[^}]*height: 6px/.test(css));
+assert.ok(/\.navigation-item-indicator\s*\{[^}]*width: var\(--navigation-dot-size\)[^}]*height: var\(--navigation-dot-size\)/.test(css));
 assert.ok(/\.navigation-item\s*\{[^}]*--navigation-item-shift: var\(--space-3\)/.test(css));
 assert.ok(/\.navigation-item-indicator\s*\{[^}]*opacity: 0[^}]*translate3d\(calc\(var\(--distance-navigation-dot\) \* -1\),-50%,0\) scale\(0\)/.test(css));
 assert.ok(/\.navigation-item-indicator\s*\{[^}]*transform-origin: 50% 50%[^}]*var\(--duration-navigation\)/.test(css));
 assert.ok(tokens.includes('--duration-navigation: 420ms'));
 assert.ok(/\.navigation-item-indicator\s*\{[^}]*var\(--duration-navigation\) var\(--ease-entrance\)/.test(css));
 assert.ok(/\[aria-current\][^}]*\[aria-pressed='true'\][^{]*\.navigation-item-indicator\s*\{[^}]*opacity: 1[^}]*translate3d\(0,-50%,0\) scale\(1\)/.test(css));
-assert.ok(/\.navigation-item\s*\{[^}]*--navigation-item-padding-inline: var\(--space-3\)[^}]*padding: 10px var\(--navigation-item-padding-inline\)/.test(css));
+assert.ok(/\.navigation-item\s*\{[^}]*--navigation-item-padding-inline: var\(--space-3\)[^}]*padding: var\(--space-2\) var\(--navigation-item-padding-inline\)/.test(css));
+assert.ok(tokens.includes('--navigation-dot-size: 6px;'));
 assert.ok(tokens.includes('--space-3: 12px;'), 'The navigation padding alias preserves its exact 12px value');
 assert.ok(!/\[aria-current\][^}]*\[aria-pressed='true'\][^{]*\{[^}]*padding-inline-end/.test(css));
 assert.ok(!/\[aria-current\][^{]*\{[^}]*background:/.test(css));

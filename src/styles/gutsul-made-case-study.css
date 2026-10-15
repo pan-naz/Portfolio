@@ -18,8 +18,8 @@
 .gutsul-red { --color-text-primary: var(--color-white); --color-text-secondary: var(--color-text-primary); background: var(--gutsul-red); }
 /* Brand artwork lives on the background, outside the shared content rhythm. */
 .gutsul-ornament { position: absolute; inset-inline: 0; display: flex; justify-content: center; height: 24px; overflow: hidden; pointer-events: none; }
-.gutsul-ornament:first-child { top: 32px; }
-.gutsul-ornament:last-child { bottom: 32px; }
+.gutsul-ornament:first-child { top: var(--space-8); }
+.gutsul-ornament:last-child { bottom: var(--space-8); }
 .gutsul-ornament .svg-asset { flex: 0 0 8192px; width: 8192px; max-width: none; height: 24px; }
 .gutsul-band-inner { position: relative; display: grid; gap: var(--space-16); }
 .gutsul-diamonds { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
@@ -62,7 +62,7 @@
 .gutsul-case .gutsul-type b { font-weight: 700; }
 .gutsul-palette { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); width: 100%; list-style: none; padding: 0; margin: 0; }
 .gutsul-palette > li { display: grid; justify-items: center; gap: var(--space-1); text-align: center; }
-.gutsul-palette span { width: 56px; height: 56px; margin: 10px 10px var(--space-6); border: 14px solid var(--gutsul-swatch); transform: rotate(45deg); }
+.gutsul-palette span { width: 56px; height: 56px; margin: var(--space-3) var(--space-3) var(--space-6); border: 14px solid var(--gutsul-swatch); transform: rotate(45deg); }
 .gutsul-palette code { color: var(--color-ink-64); font: inherit; font-size: var(--text-body-s); }
 @media (max-width: 1023px) {
   .gutsul-story { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--grid-gap); }
@@ -73,8 +73,8 @@
   .gutsul-story-step:last-child .gutsul-brand-tile { aspect-ratio: 1; }
 }
 @media (max-width: 767px) {
-  .gutsul-ornament:first-child { top: 16px; }
-  .gutsul-ornament:last-child { bottom: 16px; }
+  .gutsul-ornament:first-child { top: var(--space-4); }
+  .gutsul-ornament:last-child { bottom: var(--space-4); }
   .gutsul-block { margin-top: var(--space-8); }
   .gutsul-band-inner { gap: var(--space-8); }
   .gutsul-phones, .gutsul-guide { grid-template-columns: repeat(2, minmax(0, 1fr)); }

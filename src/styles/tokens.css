@@ -119,7 +119,7 @@
   --font-weight-heading-m: 500;
   --text-heading-m: 1.375rem; /* 22px */
   --line-height-heading-m: 1.333333;
-  --letter-spacing-heading-m: -.038em;
+  --letter-spacing-heading-m: -.034em;
 
   /* Body/L */
   --font-body-l: var(--font-body);
@@ -184,7 +184,7 @@
     --text-heading-l: 3.5rem; /* 56px */
     --letter-spacing-heading-l: -.047em;
     --text-heading-m: 1.5rem; /* 24px */
-    --letter-spacing-heading-m: -.040em;
+    --letter-spacing-heading-m: -.036em;
     --text-body-l: 1.25rem; /* 20px */
   }
 }
@@ -439,6 +439,29 @@
 
 /* Component tokens · component-owned values */
 :root {
+  /* Header clearance · sticky navigation and anchor targets. */
+  --header-clearance: 112px;
+  --scroll-clearance: 100px;
+  /* Work rail · aligns the filter beside the content lane. */
+  --work-rail-offset: 206px;
+  /* Hero bottom · preserves the composed desktop and tablet space. */
+  --hero-bottom-desktop: 150px;
+  --hero-bottom-compact: 70px;
+  /* Small button · optical inline inset, including arrow-fill. */
+  --button-padding-inline-small: 14px;
+  /* Framed media · half of the existing four-pixel border. */
+  --media-frame-radius-outset: 2px;
+  /* Header · common full and floating surface height. */
+  --header-height: 64px;
+  /* Player · native slider thumb and track geometry. */
+  --player-thumb-size: 16px;
+  --player-track-height: 4px;
+  /* Navigation dot · ink size, independent of its travel distance. */
+  --navigation-dot-size: 6px;
+  /* Project identity · supplied mark slot. */
+  --project-logo-size: 32px;
+  /* Case guides · faint editorial grid, not disabled content. */
+  --opacity-case-guides: .44;
   --hero-gutter: var(--space-6);
   --hero-visual-gutter: var(--space-6);
   --work-preview-height: 120px;
@@ -450,6 +473,7 @@
 /* Component changes · 768px and wider */
 @media (min-width: 768px) {
   :root {
+    --scroll-clearance: var(--header-clearance);
     --hero-gutter: max(var(--space-16), calc((100vw - 1328px) / 2));
     --hero-visual-gutter: calc(var(--hero-gutter) - var(--space-1));
     --work-preview-height: 200px;
