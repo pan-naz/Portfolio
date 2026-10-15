@@ -8,7 +8,7 @@ export type CodeColumns=CodeBlock[][];
 export function foundationSourceCode(root=process.cwd()){
  const tokens=readFileSync(resolve(root,'src/styles/tokens.css'),'utf8');
  const typography=readFileSync(resolve(root,'src/styles/typography.css'),'utf8');
- const scroll=readFileSync(resolve(root,'src/scripts/motion.ts'),'utf8');
+ const scroll=readFileSync(resolve(root,'src/scripts/scroll-policy.ts'),'utf8');
  const slice=(text:string,start:string,end:string)=>{const a=text.indexOf('/* '+start+' ·'),b=text.indexOf('/* '+end+' ·',a+1);if(a<0||b<0)throw Error('Missing source section '+start+' / '+end);return text.slice(a,b).trim();};
  const block=(key:string,start:string,end:string):CodeBlock=>({key,source:slice(tokens,start,end)});
  const code={
@@ -25,7 +25,7 @@ export function foundationSourceCode(root=process.cwd()){
   shadowLight:{key:'shadows-light',source:tokens.slice(tokens.indexOf('/* Shadows · light'),tokens.indexOf('/* Shadows · dark')).trim()},
   shadowDark:{key:'shadows-dark',source:tokens.slice(tokens.indexOf('/* Shadows · dark'),tokens.indexOf('/* Motion ·')).trim()},
   motion:block('motion','Motion','Icons'),
-  scrollCurve:{key:'motion-scroll-curve',source:scroll.slice(scroll.indexOf('/** Section scroll ·'),scroll.indexOf('let smoothScroll:')).trim()},
+  scrollCurve:{key:'motion-scroll-curve',source:scroll.slice(scroll.indexOf('/** Section scroll ·'),scroll.indexOf('export const scrollPolicy')).trim()},
   icons:block('icons','Icons','Controls and layers'),
   iconUse:{key:'icon-use',source:`/* Use an icon */
 import Icon from '../components/Icon.astro';

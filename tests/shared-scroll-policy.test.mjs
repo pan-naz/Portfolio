@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {scrollPolicy} from '../src/scripts/scroll-policy.ts';
+assert.equal(scrollPolicy.lerp,.18);
+assert.equal(scrollPolicy.syncTouch,false,'Touch keeps its native physics');
+assert.equal(scrollPolicy.autoResize,true,'Website keeps the original Lenis resize policy');
+for(const condition of ['min-width: 768px','pointer: fine','prefers-reduced-motion: no-preference'])assert(scrollPolicy.capability.includes(condition));
+const shared=fs.readFileSync('src/scripts/smooth-scroll.ts','utf8');assert(shared.includes('(navigator.maxTouchPoints ?? 0) === 0'));
+assert(!shared.includes("document.addEventListener('keydown'"),'Keyboard stays native, with the original backend glide cancellation');
+for(const layout of ['BaseLayout','DSLayout'])assert(fs.readFileSync('src/layouts/'+layout+'.astro','utf8').includes('<SiteRuntime />'));
+assert(!fs.readFileSync('src/scripts/motion.ts','utf8').includes('initializeSmoothScroll();'),'Page animation setup no longer owns scrolling');
+console.log('Shared scrolling preserves the original precise/768px/reduced-motion policy, native keyboard and universal layout ownership.');

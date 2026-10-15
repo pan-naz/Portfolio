@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import SiteRuntime from '../components/SiteRuntime.astro';
 import layoutCapabilitiesSource from '../scripts/layout-capabilities.js?raw';
 import SiteMetadata from '../components/SiteMetadata.astro';
 interface Props { title?: string; }
@@ -22,5 +23,5 @@ const { title = 'Design system' } = Astro.props;
     <meta name="theme-color" content="#FAF8F7" />
     <title>{title}</title>
   </head>
-  <body><slot /><script>import '../scripts/theme';</script></body>
+  <body><slot /><SiteRuntime /></body>
 </html>

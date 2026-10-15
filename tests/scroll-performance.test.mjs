@@ -1,3 +1,4 @@
+import {scrollPolicy,easeSectionScroll} from '../src/scripts/scroll-policy.ts';
 import {readMotionToken} from '../src/scripts/native-motion.ts';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -12,7 +13,7 @@ class Lenis {
   start() { this.stopped = false; } destroy() { this.destroyed = true; }
   scrollTo(...args) { this.travel = args; }
 }
-globalThis.scrollMocks = { gsap, Lenis, readMotionToken };
+globalThis.scrollMocks = { gsap, Lenis, readMotionToken, scrollPolicy, easeSectionScroll };
 globalThis.getComputedStyle=()=>({getPropertyValue:name=>name==='--duration-section-scroll'?'650ms':''});
 globalThis.window = {
   scrollY: 400,
@@ -26,18 +27,20 @@ globalThis.window = {
   scrollTo: value => { scrolled = value; }, dispatchEvent() {},
   addEventListener: (name, fn) => listeners.set(name, fn), removeEventListener: name => listeners.delete(name),
 };
-globalThis.Element = class {};
-globalThis.document = { documentElement: { dataset: {} }, fonts: { ready: Promise.resolve() }, querySelector: () => null, addEventListener: (name, fn) => documentListeners.set(name, fn) };
+globalThis.Element = class { matches() {return false;} };
+globalThis.HTMLElement = globalThis.Element;
+globalThis.innerWidth = 1440; globalThis.innerHeight = 900;
+globalThis.document = { documentElement: { dataset: {}, hasAttribute:()=>false }, fonts: { ready: Promise.resolve() }, querySelector: () => null, addEventListener: (name, fn) => documentListeners.set(name, fn) };
 const compile = source => ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
 const url = js => `data:text/javascript;base64,${Buffer.from(js).toString('base64')}`;
 let engineSource = readFileSync('src/scripts/scroll-engine.ts', 'utf8').replace(/^import .*;\n/gm, '');
-const { createScrollEngine } = await import(url(compile('const {gsap, Lenis} = globalThis.scrollMocks;\n'+engineSource)));
+const { createScrollEngine } = await import(url(compile('const {gsap, Lenis, scrollPolicy} = globalThis.scrollMocks;\n'+engineSource)));
 globalThis.loadScrollEngine = async () => { loads++; return { createScrollEngine }; };
-let source = readFileSync('src/scripts/motion.ts', 'utf8').replace(/^import .*;\n/gm, '').replace("import('./scroll-engine')", 'globalThis.loadScrollEngine()');
-source='const {readMotionToken}=globalThis.scrollMocks;\n'+source;
-const { initializeMotion, initializeSmoothScroll, scrollToSection, repositionWork, pauseScroll, resumeScroll } = await import(url(compile(source)));
+let source = readFileSync('src/scripts/smooth-scroll.ts', 'utf8').replace(/^import .*;\n/gm, '').replace("typeof import('./scroll-engine').createScrollEngine",'any').replace("import('./scroll-engine')", 'globalThis.loadScrollEngine()');
+source='const {readMotionToken,scrollPolicy,easeSectionScroll}=globalThis.scrollMocks;\n'+source+'\nexport { installTouchBoundaries };';
+const { installTouchBoundaries, initializeSmoothScroll, scrollToSection, scrollImmediately: repositionWork, pauseScroll, resumeScroll } = await import(url(compile(source)));
 Object.defineProperty(globalThis, 'navigator', { configurable: true, value: { userAgent: 'iPad Safari' } });
-initializeMotion(); await Promise.resolve();
+installTouchBoundaries(); const unused = initializeSmoothScroll(); await unused.ready; unused.destroy();
 assert.equal(loads, 0, 'Unused contexts do not request the wheel engine'); assert.equal(created.length, 0); assert.equal(frames.size, 0);
 const targetElement = new Element(); targetElement.closest = () => null;
 documentListeners.get('touchstart')({ touches: [{ clientX: 100, clientY: 100 }] });
@@ -54,28 +57,30 @@ repositionWork(-50); assert.deepEqual(scrolled, { top: 0, behavior: 'instant' })
 precise = true;
 for (const agent of ['Safari', 'Chrome', 'Firefox']) {
  navigator.userAgent = agent; const controller = initializeSmoothScroll(); await controller.ready; const lenis = created.at(-1);
- assert.equal(frames.size, 1); assert.equal(lagSmoothing, 0); [...frames][0](2); assert.equal(lenis.time, 2000, 'Same GSAP seconds-to-milliseconds clock');
+ assert.equal(initializeSmoothScroll(), controller, 'Repeated registration returns the same live root'); assert.equal(frames.size, 1); assert.equal(lagSmoothing, 0); [...frames][0](2); assert.equal(lenis.time, 2000, 'Same GSAP seconds-to-milliseconds clock');
  pauseScroll(); assert.equal(lenis.stopped, true); resumeScroll(); assert.equal(lenis.stopped, false);
- scrollToSection(target); assert.equal(lenis.travel[0], target); listeners.get('keydown')({ key: 'Tab' }); assert.deepEqual(lenis.travel, [400, { immediate: true }]);
+ scrollToSection(target); assert.equal(lenis.travel[0], target); listeners.get('keydown')({key:'Tab'}); assert.deepEqual(lenis.travel, [400, {immediate:true}]);
  controller.destroy(); assert.equal(frames.size, 0); assert.equal(lenis.destroyed, true); assert.equal(queries.at(-1).handlers.size, 0);
 }
 const homeScroll = initializeSmoothScroll(); await homeScroll.ready; const homeLenis = created.at(-1); pauseScroll();
-const caseListeners = new Map(), wrapper = new Element(); wrapper.scrollTop = 180; wrapper.addEventListener = (name, fn) => caseListeners.set(name, fn); wrapper.removeEventListener = name => caseListeners.delete(name); const caseContent = new Element(); document.querySelector = () => ({ open: true });
+const caseListeners = new Map(), wrapper = new Element(); wrapper.scrollTop = 180; wrapper.addEventListener = (name, fn) => caseListeners.set(name, fn); wrapper.removeEventListener = name => caseListeners.delete(name); const caseContent = new Element(); document.querySelector = selector => selector === 'dialog[open]' ? ({open:true}) : null;
 for (let open = 0; open < 3; open++) {
  const caseScroll = initializeSmoothScroll(wrapper, caseContent); await caseScroll.ready; const caseLenis = created.at(-1);
  for (const setting of ['lerp', 'smoothWheel', 'syncTouch', 'anchors']) assert.equal(caseLenis.options[setting], homeLenis.options[setting]);
  assert.equal(caseLenis.options.lerp, .18); assert.equal(caseLenis.options.wrapper, wrapper); assert.equal(caseLenis.options.content, caseContent); assert.equal(homeLenis.stopped, true); assert.notEqual(caseLenis.stopped, true);
- wrapper.closest = () => wrapper; assert.equal(homeLenis.options.prevent(wrapper), true); assert.equal(caseLenis.options.prevent(wrapper), false);
+ wrapper.closest = () => wrapper; wrapper.matches = selector => selector === '.case-study-scroll'; assert.equal(homeLenis.options.prevent(wrapper), true); assert.equal(caseLenis.options.prevent(wrapper), false);
  assert.equal(frames.size, 2); for (const tick of frames) tick(2); assert.equal(caseLenis.time, homeLenis.time);
- caseListeners.get('keydown')({ key: 'PageDown' }); assert.deepEqual(caseLenis.travel, [180, { immediate: true }]); caseScroll.destroy(); assert.equal(caseLenis.destroyed, true); assert.equal(caseListeners.size, 0); assert.equal(frames.size, 1);
+ caseListeners.get('keydown')({key:'PageDown'}); assert.deepEqual(caseLenis.travel,[180,{immediate:true}]); caseScroll.destroy(); assert.equal(caseLenis.destroyed, true); assert.equal(caseListeners.size, 0); assert.equal(frames.size, 1);
 }
 resumeScroll(); assert.equal(homeLenis.stopped, false); homeScroll.destroy(); assert.equal(frames.size, 0); document.querySelector = () => null;
 const direct = initializeSmoothScroll(); await direct.ready; assert.equal(created.at(-1).options.lerp, .18); direct.destroy();
 let release; globalThis.loadScrollEngine = () => new Promise(resolve => { release = resolve; });
-const count = created.length, pending = initializeSmoothScroll(); pending.destroy(); release({ createScrollEngine }); await pending.ready; assert.equal(created.length, count, 'Disposal during loading never constructs a late engine');
-const changing = initializeSmoothScroll(); reduced = true; queries.at(-1).emit(); release({ createScrollEngine }); await changing.ready; assert.equal(created.length, count, 'Reduced motion during loading cancels initialization'); changing.destroy(); reduced = false;
+const cold = await import(url(compile(source+'\n// cold import')));
+const count = created.length, pending = cold.initializeSmoothScroll(); pending.destroy(); release({ createScrollEngine }); await pending.ready; assert.equal(created.length, count, 'Disposal during loading never constructs a late engine');
+const coldAgain = await import(url(compile(source+'\n// another cold import')));
+const changing = coldAgain.initializeSmoothScroll(); reduced = true; queries.at(-1).emit(); release({ createScrollEngine }); await changing.ready; assert.equal(created.length, count, 'Reduced motion during loading cancels initialization'); changing.destroy(); reduced = false;
 assert.equal(frames.size, 0); assert.ok(readFileSync('src/components/CaseStudyPage.astro', 'utf8').includes('initializeMotion();'));
-console.log('PASS: unchanged wheel options/clock, native touch, input isolation, keyboard cancellation, repeated cleanup, unused-context loading and pending-load cancellation.');
+console.log('PASS: unchanged wheel options/clock, native touch, input isolation, native keyboard cancellation, repeated cleanup, unused-context loading and pending-load cancellation.');
 
 // The real docking controller should sleep once settled, even during a stream
 // of scroll events; direction changes must still complete both transitions.

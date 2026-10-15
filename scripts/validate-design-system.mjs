@@ -116,7 +116,7 @@ export function validateCatalogNavigation(layouts, navigation, controller, css) 
   if(!css.includes("html[data-work-stage-layout='true'] .ds-sidebar") || /(?:min-width:1100px|data-ds-contents)/.test(controller+css+navigation)) failures.push('Catalog layout must use the home layout flag, without the old sidebar breakpoint.');
   if(!css.includes("@media(max-width:767px) { .ds-navigation [data-ds-dashboard-link] { display:none; } }") || !controller.includes("phone.matches&&requested==='dashboard'?'color':requested")) failures.push('Phone catalog must hide Overview and default to Color.');
   for(const hook of ['workstagelayoutchange','focusin','ArrowRight','ArrowLeft','Home','End','revealNavigationLink','updateNavigationEdges']) if(!controller.includes(hook)) failures.push(`Catalog navigation missing ${hook}.`);
-  if(!controller.includes("link.setAttribute('aria-current','page')") || !controller.includes("behavior:'instant'")) failures.push('Catalog selection and reduced-motion scrolling must remain accessible.');
+  if(!controller.includes("link.setAttribute('aria-current','page')") || !controller.includes('scrollImmediately(')) failures.push('Catalog selection and reduced-motion scrolling must remain accessible.');
   if(/\.ds-navigation[^{}]*a[^{}]*\{[^{}]*(?:background|border-radius)/.test(css)) failures.push('Catalog links must not have a private active pill.');
   return failures;
 }
@@ -138,7 +138,7 @@ function validate(entries) {
   if (/<(?:button|a)\b[^>]*\bclass=["'][^"']*\b(?:button|icon-button)\b/.test(catalog)) errors.push('Catalog must import shared controls instead of copying their markup.');
   const layout = read('src/layouts/DSLayout.astro');
   const modules = [...layout.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(([, body]) => body.trim());
-  if (modules.length !== 1 || modules[0] !== "import '../scripts/theme';") errors.push('Catalog layout may load only the shared theme controller.');
+  if (modules.length || !layout.includes('<SiteRuntime />') || !read('src/components/SiteRuntime.astro').includes('installSharedScrolling();')) errors.push('Every layout must use the shared theme/scroll lifecycle.');
   if (/scripts\/(?:home|hero|footer|work|case-study)/.test(layout)) errors.push('Catalog must not load website animation controllers.');
   errors.push(...validatePage('src/pages/design-system.astro', read('src/pages/design-system.astro')));
   const navigation = read('src/data/design-system.ts');

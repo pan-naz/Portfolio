@@ -1,13 +1,14 @@
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
 import { gsap } from 'gsap';
+import { scrollPolicy } from './scroll-policy.ts';
 export interface ScrollEngine { lenis: Lenis; destroy: () => void; }
-/** The same options, GSAP clock and keyboard cancellation as the original engine. */
-export function createScrollEngine(wrapper: Window | HTMLElement, content: HTMLElement): ScrollEngine {
+/** Original wheel physics and GSAP clock; shared lifecycle owns input and resizing. */
+export function createScrollEngine(wrapper: Window | HTMLElement, content: HTMLElement, prevent?: (node: HTMLElement) => boolean, managedDimensions = false, orientation: 'vertical' | 'horizontal' = 'vertical'): ScrollEngine {
   const isDocument = wrapper === window;
   const lenis = new Lenis({
-    wrapper, content, lerp: .18, smoothWheel: true, syncTouch: false, anchors: false,
-    prevent: node => isDocument && node.closest('[data-case-dialog]') !== null,
+    wrapper, content, lerp: scrollPolicy.lerp, smoothWheel: scrollPolicy.smoothWheel, syncTouch: scrollPolicy.syncTouch, anchors: scrollPolicy.anchors, autoResize: managedDimensions ? false : scrollPolicy.autoResize, orientation, gestureOrientation: orientation === 'horizontal' ? 'both' : 'vertical',
+    prevent: prevent ?? (node => isDocument && node.closest('[data-case-dialog]') !== null),
   });
   if (isDocument && document.querySelector('dialog[open]')) lenis.stop();
   const tick = (time: number) => lenis.raf(time * 1000);

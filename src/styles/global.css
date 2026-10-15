@@ -482,7 +482,7 @@ html[data-work-stage-layout='true'] .about-details::before { left: max(0px, calc
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after { animation: none !important; transition-duration: 0s !important; }
+  *, *::before, *::after { animation: none !important; transition-duration: 0s !important; scroll-behavior: auto !important; }
   .skill-marquee { mask-image: none; height: auto; }
   .skill-group[aria-hidden] { display: none; }
   @media (hover: hover) and (pointer: fine) {
