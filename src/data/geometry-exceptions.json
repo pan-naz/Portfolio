@@ -1699,5 +1699,15 @@
     "kind": "spacing",
     "project": true,
     "reason": "Project-only PromShyna delivery rail: 9px edge and 56px source rail preserve the artwork."
+  },
+  {
+    "file": "src/styles/pet-care-case-study.css",
+    "selector": ".case-study-content--pet-care",
+    "context": "@layer project",
+    "property": "--pc-prize-icon-size",
+    "value": "32px",
+    "kind": "size",
+    "project": true,
+    "reason": "Project-only Pet Care prize artwork retains its original 32px size independently of interface icon tokens."
   }
 ]

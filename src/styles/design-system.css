@@ -138,12 +138,9 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
 .ds-tile-mini--section-heading,.ds-tile-mini--timeline-row { width:880px; transform:translate(-50%,-50%) scale(.16); }
 .ds-tile-mini--statistic .ds-stat-composition { grid-template-columns:minmax(0,1fr); }
 .ds-tile-mini--statistic { width:240px; transform:translate(-50%,-50%) scale(.65); }
-.ds-icon-tile { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); place-items:center; gap:var(--space-1); width:100%; color:var(--color-rain-icon); }
-.ds-icon-tile .icon { width:var(--icon-size-compact); height:var(--icon-size-compact); rotate:calc(var(--rotation-icon-close) / 8); }
-.ds-icon-tile .icon:nth-child(3n) { width:calc(var(--icon-size) + var(--space-1) / 2); height:calc(var(--icon-size) + var(--space-1) / 2); rotate:calc(var(--rotation-icon-close) / -4); }
-.ds-icon-tile .icon:nth-child(3n + 1) { width:calc(var(--icon-size-compact) - var(--space-1) / 2); height:calc(var(--icon-size-compact) - var(--space-1) / 2); rotate:calc(var(--rotation-icon-close) / 4); }
-/* Decorative density varies without introducing a new palette or alpha value. */
-.ds-icon-tile .icon:nth-child(even) { opacity:var(--ds-icon-cover-opacity); }
+/* Inset centres keep even a rotated 26px glyph at least space-4 from every edge. */
+.ds-icon-tile { position:absolute; inset:var(--space-8); color:var(--color-rain-icon); }
+.ds-icon-tile .icon { position:absolute; left:var(--ds-scatter-x); top:var(--ds-scatter-y); width:var(--ds-scatter-size); height:var(--ds-scatter-size); opacity:var(--ds-scatter-opacity); transform:translate(-50%,-50%) rotate(var(--ds-scatter-rotation)); }
 .ds-color-tile { display:flex; align-items:center; padding-inline:var(--space-1); }
 .ds-color-tile span { flex:none; width:calc(var(--space-8) + var(--space-2)); height:calc(var(--space-8) + var(--space-2)); border:1px solid var(--color-border-default); border-radius:var(--radius-full); box-shadow:0 0 0 var(--space-1) var(--color-bg-surface); }
 .ds-color-tile span + span { margin-left:calc(-1 * var(--space-2)); }
@@ -332,6 +329,7 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
 .ds-icon-control { display:grid; place-items:center; width:100%; height:auto; min-height:var(--control-icon); aspect-ratio:1; padding:0; border-radius:var(--radius-small); background:var(--color-bg-surface); }
 .ds-icon-control > .icon { overflow:visible; }
 .ds-icons-sample { display:flex; align-items:center; justify-content:space-evenly; gap:var(--space-4); min-height:calc(var(--space-24) + var(--space-12)); padding:var(--space-6); background:var(--color-bg-surface); border-radius:var(--radius-small); }
+.ds-icons-accent .icon { width:var(--space-12); height:var(--space-12); }
 .ds-icons-weight .icon { stroke-width:var(--ds-icon-stroke); }
 .ds-icon-secondary { color:var(--color-text-secondary); }
 .ds-icon-accent { color:var(--color-interactive-accent); }
