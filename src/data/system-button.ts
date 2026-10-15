@@ -44,7 +44,7 @@ export const buttonAccessibility=[
 ];
 const read=(file:string)=>readFileSync('src/components/'+file+'.astro','utf8');
 /** Usage comes from website call sites; layout hooks stay out of copied examples. */
-const examples=(file:string,component:string,indices:number[])=>{
+const examples=(file:string,component:string,indices:number[],oneLine=false)=>{
  const source=read(file).split('---').slice(2).join('---');
  const pattern=new RegExp(`<${component}\\b[^>]*>`,'g'),snippets:string[]=[];
  for(const match of source.matchAll(pattern)){
@@ -57,26 +57,43 @@ const examples=(file:string,component:string,indices:number[])=>{
   const line='<'+tag+(props.length?' '+props.join(' '):'')+(close?' /':'')+'>';
   return line.length<=76?line:'<'+tag+'\n'+props.map(prop=>'  '+prop).join('\n')+'\n'+(close?'/':'')+'>';
  }).replace(/>\s*</g,'>\n<').replace(/>([^<>\n]+)<\//g,'>\n  $1\n</');
- return indices.map(index=>{if(!snippets[index])throw Error(`Missing ${component} usage in ${file}`);return format(snippets[index].replace(/\s(?:slot|tabindex|data-[\w-]+)(?:="[^"]*"|=\{[^}]*\})?(?=\s|\/?>)/g,''));});
+ return indices.map(index=>{if(!snippets[index])throw Error(`Missing ${component} usage in ${file}`);const snippet=snippets[index].replace(/\s(?:class|slot|tabindex|data-[\w-]+)(?:="[^"]*"|=\{[^}]*\})?(?=\s|\/?>)/g,'');return oneLine?snippet.replace(/\s+/g,' '):format(snippet);});
 };
 export function buttonUsage(name:string){
- const importLine=`import ${name} from '../components/${name}.astro';`+(name==='IconButton'?"\nimport Icon from '../components/Icon.astro';":'');
- const context=name==='Button'?"import {profile,cvUrl} from '../data/portfolio';\nimport {squareChallenge} from '../data/square-case-study';":name==='TextLink'?"import {profile,hookoSiteUrl} from '../data/portfolio';\n"+read('VoximplantCaseStudy').match(/const productUrl = [^;]+;/)![0]:"const returnUrl = "+read('CaseStudyPage').match(/project.category === 'selected' \? ('[^']+')/)![1]+';';
- const entries=name==='Button'?[
+ const importLine=`import ${name} from '../components/${name}.astro';`;
+ let context=name==='Button'?"import {profile,cvUrl} from '../data/portfolio';\nimport {squareChallenge} from '../data/square-case-study';":name==='TextLink'?"import {profile,hookoSiteUrl} from '../data/portfolio';\n"+read('VoximplantCaseStudy').match(/const productUrl = [^;]+;/)![0]:"const returnUrl = "+read('CaseStudyPage').match(/project.category === 'selected' \? ('[^']+')/)![1]+';';
+ let entries=name==='Button'?[
   ...examples('ContactSection','Button',[0,1]),...examples('AboutSection','Button',[0]),...examples('SquareCaseStudy','Button',[0]),...examples('CaseStudyComparison','Button',[0,1]),
  ]:name==='IconButton'?[
-  ...examples('CaseStudyPage','IconButton',[0]),...examples('ThemeToggle','IconButton',[0]),...examples('SiteFooter','IconButton',[0]),'// Media controls are default icon buttons inside the video player.',
+  ...examples('CaseStudyPage','IconButton',[0],true),...examples('SiteFooter','IconButton',[0],true),
  ]:[...examples('ContactSection','TextLink',[0,1]),...examples('VoximplantCaseStudy','TextLink',[0]),...examples('KitchenChatbotCaseStudy','TextLink',[0])];
+ if(name==='IconButton'){
+  const names=['close','layers'];
+  entries=entries.map((example,index)=>{
+   const href=example.match(/href=(\{[^}]+\}|"[^"]+")/)![1],label=example.match(/label=("[^"]+")/)![1];
+   context+='\nconst '+names[index]+' = {href: '+href.replace(/^\{|\}$/g,'')+', label: '+label+'};';
+   return example.replace(/ href=(\{[^}]+\}|"[^"]+")/,' {...'+names[index]+'}').replace(/ label="[^"]+"/,'');
+  });
+ }
  return importLine+'\n'+context+'\n\n'+entries.join('\n');
 }
 export function buttonProps(component:SourceComponent){return componentPropSpecs(component).map(prop=>{const description=componentDescriptions[component.name][prop.name];if(!description)throw Error(`Missing ${component.name}.${prop.name} description`);return {...prop,description};});}
-/** Follow token aliases as well as tokens used directly by selectors/markup. */
+/** Direct component/control references only; alias internals belong to foundations. */
 export function buttonTokens(components:SourceComponent[]){
- const css=readFileSync('src/styles/global.css','utf8')+readFileSync('src/styles/case-video-player.css','utf8')+readFileSync('src/styles/typography.css','utf8');
- const selected=[...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].filter(([,selector])=>/\.button\b|\.button--|\.button-|\.icon-button\b|\.icon-button--|\.text-link\b|\.text-link--|floating-control|\[data-icon-layer\]|\.arrow\b|\.arrow--|\.icon\b|\.icon--|text-body-m-strong|text-body-s|:where\(button/.test(selector)).map(([, ,body])=>body).join('\n')+components.map(component=>component.source).join('\n');
- const tokens=readFileSync('src/styles/tokens.css','utf8'),names=new Set([...selected.matchAll(/var\((--[\w-]+)/g)].map(([,name])=>name));
- const declarations=new Map<string,string[]>();
- for(const [,name,value] of tokens.matchAll(/(--[\w-]+):\s*([^;]+);/g))declarations.set(name,[...(declarations.get(name)||[]),value]);
- for(const name of names)for(const [,dependency] of (declarations.get(name)||[]).join(' ').matchAll(/var\((--[\w-]+)/g))names.add(dependency);
- return [...names].filter(name=>declarations.has(name)).sort();
+ const css=readFileSync('src/styles/global.css','utf8');
+ const selected=[...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].filter(([,selector])=>(!selector.includes('.project-cursor')||selector.includes('svg > g'))&&/\.button\b|\.button-|\.icon-button\b|\.icon-button--|\.text-link\b|\.text-link--|\[data-icon-layer\]|\.arrow\b|\.arrow--|\.icon\b|\.icon--|\[data-icon-hover='close'\]|:where\(button/.test(selector)).map(([, ,body])=>body).join('\n')+components.map(component=>component.source).join('\n');
+ const tokens=readFileSync('src/styles/tokens.css','utf8');
+ const declarations=new Set([...tokens.matchAll(/(--[\w-]+):/g)].map(([,name])=>name));
+ const names=[...new Set([...selected.matchAll(/var\((--[\w-]+)/g)].map(([,name])=>name))];
+ return names.filter(name=>declarations.has(name)&&/^(--color-(?:text|bg|border|focus|interactive)-|--(?:control|icon|space|button-padding|radius|shadow|layer|duration|ease|distance|rotation|scale)-)/.test(name)).sort();
+}
+export function buttonTokenGroups(components:SourceComponent[]){
+ const names=buttonTokens(components);
+ return [
+  {title:'Color',pattern:/^--color-/},
+  {title:'Size',pattern:/^--(?:control|icon)-/},
+  {title:'Spacing',pattern:/^--(?:space|button-padding)-/},
+  {title:'Shape',pattern:/^--(?:radius|shadow|layer)-/},
+  {title:'Motion',pattern:/^--(?:duration|ease|distance|rotation|scale)-/},
+ ].map(({title,pattern})=>({title,names:names.filter(name=>pattern.test(name))}));
 }

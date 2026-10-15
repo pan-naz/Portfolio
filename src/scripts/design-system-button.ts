@@ -26,9 +26,10 @@ if(states){
     rows.set(top,[...(rows.get(top)||[]),card]);
    }
    for(const cards of rows.values()){
-    const heights=[0,1].map(index=>Math.max(...cards.map(card=>{
+    const count=Math.max(...cards.map(card=>card.querySelectorAll('.ds-button-values > div').length));
+    const heights=Array.from({length:count},(_,index)=>Math.max(...cards.map(card=>{
      const row=card.querySelectorAll<HTMLElement>('.ds-button-values > div')[index];
-     return Math.max(...[...row.children].map(child=>child.getBoundingClientRect().height));
+     return row?Math.max(...[...row.children].map(child=>child.getBoundingClientRect().height)):0;
     })));
     for(const card of cards)metadata.push({element:card,heights});
    }
@@ -47,8 +48,11 @@ if(states){
    }
   }
   const write=(element:HTMLElement,name:string,value:string)=>{if(element.style.getPropertyValue(name)!==value)element.style.setProperty(name,value);};
-  for(const {element,scale} of writes)write(element,'--ds-state-fit',String(scale));
-  for(const {element,heights} of metadata)heights.forEach((height,index)=>write(element,`--ds-button-value-${index}`,height+'px'));
+  for(const art of states.querySelectorAll<HTMLElement>('.ds-button-stage-art')){
+   if(art.parentElement!.clientWidth)writes.push({element:art,scale:Math.min(1,art.parentElement!.clientWidth/art.offsetWidth)});
+  }
+  for(const {element,scale} of writes)write(element,'--ds-specimen-fit',String(scale));
+  for(const {element,heights} of metadata)write(element,'--ds-button-value-rows',heights.map(height=>height+'px').join(' '));
  };
  let pending=false;
  const schedule=()=>{if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;fit();});};
