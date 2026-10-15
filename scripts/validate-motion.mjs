@@ -105,6 +105,17 @@ export function validateMotionCurveBindings(model,client,root=process.cwd()){
  if(!model.includes('motionCurves.find')||!model.includes('Undocumented source curve'))errors.push('Every source easing needs an explicit human name.');
  return errors;
 }
+/** Source half of the no-jump gate; the browser check compares actual before/zero-time paint. */
+export function validateMotionContinuity(client,demo,css){
+ const errors=[];
+ for(const fragment of ["fill:'forwards'",'commitEnd();','roleIndex=next','filterIndex=next','themeAngle=next','commitEnd();build();', '[...frames].reverse()',"if(!clock)build()","'--motion-clock'"])if(!client.includes(fragment))errors.push('Motion continuity contract missing: '+fragment);
+ if(!demo.includes('container work-content ds-motion-project-width'))errors.push('Tilt perspective must measure the genuine Work container, including its floating layout.');
+ if(!demo.includes('<SectionNavigation compact pill/>')||!demo.includes('data-motion-role={index}'))errors.push('Alternating demos need the genuine filter pill and both letter-split roles.');
+ if(!demo.includes('size="small" variant="secondary" arrow="up">Design system')||!demo.includes('variant="secondary" size="small" icon="layers"'))errors.push('Arrow shift needs both real website consumers.');
+ if(css.includes('.ds-motion-letters span:nth-child')||css.includes('.ds-motion-header::before'))errors.push('Resting demos cannot show mid-animation text or pill guides.');
+ if(!css.includes('repeat(7,minmax(0,1fr))')||!css.includes('repeat(5,minmax(0,1fr))'))errors.push('Easing curves need seven/five/two columns.');
+ return errors;
+}
 export function validateMotionContract(root=process.cwd()){
  const read=f=>fs.readFileSync(path.join(root,f),'utf8'),walk=d=>fs.readdirSync(path.join(root,d),{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(d,e.name)):[path.join(d,e.name)]);
  const errors=[],tokens=read('src/styles/tokens.css'),start=tokens.indexOf('/* Motion ·'),end=tokens.indexOf('/* Icons ·',start);
@@ -118,7 +129,7 @@ export function validateMotionContract(root=process.cwd()){
   else if(file.endsWith('.ts'))errors.push(...validateMotionScript(text,file));
  }
  const demo=read('src/components/DSMotion.astro'),client=read('src/scripts/design-system-motion.ts'),control=read('src/components/SegmentedControl.astro'),foundations=read('src/components/DSFoundations.astro'),model=read('src/data/system-motion.ts');
- errors.push(...validateMotionDemoTriggers(client),...validateMotionCurveBindings(model,client,root));
+ errors.push(...validateMotionDemoTriggers(client),...validateMotionCurveBindings(model,client,root),...validateMotionContinuity(client,demo,read('src/styles/design-system-motion.css')));
  const defined=new Set([...tokens.matchAll(/--([\w-]+)\s*:/g)].map(match=>match[1]));defined.add('ease-section-scroll');
  for(const name of Object.values(readMotionSourceCurves(root)))if(!defined.has(name))errors.push('Unknown easing at website source: '+name);
  for(const [,name]of model.matchAll(/(?:token|duration|delay|stagger|distance|curve):'([^']+)'/g))if(!defined.has(name))errors.push('Motion specimen references an unknown source token: '+name);

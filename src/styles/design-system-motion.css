@@ -7,8 +7,10 @@
 .ds-motion-full { grid-column:1 / -1; }
 .ds-motion-card,.ds-motion-curve-card,.ds-motion-reduced { min-width:0; padding:var(--space-6); border-radius:var(--radius-medium); background:var(--color-bg-canvas); }
 .ds-motion-demo { position:relative; display:grid; place-items:center; height:calc(var(--space-16) * 2 + var(--space-8)); margin-bottom:var(--space-6); border-radius:var(--radius-small); background:var(--color-bg-surface); isolation:isolate; touch-action:pan-y; }
-.ds-motion-art { display:grid; place-items:center; width:100%; height:100%; padding:var(--space-6); overflow:hidden; border-radius:inherit; }
+.ds-motion-art { display:grid; grid-template-columns:minmax(0,1fr); place-items:center; width:100%; height:100%; padding:var(--space-6); overflow:hidden; border-radius:inherit; }
 .ds-motion-art .wordmark { overflow:visible; }
+/* Keep native effect targets in the same paint state before their first play. */
+.ds-motion-art :is(.arrow,[data-icon-layer],.button-arrow-icon,.theme-icon-glyph,.tooltip,.ds-motion-tilt,.ds-motion-cursor,[data-motion-panel],[data-motion-artwork],[data-motion-caption],[data-motion-header-items],[data-motion-letter],[data-motion-role],[data-motion-role-letter],[data-motion-filter-item],.navigation-item-label,.navigation-item-indicator,[data-motion-skill-track]) { will-change:transform,opacity; }
 .ds-motion-art [data-logo-letter] { transform-box:fill-box; transform-origin:center; }
 .ds-motion-bubble { position:relative; }
 .ds-motion-bubble .tooltip { position:relative; display:block; left:auto; top:auto; opacity:1; transform:none; }
@@ -52,7 +54,7 @@
 .ds-motion-other { margin-top:var(--space-4); }
 .ds-motion-other > div { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr); gap:var(--space-3); padding-block:var(--space-3); border-top:1px solid var(--color-border-default); }
 .ds-motion-other > div > :not(:first-child) { color:var(--color-text-secondary); }
-.ds-motion-curves { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:var(--space-3); }
+.ds-motion-curves { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:var(--space-3); }
 .ds-motion-curve-card { padding:var(--space-2); text-align:center; }
 .ds-motion-curve-card > div { border-radius:var(--radius-small); background:var(--color-bg-surface); }
 .ds-motion-curve-card p { margin:var(--space-2) 0; }
@@ -64,11 +66,21 @@
 .ds-motion-reduced > p + p { margin-top:var(--space-1); color:var(--color-text-secondary); }
 .ds-motion-tile { width:calc(var(--space-16) * 2); height:var(--space-24); border:0; }
 .ds-motion-tile .ds-motion-curve { width:100%; height:100%; }
-.ds-motion-tilt { width:var(--space-24); height:var(--space-24); background:var(--color-bg-surface); border:1px solid var(--color-border-default); border-radius:var(--radius-small); box-shadow:var(--shadow-small); }
+.ds-motion-arrow-parts { display:flex; white-space:nowrap; align-items:center; justify-content:center; gap:var(--space-4); }
+.ds-motion-mini-card { display:grid; grid-template-rows:1fr var(--space-1); gap:var(--space-2); padding:var(--space-2); background:var(--color-bg-canvas); border-radius:var(--radius-small); box-shadow:var(--shadow-small); }
+.ds-motion-mini-thumbnail { background:var(--color-bg-surface-subtle); border-radius:var(--radius-small); }
+.ds-motion-mini-title { width:100%; background:var(--color-text-secondary); border-radius:var(--radius-full); }
+.ds-motion-mini-card--website .ds-motion-mini-thumbnail { background:color-mix(in srgb,var(--color-interactive-accent) 24%,transparent); }
+[data-motion-card='tilt'] .ds-motion-demo { height:calc(var(--space-24) * 2 + var(--space-12)); }
+.ds-motion-tilt-scene { position:relative; width:calc(var(--space-24) * 2); max-width:100%; height:var(--space-24); }
+.ds-motion-tilt { width:100%; height:100%; }
+.ds-motion-cursor { position:absolute; left:50%; top:50%; margin-left:calc(var(--control-icon) / -2); margin-top:calc(var(--control-icon) / -2); }
+/* The fixed probe uses the genuine Work container width, including the side-filter layout. */
+.ds-motion-art .ds-motion-project-width { position:fixed; left:0; top:0; visibility:hidden; height:0; pointer-events:none; }
 .ds-motion-project { position:relative; width:calc(var(--space-24) * 2 + var(--space-12)); height:calc(var(--space-24) + var(--space-3)); max-width:100%; }
 .ds-motion-project span { position:absolute; border:1px solid var(--color-interactive-accent); border-radius:var(--radius-medium); background:color-mix(in srgb,var(--color-interactive-accent) 8%,transparent); }
-.ds-motion-project [data-motion-panel] { inset:0; }
-.ds-motion-project [data-motion-artwork] { inset:var(--space-3) var(--space-16) var(--space-3) var(--space-8); border-radius:var(--radius-small); }
+.ds-motion-project [data-motion-panel] { inset:0; transform:scale(var(--motion-panel-ratio,1)); transform-origin:left bottom; border-radius:var(--radius-large); }
+.ds-motion-project [data-motion-artwork] { opacity:0; inset:var(--space-3) var(--space-16) var(--space-3) var(--space-8); border-radius:var(--radius-small); }
 .ds-motion-project [data-motion-caption] { left:0; bottom:0; width:var(--space-16); height:var(--space-12); background:color-mix(in srgb,var(--color-interactive-accent) 24%,transparent); border:0; border-radius:var(--radius-small); }
 .ds-motion-header { position:relative; display:flex; align-items:center; justify-content:space-evenly; width:calc(var(--space-24) * 2); height:var(--control-height); max-width:100%; overflow:hidden; border-radius:var(--radius-full); background:var(--color-bg-surface); box-shadow:var(--shadow-large); }
 .ds-motion-header [data-motion-header-items] { display:flex; align-items:center; justify-content:space-evenly; flex:none; width:calc(var(--space-24) * 2); height:100%; }
@@ -77,23 +89,23 @@
 .ds-motion-letters span,.ds-motion-role span { display:inline-block; }
 .ds-motion-role { display:grid; align-items:center; height:var(--space-16); width:100%; text-align:center; }
 .ds-motion-role > p { grid-area:1 / 1; white-space:nowrap; }
-.ds-motion-role [data-motion-role-letter] { opacity:0; }
-.ds-motion-role > :first-child { opacity:1; }
-[data-motion-card='filter'] .ds-motion-demo { height:calc(var(--space-24) * 2 + var(--space-8)); }
+.ds-motion-role > [data-motion-role='1'] { opacity:0; }
+[data-motion-card='filter'] .ds-motion-demo { height:calc(var(--space-24) * 3 + var(--space-8)); }
 .ds-motion-filter { display:grid; justify-items:center; gap:var(--space-2); width:100%; }
-.ds-motion-filter-nav { display:flex; }
-/* Native NavigationItem paint; the local clock controls only its two transitions. */
-.ds-motion-filter-nav :is(.navigation-item-indicator,.navigation-item-label) { transition:none; }
-.ds-motion-filter-grid { position:relative; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:repeat(2,var(--space-12)); gap:var(--space-2); width:calc(var(--space-24) * 2); max-width:100%; }
-.ds-motion-filter-grid > span { grid-row:2; border-radius:var(--radius-small); box-shadow:var(--shadow-small); background:var(--color-bg-surface); }
-.ds-motion-filter-grid > span:nth-child(-n+2) { grid-row:1; }
-.ds-motion-filter-grid > span:nth-child(odd) { grid-column:1; }
-.ds-motion-filter-grid > span:nth-child(even) { grid-column:2; }
-.ds-motion-filter-grid > span:nth-child(n+5) { opacity:0; }
+.ds-motion-filter-nav { position:relative; width:100%; }
+.ds-motion-filter-nav .section-navigation { position:absolute; left:50%; top:0; transform-origin:top center; }
+/* The local native clock owns the genuine pill transitions; its styles and labels stay shared. */
+.ds-motion-filter-nav :is(.navigation-item,.navigation-item-indicator,.navigation-item-label) { transition:none; }
+.ds-motion-filter-grid { position:relative; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:repeat(2,var(--space-24)); gap:var(--space-2); width:calc(var(--space-24) * 2); max-width:100%; }
+.ds-motion-filter-grid > div { grid-row:2; }
+.ds-motion-filter-grid > div:nth-child(-n+2) { grid-row:1; }
+.ds-motion-filter-grid > div:nth-child(odd) { grid-column:1; }
+.ds-motion-filter-grid > div:nth-child(even) { grid-column:2; }
+.ds-motion-filter-grid > div:nth-child(n+5) { opacity:0; }
 .ds-motion-skills { overflow:hidden; height:var(--space-24); mask-image:linear-gradient(transparent,currentColor 25%,currentColor 75%,transparent); }
 .ds-motion-skills > div { display:grid; justify-items:center; gap:var(--space-1); }
 .ds-motion-skills .skill-tag { min-height:0; padding:0 var(--space-2); }
-@media(max-width:1199px) { .ds-motion-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .ds-motion-curves { grid-template-columns:repeat(4,minmax(0,1fr)); } }
+@media(max-width:1199px) { .ds-motion-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .ds-motion-curves { grid-template-columns:repeat(5,minmax(0,1fr)); } }
 @media(max-width:767px) {
  .ds-motion-grid { grid-template-columns:minmax(0,1fr); } .ds-motion-wide { grid-column:auto; } .ds-motion-full { grid-column:1 / -1; }
  .ds-motion-curves { grid-template-columns:repeat(2,minmax(0,1fr)); }
@@ -117,11 +129,4 @@
  .ds-motion-art :is([data-logo-rest],[data-logo-glyphs]) { transition:none; }
  /* Keep genuine controls intact on the narrowest canvas. */
  @media(max-width:359px) { .ds-motion-card { padding:var(--space-4); } }
-}
-
-@layer system {
- .ds-motion-letters span:nth-child(-n+3) { opacity:var(--opacity-disabled); }
- .ds-motion-header::before,.ds-motion-header::after { content:''; position:absolute; left:50%; width:var(--space-16); transform:translateX(-50%); border-top:1px dashed color-mix(in srgb,var(--color-interactive-accent) 32%,transparent); }
- .ds-motion-header::before { top:0; }
- .ds-motion-header::after { bottom:0; }
 }

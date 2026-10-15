@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import assert from'node:assert/strict';
-import {validateMotionCss,validateMotionScript,validateMotionContract,motionTimingAllowlist,validateMotionDemoTriggers,validateMotionCurveBindings,readMotionSourceCurves}from'../scripts/validate-motion.mjs';
+import {validateMotionCss,validateMotionScript,validateMotionContract,motionTimingAllowlist,validateMotionDemoTriggers,validateMotionCurveBindings,readMotionSourceCurves,validateMotionContinuity}from'../scripts/validate-motion.mjs';
 import {easeSectionScroll}from'../src/scripts/motion.ts';
 assert.deepEqual(validateMotionContract(),[]);
 for(const css of ['a{transition:opacity 100ms ease-out}','a{animation:rise 1s linear}','a{transition-timing-function:cubic-bezier(.2,.3,.4,1)}'])assert(validateMotionCss(css).length);
@@ -22,3 +22,11 @@ assert(validateMotionCurveBindings(model.replace('curve:sourceCurves.filterOut',
 assert(validateMotionCurveBindings(model,client+"sourceCurve('invented')").length);
 
 assert(validateMotionCurveBindings(model.replace('curve:sourceCurves.filterOut','curve:sourceCurves.arrow'),client).length,'A real but incorrect easing must fail for the specific step');
+
+const demo=fs.readFileSync('src/components/DSMotion.astro','utf8'),css=fs.readFileSync('src/styles/design-system-motion.css','utf8');
+assert.deepEqual(validateMotionContinuity(client,demo,css),[]);
+assert(validateMotionContinuity(client.replace('commitEnd();',''),demo,css).length,'Repeats must persist alternating endpoint paint before canceling finished effects');
+assert(validateMotionContinuity(client,demo.replace('<SectionNavigation compact pill/>',''),css).length,'A copied filter is not the real pill');
+assert(validateMotionContinuity(client,demo,css+' .ds-motion-letters span:nth-child(-n+3) { opacity:.4; }').length,'Resting text is fully visible');
+
+assert(validateMotionContinuity(client,demo.replace('container work-content ds-motion-project-width','ds-motion-project-width'),css).length,'Generic page width cannot replace the real Work card reference');
