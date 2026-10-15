@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import SiteRuntime from '../components/SiteRuntime.astro';
 import layoutCapabilitiesSource from '../scripts/layout-capabilities.js?raw';
 import urbanistFont from '@fontsource-variable/urbanist/files/urbanist-latin-wght-normal.woff2?url';
 import funnelDisplayFont from '@fontsource-variable/funnel-display/files/funnel-display-latin-wght-normal.woff2?url';
@@ -125,5 +126,5 @@ const searchDescription = Astro.url.pathname === '/'
       })();
     </script>
   </head>
-  <body><slot /><script>import '../scripts/theme';</script></body>
+  <body><slot /><SiteRuntime /></body>
 </html>

@@ -30,7 +30,7 @@ export function readMotionSourceCurves(root=process.cwd()){
   return [step,match[1]];
  }));
  // Section scroll uses the shared exact Lenis function, not a CSS approximation.
- if(!fs.readFileSync(path.join(root,'src/scripts/motion.ts'),'utf8').includes('easing: easeSectionScroll'))throw Error('Section scroll must keep the source curve');
+ if(!fs.readFileSync(path.join(root,'src/scripts/smooth-scroll.ts'),'utf8').includes('easing: easeSectionScroll'))throw Error('Section scroll must keep the source curve');
  return {...curves,scroll:'ease-section-scroll'};
 }
 // Simulation integration and frame scheduling are physical models, not UI tweens.

@@ -62,7 +62,7 @@ export const hiddenDocumentation = [
   },
   {
     "section": "Icon",
-    "sha256": "211ce549480eaf857bb74dbecb38dd04a57652cb471bdbdff5ee2eda14e8ffab",
-    "characters": 849
+    "sha256": "be30d1aeb1a35e046a811a5e17a7edaccffcd749154941bd42836c605d69a0d8",
+    "characters": 958
   }
 ] as const;

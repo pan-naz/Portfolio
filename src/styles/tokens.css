@@ -418,6 +418,7 @@
   --icon-stroke-emphasis: 2.5;
   --icon-linecap: round;
   --icon-linejoin: round;
+  --rotation-icon-close: 45deg;
 }
 
 /* Controls and layers · shared geometry and stacking */

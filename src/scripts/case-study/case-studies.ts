@@ -1,7 +1,7 @@
 import { readSafeAreaInsets } from '../safe-area.ts';
 import type { WorkFilter } from '../work-filter/work-filter';
 import type { initializeProjectCursor } from '../project-cursor';
-import { initializeSmoothScroll, pauseScroll, resumeScroll, repositionWork } from '../motion';
+import { initializeSmoothScroll, destroySmoothScroll, pauseScroll, resumeScroll, repositionWork } from '../motion';
 import { refreshViewportPointer } from '../viewport-pointer';
 import { initializeCaseStudyVideos } from './case-study-videos';
 import { initializeCaseStudyImages } from './case-study-images';
@@ -35,7 +35,6 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
   let animations: Animation[] = [];
   let caseVideos: ReturnType<typeof initializeCaseStudyVideos> | undefined;
   let caseImages: ReturnType<typeof initializeCaseStudyImages> | undefined;
-  let caseScroll: ReturnType<typeof initializeSmoothScroll> | undefined;
   let closeMagnet: ReturnType<typeof initializeControlMagnet> | undefined;
   let revision = 0;
   let closeRequested = false;
@@ -226,7 +225,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     // Release the real hero at the shared travel endpoint, while the decorative
     // radius finish continues independently.
     lockScroll(false);
-    caseScroll = initializeSmoothScroll(scroll, scroll.querySelector<HTMLElement>('[data-case-content]')!);
+    initializeSmoothScroll(scroll, scroll.querySelector<HTMLElement>('[data-case-content]')!);
     await radiusFinish;
     if (ticket !== revision) return;
     panel.style.cssText = 'inset:0;width:100%;height:100%;border-radius:0';
@@ -239,8 +238,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     phase = 'closing';
     closeMagnet?.destroy(); closeMagnet = undefined;
     // Freeze any remaining glide before measuring the return animation.
-    caseScroll?.destroy();
-    caseScroll = undefined;
+    destroySmoothScroll(scroll);
     lockScroll(false);
     control.hidden = true;
     const ticket = ++revision;

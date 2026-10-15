@@ -12,7 +12,7 @@ export function validateThemeIconMotion(css,toggle){
  if(toggle!==undefined&&(!toggle.includes('<SegmentedControl theme')||!toggle.includes("icon:'sun'")||!toggle.includes("icon:'moon'")||!toggle.includes('class="theme-toggle theme-icon-control"')||!toggle.includes('class="theme-toggle-glyph theme-icon-glyph"')))errors.push('Both theme-control appearances must bind the shared control/glyph motion hooks.');
  const contracts=[
   [['.theme-icon-glyph'],{'transform-origin':'center',transform:'translateY(0) rotate(0deg) scale(1)',transition:'transform var(--duration-toggle-return) var(--ease-toggle-rotation)'}],
-  [['.theme-icon-control:hover .theme-icon-glyph'],{transform:'rotate(var(--rotation-icon-turn))','transition-duration':'var(--duration-toggle-enter)'}],
+  [['.theme-icon-control:hover .theme-icon-glyph', "[data-icon-hover='theme']:focus-visible .theme-icon-glyph"],{transform:'rotate(var(--rotation-icon-turn))','transition-duration':'var(--duration-toggle-enter)'}],
   [['.theme-icon-control:active .theme-icon-glyph'],{transform:'translateY(0) rotate(0deg) scale(var(--scale-press))','transition-duration':'var(--duration-press)','transition-timing-function':'var(--ease-out)'}],
   [['.theme-icon-control .theme-icon-glyph'],{transform:'none',transition:'none'}],
  ];

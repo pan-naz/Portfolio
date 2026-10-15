@@ -1,4 +1,5 @@
 import { initializeCardTilt } from './project-tilt';
+import { scrollImmediately } from './smooth-scroll';
 
 history.scrollRestoration='manual';
 const views=[...document.querySelectorAll<HTMLElement>('[data-ds-view]')];
@@ -17,7 +18,7 @@ const revealNavigationLink=(link:HTMLAnchorElement|null)=>{
  const row=navigation.getBoundingClientRect(),item=link.getBoundingClientRect();
  const gutter=parseFloat(getComputedStyle(navigation).scrollPaddingInlineStart)||0;
  const delta=item.left<row.left+gutter?item.left-row.left-gutter:item.right>row.right-gutter?item.right-row.right+gutter:0;
- if(delta)navigation.scrollTo({left:navigation.scrollLeft+delta,behavior:'instant'});
+ if(delta)scrollImmediately(navigation.scrollLeft+delta,navigation);
  updateNavigationEdges();
 };
 navigation.addEventListener('scroll',updateNavigationEdges,{passive:true});
@@ -70,10 +71,10 @@ const selectView=(resetScroll=true)=>{
  document.querySelector('[data-ds-description]')!.textContent=selected.dataset.description!;
  refreshMarkup(selected);refreshValues();
  revealNavigationLink(navigation.querySelector<HTMLAnchorElement>('[aria-current=page]'));
- if(resetScroll){scrollTo({top:0,left:0,behavior:'instant'});requestAnimationFrame(()=>requestAnimationFrame(()=>scrollTo({top:0,left:0,behavior:'instant'})));}
+ if(resetScroll){scrollImmediately(0);requestAnimationFrame(()=>requestAnimationFrame(()=>scrollImmediately(0)));}
 };
 window.addEventListener('hashchange',()=>selectView());window.addEventListener('popstate',()=>selectView());
-const syncNavigation=()=>{const previous=views.find(view=>!view.hidden)?.id;selectView(false);if(previous!==views.find(view=>!view.hidden)?.id)scrollTo({top:0,left:0,behavior:'instant'});};
+const syncNavigation=()=>{const previous=views.find(view=>!view.hidden)?.id;selectView(false);if(previous!==views.find(view=>!view.hidden)?.id)scrollImmediately(0);};
 window.addEventListener('workstagelayoutchange',syncNavigation);phone.addEventListener('change',syncNavigation);
 window.addEventListener('resize',()=>{revealNavigationLink(navigation.querySelector<HTMLAnchorElement>('[aria-current=page]'));updateNavigationEdges();});
 links.filter(link=>!link.hasAttribute('data-ds-dashboard-link')).forEach(link=>link.addEventListener('click',event=>{event.preventDefault();if(link.hash!==location.hash)history.pushState(null,'',link.hash);selectView();}));

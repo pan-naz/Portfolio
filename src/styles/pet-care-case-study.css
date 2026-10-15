@@ -1,7 +1,7 @@
 /* Project-only: Pet Care brand styles, not part of the design system */
 @layer system, project;
 @layer project {
-.case-study-content--pet-care { --pc-color-f27477: #F27477; --pc-color-f15093: #F15093; --pc-color-df42c4: #DF42C4; }
+.case-study-content--pet-care { --pc-prize-icon-size: 32px; --pc-color-f27477: #F27477; --pc-color-f15093: #F15093; --pc-color-df42c4: #DF42C4; }
 /* Pet Care palettes and screen dimensions are original project artwork. */
 .case-study-content--pet-care { --pc-pink: #F25194; --pc-magenta: #DF42C5; --pc-coral: #F47E74; --pc-cream: #FFF4E6; padding-bottom: 0; }
 .pc-muted { color: var(--color-text-secondary); }
@@ -29,6 +29,7 @@
 .pc-prize-copy { display: grid; gap: var(--space-1); min-width: 0; }
 .pc-prize-place { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-2); color: var(--color-text-secondary); }
 .pc-prize--won { --color-interactive-accent: var(--pc-pink); }
+.pc-prize-glyph { width: var(--pc-prize-icon-size); height: var(--pc-prize-icon-size); }
 .pc-prize--won .pc-prize-place, .pc-prize--won .pc-prize-icon { color: var(--pc-pink); }
 .pc-prize--won .pc-prize-icon { background: color-mix(in srgb, var(--pc-pink) 8%, var(--color-bg-surface)); }
 .pc-research-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: var(--grid-gap); }

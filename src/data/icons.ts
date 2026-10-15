@@ -2,10 +2,12 @@ export type IconNode = [string, Record<string, string>];
 interface IconDefinition {
   nodes: IconNode[];
   weight?: 'strong';
+  close?: boolean;
 }
 
 // Node attributes may opt into semantic fills; unfilled nodes inherit the regular stroke.
 // Approved UI geometry; every control and decorative SVG uses the same renderer.
+const plusNodes: IconNode[] = [['path', { d: 'M12 5v14M5 12h14' }]];
 export const icons = {
   monitor: { nodes: [['rect', { x:'3', y:'4', width:'18', height:'13', rx:'2' }], ['path', { d:'M8 21h8M12 17v4' }]] },
   tablet: { nodes: [['rect', { x:'5', y:'2', width:'14', height:'20', rx:'2' }], ['circle', { cx:'12', cy:'18.5', r:'.5' }]] },
@@ -15,8 +17,9 @@ export const icons = {
     ['path', { d: 'M3.5 12 12 7.7l8.5 4.3L12 16.3z', fill: 'var(--icon-layer-surface, var(--color-bg-canvas))', 'data-icon-layer': 'middle' }],
     ['path', { d: 'M3.5 7.9 12 3.6l8.5 4.3L12 12.2z', fill: 'var(--color-interactive-accent)', stroke: 'none', 'data-icon-layer': 'top' }],
   ] },
-  plus: { weight: 'strong', nodes: [['path', { d: 'M12 5v14M5 12h14' }]] },
-  equals: { nodes: [['path', { d: 'M5 9h14M5 15h14' }]] },
+  plus: { weight: 'strong', nodes: plusNodes },
+  close: { weight: 'strong', nodes: plusNodes, close: true },
+  equals: { weight: 'strong', nodes: [['path', { d: 'M5 9h14M5 15h14' }]] },
   arrow: { nodes: [['path', { d: 'M4 12h15M13 5l7 7-7 7' }]] },
   sun: { nodes: [['circle', { cx: '12', cy: '12', r: '4' }], ['path', { d: 'M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5' }]] },
   moon: { nodes: [['path', { d: 'M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z' }]] },
