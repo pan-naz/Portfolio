@@ -7,6 +7,6 @@ const { label, href, icon, variant = 'default', size = 'large', class: className
 const fixedLight = variant === 'raised';
 const Tag = href ? 'a' : 'button';
 ---
-<Tag type={href ? undefined : "button"} href={href} data-color-zone={fixedLight ? "light" : undefined} data-zone-keep={fixedLight ? "shadows" : undefined} {...attributes} tabindex={attributes.tabindex ?? 0} class:list={['icon-button', variant === 'raised' && 'icon-button--raised', variant === 'secondary' && 'icon-button--secondary', size === 'small' && 'icon-button--small hit-area', className]} aria-label={label}>
+<Tag type={href ? undefined : "button"} href={href} data-color-zone={fixedLight ? "light" : undefined} data-zone-keep={fixedLight ? "shadows focus-ring" : undefined} data-icon={fixedLight ? icon : undefined} {...attributes} tabindex={attributes.tabindex ?? 0} class:list={['icon-button', variant === 'raised' && 'icon-button--raised', variant === 'secondary' && 'icon-button--secondary', size === 'small' && 'icon-button--small hit-area', className]} aria-label={label}>
   {icon && <Icon name={icon} />}<slot />
 </Tag>

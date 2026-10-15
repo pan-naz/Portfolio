@@ -21,7 +21,8 @@ export function validateTokenSource(css){
  tree.walkRules(rule=>{if(rule.selector.includes(',')&&rule.selector.split('\n').some(line=>line.replace(/,\s*$/,'').includes(',')))errors.push('Each token selector needs its own line.');if(/:root\[data-theme=['"]dark['"]\]/.test(rule.selector)&&/\[data-theme=['"]dark['"]\]/.test(rule.selector.replace(/:root\[data-theme=['"]dark['"]\]/g,''))&&!(rule.prev()?.type==='comment'&&/priority:/i.test(rule.prev().text)))errors.push('Duplicate Dark root selector needs a priority comment.');});
  tree.walkDecls(/^--shadow-/,decl=>{if(decl.value.includes(',')&&!decl.value.includes('\n'))errors.push('Each shadow layer needs its own line.');});
  for(const name of ['--font-heading','--font-body','--color-backdrop'])if(counts.get(name)!==1)errors.push(name+' must be defined once.');
- for(const name of ['--color-border-control','--color-focus-ring']){const defs=[];tree.walkDecls(name,d=>defs.push(d.value));if(defs.length!==1||defs[0]!=='var(--color-text-primary)')errors.push(name+' must derive once from local primary text.');}
+ for(const name of ['--color-border-control','--color-focus-ring']){const defs=[];tree.walkDecls(name,d=>defs.push(d.value));if(defs.filter(value=>value==='var(--color-text-primary)').length!==1||defs.some(value=>value!=='var(--color-text-primary)'&&!(name==='--color-focus-ring'&&value==='inherit')))errors.push(name+' must derive once from local primary text.');}
+ tree.walkDecls('--color-focus-ring',decl=>{if(decl.value==='inherit'&&decl.parent.selector!=="[data-zone-keep~='focus-ring']")errors.push('Only fixed-Light controls may keep their surrounding focus ring.');});
  const raw=new Map();tree.walkDecls(d=>{if(d.prop.startsWith('--')&&!raw.has(d.prop))raw.set(d.prop,d.value);});
  for(const [name,value]of Object.entries({'radius-small':'12px','radius-medium':'24px','radius-large':'24px','radius-xlarge':'40px','radius-full':'999px','gutter':'var(--space-6)','header-inset':'var(--space-6)','grid-gap':'var(--space-4)','section-space':'var(--space-16)'}))if(raw.get('--'+name)!==value)errors.push('Incorrect phone default: '+name);
  return errors;
@@ -32,14 +33,15 @@ export function validateRenderedThemeZones(html){
  for(const[,attributes]of html.matchAll(/<[a-z][\w-]*\b((?:"[^"]*"|'[^']*'|[^'">])*)>/gi)){
   const classes=new Set((attributes.match(/\bclass="([^"]*)"/)?.[1]||'').split(/\s+/)),has=(name,value)=>attributes.includes(`${name}="${value}"`);
   const inverse=classes.has('case-study-chapter--inverse'),impact=classes.has('case-study-decision-card__impact'),about=classes.has('about-details');
-  const light=['case-study-direct-close','tooltip','case-study-decision-card--figure','case-study-service-demo'].some(name=>classes.has(name))||(classes.has('floating-control-theme')&&!classes.has('floating-navigation-theme'));
+  const light=['icon-button--raised','tooltip','case-study-decision-card--figure','case-study-service-demo'].some(name=>classes.has(name))||(classes.has('floating-control-theme')&&!classes.has('floating-navigation-theme'));
   const zone=light?'light':inverse||impact||about?'dark':null;
   if(zone&&!has('data-color-zone',zone))errors.push('Missing rendered '+zone+' zone: '+[...classes].join(' '));
   const keep=new Set((attributes.match(/\bdata-zone-keep="([^"]*)"/)?.[1]||'').split(/\s+/));
   if((inverse||impact||about)&&!keep.has('section'))errors.push('Scoped copy must retain the original section background: '+[...classes].join(' '));
   if(inverse&&!keep.has('surface'))errors.push('Inverse artwork must retain its inherited surface.');
   if(zone&&!keep.has(about?'large-shadow':'shadows'))errors.push('Scoped copy must retain its original shadow mode: '+[...classes].join(' '));
-  if([...keep].some(keyword=>!['surface','section','shadows','large-shadow',''].includes(keyword))||keep.has('shadows')&&keep.has('large-shadow'))errors.push('Unknown/redundant zone keyword.');
+  if([...keep].some(keyword=>!['surface','section','shadows','large-shadow','focus-ring',''].includes(keyword))||keep.has('shadows')&&keep.has('large-shadow'))errors.push('Unknown/redundant zone keyword.');
+  if(classes.has('icon-button--raised')&&!keep.has('focus-ring'))errors.push('Raised must keep its surrounding focus ring.');
   if(oldZoneAttributes.some(name=>attributes.includes(name+'=')))errors.push('Retired zone helper attribute.');
  }
  return errors;

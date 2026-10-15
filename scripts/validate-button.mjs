@@ -42,8 +42,8 @@ export function validateButtonCatalog(root=process.cwd()){
   for(const variant of used)if(!specimens.includes(variant))errors.push(name+' website variant has no real specimen: '+variant);
   for(const variant of specimens)if(!used.includes(variant))errors.push(name+' has an unused specimen variant: '+variant);
   if(usage.split('\n').some(line=>line.length>76))errors.push('Button Usage must fit desktop blocks: '+name);
-  if(name==='IconButton'&&(/class[=:]|<span|import Icon from/.test(usage)||usage.match(/<IconButton/g)?.length!==2||!usage.includes('variant="raised"')||!usage.includes('icon="layers"')))errors.push('Icon Usage needs only two clean one-line source examples.');
-  if(!usage.startsWith('import '+name)||!usage.includes('<'+name))errors.push('Source Usage missing: '+name);
+  if(name==='IconButton'&&(/class[=:]|<span|import Icon from/.test(usage)||usage.match(/<IconButton(?=\s|\/>)/g)?.length!==2||!usage.includes('variant="raised"')||!usage.includes('icon="layers"')))errors.push('Icon Usage needs two explicit source examples.');
+  if(!usage.includes('import '+name)||!usage.includes('<'+name))errors.push('Source Usage missing: '+name);
  }
  const actionComponents=model.components.filter(item=>['Button','IconButton','TextLink'].includes(item.name));
  const direct=buttonTokens(actionComponents),groups=buttonTokenGroups(actionComponents);
@@ -58,15 +58,26 @@ export function validateButtonCatalog(root=process.cwd()){
  const states=read('src/scripts/design-system-button.ts');
  if(!states.includes('CSSStyleRule')||!states.includes('rule.style.cssText')||!states.includes('rule.cssText.startsWith(\'@layer\')'))errors.push('Frozen states must read actual shared CSS without changing its layer.');
  const page=read('src/components/DSButtons.astro');
- if(!page.includes('The theme switch is <code>&lt;ThemeToggle /&gt;</code>, built on IconButton.'))errors.push('Explain ThemeToggle composition in Icon Usage.');
+ if(/DSTokenNames|ds-token-swap|data-ds-names/.test(page+read('src/styles/design-system-button.css')))errors.push('Button must have no token-name switch or swap.');
+ const usage=buttonUsage('IconButton');
+ if(/\{\.\.\.|const (?:close|layers) =/.test(usage)||!usage.includes('// The theme switch is <ThemeToggle />, built on IconButton.')||!usage.includes('// Media controls are default icon buttons inside the video player.')||usage.indexOf('// Media')>usage.lastIndexOf('---'))errors.push('Explicit Icon Usage and script comments are required.');
  const css=read('src/styles/design-system-button.css');
- if(!css.includes('.ds-button-view .ds-comparison-switch .case-comparison-images { display:none; }')||!css.includes('.ds-button-values .ds-token-swap { text-align:right; align-items:start; }'))errors.push('Button-only Toggle images and visible value-row alignment must be explicit.');
+ if(!css.includes('.ds-button-view .ds-comparison-switch .case-comparison-images { display:none; }'))errors.push('Button-only Toggle images and visible value-row alignment must be explicit.');
  if(!css.includes('.ds-button-state-cell { min-width:0;'))errors.push('State rows must shrink to their card, never to unwrapped content.');
- if(!css.includes('transform:rotate(var(--rotation-icon-close))')||!page.includes('ds-button-turn')||!page.includes('ds-button-state-name--phone text-body-m-strong'))errors.push('Close mid-turn and phone state names must use shared tokens/styles.');
+ if(!css.includes('transform:rotate(calc(var(--rotation-icon-close) / 2))')||!page.includes('ds-button-turn')||!page.includes('ds-button-state-name--phone text-body-m-strong'))errors.push('Close mid-turn and phone state names must use shared tokens/styles.');
  if(!states.includes("querySelectorAll('.ds-button-values > div').length")||!states.includes('.ds-button-stage-art'))errors.push('Fit every metadata row and the unwrapped secondary-arrow specimen.');
- if(!page.includes('buttonStateGroups.map')||!page.includes('buttonStates.map')||buttonStates.length!==4||buttonStateGroups.flat().length!==7)errors.push('States need seven real controls and four states.');
+ if(!page.includes('buttonStateGroups.map')||!page.includes('buttonStates.map')||buttonStates.length!==4||buttonStateGroups.flatMap(group=>group.cards).length!==13)errors.push('States need all thirteen real variants in three groups and four states.');
  if(!page.includes('inert aria-hidden="true"')||!read('src/components/DSDashboard.astro').includes('ds-button-cover'))errors.push('Button stages and Overview cover must be inert.');
  if(!read('src/scripts/design-system.ts').includes("['icon-button','text-link']"))errors.push('Retired action hashes must redirect to Button.');
+ const global=read('src/styles/global.css');
+ if(/:is\(\.project-cursor\.is-case-control, \.case-study-direct-close\)/.test(global)||!global.includes(".icon-button--raised[data-icon='close']:hover svg > g")||!global.includes('.icon-button--raised:hover'))errors.push('Raised owns white hover and the close turn.');
+ if(!css.includes('grid-template-columns:var(--space-16) repeat(5,minmax(0,1fr))')||!page.includes('ds-button-state-labels'))errors.push('States require one shared label plus five-column grid.');
+ if(!read('src/components/DSDashboard.astro').includes('<DSButtonSpecimen id="toggle" cover/>')||!read('src/components/DSButtonSpecimen.astro').includes('state||cover?'))errors.push('The cover needs only the control pair, never comparison artwork.');
+ if(!css.includes('.ds-tile-visual:has(> .ds-button-cover) { overflow:visible; }'))errors.push('The cover must not clip native shadows at the preview separator.');
+ if(!states.includes('--ds-cover-fit'))errors.push('Cover must fit its actual tile with token-sized clearance.');
+ if(!css.includes('.ds-button-stage:has(> p) { padding:var(--space-6); }'))errors.push('Inline prose keeps an unscaled Space6 inset.');
+ const propsCss=read('src/styles/design-system.css');
+ if(!propsCss.includes('.ds-props-table :is(th,td):nth-child(3) { grid-column:2; grid-row:1; }')||!propsCss.includes('.ds-props-table tbody tr { border-top:1px solid var(--color-border-default); }'))errors.push('Phone Props header and rows must share placement and per-prop separators.');
  return errors;
 }
 if(process.argv[1]===fileURLToPath(import.meta.url)){assert.deepEqual(validateButtonCatalog(),[]);console.log('Button catalog: source props/usage, variants, shared frozen states, raised API and catalog ownership pass.');}

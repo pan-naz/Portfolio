@@ -7,7 +7,7 @@ assert.deepEqual(validateButtonCatalog(),[]);
 const model=buildSystemInventory();
 for(const name of ['Button','IconButton','TextLink']){
  const component=model.components.find(component=>component.name===name);
- assert.deepEqual(buttonProps(component).map(prop=>[prop.name,prop.type]),component.props.map(prop=>[prop.name,prop.type]));
+ assert.deepEqual(buttonProps(component).map(prop=>[prop.name,prop.type]).sort(),component.props.map(prop=>[prop.name,prop.type]).sort());
  assert(buttonProps(component).every(prop=>prop.description));
  assert(buttonUsage(name).includes('import '+name));
 }
@@ -23,5 +23,9 @@ assert(tokens.includes('--color-text-primary')&&tokens.includes('--control-icon'
 assert(!tokens.includes('--color-ink')&&!tokens.includes('--font-family-body')&&!tokens.includes('--ease-entrance'));
 assert.deepEqual(buttonTokenGroups(actions).flatMap(group=>group.names).sort(),tokens);
 const iconUsage=buttonUsage('IconButton');
-assert.equal(iconUsage.match(/<IconButton[^\n]+\/>/g)?.length,2);
+assert.equal(iconUsage.match(/<IconButton(?=\s|\/>)/g)?.length,2);
+assert(!iconUsage.includes('{...'));
+assert.deepEqual(buttonProps(model.components.find(c=>c.name==='Button')).map(p=>p.name),['href','variant','size','arrow','download','appearance']);
+assert.deepEqual(buttonProps(model.components.find(c=>c.name==='IconButton')).map(p=>p.name),['label','icon','href','variant','size']);
+assert.equal(buttonProps(model.components.find(c=>c.name==='Button')).find(p=>p.name==='download').default,'false');
 assert(!/class=|<span|import Icon from/.test(iconUsage));

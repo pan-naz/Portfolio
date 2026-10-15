@@ -168,10 +168,12 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
  .ds-spec-footer { flex-direction:column; gap:var(--space-4); }
  .ds-tile-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
  .ds-props-table tr { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
- .ds-props-table th,.ds-props-table td { min-width:0; }
- .ds-props-table td:nth-child(2) { grid-column:1; grid-row:2; }
- .ds-props-table td:nth-child(3) { grid-column:2; grid-row:1; }
- .ds-props-table td:nth-child(4) { grid-column:2; grid-row:2; }
+ .ds-props-table th,.ds-props-table td { min-width:0; border-top:0; }
+ .ds-props-table tbody tr { border-top:1px solid var(--color-border-default); }
+ .ds-props-table :is(th,td):nth-child(1) { grid-column:1; grid-row:1; }
+ .ds-props-table :is(th,td):nth-child(2) { grid-column:1; grid-row:2; }
+ .ds-props-table :is(th,td):nth-child(3) { grid-column:2; grid-row:1; }
+ .ds-props-table :is(th,td):nth-child(4) { grid-column:2; grid-row:2; }
 }
 @media (max-width:599px) { .ds-navigation { grid-template-columns:minmax(0,1fr); } }
 @media (max-width:359px) { .ds-tile-grid { grid-template-columns:minmax(0,1fr); } }

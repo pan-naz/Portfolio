@@ -84,6 +84,11 @@
   --color-bg-surface: inherit;
 }
 
+/* Focus · keep page ring on fixed-Light controls */
+[data-zone-keep~='focus-ring'] {
+  --color-focus-ring: inherit;
+}
+
 /* Section · keep page band */
 [data-zone-keep~='section'] {
   --color-bg-section: inherit;

@@ -21,7 +21,8 @@ const { before, after, label } = Astro.props;
 @layer system, project;
 @layer system {
   .case-comparison { display: block; }
-  .case-comparison-controls { display: flex; justify-content: center; gap: var(--space-1); width: fit-content; margin: 0 auto var(--space-4); padding: var(--space-1); border-radius: var(--radius-full); background: var(--color-bg-surface); box-shadow: var(--shadow-small); }
+  /* The real comparison and its catalog-only control pair share this row. */
+  :global(.case-comparison-controls) { display: flex; justify-content: center; gap: var(--space-1); width: fit-content; margin: 0 auto var(--space-4); padding: var(--space-1); border-radius: var(--radius-full); background: var(--color-bg-surface); box-shadow: var(--shadow-small); }
   .case-comparison-images { display: grid; align-items: start; filter: drop-shadow(var(--shadow-small)); }
   .case-comparison-images img { grid-area: 1 / 1; display: block; width: 100%; height: auto; border-radius: var(--radius-medium); opacity: 0; transition: opacity var(--duration-fast) var(--ease-in-out); }
   .case-comparison-images img[data-active] { opacity: 1; }

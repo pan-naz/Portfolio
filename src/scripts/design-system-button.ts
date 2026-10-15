@@ -14,6 +14,8 @@ if(states){
  const style=document.createElement('style');style.dataset.dsButtonStates='';
  style.textContent='@layer system {'+[...document.styleSheets].map(sheet=>{try{return rules(sheet.cssRules)}catch{return ''}}).join('\n')+'}';
  document.head.append(style);
+ for(const art of states.querySelectorAll<HTMLElement>('[data-button-state]'))for(const control of art.querySelectorAll<HTMLElement>('.button,.icon-button,.text-link'))if(!control.dataset.dsState)control.dataset.dsState=art.dataset.buttonState;
+ const covers=[...document.querySelectorAll<HTMLElement>('.ds-button-cover')];
  const groups=[...states.querySelectorAll<HTMLElement>('.ds-button-states')];
  const fit=()=>{
   const writes:{element:HTMLElement;scale:number}[]=[];
@@ -35,7 +37,7 @@ if(states){
    }
   }
   for(const group of groups){
-   const units=matchMedia('(max-width:767px)').matches?[...group.children] as HTMLElement[]:[group];
+   const units=[...group.querySelectorAll<HTMLElement>('.ds-button-state-column')];
    for(const unit of units){
     const art=[...unit.querySelectorAll<HTMLElement>('.ds-button-state-art')];
     if(!art.length||!unit.clientWidth)continue;
@@ -51,11 +53,17 @@ if(states){
   for(const art of states.querySelectorAll<HTMLElement>('.ds-button-stage-art')){
    if(art.parentElement!.clientWidth)writes.push({element:art,scale:Math.min(1,art.parentElement!.clientWidth/art.offsetWidth)});
   }
+  for(const cover of covers){
+   if(!cover.parentElement!.clientWidth)continue;
+   const room=parseFloat(getComputedStyle(cover).getPropertyValue('--space-4'))*2;
+   const scale=Math.min(1,(cover.parentElement!.clientWidth-room)/cover.offsetWidth,(cover.parentElement!.clientHeight-room)/cover.offsetHeight);
+   write(cover,'--ds-cover-fit',String(scale));
+  }
   for(const {element,scale} of writes)write(element,'--ds-specimen-fit',String(scale));
   for(const {element,heights} of metadata)write(element,'--ds-button-value-rows',heights.map(height=>height+'px').join(' '));
  };
  let pending=false;
  const schedule=()=>{if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;fit();});};
- const observer=new ResizeObserver(schedule);[...groups,...states.querySelectorAll('.ds-button-grid')].forEach(group=>observer.observe(group));
+ const observer=new ResizeObserver(schedule);[...groups,...states.querySelectorAll('.ds-button-grid'),...covers.map(cover=>cover.parentElement!)].forEach(group=>observer.observe(group));
  document.fonts.ready.then(schedule);
 }

@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import {readFileSync,readdirSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {visibleComponents,catalogComponents,dsComponents} from '../src/data/ds-components.ts';
+import {buttonProps} from '../src/data/system-button.ts';
 import {componentPropSpecs} from '../src/data/system-props.ts';
 import {buildSystemInventory} from '../src/data/system-inventory.ts';
 import {validateInventoryCoverage,validateVariantCoverage,validateRenderedComponentNames,validateOverviewHiddenEntries} from './validate-design-system.mjs';
@@ -14,7 +15,7 @@ const catalog=read('dist/design-system/index.html'),home=read('dist/index.html')
 assert.deepEqual(validateRenderedIcons(catalog),[]);
 const styles=html=>[...html.matchAll(/<link[^>]*href="([^"]+\.css)"[^>]*>/g)].map(([,file])=>read('dist'+file)).concat([...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map(([,css])=>css)).join('\n');
 assert.equal((catalog.match(/\bdata-theme-control/g)||[]).length,1,'Only the header controls the page theme');
-assert.equal((catalog.match(/<[a-z][^>]*\sdata-theme=/g)||[]).length,2,'Page theme plus the shared fixed-dark media control specimen');
+assert.equal((catalog.match(/<[a-z][^>]*\sdata-theme=/g)||[]).length,6,'Page theme plus the main Media specimen and its four frozen states');
 assert.match(catalog, /<html\b[^>]*\bdata-catalog(?:[\s=>])/);
 assert.doesNotMatch(home, /<html\b[^>]*\bdata-catalog(?:[\s=>])/);
 assert.ok(!styles(catalog).includes('html[data-static]'),'Live specimens must keep genuine transitions and states');
@@ -77,7 +78,7 @@ for(const id of sections)for(const group of ['canvas'])for(let index=0;index<2;i
 const ids=[...catalog.matchAll(/\bid="([^"]+)"/g)].map(([,id])=>id);assert.equal(ids.length,new Set(ids).size,'Unique document ids');
 const model=buildSystemInventory(root),names=[...new Set([...catalog.matchAll(/data-ds-component="([^"]+)"/g)].map(([,name])=>name))];
 assert.deepEqual(validateRenderedComponentNames(names,catalogComponents.map(item=>item.name)),[]);
-for(const entry of catalogComponents){const component=model.components.find(item=>item.name===entry.name);const hook=entry.section==='button'?`data-ds-component-code="${entry.name}"`:`id="${entry.section}"`;const view=catalog.match(new RegExp(`<section[^>]*${hook}[\\s\\S]*?</section>`))?.[0]||'';const documented=[...view.matchAll(/data-ds-prop="([^"]+)"/g)].map(([,name])=>name);assert.deepEqual(documented,componentPropSpecs(component).map(prop=>prop.name),`All source props, including inherited fields: ${entry.name}`);}
+for(const entry of catalogComponents){const component=model.components.find(item=>item.name===entry.name);const hook=entry.section==='button'?`data-ds-component-code="${entry.name}"`:`id="${entry.section}"`;const view=catalog.match(new RegExp(`<section[^>]*${hook}[\\s\\S]*?</section>`))?.[0]||'';const documented=[...view.matchAll(/data-ds-prop="([^"]+)"/g)].map(([,name])=>name);assert.deepEqual(documented,(entry.section==='button'?buttonProps(component):componentPropSpecs(component)).map(prop=>prop.name),`All source props, including inherited fields: ${entry.name}`);}
 const paths=dsComponents.map(item=>item.file),tokens=[...new Set([...catalog.matchAll(/data-ds-token="([^"]+)"/g)].map(([,name])=>name))],icons=[...new Set([...catalog.matchAll(/data-ds-icon="([^"]+)"/g)].map(([,name])=>name))];
 assert.deepEqual(validateInventoryCoverage(model,paths,tokens,icons,read('src/styles/tokens.css'),catalog+styles(catalog)),[]);
 const variantValues=[...catalog.matchAll(/data-ds-variant="([^"]+)"/g)].map(([,value])=>value);assert.deepEqual(validateVariantCoverage(model,variantValues),[]);
