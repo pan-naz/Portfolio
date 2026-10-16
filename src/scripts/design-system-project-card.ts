@@ -34,12 +34,13 @@ const fit=()=>{
  if(probe.getClientRects().length){
   // The real container/bento CSS owns viewport widths and the desktop rail inset.
   const full=parseFloat(getComputedStyle(probe).width),compact=parseFloat(getComputedStyle(probe.firstElementChild!).gridTemplateColumns);
+  if(full<=0||compact<=0)return;
   for(const art of view.querySelectorAll<HTMLElement>('[data-project-art]'))write(art,'--ds-project-width',(art.dataset.projectArt==='full'?full:compact)+'px');
   const fullDetails=view.querySelector<HTMLElement>('[data-project-art="full"] .project-details')!;
   const identity=view.querySelector<HTMLElement>('[data-project-art="identity"]')!;
   write(identity,'--ds-project-width',getComputedStyle(fullDetails).width);
-  const cursor=view.querySelector<HTMLElement>('.ds-project-cursor')!,hover=cursor.parentElement!,media=hover.querySelector<HTMLElement>('.project-media')!,button=cursor.firstElementChild as HTMLElement;
-  cursor.style.left=(media.offsetLeft+(media.offsetWidth-button.offsetWidth)/2)+'px';cursor.style.top=(media.offsetTop+(media.offsetHeight-button.offsetHeight)/2)+'px';
+  const cursor=view.querySelector<HTMLElement>('.ds-project-cursor')!,hover=cursor.parentElement!,button=cursor.firstElementChild as HTMLElement;
+  cursor.style.left=(hover.offsetWidth*.8-button.offsetWidth/2)+'px';cursor.style.top=(hover.offsetHeight*.78-button.offsetHeight/2)+'px';
   for(const grid of view.querySelectorAll<HTMLElement>('.ds-project-grid,.ds-project-states')){
    const rows=new Map<number,HTMLElement[]>();
    for(const card of grid.children as HTMLCollectionOf<HTMLElement>)rows.set(card.offsetTop,[...(rows.get(card.offsetTop)||[]),card]);
@@ -50,10 +51,17 @@ const fit=()=>{
      const stage=card.querySelector<HTMLElement>('.ds-project-stage')!,holder=stage.firstElementChild as HTMLElement,art=holder.firstElementChild as HTMLElement;
      const old=Number(getComputedStyle(art).getPropertyValue('--ds-project-scale'))||1,r=art.getBoundingClientRect(),surface=art.querySelector<HTMLElement>('.project-surface'),paint=surface?.getBoundingClientRect();
      const outline=surface?getComputedStyle(surface):null,ring=outline&&outline.outlineStyle!=='none'?parseFloat(outline.outlineWidth)+parseFloat(outline.outlineOffset):0;
-     const left=Math.min(0,paint?(paint.left-r.left)/old-ring:0),top=Math.min(0,paint?(paint.top-r.top)/old-ring:0),right=Math.max(art.offsetWidth,paint?(paint.right-r.left)/old+ring:0),bottom=Math.max(art.offsetHeight,paint?(paint.bottom-r.top)/old+ring:0);
-     const css=getComputedStyle(stage),room=parseFloat(css.width)-parseFloat(css.paddingLeft)-parseFloat(css.paddingRight)-parseFloat(css.getPropertyValue('--space-1'));
+     let left=Math.min(0,paint?(paint.left-r.left)/old-ring:0),top=Math.min(0,paint?(paint.top-r.top)/old-ring:0),right=Math.max(art.offsetWidth,paint?(paint.right-r.left)/old+ring:0),bottom=Math.max(art.offsetHeight,paint?(paint.bottom-r.top)/old+ring:0);
+     const tilted=paint&&outline?.transform!=='none';
+     if(tilted){
+      // Fit visible tilted paint and cursor, not the empty untransformed plane.
+      const pointer=art.querySelector('.project-cursor .icon-button'),bounds=[paint,...(pointer?[pointer.getBoundingClientRect()]:[])];
+      left=Math.min(...bounds.map(b=>(b.left-r.left)/old));top=Math.min(...bounds.map(b=>(b.top-r.top)/old));right=Math.max(...bounds.map(b=>(b.right-r.left)/old));bottom=Math.max(...bounds.map(b=>(b.bottom-r.top)/old));
+     }
+     const css=getComputedStyle(stage),room=parseFloat(css.width)-parseFloat(css.paddingLeft)-parseFloat(css.paddingRight)-(tilted?0:parseFloat(css.getPropertyValue('--space-1')));
      return{stage,holder,art,left,top,width:right-left,height:bottom-top,room,padding:parseFloat(css.paddingTop)+parseFloat(css.paddingBottom)};
     });
+    if(items.some(item=>item.room<=0||item.width<=0))continue;
     const scale=Math.min(1,...items.map(item=>item.room/item.width));
     for(const item of items){
      write(item.art,'--ds-project-scale',String(scale));item.art.style.left=(-item.left*scale)+'px';item.art.style.top=(-item.top*scale)+'px';

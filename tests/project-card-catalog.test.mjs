@@ -7,6 +7,8 @@ assert.deepEqual(validateProjectCard(),[]);
 const model=buildSystemInventory();for(const name of ['ProjectCard','ProjectIdentity','ProjectTags'])assert.equal(projectCardProps(model.components.find(c=>c.name===name)).length,name==='ProjectCard'?2:name==='ProjectIdentity'?3:1);
 assert(projectCardUsage('ProjectCard').includes('<ProjectCard project={project} compact />'));
 assert(projectCardTokenGroups().find(g=>g.title==='Motion').names.includes('--project-tilt-angle'));
+assert(readFileSync('src/components/DSProjectCardSpecimen.astro','utf8').includes("project.id==='yellow-leaf'"));
+assert(!readFileSync('src/components/DSProjectCardSpecimen.astro','utf8').includes("project.id==='gutsul-made'"));
 const literal=model.projectValues[0],common=[model,model.components.filter(c=>model.components.some(v=>v.file===c.file)).map(c=>c.file),model.tokens.map(t=>t.name),model.iconNames,readFileSync('src/styles/tokens.css','utf8')];
 const check=text=>validateInventoryCoverage(...common,text).filter(e=>e.includes('Project-only literal'));
 assert(check('<span>'+literal+'</span>').length);assert.equal(check('<template data-project-template="compact"><svg data-svg-src="/projects/gutsul-made-case-study/logo.svg"><path fill="'+literal+'"/></svg></template>').length,0);assert(check('<svg data-svg-src="/projects/gutsul-made-case-study/logo.svg"><path fill="'+literal+'"/></svg>').length);
