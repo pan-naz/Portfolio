@@ -1,6 +1,6 @@
 ---
-import Button from './Button.astro';
+import DSControl from './DSControl.astro';
 interface Props {token?:string;label?:string;}
 const {token,label}=Astro.props;
 ---
-{token?<span class="ds-token-swap" data-ds-label-swap><span class="ds-token-human">{label||<slot/>}</span><code class="ds-token-name" aria-hidden="true">{token}</code></span>:<Button appearance="catalog" size="small" class="ds-name-toggle" role="switch" aria-checked="false" data-ds-names><span class="ds-name-switch" aria-hidden="true"></span>Show token names</Button>}
+{token?<span class="ds-token-swap" data-ds-label-swap><span class="ds-token-human">{label||<slot/>}</span><code class="ds-token-name" aria-hidden="true">{token}</code></span>:<DSControl class="ds-name-toggle" role="switch" aria-checked="false" data-ds-names><span class="ds-name-switch" aria-hidden="true"></span>Show token names</DSControl>}

@@ -1,45 +1,22 @@
 ---
 import '../styles/case-video-player.css';
 import type {SourceComponent} from '../data/system-inventory';
-import Button from './Button.astro';import TextLink from './TextLink.astro';import IconButton from './IconButton.astro';import Icon from './Icon.astro';
+import Button from './Button.astro';import DSControl from './DSControl.astro';
 import Chip from './Chip.astro';import Stat from './Stat.astro';import TimelineRow from './TimelineRow.astro';import ProjectCard from './ProjectCard.astro';
 import SectionHeading from './SectionHeading.astro';import SectionNavigation from './SectionNavigation.astro';import NavLinks from './NavLinks.astro';import Logo from './Logo.astro';
-import CaseStudyComparison from './CaseStudyComparison.astro';
+
 import ToolCard from './ToolCard.astro';import ThemeToggle from './ThemeToggle.astro';
-import {projects,impactGroups,experience,profile,cvUrl,hookoSiteUrl,tools} from '../data/portfolio';
-import {dataGPTMedia} from '../data/datagpt-case-study';import {workCategories} from '../data/work-categories';
+import {projects,impactGroups,experience,profile,tools} from '../data/portfolio';
+import {workCategories} from '../data/work-categories';
 interface Props {component:SourceComponent;miniature?:boolean;}
 const {component,miniature=false}=Astro.props,name=component.name;
 const prefix=miniature?'tile-':'example-';
 ---
-{name==='Button'&&<div class="ds-specimen-composition">
- <div class="ds-labelled-specimen"><span>Primary</span><div data-ds-example="primary" data-ds-target=".button"><Button href={`mailto:${profile.email}`} arrow="up">Get in touch</Button></div></div>
- {!miniature&&<><div class="ds-labelled-specimen"><span>Secondary</span><div data-ds-example="secondary" data-ds-target=".button"><Button href={cvUrl} variant="secondary" download>Download CV (PDF)</Button></div></div>
- <div class="ds-labelled-specimen"><span>Small</span><div data-ds-example="small" data-ds-target=".button"><Button href="/design-system/" size="small" variant="secondary" arrow="up">Design system</Button></div></div>
- <div class="ds-labelled-specimen"><span>Before / After</span><div class="ds-comparison-switch" data-ds-example="comparison" data-ds-target=".case-comparison-controls"><CaseStudyComparison before={dataGPTMedia.before} after={dataGPTMedia.after} label="Compare date and filter visibility" /></div></div></>}
-</div>}
 {name==='Chip'&&<div class="ds-specimen-composition">
  <div class="ds-labelled-specimen"><span>Default</span><div data-ds-example="chip-default" data-ds-target=".skill-tag"><Chip label="Accessibility" /></div></div>
  {!miniature&&<><div class="ds-labelled-specimen"><span>Raised</span><div class="ds-project-context" data-ds-example="chip-raised" data-ds-target=".skill-tag"><Chip label={projects[0].tags[0]} variant="raised" /></div></div>
  <div class="ds-labelled-specimen"><span>Accent</span><div data-ds-example="chip-accent" data-ds-target=".skill-tag"><Chip label="Context" variant="accent" /></div></div>
  <div class="ds-labelled-specimen"><span>Plain</span><div data-ds-example="chip-plain" data-ds-target=".skill-tag"><Chip label="Workflows" variant="plain" /></div></div></>}
-</div>}
-{name==='IconButton'&&<div class="ds-specimen-composition">
- <div class="ds-labelled-specimen"><span>Raised</span><div class="ds-inline-controls">
- <div class="floating-navigation-theme floating-navigation-surface ds-icon-surface" data-ds-example="icon-raised-theme" data-ds-target=".icon-button"><ThemeToggle /></div>
- <div class="case-study-direct-close ds-close-holder" data-color-zone="light" data-zone-keep="shadows" data-ds-example="icon-close" data-ds-target=".icon-button"><IconButton href="/#work" label="Close case study" class="floating-control-theme floating-control-surface"><Icon name="close" /></IconButton></div>
- </div></div>
- {!miniature&&<><div class="ds-labelled-specimen"><span>Plain</span><div data-ds-example="icon-theme" data-ds-target=".icon-button"><ThemeToggle /></div></div>
- <div class="ds-labelled-specimen"><span>Secondary · Small</span><div data-ds-example="icon-layers" data-ds-target=".icon-button"><IconButton href="/design-system/" label="Design system" variant="secondary" size="small" icon="layers" /></div></div>
- <div class="ds-labelled-specimen"><span>Media</span><div class="ds-media-backdrop"><div class="case-video-controls ds-media-controls" data-theme="dark">
- <div data-ds-example="icon-play" data-ds-target=".icon-button"><IconButton label="Play video" data-video-toggle><span data-play-icon><Icon name="play" /></span><span data-pause-icon hidden><Icon name="pause" /></span></IconButton></div>
- <div data-ds-example="icon-sound" data-ds-target=".icon-button"><IconButton label="Sound off. Turn sound on" data-video-mute aria-pressed="false"><span data-muted-icon><Icon name="volume-muted" /></span><span data-sound-icon hidden><Icon name="volume" /></span></IconButton></div>
- </div></div></div></>}
-</div>}
-{name==='TextLink'&&<div class="ds-specimen-composition">
- <div class="ds-labelled-specimen"><span>Default</span><div data-ds-example="link-default" data-ds-target=".text-link"><TextLink href={profile.linkedin}>LinkedIn</TextLink></div></div>
- {!miniature&&<><div class="ds-labelled-specimen"><span>Accent</span><div data-ds-example="link-accent" data-ds-target=".text-link"><TextLink href={hookoSiteUrl} accent>iOS App - Hooko</TextLink></div></div>
- <div class="ds-labelled-specimen"><span>Inline</span><p class="text-body-m" data-ds-example="link-inline" data-ds-target=".text-link"><TextLink href="https://dribbble.com/shots/2937858-Blink-Bot" inline>Vic Bell’s Blink Bot</TextLink></p></div></>}
 </div>}
 {name==='NavigationItem'&&<div class="ds-specimen-composition ds-navigation-composition">
  <div class="ds-labelled-specimen"><span>Top header</span><div class="ds-inline-controls"><a href="/#top" aria-label="naz.wtf — home" data-ds-example="nav-top-logo" data-ds-target=".wordmark"><Logo /></a><div class="ds-inline-controls"><div data-ds-example="nav-top" data-ds-target=".desktop-nav"><NavLinks showDS={false} /></div><div data-ds-example="nav-top-theme" data-ds-target=".icon-button"><ThemeToggle /></div></div></div></div>
@@ -58,6 +35,6 @@ const prefix=miniature?'tile-':'example-';
 {name==='ProjectCard'&&<div class="ds-project-example" data-ds-example="project-card" data-ds-target=".project"><ProjectCard project={projects[0]} lead /></div>}
 
 {name==='Tooltip'&&<div class="ds-specimen-composition ds-tooltip-composition">
- {!miniature&&<div class="ds-inline-controls">{['Hidden','Visible above','Flipped below','Keyboard focus'].map((state,index)=><Button size="small" variant="secondary" appearance="catalog" data-ds-tooltip-state={['hidden','above','below','focus'][index]} aria-pressed={index===0?'true':'false'}>{state}</Button>)}</div>}
+ {!miniature&&<div class="ds-inline-controls">{['Hidden','Visible above','Flipped below','Keyboard focus'].map((state,index)=><DSControl data-ds-tooltip-state={['hidden','above','below','focus'][index]} aria-pressed={index===0?'true':'false'}>{state}</DSControl>)}</div>}
  <div class="ds-labelled-specimen"><span>{tools[0].name}</span><div class="about-details ds-context-about ds-tooltip-tool" data-color-zone="dark" data-zone-keep="section large-shadow" data-ds-example="tooltip-tool" data-ds-target=".tool-card"><ToolCard tool={tools[0]} tooltipId={`${prefix}tool-tooltip`} /></div></div>
 </div>}

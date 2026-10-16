@@ -1,3 +1,4 @@
+import {validateButtonCatalog} from './validate-button.mjs';
 import {validateIcons} from './validate-icons.mjs';
 import {validateMotionContract} from './validate-motion.mjs';
 import {validateFoundationCodeContract} from './validate-foundation-code.mjs';
@@ -16,7 +17,7 @@ import { icons } from '../src/data/icons.ts';
 import { buildSystemInventory } from '../src/data/system-inventory.ts';
 import { componentVariants } from '../src/data/system-variants.ts';
 import { componentManifest, isReusableComponent } from '../src/data/system-components.ts';
-import { dsComponents as registry, visibleComponents, overviewHiddenComponents } from '../src/data/ds-components.ts';
+import { dsComponents as registry, visibleComponents, catalogComponents, overviewHiddenComponents } from '../src/data/ds-components.ts';
 import { dsGroups } from '../src/data/design-system.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -54,7 +55,7 @@ const hiddenSections = {
  'Logo':'Wordmark','CaseStudyComparison':'Before and after','CaseStudyDecisionCard':'Decision card','CaseStudySteps':'Steps','CaseStudyMedia':'Media','ToolCard':'Tool card','ProjectIdentity':'Project identity','ProjectTags':'Project tags','SectionNavigation':'Project filter','ThemeToggle':'Theme switch','Icon':'Icon',
 };
 const hiddenKeys = Object.fromEntries(Object.entries(hiddenSections).map(([file,title])=>['src/components/'+file+'.astro',title.toLowerCase().replaceAll(' ','-')]));
-const expectedVisible = ['Button','Chip','IconButton','NavigationItem','ProjectCard','SectionHeading','Stat','TextLink','TimelineRow','Tooltip'];
+const expectedVisible = ['Button','Chip','NavigationItem','ProjectCard','SectionHeading','Stat','TimelineRow','Tooltip'];
 export function validateComponentClassification(files, used, manifest, shown) {
   const failures = [];
   const kinds = ['reusable-ui', 'page-section', 'case-study', 'internal-helper'];
@@ -161,7 +162,7 @@ function validate(entries) {
     const selector = match[1].trim();
     if (!selector.includes('.ds-')) continue;
     // Frozen interaction state specimens are deliberately explicit, inert examples.
-    if (selector.includes('.ds-state-example')) continue;
+    if (selector.includes('.ds-state-example') || selector.startsWith('.theme-toggle-group .ds-control')) continue;
     if (/\.(?:button|wordmark|arrow|nav-link|desktop-nav|skill-tag|project(?:-[\w-]+)?|placeholder-[\w-]+|theme-toggle|icon-button|hero(?:-[\w-]+)?)\b/.test(selector)) {
       errors.push(`Catalog CSS overrides a shared component: ${selector}`);
     }
@@ -186,14 +187,14 @@ export function validateHiddenDocumentation(records, text) {
   }
   return failures;
 }
-const errors = [...validateIcons(root),...validateMotionContract(root),...validate(registry),...validateColors(),...validateSpaceShape(root),...validateRadiusContract(),...validateFoundationCodeContract(root)];
+const errors = [...validateButtonCatalog(root),...validateIcons(root),...validateMotionContract(root),...validate(registry),...validateColors(),...validateSpaceShape(root),...validateRadiusContract(),...validateFoundationCodeContract(root)];
 errors.push(...validateLogoWave(read('src/styles/global.css'), read('src/components/Logo.astro'), read('src/styles/tokens.css'), filesUnder('src/scripts').filter(file=>file.endsWith('.ts')&&file!=='src/scripts/design-system-motion.ts').map(read).join('\n')));
-if(JSON.stringify(visibleComponents.map(item=>item.name).sort())!==JSON.stringify([...expectedVisible].sort()))errors.push('Visible catalog must contain exactly the approved ten components');
+if(JSON.stringify(visibleComponents.map(item=>item.name).sort())!==JSON.stringify([...expectedVisible].sort()))errors.push('Visible catalog must contain exactly the approved eight pages');
 for(const [file,key] of Object.entries(hiddenKeys))if(componentManifest.find(item=>item.file===file)?.documentedHidden!==key)errors.push('Missing documented-hidden classification: '+file);
 errors.push(...validateHoverSource(root));
 const externalDocs=resolve(root,'../docs/design-system.md');
 errors.push(...validateHiddenDocumentation(hiddenDocumentation,existsSync(externalDocs)?readFileSync(externalDocs,'utf8'):undefined));
-errors.push(...validateComponentClassification(filesUnder('src/components').filter(file => /\.(astro|tsx|jsx|ts|js|vue|svelte)$/.test(file)), [...new Set(websitePages.flatMap(page => [...componentsReachableFrom(page)]))].map(file => file.slice(root.length + 1)), componentManifest, visibleComponents.map(item => item.file)));
+errors.push(...validateComponentClassification(filesUnder('src/components').filter(file => /\.(astro|tsx|jsx|ts|js|vue|svelte)$/.test(file)), [...new Set(websitePages.flatMap(page => [...componentsReachableFrom(page)]))].map(file => file.slice(root.length + 1)), componentManifest, catalogComponents.map(item => item.file)));
 const inventory = buildSystemInventory(root);
 for (const entry of registry) if (!inventory.components.some(component => component.file === entry.file && component.usages.length)) errors.push(`Reusable UI has no rendered website consumer: ${entry.file}`);
 /** Overview notes are informational; they cannot become extra visible pages. */

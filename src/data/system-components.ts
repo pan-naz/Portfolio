@@ -1,16 +1,19 @@
 /** Every Astro component has an explicit ownership and catalog decision. */
 export type ComponentKind = 'reusable-ui' | 'page-section' | 'case-study' | 'internal-helper';
-export interface ComponentClassification { file: string; kind: ComponentKind; group?: string; title?: string; reason: string; documentedHidden?: string; }
+export interface ComponentClassification { file: string; kind: ComponentKind; group?: string; title?: string; reason: string; documentedHidden?: string; catalogPage?: string; }
 export const componentManifest: ComponentClassification[] = [
+ {file:'src/components/DSControl.astro',kind:'internal-helper',reason:'Catalog-only controls shared by tabs, segmented choices and token-name switches.'},
+ {file:'src/components/DSButtons.astro',kind:'internal-helper',reason:'Combined documentation for the three website action components.'},
+ {file:'src/components/DSButtonSpecimen.astro',kind:'internal-helper',reason:'Real website action variants shared by Button specimens and the Overview cover.'},
  {file:'src/components/SiteRuntime.astro',kind:'internal-helper',reason:'Shared theme and scrolling lifecycle, automatically composed by both document layouts.'},
  {file:'src/components/DSIcons.astro',kind:'internal-helper',reason:'Source-derived Icons foundation groups and decorative library.'},
- {file:'src/components/SegmentedControl.astro',kind:'internal-helper',reason:'Shared segmented Button group used by the existing theme switch and catalog playback control.'},
+ {file:'src/components/SegmentedControl.astro',kind:'internal-helper',reason:'Shared segmented catalog-control group used by the existing theme switch and catalog playback control.'},
  {file:'src/components/DSMotion.astro',kind:'internal-helper',reason:'Source-derived Motion foundation demonstrations and timelines.'},
  {file:'src/components/DSMotionCurve.astro',kind:'internal-helper',reason:'Source-derived curve chart shared by the Motion foundation and its Overview cover.'},
   { file: 'src/components/DeferredVideo.astro', kind: 'internal-helper', reason: 'Native video markup, deferred poster delivery and identical noscript fallback for real website media.' },
   {file:'src/components/DSDashboard.astro',kind:'internal-helper',reason:'Catalog dashboard composed from real shared specimens.'},
-  {file:'src/components/DSTokenNames.astro',kind:'internal-helper',reason:'Fixed-size human/source label slots and their switch using the existing catalog Button appearance.'},
-  { file: 'src/components/DSTabs.astro', kind: 'internal-helper', reason: 'Catalog tab wiring composed from the shared Button documentation variant.' },
+  {file:'src/components/DSTokenNames.astro',kind:'internal-helper',reason:'Fixed-size human/source label slots and their switch using the catalog control helper.'},
+  { file: 'src/components/DSTabs.astro', kind: 'internal-helper', reason: 'Catalog tab wiring composed from the catalog control helper.' },
   { file: 'src/components/DSPreview.astro', kind: 'internal-helper', reason: 'Documentation-only live specimens of existing components.' },
   { file: 'src/components/AboutSection.astro', kind: 'page-section', reason: 'Composes a page or a narrative chapter; not a catalog building block.' },
   { file: 'src/components/Arrow.astro', kind: 'internal-helper', reason: 'Implementation or documentation helper; described by its consumer.' },
@@ -47,7 +50,7 @@ export const componentManifest: ComponentClassification[] = [
   { file: 'src/components/HookoHero.astro', kind: 'case-study', reason: 'Project composition or artwork scaffolding; outside the design system.' },
   { file: 'src/components/HookoPhoneFrame.astro', kind: 'case-study', reason: 'Project composition or artwork scaffolding; outside the design system.' },
   { file: 'src/components/Icon.astro', documentedHidden: 'icon', kind: 'reusable-ui', group: 'Identity', title: 'Icon', reason: 'Website-used building block with shared UI styling.' },
-  { file: 'src/components/IconButton.astro', kind: 'reusable-ui', group: 'Actions', title: 'Icon button', reason: 'Website-used building block with shared UI styling.' },
+  { file: 'src/components/IconButton.astro', kind: 'reusable-ui', group: 'Actions', title: 'Icon button', catalogPage: 'button', reason: 'Website-used building block with shared UI styling.' },
   { file: 'src/components/ImpactSection.astro', kind: 'page-section', reason: 'Composes a page or a narrative chapter; not a catalog building block.' },
   { file: 'src/components/IndexLawFirmCaseStudy.astro', kind: 'case-study', reason: 'Project composition or artwork scaffolding; outside the design system.' },
   { file: 'src/components/KitchenChatbotCaseStudy.astro', kind: 'case-study', reason: 'Project composition or artwork scaffolding; outside the design system.' },
@@ -77,7 +80,7 @@ export const componentManifest: ComponentClassification[] = [
   { file: 'src/components/SvgAsset.astro', kind: 'internal-helper', reason: 'Implementation or documentation helper; described by its consumer.' },
   { file: 'src/components/TeamSternfitCaseStudy.astro', kind: 'case-study', reason: 'Project composition or artwork scaffolding; outside the design system.' },
   { file: 'src/components/TelegramFilePickerCaseStudy.astro', kind: 'case-study', reason: 'Project composition or artwork scaffolding; outside the design system.' },
-  { file: 'src/components/TextLink.astro', kind: 'reusable-ui', group: 'Actions', title: 'Text link', reason: 'Website-used building block with shared UI styling.' },
+  { file: 'src/components/TextLink.astro', kind: 'reusable-ui', group: 'Actions', title: 'Text link', catalogPage: 'button', reason: 'Website-used building block with shared UI styling.' },
   { file: 'src/components/ThemeToggle.astro', documentedHidden: 'theme-switch', kind: 'reusable-ui', group: 'Actions', title: 'Theme switch', reason: 'Website-used building block with shared UI styling.' },
   { file: 'src/components/TimelineRow.astro', kind: 'reusable-ui', group: 'Content', title: 'Timeline row', reason: 'Website-used building block with shared UI styling.' },
   { file: 'src/components/Tooltip.astro', kind: 'reusable-ui', group: 'Content', title: 'Tooltip', reason: 'Shared tool-card accessible names with pointer tracking.' },

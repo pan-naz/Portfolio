@@ -2,7 +2,7 @@
 import {iconGroups,iconLabels,iconWeights,decorativeIcons,decorativeIconCount} from '../data/system-icons';
 import Icon from './Icon.astro';
 import IconButton from './IconButton.astro';
-import Button from './Button.astro';
+import Button from './Button.astro';import {squareChallenge} from '../data/square-case-study';
 import TextLink from './TextLink.astro';
 import DSTokenNames from './DSTokenNames.astro';
 interface Props {inventory:ReturnType<typeof import('../data/system-inventory').buildSystemInventory>;}
@@ -21,7 +21,7 @@ const value=(name:string)=>inventory.tokens.find(token=>token.name===name)!.reso
  </section>
  <section class="ds-icons-section"><p class="text-label-m">Size</p><div class="ds-icons-sizes">
   {['icon-size','icon-size-compact'].map((token,index)=><article class="ds-icons-card">
-   <div class="ds-icons-sample" inert aria-hidden="true">{index===0?<Button href="/design-system/" variant="secondary" arrow="up">Design system</Button>:<IconButton href="/design-system/" label="Design system" variant="secondary" size="small" icon="layers"/>}<Icon name="arrow" size={Number.parseFloat(value(token))}/></div>
+   <div class="ds-icons-sample" inert aria-hidden="true">{index===0?<Button href={squareChallenge.href} variant="secondary" arrow="up" target="_blank" rel="noopener noreferrer">{squareChallenge.linkLabel}</Button>:<IconButton href="/design-system/" label="Design system" variant="secondary" size="small" icon="layers"/>}<Icon name="arrow" size={Number.parseFloat(value(token))}/></div>
    <div class="ds-icons-copy"><p class="text-body-m-strong"><DSTokenNames label={`${index===0?'Default':'Compact'} · ${value(token)}`} token={'--'+token}/></p><p class="text-body-s">{index===0?'Buttons, links, theme switch, media controls.':'Small icon buttons and text links.'}</p></div>
   </article>)}
  </div></section>

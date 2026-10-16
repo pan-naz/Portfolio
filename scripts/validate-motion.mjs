@@ -111,7 +111,7 @@ export function validateMotionContinuity(client,demo,css){
  for(const fragment of ["fill:'forwards'",'commitEnd();','roleIndex=next','filterIndex=next','themeAngle=next','commitEnd();build();', '[...frames].reverse()',"if(!clock)build()","'--motion-clock'"])if(!client.includes(fragment))errors.push('Motion continuity contract missing: '+fragment);
  if(!demo.includes('container work-content ds-motion-project-width'))errors.push('Tilt perspective must measure the genuine Work container, including its floating layout.');
  if(!demo.includes('<SectionNavigation compact pill/>')||!demo.includes('data-motion-role={index}'))errors.push('Alternating demos need the genuine filter pill and both letter-split roles.');
- if(!demo.includes('size="small" variant="secondary" arrow="up">Design system')||!demo.includes('variant="secondary" size="small" icon="layers"'))errors.push('Arrow shift needs both real website consumers.');
+ if(!demo.includes('href={squareChallenge.href} variant="secondary" arrow="up"')||!demo.includes('variant="secondary" size="small" icon="layers"'))errors.push('Arrow shift needs both real website consumers.');
  if(css.includes('.ds-motion-letters span:nth-child')||css.includes('.ds-motion-header::before'))errors.push('Resting demos cannot show mid-animation text or pill guides.');
  if(!css.includes('repeat(7,minmax(0,1fr))')||!css.includes('repeat(5,minmax(0,1fr))'))errors.push('Easing curves need seven/five/two columns.');
  return errors;
@@ -140,7 +140,7 @@ export function validateMotionContract(root=process.cwd()){
  if(!code.includes("motion:block('motion','Motion','Icons')")||!code.includes('scroll.indexOf(\'/** Section scroll ·\')'))errors.push('Motion Code must show the verbatim Motion source and exact scroll function.');
  if(!catalogCss.includes('repeat(auto-fit,minmax(min(100%,calc(60ch + var(--space-6) * 2)),1fr))'))errors.push('Paired Code blocks need two complete sixty-character columns before sitting side by side.');
  if(!demo.includes('class="ds-motion-art" inert aria-hidden="true"')||!demo.includes('<IconButton class="ds-motion-replay" size="small" variant="secondary"'))errors.push('Motion art must be inert and Replay must use the shared Secondary/Small IconButton.');
- if(!control.includes("import Button from './Button.astro'")||!control.includes("import Icon from './Icon.astro'")||!control.includes('class="theme-icon-glyph"')||!control.includes('choice.label'))errors.push('Segmented controls must compose shared Buttons, icons and labels.');
+ if(!control.includes("import DSControl from './DSControl.astro'")||!control.includes("import Icon from './Icon.astro'")||!control.includes('class="theme-icon-glyph"')||!control.includes('choice.label'))errors.push('Segmented controls must compose the catalog helper, icons and labels.');
  if(!foundations.includes('<SegmentedControl label="Playback speed"')||!foundations.includes('data-motion-speed'))errors.push('Motion speed must use the shared segmented control.');
  if(!client.includes('a.updatePlaybackRate(speed)')||/setProperty\(['"]--(?:duration|delay|stagger|ease|distance|scale)-/.test(client))errors.push('Catalog speed changes only local animation playback rates.');
  if(/document\.querySelector(?:All)?[^;\n]*(?:data-logo|wordmark)/.test(client))errors.push('Catalog replay must never target a website/sidebar Logo.');

@@ -71,6 +71,7 @@ export function initializeProjectCursor() {
       const button = cursor.querySelector('button')!;
       button.tabIndex = 0;
       button.setAttribute('aria-label', 'Close case study');
+      button.dataset.icon = 'close';
       return cursor;
     },
     release() {
@@ -84,6 +85,7 @@ export function initializeProjectCursor() {
       const button = cursor.querySelector('button')!;
       button.tabIndex = -1;
       button.setAttribute('aria-label', 'Project cursor');
+      button.dataset.icon = 'plus';
       cursor.querySelector('svg')?.style.removeProperty('transform');
       hide();
       refreshViewportPointer();

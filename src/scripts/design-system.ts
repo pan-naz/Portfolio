@@ -41,7 +41,7 @@ for(const specimen of document.querySelectorAll<HTMLElement>('[data-ds-pill][dat
 // Preserve genuine shared typography while removing specimen heading semantics.
 // Replacement selectors and declarations come from the loaded shared CSSOM.
 const headingSelector=(selector:string)=>selector.replace(/(^|[^\w-])h([1-6])\b/g,'$1:is(h$2,:where([data-ds-heading="$2"]))');
-const splitSelectors=(text:string)=>{const parts:string[]=[];let depth=0,start=0,quote='';for(let i=0;i<text.length;i++){const char=text[i];if(char==='\\'){i++;continue;}if(quote){if(char===quote)quote='';continue;}if(char==='"'||char==="'"){quote=char;continue;}if(char==='('||char==='[')depth++;if(char===')'||char===']')depth--;if(char===','&&depth===0){parts.push(text.slice(start,i));start=i+1;}}parts.push(text.slice(start));return parts;};
+export const splitSelectors=(text:string)=>{const parts:string[]=[];let depth=0,start=0,quote='';for(let i=0;i<text.length;i++){const char=text[i];if(char==='\\'){i++;continue;}if(quote){if(char===quote)quote='';continue;}if(char==='"'||char==="'"){quote=char;continue;}if(char==='('||char==='[')depth++;if(char===')'||char===']')depth--;if(char===','&&depth===0){parts.push(text.slice(start,i));start=i+1;}}parts.push(text.slice(start));return parts;};
 const headingRules=(rules:CSSRuleList):string=>[...rules].map(rule=>{
  if(rule instanceof CSSStyleRule){const selector=headingSelector(rule.selectorText);return selector===rule.selectorText?'':splitSelectors(selector).map(part=>`:where(.ds-specimens) :is(${part.trim()})`).join(',')+`{${rule.style.cssText}}`;}
  if('cssRules' in rule){const group=rule as CSSGroupingRule;const children=headingRules(group.cssRules);return children?rule.cssText.slice(0,rule.cssText.indexOf('{')+1)+children+'}':'';}
@@ -60,7 +60,8 @@ const refreshMarkup=(view:HTMLElement)=>{
 };
 const selectView=(resetScroll=true)=>{
  dashboardTilt.reset();dashboardTilt.deferHoverUntilPointerMove();
- const requested=location.hash.slice(1)||'dashboard';
+ let requested=location.hash.slice(1)||'dashboard';
+ if(['icon-button','text-link'].includes(requested)){requested='button';history.replaceState(history.state,'','#button');}
  const id=phone.matches&&requested==='dashboard'?'color':requested;
  const selected=views.find(view=>view.id===id)||views.find(view=>view.id===(phone.matches?'color':'dashboard'))!;
  for(const view of views)view.hidden=view!==selected;

@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import {icons} from '../src/data/icons.ts';
 import {iconGroups,decorativeIconCount,decorativeIcons,coverIconScatter} from '../src/data/system-icons.ts';
 import {waterfallIconNodes} from '../src/scripts/waterfall/waterfall-icon-data.ts';
-import {validateIconScatter,validateProjectIconSizes,validateIcons,validateIconGroups,validateIconStyles,validateRenderedIcons} from '../scripts/validate-icons.mjs';
+import {validateUIIconStrokes,validateIconScatter,validateProjectIconSizes,validateIcons,validateIconGroups,validateIconStyles,validateRenderedIcons} from '../scripts/validate-icons.mjs';
 assert.deepEqual(validateIcons(),[]);
 assert(validateIconGroups(iconGroups.slice(1)).length,'Missing icon group fails');
 assert(validateIconGroups([...iconGroups,iconGroups[0]]).length,'Duplicate icon ownership fails');
@@ -30,3 +30,6 @@ for(const css of [
 ])assert(validateProjectIconSizes(css).length,'Project artwork cannot derive interface icon size');
 assert.deepEqual(validateProjectIconSizes('@layer project {.art{--pc-prize:32px;width:var(--pc-prize)}}'),[]);
 assert.deepEqual(validateProjectIconSizes('@layer system {.case-study-decision-card__icon svg{width:var(--icon-size)}}'),[],'Shared UI keeps interface sizing');
+
+assert.deepEqual(validateUIIconStrokes('.icon {stroke-width:var(--icon-stroke-regular)} .text-link .arrow path {stroke-width:var(--icon-stroke-strong)}'),[]);
+for(const css of ['.icon {stroke-width:2}','.arrow path {stroke-width:var(--icon-stroke-other)}','.icon {stroke-width:var(--other, 1.5)}'])assert(validateUIIconStrokes(css).length,'A third/raw interface stroke cannot bypass the two-role guard');

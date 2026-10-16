@@ -13,8 +13,7 @@ export const iconGroups: {title:string;description:string;icons:IconName[]}[] = 
 export const iconLabels: Record<IconName,string> = {arrow:'Arrow',plus:'Plus',close:'Close',sun:'Sun',moon:'Moon',play:'Play',pause:'Pause',volume:'Volume','volume-muted':'Muted',layers:'Layers','shield-check':'Shield',equals:'Equals',monitor:'Monitor',tablet:'Tablet',phone:'Phone'};
 export const iconWeights = [
  {name:'Regular',token:'icon-stroke-regular',description:'Theme, volume, layers and most icons.'},
- {name:'Strong',token:'icon-stroke-strong',description:'Plus, close, play, pause, shield, equals and button arrows.'},
- {name:'Emphasis',token:'icon-stroke-emphasis',description:'The small arrow in text links.'},
+ {name:'Strong',token:'icon-stroke-strong',description:'Plus, close, play, pause, shield, equals, and the arrows in buttons and text links.'},
 ];
 export const decorativeIconNames = ['heart','sparkles','archive','at-sign','award','bell','bookmark','calendar','camera','chart-column','code','compass','image','grid-2x2','link','lock','mail','map-pin','message-circle','mic','music','palette','pen-tool','search','send','settings','star','tag','users','zap','video','rocket','puzzle','pin','lightbulb','flag','feather','eye','download','clock'];
 export const decorativeIcons = decorativeIconNames.map(name=>{

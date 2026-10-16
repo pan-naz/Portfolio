@@ -54,7 +54,6 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
 .ds-labelled-specimen { display:grid; gap:var(--space-3); justify-items:center; min-width:0; max-width:100%; }
 .ds-labelled-specimen > span { color:var(--color-text-secondary); }
 .ds-inline-controls { display:flex; gap:var(--space-3); align-items:center; }
-.ds-icon-surface { border-radius:var(--radius-full); }
 .ds-close-holder { position:static; transform:none; }
 .ds-media-backdrop { padding:var(--space-6); background:var(--color-bg-section); border-radius:var(--radius-medium); }
 .ds-media-backdrop .ds-media-controls { display:flex; align-items:center; gap:var(--space-2); position:static; opacity:1; pointer-events:auto; padding:var(--space-1); }
@@ -169,14 +168,16 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
  .ds-spec-footer { flex-direction:column; gap:var(--space-4); }
  .ds-tile-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
  .ds-props-table tr { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
- .ds-props-table th,.ds-props-table td { min-width:0; }
- .ds-props-table td:nth-child(2) { grid-column:1; grid-row:2; }
- .ds-props-table td:nth-child(3) { grid-column:2; grid-row:1; }
- .ds-props-table td:nth-child(4) { grid-column:2; grid-row:2; }
+ .ds-props-table th,.ds-props-table td { min-width:0; border-top:0; }
+ .ds-props-table tbody tr { border-top:1px solid var(--color-border-default); }
+ .ds-props-table :is(th,td):nth-child(1) { grid-column:1; grid-row:1; }
+ .ds-props-table :is(th,td):nth-child(2) { grid-column:1; grid-row:2; }
+ .ds-props-table :is(th,td):nth-child(3) { grid-column:2; grid-row:1; }
+ .ds-props-table :is(th,td):nth-child(4) { grid-column:2; grid-row:2; }
 }
 @media (max-width:599px) { .ds-navigation { grid-template-columns:minmax(0,1fr); } }
 @media (max-width:359px) { .ds-tile-grid { grid-template-columns:minmax(0,1fr); } }
-/* The shared explicit catalog appearance is loaded only by DSLayout. */
+/* Native DSControl keeps these catalog-only class hooks and shared tokens. */
 .button.button--catalog { min-height:var(--space-8); padding:var(--space-2) var(--space-3); border-color:transparent; background:transparent; color:var(--color-text-secondary); }
 @media (hover:hover) and (pointer:fine) { .button.button--catalog:hover { background:var(--color-bg-surface-subtle); color:var(--color-text-primary); transform:none; } }
 .button.button--catalog:active { background:var(--color-bg-surface-subtle); color:var(--color-text-primary); transform:none; }
@@ -321,8 +322,8 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
 .ds-icons { display:grid; gap:var(--space-12); }
 .ds-icons-section { display:grid; gap:var(--space-4); min-width:0; }
 .ds-icons-section > .text-label-m { color:var(--color-text-secondary); }
-.ds-icons-groups,.ds-icons-weights,.ds-icons-colors { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--space-3); }
-.ds-icons-sizes { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-3); }
+.ds-icons-groups,.ds-icons-colors { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--space-3); }
+.ds-icons-sizes,.ds-icons-weights { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-3); }
 .ds-icons-card { display:flex; flex-direction:column; gap:var(--space-4); }
 .ds-icons-copy { display:grid; gap:var(--space-1); }
 .ds-icons-copy > .text-body-s { color:var(--color-text-secondary); }

@@ -1,0 +1,46 @@
+---
+import '../styles/design-system-button.css';
+import type {SourceComponent} from '../data/system-inventory';
+import {buttonDescription,buttonGroups,buttonStates,buttonStateGroups,buttonUsage,buttonProps,buttonTokenGroups,buttonAccessibility} from '../data/system-button';
+import {componentVariants} from '../data/system-variants';
+import DSButtonSpecimen from './DSButtonSpecimen.astro';import DSTabs from './DSTabs.astro';import Icon from './Icon.astro';
+interface Props {components:SourceComponent[];}
+const {components}=Astro.props;
+const docs=components.map(component=>({component,props:buttonProps(component),usage:`/* Usage · ${component.file} */\n`+buttonUsage(component.name)}));
+const tokenCode=buttonTokenGroups(components).map(group=>`/* ${group.title} */\n`+group.names.join('\n')).join('\n\n');
+const titles:Record<string,string>={Button:'Button',IconButton:'Icon button',TextLink:'Text link'};
+const exampleNames:Record<string,string>={primary:'primary',secondary:'secondary',small:'small',outside:'outside',toggle:'comparison',plain:'icon-theme',layers:'icon-layers','link-default':'link-default','link-accent':'link-accent','link-compact':'link-compact','link-inline':'link-inline'};
+---
+<section id="button" class="ds-view ds-button-view" data-ds-view data-title="Button" data-group="Components" data-description={buttonDescription} hidden>
+ <div class="ds-stage" data-ds-card>
+  <div class="ds-stage-bar"><DSTabs id="button-canvas" labels={['Preview','Code']}/></div>
+  <div id="button-canvas-panel-0" role="tabpanel" aria-labelledby="button-canvas-tab-0" class="ds-button-preview">
+   {buttonGroups.map((group,index)=><section class="ds-button-group" data-ds-component={['Button','IconButton','TextLink'][index]}>
+    <p class="text-label-m">{group.name}</p><p class="text-body-s ds-button-secondary">{group.description}</p>
+    <div class:list={['ds-button-grid',index===0&&'ds-button-grid--three']}>{group.cards.map(card=><article class:list={['ds-button-card',card.id==='toggle'&&'ds-button-card--wide']} data-button-card={card.id}>
+     <div class="ds-button-stage" data-ds-example={exampleNames[card.id]} data-ds-target={card.id==='toggle'?'.case-comparison-controls':card.id.startsWith('link')?'.text-link':['plain','layers'].includes(card.id)?'.icon-button':'.button'} inert aria-hidden="true">{card.id==='outside'?<div class="ds-button-stage-art"><DSButtonSpecimen id={card.id}/></div>:<DSButtonSpecimen id={card.id}/>}</div>
+     <div><p class="text-body-m-strong">{card.name}</p><p class="text-body-s ds-button-secondary">{card.description}</p></div>
+     <dl class="ds-button-values text-body-s"><div><dt>Used in</dt><dd>{card.used}</dd></div><div><dt>{index===2?'Style':'Size'}</dt><dd>{card.value}</dd></div></dl>
+    </article>)}</div>
+   </section>)}
+   <section class="ds-button-group ds-button-state-section">
+    {buttonStateGroups.map(group=><section class="ds-button-group ds-button-state-group"><p class="text-label-m">{group.name}</p><div class="ds-button-states">
+     <div class="ds-button-state-labels text-body-s ds-button-secondary" aria-hidden="true"><span/>{buttonStates.map(state=><span>{state}</span>)}</div>
+     {group.cards.map(card=><div class="ds-button-state-column"><p><span class="ds-button-state-name--desktop text-body-s ds-button-secondary">{card.name}</span><span class="ds-button-state-name--phone text-body-m-strong">{card.name}</span></p>{buttonStates.map(state=><div class="ds-button-state-cell"><span class="text-body-s ds-button-secondary">{state}</span><div class="ds-button-state-example" inert aria-hidden="true"><div class="ds-button-state-art" data-button-state={state.toLowerCase()}><DSButtonSpecimen id={card.id==='raised'?'close':card.id} state={state.toLowerCase()}/>{card.id==='raised'&&state==='Hover'&&<Icon nodes={[["path",{d:"M1 2a20 20 0 0 1 20 20m-5-5 5 5 5-5"}]]} class="ds-button-turn"/>}</div></div></div>)}</div>)}
+    </div></section>)}
+   </section>
+  </div>
+  <div id="button-canvas-panel-1" role="tabpanel" aria-labelledby="button-canvas-tab-1" class="ds-code ds-button-code" hidden>
+   {docs.map(({component,props,usage})=><section data-ds-component-code={component.name}>
+    <p class="text-label-m">{titles[component.name]}</p>
+    <pre><code data-ds-usage={component.name}>{usage}</code></pre>
+    <div class="ds-button-props"><p class="ds-code-comment">/* Props */</p><div class="ds-props-table"><table><thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>What it does</th></tr></thead><tbody>{props.map(prop=><tr data-ds-prop={prop.name}><th scope="row"><code>{prop.name}</code></th><td><code>{prop.type}</code></td><td><code>{prop.default==='Not set'?'—':prop.default==='Required'?'required':prop.default}</code></td><td>{prop.description}</td></tr>)}</tbody></table></div></div>
+   </section>)}
+   <section><p class="text-label-m">Shared</p><div class="ds-button-code-grid">
+    <pre><code>{tokenCode}</code></pre>
+    <div class="ds-button-code-panel"><p class="ds-code-comment">/* Accessibility */</p><ul>{buttonAccessibility.map(point=><li>{point}</li>)}</ul></div>
+   </div><div class="ds-button-code-panel"><p class="ds-code-comment">/* Source */</p>{components.map(component=><div><p>{component.file}</p><ul>{[...new Set(component.usages.map(usage=>usage.file))].map(file=><li>{file}</li>)}</ul>{componentVariants(component).map(variant=><span data-ds-variant={`${component.name}:${variant}`}/>)}</div>)}</div></section>
+  </div>
+ </div>
+</section>
+<script>import '../scripts/design-system-button';</script>
