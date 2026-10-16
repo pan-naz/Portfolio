@@ -5,6 +5,9 @@ import {typographyCssExclusions,typographyExclusions} from '../src/data/typograp
 const root=new URL('../',import.meta.url),read=file=>readFileSync(new URL(file,root),'utf8');
 const tokens=read('src/styles/tokens.css'),styles=read('src/styles/typography.css'),catalog=read('src/components/DSFoundations.astro');
 assert.deepEqual(validateTypographySystem(tokens,styles,catalog),[]);
+assert.deepEqual([...tokens.matchAll(/--letter-spacing-heading-m:\s*([^;]+);/g)].map(match=>match[1]),['-.032em','-.034em'],'Heading/M pins raw base and Desktop tracking; Tablet inherits base');
+assert(tokens.includes('--letter-spacing-label-m: -.036em;'),'Label/M keeps its independent tracking');
+for(const [from,to] of [['--letter-spacing-heading-m: -.032em;','--letter-spacing-heading-m: -.034em;'],['--letter-spacing-heading-m: -.034em;','--letter-spacing-heading-m: -.036em;']])assert(validateTypographySystem(tokens.replace(from,to),styles,catalog).length,'Reject retired Heading/M tracking');
 const catalogCss=read('src/styles/design-system.css'),themeToggle=read('src/components/ThemeToggle.astro');
 assert.deepEqual(validateCatalogTypographyLayout(catalogCss,catalog,themeToggle),[]);
 for(const rule of ['.ds-type-live{text-box-trim:none;}', '.ds-type-live{text-box-edge:auto;}', '.ds-type-device{grid-template-rows:auto;}', '.ds-type-info .ds-type-use{margin-top:0;}'])assert(validateCatalogTypographyLayout(catalogCss+rule,catalog,themeToggle).length,'Reject broken sample/value alignment');
