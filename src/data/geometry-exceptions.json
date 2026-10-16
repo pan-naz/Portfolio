@@ -1,7 +1,7 @@
 [
   {
     "file": "src/components/HookoCaseStudy.astro",
-    "selector": "[inline-style-21950]",
+    "selector": "[inline-style-21920]",
     "context": "",
     "property": "max-width",
     "value": "760px",
@@ -870,15 +870,6 @@
   },
   {
     "file": "src/styles/global.css",
-    "selector": ".hero-content",
-    "context": "@layer system > @media (max-width: 1439px)",
-    "property": "padding-right",
-    "value": "130px",
-    "kind": "spacing",
-    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
-  },
-  {
-    "file": "src/styles/global.css",
     "selector": ".hero-description",
     "context": "@layer system > @media (max-width: 1439px)",
     "property": "max-width",
@@ -892,15 +883,6 @@
     "context": "@layer system > @media (max-width: 1439px)",
     "property": "width",
     "value": "170px",
-    "kind": "size",
-    "reason": "Existing ticker viewport size/position, independent of title motion."
-  },
-  {
-    "file": "src/styles/global.css",
-    "selector": ".skill-marquee",
-    "context": "@layer system > @media (max-width: 1023px)",
-    "property": "height",
-    "value": "130px",
     "kind": "size",
     "reason": "Existing ticker viewport size/position, independent of title motion."
   },
@@ -1709,5 +1691,23 @@
     "kind": "size",
     "project": true,
     "reason": "Project-only Pet Care prize artwork retains its original 32px size independently of interface icon tokens."
+  },
+  {
+    "file": "src/styles/datagpt-case-study.css",
+    "selector": ".dg-case",
+    "context": "@layer project",
+    "property": "--dg-question-label-advance",
+    "value": "10.96484375em",
+    "kind": "spacing",
+    "reason": "Original DataGPT Regular-label glyph advance, measured before the Label/S migration; with the unchanged padding this preserves persona heading wraps and testimonial coordinates. Not a typography override."
+  },
+  {
+    "file": "src/styles/datagpt-case-study.css",
+    "selector": ".dg-case",
+    "context": "@layer project",
+    "property": "--dg-answer-label-advance",
+    "value": "12.2096354167em",
+    "kind": "spacing",
+    "reason": "Original DataGPT Regular-label glyph advance, measured before the Label/S migration; with the unchanged padding this preserves persona heading wraps and testimonial coordinates. Not a typography override."
   }
 ]

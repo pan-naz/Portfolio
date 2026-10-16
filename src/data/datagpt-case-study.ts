@@ -62,5 +62,5 @@ export const contextResults = [
 export const conclusions = [
   ['Hybrid insight view', 'Allowed users to explore metrics and follow up through conversation within the same screen.'],
   ['Schema level LLM instructions', 'aligned AI responses with business terminology, cutting ambiguous interpretations by 64%.'],
-  ['Date range presets', 'Enabled reusable, dynamic time filters for recurring analyses, boosting speed and consistency.'],
+  ['Date range presets', 'Saved date ranges for recurring analyses, shown above Chat and Data Navigator.'],
 ];

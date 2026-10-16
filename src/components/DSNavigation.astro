@@ -1,10 +1,10 @@
 ---
 import {dsGroups} from '../data/design-system';
-import Logo from './Logo.astro';
+import LogoLink from './LogoLink.astro';
 import NavigationItem from './NavigationItem.astro';
 ---
 <aside class="ds-sidebar">
-  <div class="ds-logo-row"><a tabindex="0" class="ds-home" href="/" aria-label="naz.wtf — home"><Logo /></a></div>
+  <div class="ds-logo-row"><LogoLink tabindex="0" class="ds-home" href="/" /></div>
   <nav class="ds-navigation" aria-label="Design system sections">
     <div class="ds-nav-scroll" data-ds-nav-scroll>
       <NavigationItem label="Overview" href="/design-system/" data-ds-dashboard-link />

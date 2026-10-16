@@ -2,7 +2,7 @@ export const workCategories = {
   selected: {
     label: '01 / Selected work',
     title: 'Projects worth a closer look.',
-    description: 'Shaped with care, from the first question to the final detail.',
+    description: 'I worked on each one from research to launch.',
   },
   websites: {
     label: '01 / Websites',

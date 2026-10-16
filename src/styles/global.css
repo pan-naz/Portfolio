@@ -231,7 +231,7 @@ main, .footer { position: relative; }
 .accent-stat { color: var(--color-interactive-accent); white-space: nowrap; }
 .skill-tag { display: inline-flex; align-items: center; justify-content: center; width: max-content; max-width: 100%; min-height: 28px; padding: 5px 11px; border: 1px solid var(--color-border-default); border-radius: var(--radius-full); white-space: normal; overflow-wrap: anywhere; text-align: center; background: var(--color-bg-surface); }
 .skill-tag--plain { min-height: 0; padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--color-text-secondary); text-align: left; }
-.skill-tag--accent { border-color: transparent; color: var(--color-interactive-accent); background: color-mix(in srgb, var(--color-interactive-accent) 12%, var(--color-bg-surface)); text-transform: uppercase; box-shadow: none; }
+.skill-tag--accent { border-color: transparent; color: var(--color-interactive-accent); background: var(--color-bg-accent-subtle); text-transform: uppercase; box-shadow: none; }
 :root[data-theme='dark'] .skill-tag--accent:not([data-theme='light'] .skill-tag--accent,[data-color-zone='light'] .skill-tag--accent,.case-study-decision-card--figure .skill-tag--accent,.case-study-service-demo .skill-tag--accent) { background: var(--color-bg-surface); }
 .process-tags { position: absolute; left: calc(var(--header-inset) + var(--safe-left)); top: calc(108px + var(--safe-top)); display: grid; justify-items: start; gap: var(--space-2); }
 .hero-cta-entrance:has(:focus-visible) { opacity: 1 !important; transform: none !important; filter: none !important; }
@@ -430,13 +430,11 @@ html[data-work-stage-layout='true'] .about-details::before { left: max(0px, calc
   .process-tags { position: static; display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0 var(--gutter-right) var(--space-8) var(--gutter-left); }
   /* Move only the row and hero content; compensate below to retain the outer frame. */
   .hero { padding-top: calc(var(--header-inset) + var(--control-icon) + var(--space-8) + var(--safe-top)); padding-bottom: calc(var(--hero-bottom-desktop) + var(--space-8) + var(--space-2)); }
-  .hero-content { padding-right: 130px; }
   .hero-description { max-width: min(625px, 100%); }
   .skill-marquee { width: 170px; }
 }
 @media (max-width: 1023px) {
-  .hero-content { padding-right: 0; }
-  .skill-marquee { position: relative; top: auto; right: auto; margin: var(--space-8) var(--gutter-right) 0 auto; height: 130px; width: 100%; max-width: 240px; }
+  .skill-marquee { position: relative; top: auto; right: auto; margin: var(--space-8) var(--gutter-right) 0 auto; height: var(--hero-marquee-height-compact); width: 100%; max-width: 240px; }
   .hero { padding-bottom: calc(var(--hero-bottom-compact) + var(--space-8) + var(--space-2)); }
   .tools-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: var(--space-6); }
 }

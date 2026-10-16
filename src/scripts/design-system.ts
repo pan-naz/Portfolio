@@ -99,7 +99,7 @@ for(const preview of document.querySelectorAll<HTMLElement>('.ds-specimens')){
  });
 }
 // Human values are resolved by the same browser CSS engine as the specimens.
-const hex=(value:string)=>{const match=value.match(/^rgba?\(([^)]+)\)$/);if(!match)return value;const parts=match[1].split(',').map(Number);return '#'+parts.slice(0,3).map(number=>number.toString(16).padStart(2,'0')).join('').toUpperCase()+(parts.length>3&&parts[3]<1?Math.round(parts[3]*255).toString(16).padStart(2,'0').toUpperCase():'');};
+const hex=(value:string)=>{const srgb=value.match(/^color\(srgb ([\d.]+) ([\d.]+) ([\d.]+)(?: \/ ([\d.]+))?\)$/);if(srgb)return '#'+srgb.slice(1,4).map(number=>Math.round(Number(number)*255).toString(16).padStart(2,'0')).join('').toUpperCase()+(srgb[4]&&Number(srgb[4])<1?Math.round(Number(srgb[4])*255).toString(16).padStart(2,'0').toUpperCase():'');const match=value.match(/^rgba?\(([^)]+)\)$/);if(!match)return value;const parts=match[1].split(',').map(Number);return '#'+parts.slice(0,3).map(number=>number.toString(16).padStart(2,'0')).join('').toUpperCase()+(parts.length>3&&parts[3]<1?Math.round(parts[3]*255).toString(16).padStart(2,'0').toUpperCase():'');};
 const readable=(value:string)=>value.replace(/-?[\d.]+px/g,number=>`${+parseFloat(number).toFixed(2)}px`);
 const refreshValues=()=>{
  const view=views.find(view=>!view.hidden);if(!view)return;
