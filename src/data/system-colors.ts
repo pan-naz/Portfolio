@@ -17,7 +17,14 @@ export const paletteColors:PaletteColor[]=[
  {name:'Orange',token:'color-orange',uses:[use('light','Accent','color-interactive-accent')]},
  {name:'Orange light',token:'color-orange-light',uses:[use('dark','Accent','color-interactive-accent')]},
 ];
-export const colorRoles=['color-text-primary','color-text-secondary','color-text-primary-hover','color-bg-canvas','color-bg-surface','color-bg-surface-subtle','color-border-default','color-interactive-accent','color-bg-section','color-video-track','color-rain-icon','color-footer-icon','color-text-on-primary','color-border-control','color-focus-ring'];
+/** A derived role stays separate from the named primitive palette. */
+export const accentSubtleColor:PaletteColor={name:'Accent tint',token:'color-bg-accent-subtle',uses:[
+ use('light','Accent chips'),
+ use('both','Decision cards and Hooko','color-bg-accent-subtle'),
+ use('both','Spacing, layout and motion demos'),
+]};
+export const colorCards=[...paletteColors,accentSubtleColor];
+export const colorRoles=['color-bg-accent-subtle','color-text-primary','color-text-secondary','color-text-primary-hover','color-bg-canvas','color-bg-surface','color-bg-surface-subtle','color-border-default','color-interactive-accent','color-bg-section','color-video-track','color-rain-icon','color-footer-icon','color-text-on-primary','color-border-control','color-focus-ring'];
 export const strokeCards=[
  {name:'Borders',description:'Dividers, card outlines, tags, dot grid',role:'color-border-default',demo:'border'},
  {name:'Button outlines',description:'Outlined buttons and icon buttons',role:'color-border-control',demo:'button'},
@@ -27,4 +34,4 @@ export const strokeCards=[
 export const paletteTokenNames=paletteColors.flatMap(color=>[color.token,...(color.shades||[]).map(shade=>shade.token)]);
 
 /** Reviewed external Color contract; local guards verify its body when present. */
-export const colorDocumentationReceipt={"section":"Color","sha256":"2ac8c12233167944292b9afb58ba5d8fca69539a1ad54d7c38c69bab595cd238","characters":7072};
+export const colorDocumentationReceipt={"section":"Color","sha256":"7ec6b03a2c4cde85e6d88584a703d19b80778290fe66c01ece277c2edcd55ca8","characters":7410};

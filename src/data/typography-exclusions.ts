@@ -22,18 +22,6 @@ export const typographyExclusions={
     ],
     "reason": "Original Index product UI, including its popovers."
   },
-  "product-avatar": {
-    "classes": [
-      "dg-avatar"
-    ],
-    "reason": "Original DataGPT persona initials."
-  },
-  "product-badge": {
-    "classes": [
-      "dg-badge"
-    ],
-    "reason": "Original DataGPT product-model label."
-  },
   "decorative-quote": {
     "classes": [
       "dg-quote-decoration"
@@ -163,16 +151,6 @@ export const typographyCssExclusions=[
     "file": "src/styles/cravus-case-study.css",
     "selector": ".cravus-s14",
     "reason": "Original client-font specimen; only marked sample text is excluded."
-  },
-  {
-    "file": "src/styles/datagpt-case-study.css",
-    "selector": ".dg-badge",
-    "reason": "Original DataGPT product badge or persona avatar."
-  },
-  {
-    "file": "src/styles/datagpt-case-study.css",
-    "selector": ".dg-avatar",
-    "reason": "Original DataGPT product badge or persona avatar."
   },
   {
     "file": "src/styles/datagpt-case-study.css",

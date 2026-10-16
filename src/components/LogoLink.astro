@@ -1,0 +1,7 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import Logo from './Logo.astro';
+type Props = HTMLAttributes<'a'> & { compact?: boolean; morph?: boolean; };
+const { href = '/#top', compact = false, morph = false, ...attributes } = Astro.props;
+---
+<a href={href} {...attributes} aria-label="naz.wtf — home">{morph ? <><span class="header-full-logo" aria-hidden="true"><Logo /></span><span class="header-compact-logo" aria-hidden="true"><Logo compact /></span></> : <Logo compact={compact} />}</a>

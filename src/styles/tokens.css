@@ -49,6 +49,17 @@
 
 /* Shared roles · local text and
    backdrop in both modes */
+/* Resolve tint locally · keep project accent overrides. */
+:root,
+[data-theme],
+[data-color-zone],
+:where(.skill-tag--accent),
+:where(.case-study-decision-card__icon) {
+  --color-bg-accent-subtle:
+    color-mix(in srgb, var(--color-interactive-accent) 12%,
+      var(--color-bg-surface));
+}
+
 :root,
 [data-theme],
 [data-color-zone] {
@@ -451,6 +462,7 @@
   --work-rail-offset: 206px;
   /* Hero bottom · preserves the composed desktop and tablet space. */
   --hero-bottom-desktop: 150px;
+  --hero-marquee-height-compact: 130px;
   --hero-bottom-compact: 70px;
   /* Small button · optical inline inset, including arrow-fill. */
   --button-padding-inline-small: 14px;

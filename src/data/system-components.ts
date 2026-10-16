@@ -54,6 +54,7 @@ export const componentManifest: ComponentClassification[] = [
   { file: 'src/components/ImpactSection.astro', kind: 'page-section', reason: 'Composes a page or a narrative chapter; not a catalog building block.' },
   { file: 'src/components/IndexLawFirmCaseStudy.astro', kind: 'case-study', reason: 'Project composition or artwork scaffolding; outside the design system.' },
   { file: 'src/components/KitchenChatbotCaseStudy.astro', kind: 'case-study', reason: 'Project composition or artwork scaffolding; outside the design system.' },
+  { file: 'src/components/LogoLink.astro', kind: 'internal-helper', reason: 'Composes the shared wordmark and home-link semantics for headers and catalog navigation.' },
   { file: 'src/components/Logo.astro', documentedHidden: 'wordmark', kind: 'reusable-ui', group: 'Identity', title: 'Wordmark', reason: 'Website-used building block with shared UI styling.' },
   { file: 'src/components/MetricValue.astro', kind: 'internal-helper', reason: 'Implementation or documentation helper; described by its consumer.' },
   { file: 'src/components/NavLinks.astro', kind: 'internal-helper', reason: 'Implementation or documentation helper; described by its consumer.' },

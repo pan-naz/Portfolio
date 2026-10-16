@@ -31,7 +31,7 @@
 .hk-band-inner { width: min(1200px, calc(100% - var(--gutter-left) - var(--gutter-right))); margin-inline: var(--gutter-left) var(--gutter-right); gap: var(--case-content-gap); }
 .hk-decisions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--grid-gap); --color-bg-surface: var(--color-white); --color-bg-canvas: var(--color-mist); --color-text-secondary: var(--hk-page-secondary); --color-border-default: var(--color-ink-8); }
 /* This project's Light decision cards keep their original accent-label substrate in both themes. */
-.hk-decisions .skill-tag--accent { background: color-mix(in srgb, var(--color-interactive-accent) 12%, var(--color-bg-surface)); }
+.hk-decisions .skill-tag--accent { background: var(--color-bg-accent-subtle); }
 .hk-pillrow { margin-top: var(--space-3); }
 .hk-stack { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
 .hk-diagram { display: grid; gap: var(--space-4); padding: var(--space-6); border-radius: var(--radius-medium); background: var(--color-bg-surface); box-shadow: var(--shadow-small); }

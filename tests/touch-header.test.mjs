@@ -8,7 +8,7 @@ for (const obsolete of ['menu-toggle', 'mobile-menu', 'menu-close', 'menu-open',
 }
 assert.ok(validateNoMobileMenu({}, { menu: {} }).length, 'Reject the unused menu icon');
 const header = read('src/components/SiteHeader.astro');
-assert.ok(header.includes('<NavLinks showDS={false}') && header.includes('<ThemeToggle') && header.includes('naz.wtf — home'));
+assert.ok(header.includes('<NavLinks showDS={false}') && header.includes('<ThemeToggle') && header.includes('<LogoLink morph') && read('src/components/LogoLink.astro').includes('naz.wtf — home'));
 const contact = read('src/components/ContactSection.astro');
 for (const destination of ['mailto:${profile.email}', 'href={cvUrl}', 'href={profile.linkedin}']) assert.ok(contact.includes(destination), 'Contact retains every destination');
 const morph = read('src/scripts/header-morph/header-morph.ts');

@@ -1,9 +1,9 @@
 import {createHash} from 'node:crypto';import fs from 'node:fs';import path from 'node:path';import {createRequire} from 'node:module';
 const require=createRequire(import.meta.url),astro=path.dirname(require.resolve('astro/package.json')),vite=path.dirname(require.resolve('vite/package.json',{paths:[astro]})),postcss=require(require.resolve('postcss',{paths:[vite]}));
 import {readSystemTokens} from '../src/data/system-inventory.ts';
-import {paletteColors,paletteTokenNames,colorRoles,strokeCards,colorDocumentationReceipt} from '../src/data/system-colors.ts';
+import {paletteColors,colorCards,paletteTokenNames,colorRoles,strokeCards,colorDocumentationReceipt} from '../src/data/system-colors.ts';
 const root=path.resolve(import.meta.dirname,'..');
-export function validateColorUses(css,colors=paletteColors,strokes=strokeCards){
+export function validateColorUses(css,colors=colorCards,strokes=strokeCards){
  const tokens=readSystemTokens(css),errors=[],seen={light:new Map(),dark:new Map()};
  for(const color of colors){
   if(!color.uses.length)errors.push('Palette color has no use: '+color.token);
