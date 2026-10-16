@@ -209,9 +209,9 @@ function startSharedScrolling() {
     // owner through bubbling so every scroll root sees this same wheel event.
     setTimeout(() => { wheelOwner = undefined; }, 0);
     if (owner === window) {
-      // WebKit can swallow native vertical wheel input over overflow-x content.
-      // Narrow mouse windows have no engine; forward that input without smoothing.
-      if (verticalOnHorizontal && !documentScroll.lenis && navigator.maxTouchPoints === 0 && event.cancelable) {
+      // WebKit can swallow document wheel input under a nonpassive router.
+      // Without Lenis, forward its vertical delta once; touch gestures stay native.
+      if (!documentScroll.lenis && event.cancelable && !event.shiftKey && event.deltaY !== 0) {
         event.preventDefault();
         const scale = event.deltaMode === 1 ? parseFloat(getComputedStyle(document.documentElement).lineHeight) || 16 : event.deltaMode === 2 ? innerHeight : 1;
         window.scrollBy({top:event.deltaY * scale,behavior:'instant'});
