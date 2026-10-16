@@ -36,7 +36,7 @@ const typePercent=(value:number)=>Number((value*100).toFixed(2));
     <div class="ds-color-legend">{['light','dark','both'].map(mode=><span class="ds-icon-text-row"><span class="ds-color-mode">{mode!=='dark'&&<Icon name="sun"/>}{mode!=='light'&&<Icon name="moon"/>}</span><span class="ds-mode-text">{mode==='light'?'Light mode':mode==='dark'?'Dark mode':'Both'}</span></span>)}</div>
     <div class="ds-color-cards">{colorCards.map(color=><article class="ds-color-card" data-ds-palette={color.token}>
      <div class="ds-color-square" style={`background:var(--${color.token})`} aria-hidden="true"/>
-     <div class="ds-color-copy"><div class="ds-color-card-heading"><strong><DSTokenNames label={color.name} token={'--'+color.token}/></strong><span data-ds-human-token={color.token==='color-bg-accent-subtle'?color.token:undefined}>{colorValue(color.token)}</span></div>
+     <div class="ds-color-copy"><div class="ds-color-card-heading"><strong><DSTokenNames label={color.name} token={'--'+color.token}/></strong><span data-ds-human-token={['color-bg-accent-subtle','color-media-frame'].includes(color.token)?color.token:undefined}>{colorValue(color.token)}</span></div>
      <div class="ds-color-uses">{color.uses.map(use=><div class="ds-icon-text-row" data-ds-color-use={`${color.token}:${use.mode}`}><span class="ds-color-mode" aria-label={use.mode==='both'?'Both modes':`${use.mode} mode`}>{use.mode!=='dark'&&<Icon name="sun"/>}{use.mode!=='light'&&<Icon name="moon"/>}</span><span class="ds-mode-text">{use.label}</span></div>)}</div>
      </div>
     </article>)}</div>

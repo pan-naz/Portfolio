@@ -64,6 +64,8 @@
 [data-theme],
 [data-color-zone] {
   --color-border-control: var(--color-text-primary);
+  /* Hero frames · follow the local page or card surface */
+  --color-media-frame: var(--color-bg-canvas);
   --color-focus-ring: var(--color-text-primary);
   --color-backdrop: rgb(0 0 0 / .18);
 }

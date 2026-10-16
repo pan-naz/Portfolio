@@ -283,7 +283,7 @@ html[data-work-stage-layout='true']:not([data-work-stage-motion='true']) .work-p
 .project-collection--bento[data-masonry-ready] { display: block; position: relative; }
 .project-collection--bento[data-masonry-ready] > .project { position: absolute; }
 .project-collection.is-filter-leaving { position: absolute; inset: 0 0 auto; pointer-events: none; }
-.project-surface { transform-origin: 50% 50%; border-radius: inherit; background: var(--color-bg-canvas); overflow: hidden; }
+.project-surface { --color-media-frame: var(--color-bg-canvas); transform-origin: 50% 50%; border-radius: inherit; background: var(--color-media-frame); overflow: hidden; }
 .work-filter-pill {
   position: fixed;
   inset: calc(var(--header-inset) / 2 + var(--safe-top)) var(--safe-right) auto var(--safe-left);
@@ -328,8 +328,8 @@ html[data-work-stage-layout='true']:not([data-work-stage-motion='true']) .work-p
   .project-cursor .icon-button { transition: none; transform: none; }
 }
 .project[data-tilt-ready] { position: relative; background: transparent; }
-.project[data-tilt-ready] > .project-surface { position: relative; background: var(--color-bg-canvas); }
-:root[data-theme='dark'] .project-surface:not([data-theme='light'] .project-surface, [data-color-zone='light'] .project-surface) { background: var(--color-bg-surface); }
+.project[data-tilt-ready] > .project-surface { position: relative; background: var(--color-media-frame); }
+:root[data-theme='dark'] .project-surface:not([data-theme='light'] .project-surface, [data-color-zone='light'] .project-surface) { --color-media-frame: var(--color-bg-surface); }
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .project.is-tilting { z-index: var(--layer-content); }
   .project.is-tilting[data-tilt-ready] > .project-surface {
@@ -561,7 +561,7 @@ html.case-study-open { overflow: hidden; scrollbar-gutter: stable; }
 :is(.project-media, .case-study-transition-artwork, .case-study-artwork) {
   /* The stroke follows radius-large at its center; overflow clips media at
      the inner border curve, keeping dark pixels away from the outer edge. */
-  border: 4px solid var(--color-bg-canvas);
+  border: 4px solid var(--color-media-frame);
   border-radius: calc(var(--radius-large) + var(--media-frame-radius-outset));
   overflow: hidden;
 }

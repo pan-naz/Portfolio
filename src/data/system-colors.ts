@@ -23,8 +23,12 @@ export const accentSubtleColor:PaletteColor={name:'Accent tint',token:'color-bg-
  use('both','Decision cards and Hooko','color-bg-accent-subtle'),
  use('both','Spacing, layout and motion demos'),
 ]};
-export const colorCards=[...paletteColors,accentSubtleColor];
-export const colorRoles=['color-bg-accent-subtle','color-text-primary','color-text-secondary','color-text-primary-hover','color-bg-canvas','color-bg-surface','color-bg-surface-subtle','color-border-default','color-interactive-accent','color-bg-section','color-video-track','color-rain-icon','color-footer-icon','color-text-on-primary','color-border-control','color-focus-ring'];
+export const mediaFrameColor:PaletteColor={name:'Hero frame',token:'color-media-frame',uses:[
+ use('both','Case-study hero frames','color-media-frame'),
+ use('both','Project cards and travelling artwork'),
+]};
+export const colorCards=[...paletteColors,accentSubtleColor,mediaFrameColor];
+export const colorRoles=['color-media-frame','color-bg-accent-subtle','color-text-primary','color-text-secondary','color-text-primary-hover','color-bg-canvas','color-bg-surface','color-bg-surface-subtle','color-border-default','color-interactive-accent','color-bg-section','color-video-track','color-rain-icon','color-footer-icon','color-text-on-primary','color-border-control','color-focus-ring'];
 export const strokeCards=[
  {name:'Borders',description:'Dividers, card outlines, tags, dot grid',role:'color-border-default',demo:'border'},
  {name:'Button outlines',description:'Outlined buttons and icon buttons',role:'color-border-control',demo:'button'},
@@ -34,4 +38,4 @@ export const strokeCards=[
 export const paletteTokenNames=paletteColors.flatMap(color=>[color.token,...(color.shades||[]).map(shade=>shade.token)]);
 
 /** Reviewed external Color contract; local guards verify its body when present. */
-export const colorDocumentationReceipt={"section":"Color","sha256":"b4de992bb736398baa7a4d8ed745cb5e78e186fac46372cccee9b53c9142a7f0","characters":7404};
+export const colorDocumentationReceipt={"section":"Color","sha256":"ab2cc1a89c8db123b935e204c1c9d4769123d8a9cfed381a05fa31b68586114d","characters":7892};
