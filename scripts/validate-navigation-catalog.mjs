@@ -1,4 +1,7 @@
 import fs from 'node:fs';
+import {compareTokenNames,componentTokenPatterns} from '../src/data/system-component-tokens.ts';
+import {buttonTokenGroups} from '../src/data/system-button.ts';
+import {chipTokenGroups} from '../src/data/system-chip.ts';
 import {buildSystemInventory} from '../src/data/system-inventory.ts';
 import {navigationGroups,navigationStates,navigationUsage,navigationProps,navigationTokenGroups} from '../src/data/system-navigation.ts';
 import {chipConsumers} from '../src/data/system-chip.ts';
@@ -16,5 +19,11 @@ export function validateNavigationCatalog(root=process.cwd()){
  for(const[name,order]of Object.entries(orders)){const component=model.components.find(c=>c.name===name);if(navigationProps(component).map(p=>p.name).join(',')!==order||navigationProps(component).some(p=>!p.description))errors.push('Source ordered props: '+name);if(missingUsageNames(navigationUsage(name)).length)errors.push('Self-contained usage: '+name);if(component.usages.some(u=>u.file.includes('/DS')))errors.push('Website Source list only: '+name);}
  if(chipConsumers(model.components.find(c=>c.name==='Chip')).some(file=>file.includes('/DS')))errors.push('Chip Source is website only.');
  const names=navigationTokenGroups().flatMap(g=>g.names);for(const token of ['duration-header-enter','duration-header-exit','ease-header-pill'])if(!names.includes('--'+token))errors.push('Navigation documents shared Work pill motion: '+token);
+ if(!css.includes('padding:var(--space-16) var(--space-6)')||!css.includes('.ds-nav-specimen--top .site-header { height:var(--control-icon); }')||!css.includes('overflow:visible'))errors.push('Navigation centres the visible top row with token clearance and uncut shadows.');
+ const navGroups=navigationTokenGroups();
+ for(const [token,title] of [['--layer-header','Elevation'],['--header-clearance','Spacing'],['--header-inset','Spacing'],['--header-height','Size']])if(!navGroups.find(g=>g.title===title)?.names.includes(token))errors.push('Navigation token group: '+token);
+ for(const groups of [navGroups,chipTokenGroups(),buttonTokenGroups(model.components.filter(c=>['Button','IconButton','TextLink'].includes(c.name)))]){
+  for(const group of groups){if(group.names.join()!==[...group.names].sort(compareTokenNames).join())errors.push('Natural token order: '+group.title);for(const name of group.names){const key=group.title.startsWith('Type')?'type':group.title.toLowerCase();if(!componentTokenPatterns[key].test(name))errors.push('Direct token role: '+name);}}
+ }
  return errors;
 }

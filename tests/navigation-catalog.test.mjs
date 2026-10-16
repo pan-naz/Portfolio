@@ -24,3 +24,8 @@ for(const obsolete of ['work-compact-filter','work-filter-anchor','is-filter-doc
 assert(validateWorkPill(parts[0],parts[1].replace('wrapper.inert = !visible',''),...parts.slice(2)).length);
 assert(validateWorkPill(...parts.slice(0,3),parts[3].replaceAll('var(--duration-header-enter)','')).length);
 console.log('PASS: four genuine navigation compositions, shared states/geometry, source Usage/Props/consumers and Work pill motion.');
+
+assert.equal(navigationTokenGroups().find(g=>g.title==='Elevation').names.includes('--layer-header'),true);
+const {compareTokenNames}=await import('../src/data/system-component-tokens.ts');
+assert.deepEqual(['--space-16','--space-4','--space-2','--space-3','--space-6'].sort(compareTokenNames),['--space-2','--space-3','--space-4','--space-6','--space-16']);
+assert.equal(read('src/styles/design-system-navigation.css').includes('.ds-nav-specimen--top .site-header { height:var(--control-icon); }'),true);

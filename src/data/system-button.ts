@@ -1,3 +1,4 @@
+import {compareTokenNames,componentTokenPatterns as patterns} from './system-component-tokens.ts';
 import {readFileSync} from 'node:fs';
 import {componentPropSpecs} from './system-props.ts';
 import type {SourceComponent} from './system-inventory.ts';
@@ -87,15 +88,16 @@ export function buttonTokens(components:SourceComponent[]){
  const tokens=readFileSync('src/styles/tokens.css','utf8');
  const declarations=new Set([...tokens.matchAll(/(--[\w-]+):/g)].map(([,name])=>name));
  const names=[...new Set([...selected.matchAll(/var\((--[\w-]+)/g)].map(([,name])=>name))];
- return names.filter(name=>declarations.has(name)&&/^(--color-(?:text|bg|border|focus|interactive)-|--(?:control|icon|space|button-padding|radius|shadow|layer|duration|ease|distance|rotation|scale)-)/.test(name)).sort();
+ return names.filter(name=>declarations.has(name)&&/^(--color-(?:text|bg|border|focus|interactive)-|--(?:control|icon|space|button-padding|radius|shadow|layer|duration|ease|distance|rotation|scale)-)/.test(name)).sort(compareTokenNames);
 }
 export function buttonTokenGroups(components:SourceComponent[]){
  const names=buttonTokens(components);
  return [
-  {title:'Color',pattern:/^--color-/},
-  {title:'Size',pattern:/^--(?:control|icon)-/},
-  {title:'Spacing',pattern:/^--(?:space|button-padding)-/},
-  {title:'Shape',pattern:/^--(?:radius|shadow|layer)-/},
-  {title:'Motion',pattern:/^--(?:duration|ease|distance|rotation|scale)-/},
+  {title:'Color',pattern:patterns.color},
+  {title:'Size',pattern:patterns.size},
+  {title:'Spacing',pattern:patterns.spacing},
+  {title:'Shape',pattern:patterns.shape},
+  {title:'Elevation',pattern:patterns.elevation},
+  {title:'Motion',pattern:patterns.motion},
  ].map(({title,pattern})=>({title,names:names.filter(name=>pattern.test(name))}));
 }

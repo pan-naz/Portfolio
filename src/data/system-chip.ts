@@ -1,3 +1,4 @@
+import {compareTokenNames,componentTokenPatterns as patterns} from './system-component-tokens.ts';
 import {readFileSync} from 'node:fs';
 import type {SourceComponent} from './system-inventory';
 import {componentPropSpecs} from './system-props.ts';
@@ -24,14 +25,14 @@ export function chipTokenGroups(){
  const shared=[...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].filter(([,selector])=>/^\s*\.skill-tag(?:[\s{]|--)/.test(selector)).map(([, ,body])=>body).join('\n');
  const label=type.match(/\/\* label-s ·[\s\S]*?\{([^}]+)\}/)![1];
  const motion=readFileSync('src/scripts/hero-intro.ts','utf8').match(/const tagStagger = number\('([^']+)'\)/)![1];
- const names=[...new Set([...shared.matchAll(/var\((--[\w-]+)/g),...label.matchAll(/var\((--[\w-]+)/g)].map(([,name])=>name).concat(motion))].sort();
+ const names=[...new Set([...shared.matchAll(/var\((--[\w-]+)/g),...label.matchAll(/var\((--[\w-]+)/g)].map(([,name])=>name).concat(motion))].sort(compareTokenNames);
  return [
-  {title:'Color',pattern:/^--color-/},
-  {title:'Type · Label/S',pattern:/^--(?:font|text|line-height|letter-spacing)/},
-  {title:'Spacing',pattern:/^--space-/},
-  {title:'Shape',pattern:/^--radius-/},
-  {title:'Elevation',pattern:/^--shadow-/},
-  {title:'Motion',pattern:/^--stagger-/},
+  {title:'Color',pattern:patterns.color},
+  {title:'Type · Label/S',pattern:patterns.type},
+  {title:'Spacing',pattern:patterns.spacing},
+  {title:'Shape',pattern:patterns.shape},
+  {title:'Elevation',pattern:patterns.elevation},
+  {title:'Motion',pattern:patterns.motion},
  ].map(({title,pattern})=>({title,names:names.filter(name=>pattern.test(name))}));
 }
 

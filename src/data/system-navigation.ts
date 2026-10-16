@@ -1,3 +1,4 @@
+import {compareTokenNames,componentTokenPatterns as patterns} from './system-component-tokens.ts';
 import {readFileSync} from 'node:fs';
 import {componentPropSpecs} from './system-props.ts';
 import type {SourceComponent} from './system-inventory';
@@ -49,6 +50,6 @@ export function navigationTokenGroups(){
  const global=readFileSync('src/styles/global.css','utf8').replace(/\/\*[\s\S]*?\*\//g,''),type=readFileSync('src/styles/typography.css','utf8');
  const body=[...global.matchAll(/([^{}]+)\{([^{}]*)\}/g)].filter(([,s])=>/\.wordmark|\[data-logo|:where\(button|\.navigation-item|\.section-navigation|\.header-(?:pill-surface|full-logo|compact-logo)|\.identity\b|\.header-controls|\.desktop-nav|\.floating-navigation|\.work-filter-pill/.test(s)).map(([, ,v])=>v).join('\n');
  const text=type.match(/\/\* body-m-strong ·[\s\S]*?\{([^}]+)\}/)![1],tokens=readFileSync('src/styles/tokens.css','utf8'),declared=new Set([...tokens.matchAll(/(--[\w-]+):/g)].map(([,n])=>n));
- const names=[...new Set([...body.matchAll(/var\((--[\w-]+)/g),...text.matchAll(/var\((--[\w-]+)/g)].map(([,n])=>n))].filter(n=>declared.has(n)&&!/^--(?:safe|work-preview|gutter)/.test(n)).sort();
- return [{title:'Color',pattern:/^--color-/},{title:'Type · Body/M Strong',pattern:/^--(?:font|text|line-height|letter-spacing)/},{title:'Size',pattern:/^--(?:header|control|icon|navigation-dot|layer)-/},{title:'Spacing',pattern:/^--space-/},{title:'Shape',pattern:/^--radius-/},{title:'Elevation',pattern:/^--shadow-/},{title:'Motion',pattern:/^--(?:duration|ease|distance|scale|rotation|stagger)-/}].map(({title,pattern})=>({title,names:names.filter(n=>pattern.test(n))}));
+ const names=[...new Set([...body.matchAll(/var\((--[\w-]+)/g),...text.matchAll(/var\((--[\w-]+)/g)].map(([,n])=>n))].filter(n=>declared.has(n)&&!/^--(?:safe|work-preview|gutter)/.test(n)).sort(compareTokenNames);
+ return [{title:'Color',pattern:patterns.color},{title:'Type · Body/M Strong',pattern:patterns.type},{title:'Size',pattern:patterns.size},{title:'Spacing',pattern:patterns.spacing},{title:'Shape',pattern:patterns.shape},{title:'Elevation',pattern:patterns.elevation},{title:'Motion',pattern:patterns.motion}].map(({title,pattern})=>({title,names:names.filter(n=>pattern.test(n))}));
 }

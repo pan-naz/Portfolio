@@ -3,10 +3,12 @@
 .ds-navigation-view .ds-stage-bar > .ds-tabs { margin-inline-start:0; }
 .ds-nav-grid { grid-template-columns:minmax(0,2fr) minmax(0,3fr); }
 .ds-nav-grid .ds-button-card { display:grid; grid-template-rows:subgrid; grid-row:span 3; }
-.ds-nav-stage { min-height:calc(var(--space-16) * 2); padding:var(--space-4); overflow:visible; }
+.ds-nav-stage { min-height:calc(var(--space-16) * 2); padding:var(--space-16) var(--space-6); overflow:visible; }
 .ds-navigation-view .ds-button-values dt { white-space:nowrap; flex:none; }
 .ds-nav-specimen { position:relative; flex:none; width:max-content; transform:scale(var(--ds-specimen-fit,1)); }
 .ds-nav-specimen .site-header { position:relative; top:0; left:0; right:auto; z-index:auto; }
+/* Centre the visible top row, without changing the website header geometry. */
+.ds-nav-specimen--top .site-header { height:var(--control-icon); }
 .ds-nav-specimen .identity { left:0; }
 .ds-nav-specimen .header-controls { right:0; }
 .ds-nav-specimen .header-pill-surface { opacity:1; }
