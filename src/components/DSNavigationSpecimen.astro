@@ -1,0 +1,11 @@
+---
+import SiteHeader from './SiteHeader.astro';
+import SectionNavigation from './SectionNavigation.astro';
+import Button from './Button.astro';
+import {profile} from '../data/portfolio';
+interface Props {kind:'top'|'floating'|'side'|'pill';}
+const {kind}=Astro.props;
+---
+<div class:list={['ds-nav-specimen',`ds-nav-specimen--${kind}`]} data-nav-specimen={kind}>
+ {kind==='top'||kind==='floating'?<><SiteHeader/>{kind==='floating'&&<Button href={`mailto:${profile.email}`} arrow="up">Get in touch</Button>}</>:kind==='side'?<div class="work-rail"><SectionNavigation/></div>:<div><SectionNavigation compact theme pill/></div>}
+</div>

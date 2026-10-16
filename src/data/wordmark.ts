@@ -4,6 +4,7 @@ export const wordmarks = {
   "full": {
     "width": 79.5,
     "height": 24.0,
+    "baseline": 21.0,
     "viewBoxY": 0,
     "letters": [
       {
@@ -46,6 +47,7 @@ export const wordmarks = {
   "compact": {
     "width": 37.82,
     "height": 24.0,
+    "baseline": 21.0,
     "viewBoxY": 2.99,
     "letters": [
       {

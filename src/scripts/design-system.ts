@@ -30,14 +30,6 @@ navigation.addEventListener('keydown',event=>{
  if(next!==undefined&&current>=0){event.preventDefault();visible[next].focus({preventScroll:horizontal()});revealNavigationLink(visible[next]);}
 });
 
-// Show the actual website pill state, and pin its real phone typography when
-// the small specimen is viewed in a desktop catalog. No private size value.
-for(const specimen of document.querySelectorAll<HTMLElement>('[data-ds-pill][data-ds-phone-filter]')){
- const nav=specimen.querySelector<HTMLElement>('.section-navigation')!;
- nav.dataset.themeFit='false';
- nav.toggleAttribute('data-small-work-type',true);
-}
-
 // Preserve genuine shared typography while removing specimen heading semantics.
 // Replacement selectors and declarations come from the loaded shared CSSOM.
 const headingSelector=(selector:string)=>selector.replace(/(^|[^\w-])h([1-6])\b/g,'$1:is(h$2,:where([data-ds-heading="$2"]))');

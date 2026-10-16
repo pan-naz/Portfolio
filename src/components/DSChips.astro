@@ -29,7 +29,7 @@ const tokenCode=chipTokenGroups().map(group=>`/* ${group.title} */\n`+group.name
    <section><p class="text-label-m">Shared</p><div class="ds-button-code-grid">
     <pre><code>{tokenCode}</code></pre>
     <div class="ds-button-code-panel"><p class="ds-code-comment">/* Accessibility */</p><ul>{chipAccessibility.map(point=><li>{point}</li>)}</ul></div>
-   </div><div class="ds-button-code-panel"><p class="ds-code-comment">/* Source */</p><p>{component.file}</p><ul>{chipConsumers().map(file=><li>{file}</li>)}</ul>{componentVariants(component).map(variant=><span data-ds-variant={`Chip:${variant}`}/>)}</div></section>
+   </div><div class="ds-button-code-panel"><p class="ds-code-comment">/* Source */</p><p>{component.file}</p><ul>{chipConsumers(component).map(file=><li>{file}</li>)}</ul>{componentVariants(component).map(variant=><span data-ds-variant={`Chip:${variant}`}/>)}</div></section>
   </div>
  </div>
 </section>

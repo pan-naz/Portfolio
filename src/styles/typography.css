@@ -85,6 +85,7 @@ body,
 
 /* body-m-strong · canonical role and actual website consumers */
 .text-body-m-strong,
+:where(.identity),
 :where(.case-study-narrative) :where(th),
 :where(.case-study-narrative .stat-label),
 :where(.ds-tile-link strong),

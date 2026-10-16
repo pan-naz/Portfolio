@@ -493,6 +493,12 @@ html[data-work-stage-layout='true'] .about-details::before { left: max(0px, calc
 .button.cta-morph-managed { transition-property: background-color; }
 .header-pill-surface { position: absolute; top: 0; height: var(--header-height); border-radius: var(--radius-full); opacity: 0; pointer-events: none; }
 .header-full-logo { display: inline-flex; }
+/* The full SVG's source baseline meets Body/M Strong's native line baseline.
+   Keep the original centred mark when the section links do not fit. */
+@media (min-width:335px) {
+.site-header:has(.desktop-nav:not([hidden])) .header-full-logo { display: block; height: calc(var(--text-body-m-strong) * var(--line-height-body-m-strong)); }
+.site-header:has(.desktop-nav:not([hidden])) .header-full-logo .wordmark { display: inline-block; margin-top: calc(var(--text-body-m-strong) * -1); vertical-align: calc(var(--wordmark-baseline-outset) * -1); }
+}
 .header-compact-logo { position: absolute; left: 0; top: 0; display: inline-flex; width: 100%; min-height: var(--control-icon); align-items: center; justify-content: center; opacity: 0; }
 .header-cta { position: absolute; top: 0; left: 0; margin: 0; pointer-events: auto; white-space: nowrap; z-index: var(--layer-content); transition: background-color var(--duration-fast); }
 @media (min-width: 1440px) { .hero-content { width: calc(100% - var(--hero-gutter) * 2 - var(--safe-left) - var(--safe-right)); margin-inline: calc(var(--hero-gutter) + var(--safe-left)) calc(var(--hero-gutter) + var(--safe-right)); } }

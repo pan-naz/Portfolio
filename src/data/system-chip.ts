@@ -1,4 +1,4 @@
-import {readFileSync,readdirSync} from 'node:fs';
+import {readFileSync} from 'node:fs';
 import type {SourceComponent} from './system-inventory';
 import {componentPropSpecs} from './system-props.ts';
 
@@ -35,7 +35,7 @@ export function chipTokenGroups(){
  ].map(({title,pattern})=>({title,names:names.filter(name=>pattern.test(name))}));
 }
 
-/** Include every actual Astro caller, including the catalog's own specimens. */
-export function chipConsumers(){
- return readdirSync('src/components').filter(file=>file.endsWith('.astro')).filter(file=>/<Chip\b/.test(readFileSync('src/components/'+file,'utf8'))).map(file=>'src/components/'+file).sort();
+/** Website callers only; catalog specimens are documentation, not consumers. */
+export function chipConsumers(component:SourceComponent){
+ return [...new Set(component.usages.map(usage=>usage.file))].sort();
 }

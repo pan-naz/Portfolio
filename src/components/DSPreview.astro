@@ -1,25 +1,17 @@
 ---
 import '../styles/case-video-player.css';
 import type {SourceComponent} from '../data/system-inventory';
-import Button from './Button.astro';import DSControl from './DSControl.astro';
+import DSControl from './DSControl.astro';
 import Stat from './Stat.astro';import TimelineRow from './TimelineRow.astro';import ProjectCard from './ProjectCard.astro';
-import SectionHeading from './SectionHeading.astro';import SectionNavigation from './SectionNavigation.astro';import NavLinks from './NavLinks.astro';import LogoLink from './LogoLink.astro';
+import SectionHeading from './SectionHeading.astro';
 
-import ToolCard from './ToolCard.astro';import ThemeToggle from './ThemeToggle.astro';
-import {projects,impactGroups,experience,profile,tools} from '../data/portfolio';
+import ToolCard from './ToolCard.astro';
+import {projects,impactGroups,experience,tools} from '../data/portfolio';
 import {workCategories} from '../data/work-categories';
 interface Props {component:SourceComponent;miniature?:boolean;}
 const {component,miniature=false}=Astro.props,name=component.name;
 const prefix=miniature?'tile-':'example-';
 ---
-{name==='NavigationItem'&&<div class="ds-specimen-composition ds-navigation-composition">
- <div class="ds-labelled-specimen"><span>Top header</span><div class="ds-inline-controls"><LogoLink data-ds-example="nav-top-logo" data-ds-target=".wordmark" /><div class="ds-inline-controls"><div data-ds-example="nav-top" data-ds-target=".desktop-nav"><NavLinks showDS={false} /></div><div data-ds-example="nav-top-theme" data-ds-target=".icon-button"><ThemeToggle /></div></div></div></div>
- {!miniature&&<><div class="ds-labelled-specimen"><span>Compact header</span><div class="ds-inline-controls"><LogoLink data-ds-example="nav-compact-logo" data-ds-target=".wordmark" /><div data-ds-example="nav-compact-theme" data-ds-target=".icon-button"><ThemeToggle /></div></div></div>
- <div class="ds-labelled-specimen"><span>Work pill</span><div class="ds-filter-specimen" data-ds-pill data-ds-example="nav-work-pill" data-ds-target=".section-navigation"><SectionNavigation compact theme pill /></div></div>
- <div class="ds-labelled-specimen"><span>Small Work pill</span><div class="ds-filter-specimen" data-ds-pill data-ds-phone-filter data-ds-example="nav-small-filter" data-ds-target=".section-navigation"><SectionNavigation compact theme pill /></div></div>
- <div class="ds-labelled-specimen"><span>Desktop floating header</span><div class="ds-floating-header floating-navigation-theme floating-navigation-surface"><LogoLink compact data-ds-example="nav-wordmark" data-ds-target=".wordmark" /><div data-ds-example="nav-floating" data-ds-target=".desktop-nav"><NavLinks showDS={false} /></div><div data-ds-example="nav-floating-theme" data-ds-target=".icon-button"><ThemeToggle /></div><div data-ds-example="nav-action" data-ds-target=".button"><Button href={`mailto:${profile.email}`} arrow="up">Get in touch</Button></div></div></div>
- <div class="ds-labelled-specimen"><span>Side filter</span><div data-ds-example="nav-filter" data-ds-target=".section-navigation"><SectionNavigation /></div></div></>}
-</div>}
 {name==='Stat'&&<dl class="ds-stat-composition">{[impactGroups[0].metrics[0],...(!miniature?[impactGroups[0].metrics[1],impactGroups[1].metrics[1]]:[])].map((metric,index)=><div data-ds-example={`stat-${index}`} data-ds-target=".stat"><Stat {...metric} revealValue/></div>)}</dl>}
 {name==='TimelineRow'&&<div class="about-details ds-context-about" data-color-zone="dark" data-zone-keep="section large-shadow"><ol class="experience-list" data-ds-example="timeline" data-ds-target=".experience-list">{experience.map(item=><TimelineRow item={item}/>)}</ol></div>}
 {name==='SectionHeading'&&<div class="ds-heading-composition">

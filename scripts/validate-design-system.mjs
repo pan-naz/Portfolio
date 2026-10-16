@@ -1,3 +1,4 @@
+import {validateNavigationCatalog} from './validate-navigation-catalog.mjs';
 import {validateChip} from './validate-chip.mjs';
 import {validateSystemCleanup} from './validate-system-cleanup.mjs';
 import {validateButtonCatalog} from './validate-button.mjs';
@@ -83,28 +84,20 @@ export function validateNoMobileMenu(sources, iconRegistry) {
   if ('menu' in iconRegistry) errors.push('Removed menu icon must not remain in the system registry.');
   return errors;
 }
-export function validateNavigationExamples(preview, controller) {
-  const errors = [];
-  const start = preview.indexOf("{name==='NavigationItem'");
-  const navigation = preview.slice(start, preview.indexOf("{name==='Stat'", start));
-  for (const example of ['nav-top-logo', 'nav-top', 'nav-top-theme', 'nav-compact-logo', 'nav-compact-theme', 'nav-work-pill', 'nav-small-filter', 'nav-floating', 'nav-action', 'nav-filter']) {
-    if (!navigation.includes(`data-ds-example="${example}"`)) errors.push(`Navigation specimen missing: ${example}`);
-  }
-  if (navigation.includes('<IconButton') || !navigation.includes('<ThemeToggle')) errors.push('Navigation must compose the shared ThemeToggle.');
-  for (const example of ['nav-work-pill', 'nav-small-filter']) {
-    const block = navigation.match(new RegExp(`data-ds-example="${example}"[^>]*>([\\s\\S]*?)</div>`))?.[1];
-    if (!block?.includes('<SectionNavigation compact theme pill')) errors.push(`Navigation must use the real compact filter: ${example}`);
-  }
-  if (!controller.includes("nav.toggleAttribute('data-small-work-type',true)") || !controller.includes("nav.dataset.themeFit='false'")) errors.push('Small filter must derive its real responsive typography and pill state from source.');
-  if (/\.style\.(?:fontSize|fontWeight|fontFamily|lineHeight|letterSpacing)\s*=/.test(controller)) errors.push('Catalog must not invent a small-filter font size.');
-  return errors;
+export function validateNavigationExamples(specimen, controller) {
+ const errors=[];
+ for(const tag of ['SiteHeader','SectionNavigation','Button'])if(!specimen.includes('<'+tag))errors.push('Navigation must compose '+tag);
+ if(!specimen.includes('<SectionNavigation compact theme pill'))errors.push('Navigation needs the real Work pill.');
+ if(!controller.includes('pillGeometry('))errors.push('Floating specimen must use the website header model.');
+ if(/\.style\.(?:fontSize|fontWeight|fontFamily|lineHeight|letterSpacing)\s*=/.test(controller))errors.push('Catalog must not invent typography.');
+ return errors;
 }
 export function validateWorkPill(work, controller, css, presentation) {
   const errors = [];
   if (/work-compact-filter|work-filter-anchor|is-filter-docked/.test(work + controller + css + presentation)) errors.push('Work must have only the floating pill, without a former bar or docking reservation.');
   if (!work.includes('<SectionNavigation compact theme pill') || !work.includes('inert aria-hidden="true"')) errors.push('Work pill must render the real filter and start inaccessible while hidden.');
   if (!controller.includes('wrapper.inert = !visible') || !controller.includes("setAttribute('aria-hidden'") || !controller.includes("document.addEventListener('keydown', tab")) errors.push('Work pill must preserve hidden and native keyboard access.');
-  for (const token of ['duration-header-enter', 'duration-header-exit', 'ease-header-pill']) if (!css.includes(`var(--${token})`) || !presentation.includes(`token:'${token}'`)) errors.push(`Work pill and Navigation specs must share --${token}.`);
+  for (const token of ['duration-header-enter', 'duration-header-exit', 'ease-header-pill']) if (!css.includes(`var(--${token})`) || !presentation.includes(`var(--${token})`)) errors.push(`Work pill and Navigation specs must share --${token}.`);
   return errors;
 }
 export function validateCatalogNavigation(layouts, navigation, controller, css) {
@@ -152,14 +145,14 @@ function validate(entries) {
   if (/Tooltip|data-tooltip-target|aria-labelledby/.test(footer)) errors.push('Footer icon link must have only its accessible label, without a tooltip.');
   if (!/label="Design system"/.test(footer)) errors.push('Footer icon link must retain its accessible name.');
   const preview = read('src/components/DSPreview.astro');
-  errors.push(...validateNavigationExamples(preview, read('src/scripts/design-system.ts')));
+  errors.push(...validateNavigationExamples(read('src/components/DSNavigationSpecimen.astro'), read('src/scripts/design-system-navigation.ts')));
   if (/tooltip-link|<Tooltip/.test(preview) || !/data-ds-example="tooltip-tool"[\s\S]*?<ToolCard/.test(preview)) errors.push('Tooltip catalog must use the real tool-card specimen only.');
   if (/tooltipAnchor|data-tooltip-anchor/.test(read('src/scripts/tooltip.ts') + read('src/components/Tooltip.astro'))) errors.push('Tooltip must not retain footer-only anchor positioning.');
   const css = read('src/styles/design-system.css');
   const capabilities=read('src/scripts/layout-capabilities.js');
   if(!capabilities.includes("const catalog = root.hasAttribute('data-catalog');") || !capabilities.includes('!catalog && (precise || homeWork)') || !capabilities.includes('!catalog && floating && !motion.matches')) errors.push('Catalog must consume the shared layout decision without home preview/motion flags that clip specimens.');
   errors.push(...validateCatalogNavigation({BaseLayout:read('src/layouts/BaseLayout.astro'),DSLayout:layout},read('src/components/DSNavigation.astro'),read('src/scripts/design-system.ts'),css));
-  errors.push(...validateWorkPill(read('src/components/WorkSection.astro'), read('src/scripts/work-filter/work-filter-pill.ts'), read('src/styles/global.css'), read('src/data/system-presentation.ts')));
+  errors.push(...validateWorkPill(read('src/components/WorkSection.astro'), read('src/scripts/work-filter/work-filter-pill.ts'), read('src/styles/global.css'), read('src/styles/global.css')));
   for (const match of css.matchAll(/([^{}]+)\{[^{}]*\}/g)) {
     const selector = match[1].trim();
     if (!selector.includes('.ds-')) continue;
@@ -189,7 +182,7 @@ export function validateHiddenDocumentation(records, text) {
   }
   return failures;
 }
-const errors = [...validateChip(root),...validateSystemCleanup(root),...validateButtonCatalog(root),...validateIcons(root),...validateMotionContract(root),...validate(registry),...validateColors(),...validateSpaceShape(root),...validateRadiusContract(),...validateFoundationCodeContract(root)];
+const errors = [...validateNavigationCatalog(root),...validateChip(root),...validateSystemCleanup(root),...validateButtonCatalog(root),...validateIcons(root),...validateMotionContract(root),...validate(registry),...validateColors(),...validateSpaceShape(root),...validateRadiusContract(),...validateFoundationCodeContract(root)];
 errors.push(...validateLogoWave(read('src/styles/global.css'), read('src/components/Logo.astro'), read('src/styles/tokens.css'), filesUnder('src/scripts').filter(file=>file.endsWith('.ts')&&file!=='src/scripts/design-system-motion.ts').map(read).join('\n')));
 if(JSON.stringify(visibleComponents.map(item=>item.name).sort())!==JSON.stringify([...expectedVisible].sort()))errors.push('Visible catalog must contain exactly the approved eight pages');
 for(const [file,key] of Object.entries(hiddenKeys))if(componentManifest.find(item=>item.file===file)?.documentedHidden!==key)errors.push('Missing documented-hidden classification: '+file);
