@@ -2,6 +2,7 @@
 export type ComponentKind = 'reusable-ui' | 'page-section' | 'case-study' | 'internal-helper';
 export interface ComponentClassification { file: string; kind: ComponentKind; group?: string; title?: string; reason: string; documentedHidden?: string; catalogPage?: string; }
 export const componentManifest: ComponentClassification[] = [
+ {file:'src/components/DSChips.astro',kind:'internal-helper',reason:'Chip documentation composed from the real shared component and source-derived API.'},
  {file:'src/components/DSControl.astro',kind:'internal-helper',reason:'Catalog-only controls shared by tabs, segmented choices and token-name switches.'},
  {file:'src/components/DSButtons.astro',kind:'internal-helper',reason:'Combined documentation for the three website action components.'},
  {file:'src/components/DSButtonSpecimen.astro',kind:'internal-helper',reason:'Real website action variants shared by Button specimens and the Overview cover.'},

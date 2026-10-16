@@ -701,19 +701,10 @@
     "file": "src/styles/global.css",
     "selector": ".skill-tag",
     "context": "@layer system",
-    "property": "min-height",
-    "value": "28px",
-    "kind": "size",
-    "reason": "Existing 28px tag height and optical 5/11px insets preserve the ticker."
-  },
-  {
-    "file": "src/styles/global.css",
-    "selector": ".skill-tag",
-    "context": "@layer system",
     "property": "padding",
-    "value": "5px 11px",
+    "value": "var(--space-1) calc(var(--space-3) - 1px)",
     "kind": "spacing",
-    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
+    "reason": "Subtract the literal 1px outline from Space3 so the visible side inset remains exactly 12px."
   },
   {
     "file": "src/styles/global.css",

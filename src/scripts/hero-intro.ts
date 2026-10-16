@@ -38,9 +38,9 @@ export function initializeHeroIntro(workStage?: WorkStageController) {
   const paragraph = hero.querySelector<HTMLElement>('.hero-description')!;
   const eyebrow = hero.querySelector<HTMLElement>('.hero-eyebrow')!;
   const cta = hero.querySelector<HTMLElement>('.hero-cta-entrance')!;
-  const tags = [...hero.querySelectorAll<HTMLElement>('.skill-tag')];
-  const processTags = [...hero.querySelectorAll<HTMLElement>('.process-tags .skill-tag')];
+  const processTags = [...hero.querySelectorAll<HTMLElement>('.process-tag')];
   const rightTags = [...hero.querySelectorAll<HTMLElement>('.skill-marquee .skill-tag')];
+  const tags = [...processTags, ...rightTags];
   const roots = [permanent, cycling, paragraph, eyebrow, cta, ...tags];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const tokens = getComputedStyle(hero);

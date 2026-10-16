@@ -1,12 +1,11 @@
 ---
 import Button from './Button.astro';
-import Chip from './Chip.astro';
 import SkillMarquee from './SkillMarquee.astro';
 import TypewriterHeading from './TypewriterHeading.astro';
 import { profile } from '../data/portfolio';
 ---
 <section id="top" class="hero" aria-labelledby="hero-title">
-  <div class="process-tags" aria-label="Design process">{['Workflows','Testing','Feedback'].map((label,index) => <Chip label={label} index={index} variant="plain" />)}</div>
+  <div class="process-tags" aria-label="Design process">{['Workflows','Testing','Feedback'].map(label => <span class="process-tag text-label-s"><span>{label}</span></span>)}</div>
   <div class="container hero-content">
     <p class="hero-eyebrow">Hi, I'm Nazar</p>
     <TypewriterHeading />

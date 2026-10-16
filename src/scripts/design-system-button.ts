@@ -15,12 +15,12 @@ if(states){
  style.textContent='@layer system {'+[...document.styleSheets].map(sheet=>{try{return rules(sheet.cssRules)}catch{return ''}}).join('\n')+'}';
  document.head.append(style);
  for(const art of states.querySelectorAll<HTMLElement>('[data-button-state]'))for(const control of art.querySelectorAll<HTMLElement>('.button,.icon-button,.text-link'))if(!control.dataset.dsState)control.dataset.dsState=art.dataset.buttonState;
- const covers=[...document.querySelectorAll<HTMLElement>('.ds-button-cover')];
+ const covers=[...document.querySelectorAll<HTMLElement>('.ds-button-cover,.ds-chip-cover')];
  const groups=[...states.querySelectorAll<HTMLElement>('.ds-button-states')];
  const fit=()=>{
   const writes:{element:HTMLElement;scale:number}[]=[];
   const metadata:{element:HTMLElement;heights:number[]}[]=[];
-  for(const grid of states.querySelectorAll<HTMLElement>('.ds-button-grid')){
+  for(const grid of document.querySelectorAll<HTMLElement>('#button .ds-button-grid,#chip .ds-button-grid')){
    if(!grid.clientWidth)continue;
    const rows=new Map<number,HTMLElement[]>();
    for(const card of grid.children as HTMLCollectionOf<HTMLElement>){
@@ -70,8 +70,11 @@ if(states){
   }
   for(const cover of covers){
    if(!cover.parentElement!.clientWidth)continue;
-   const room=parseFloat(getComputedStyle(cover).getPropertyValue('--space-4'))*2;
-   const scale=Math.min(1,(cover.parentElement!.clientWidth-room)/cover.offsetWidth,(cover.parentElement!.clientHeight-room)/cover.offsetHeight);
+   const room=parseFloat(getComputedStyle(cover).getPropertyValue('--space-4'))*2
+    +(cover.matches('.ds-chip-cover')?parseFloat(getComputedStyle(cover).getPropertyValue('--space-1')):0);
+   const width=cover.matches('.ds-chip-cover')?parseFloat(getComputedStyle(cover).width):cover.offsetWidth;
+   const available=cover.matches('.ds-chip-cover')?Math.floor(parseFloat(getComputedStyle(cover.parentElement!).width)):cover.parentElement!.clientWidth;
+   const scale=Math.min(1,(available-room)/width,(cover.parentElement!.clientHeight-room)/cover.offsetHeight);
    write(cover,'--ds-cover-fit',String(scale));
   }
   for(const {element,scale} of writes)write(element,element.matches('.ds-button-states')?'--ds-state-scale':'--ds-specimen-fit',String(scale));
@@ -80,6 +83,6 @@ if(states){
  };
  let pending=false;
  const schedule=()=>{if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;fit();});};
- const observer=new ResizeObserver(schedule);[...groups,...states.querySelectorAll('.ds-button-grid'),...covers.map(cover=>cover.parentElement!)].forEach(group=>observer.observe(group));
+ const observer=new ResizeObserver(schedule);[...groups,...document.querySelectorAll('#button .ds-button-grid,#chip .ds-button-grid'),...covers.map(cover=>cover.parentElement!)].forEach(group=>observer.observe(group));
  document.fonts.ready.then(schedule);
 }

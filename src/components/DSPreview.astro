@@ -2,7 +2,7 @@
 import '../styles/case-video-player.css';
 import type {SourceComponent} from '../data/system-inventory';
 import Button from './Button.astro';import DSControl from './DSControl.astro';
-import Chip from './Chip.astro';import Stat from './Stat.astro';import TimelineRow from './TimelineRow.astro';import ProjectCard from './ProjectCard.astro';
+import Stat from './Stat.astro';import TimelineRow from './TimelineRow.astro';import ProjectCard from './ProjectCard.astro';
 import SectionHeading from './SectionHeading.astro';import SectionNavigation from './SectionNavigation.astro';import NavLinks from './NavLinks.astro';import LogoLink from './LogoLink.astro';
 
 import ToolCard from './ToolCard.astro';import ThemeToggle from './ThemeToggle.astro';
@@ -12,12 +12,6 @@ interface Props {component:SourceComponent;miniature?:boolean;}
 const {component,miniature=false}=Astro.props,name=component.name;
 const prefix=miniature?'tile-':'example-';
 ---
-{name==='Chip'&&<div class="ds-specimen-composition">
- <div class="ds-labelled-specimen"><span>Default</span><div data-ds-example="chip-default" data-ds-target=".skill-tag"><Chip label="Accessibility" /></div></div>
- {!miniature&&<><div class="ds-labelled-specimen"><span>Raised</span><div class="ds-project-context" data-ds-example="chip-raised" data-ds-target=".skill-tag"><Chip label={projects[0].tags[0]} variant="raised" /></div></div>
- <div class="ds-labelled-specimen"><span>Accent</span><div data-ds-example="chip-accent" data-ds-target=".skill-tag"><Chip label="Context" variant="accent" /></div></div>
- <div class="ds-labelled-specimen"><span>Plain</span><div data-ds-example="chip-plain" data-ds-target=".skill-tag"><Chip label="Workflows" variant="plain" /></div></div></>}
-</div>}
 {name==='NavigationItem'&&<div class="ds-specimen-composition ds-navigation-composition">
  <div class="ds-labelled-specimen"><span>Top header</span><div class="ds-inline-controls"><LogoLink data-ds-example="nav-top-logo" data-ds-target=".wordmark" /><div class="ds-inline-controls"><div data-ds-example="nav-top" data-ds-target=".desktop-nav"><NavLinks showDS={false} /></div><div data-ds-example="nav-top-theme" data-ds-target=".icon-button"><ThemeToggle /></div></div></div></div>
  {!miniature&&<><div class="ds-labelled-specimen"><span>Compact header</span><div class="ds-inline-controls"><LogoLink data-ds-example="nav-compact-logo" data-ds-target=".wordmark" /><div data-ds-example="nav-compact-theme" data-ds-target=".icon-button"><ThemeToggle /></div></div></div>
