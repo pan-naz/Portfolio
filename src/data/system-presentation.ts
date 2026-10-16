@@ -1,9 +1,5 @@
 import { tooltipFollowTiming } from '../scripts/tooltip.ts';
 export const componentPresentation:Record<string,{description:string;hint:string;columns:{title:string;rows:{name:string;detail?:string;token?:string;context?:string;selector?:string;properties?:string}[]}[];rules:string[]}>={
- SectionHeading:{description:'Opens a section with its number, title and supporting text.',hint:'Scroll the canvas to see all three variants',columns:[
- {title:'Variants',rows:[{name:'Columns',detail:'Section number beside the title.'},{name:'Stacked',detail:'Label above the title.'},{name:'Case study',detail:'Chapter label without a number.'}]},
- {title:'Sizes',rows:[{name:'Title',selector:'.section-heading [data-ds-heading]',properties:'font-size,line-height'},{name:'Label',selector:'.eyebrow',properties:'font-size'},{name:'Column gap',selector:'.section-heading',properties:'gap'}]},
- {title:'Behaviour',rows:[{name:'Entrance',detail:'The website reveals text while scrolling.'},{name:'Reduced motion',detail:'Readable without entrance motion.'},{name:'Wrapping',detail:'The title wraps naturally at its real size.'}]}],rules:['Use one introduction per section, with the correct heading level.','Keep supporting text in the same composition.','Number website sections only; case-study chapters use labels.']},
  Stat:{description:'A result: the number, what it measures and its context.',hint:'Static',columns:[
  {title:'Parts',rows:[{name:'Value',detail:'The number in accent.'},{name:'Label',detail:'What it measures.'},{name:'Note',detail:'Its source or comparison.'}]},
  {title:'Sizes',rows:[{name:'Value',selector:'.stat-value',properties:'font-size,line-height,font-weight'},{name:'Label',selector:'.stat-label',properties:'font-size,font-weight'},{name:'Note',selector:'.stat dd',properties:'font-size'}]},

@@ -1,0 +1,33 @@
+---
+import '../styles/design-system-button.css';import '../styles/design-system-section-heading.css';
+import type {SourceComponent} from '../data/system-inventory';import {componentVariants} from '../data/system-variants';
+import {sectionHeadingDescription,sectionHeadingCards,sectionHeadingUsage,sectionHeadingProps,sectionHeadingTokenGroups,sectionHeadingSlots,sectionHeadingAccessibility} from '../data/system-section-heading';
+import DSSectionHeadingSpecimen from './DSSectionHeadingSpecimen.astro';import DSTabs from './DSTabs.astro';
+interface Props {component:SourceComponent;}
+const {component}=Astro.props,groups=sectionHeadingTokenGroups(),tokenCode=groups.map(group=>`/* ${group.title} */\n`+group.names.join('\n')).join('\n\n');
+---
+<div class="ds-heading-width-probe" inert aria-hidden="true"><div class="container"/></div>
+<section id="section-heading" class="ds-view ds-heading-view" data-ds-view data-ds-component="SectionHeading" data-title="Section heading" data-group="Components" data-description={sectionHeadingDescription} hidden>
+ <div class="ds-stage" data-ds-card>
+  <div class="ds-stage-bar"><DSTabs id="section-heading-canvas" labels={['Preview','Code']}/></div>
+  <div id="section-heading-canvas-panel-0" role="tabpanel" aria-labelledby="section-heading-canvas-tab-0" class="ds-button-preview">
+   <section class="ds-button-group"><p class="text-label-m">Section heading</p><p class="text-body-s ds-button-secondary">Every section and case-study chapter starts with one.</p>
+    <div class="ds-button-grid ds-heading-grid">{sectionHeadingCards.map(card=><article class="ds-button-card" data-heading-card={card.id}>
+     <div class="ds-button-stage ds-heading-stage" inert aria-hidden="true"><DSSectionHeadingSpecimen kind={card.id}/></div>
+     <div><p class="text-body-m-strong">{card.name}</p><p class="text-body-s ds-button-secondary">{card.description}</p></div>
+     <dl class="ds-button-values text-body-s"><div><dt>Used in</dt><dd>{card.used}</dd></div><div><dt>Style</dt><dd>{card.style}</dd></div></dl>
+    </article>)}</div>
+   </section>
+  </div>
+  <div id="section-heading-canvas-panel-1" role="tabpanel" aria-labelledby="section-heading-canvas-tab-1" class="ds-code ds-button-code" hidden>
+   <section data-ds-component-code="SectionHeading"><p class="text-label-m">Section heading</p><pre><code data-ds-usage="SectionHeading">{'/* Usage · '+component.file+' */\n'+sectionHeadingUsage()}</code></pre>
+    <div class="ds-button-props"><p class="ds-code-comment">/* Props */</p><div class="ds-props-table"><table><thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>What it does</th></tr></thead><tbody>{sectionHeadingProps(component).map(prop=><tr data-ds-prop={prop.name}><th scope="row"><code>{prop.name}</code></th><td><code>{prop.type}</code></td><td><code>{prop.default==='Required'?'required':prop.default}</code></td><td>{prop.description}</td></tr>)}</tbody></table></div></div>
+    <div class="ds-button-code-panel"><p class="ds-code-comment">/* Slots */</p><ul>{sectionHeadingSlots.map(point=><li>{point}</li>)}</ul></div>
+   </section>
+   <section><p class="text-label-m">Shared</p>{groups.flatMap(group=>group.names).map(name=><span data-ds-token={name.slice(2)}/>)}<div class="ds-button-code-grid"><pre><code>{tokenCode}</code></pre><div class="ds-button-code-panel"><p class="ds-code-comment">/* Accessibility */</p><ul>{sectionHeadingAccessibility.map(point=><li>{point}</li>)}</ul></div></div>
+    <div class="ds-button-code-panel"><p class="ds-code-comment">/* Source */</p><p>{component.file}</p><ul>{[...new Set(component.usages.map(usage=>usage.file))].sort().map(file=><li>{file}</li>)}</ul>{componentVariants(component).map(variant=><span data-ds-variant={`SectionHeading:${variant}`}/>)}</div>
+   </section>
+  </div>
+ </div>
+</section>
+<script>import '../scripts/design-system-section-heading';</script>

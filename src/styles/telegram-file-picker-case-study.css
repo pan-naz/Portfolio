@@ -6,8 +6,10 @@
 .telegram-case > .case-study-overview { padding-top: var(--case-section-space); }
 .telegram-case > :is(#tg-competition, #tg-video) { padding-bottom: 0; }
 .tg-head { row-gap: var(--space-6); }
-.tg-head > .case-study-eyebrow { grid-column: 1; grid-row: 1; }
-.tg-head > .case-study-heading { grid-column: 1; grid-row: 2; margin: 0 var(--grid-gap) 0 0; }
+/* The shared heading participates in Telegram’s existing two-row text grid. */
+.tg-head > .section-heading, .tg-head > .section-heading > div { display: contents; }
+.tg-head .case-study-eyebrow { grid-column: 1; grid-row: 1; margin-inline-end: var(--grid-gap); }
+.tg-head .case-study-heading { grid-column: 1; grid-row: 2; margin: 0 var(--grid-gap) 0 0; }
 .tg-head > .tg-copy { grid-column: 2; grid-row: 2; align-self: center; margin: 0; }
 .tg-copy { display: grid; gap: var(--space-3); }
 .tg-copy > p { margin: 0; }
@@ -25,7 +27,7 @@
   .tg-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 767px) {
-  .tg-head > .case-study-heading { margin-inline-end: 0; }
+  .tg-head :is(.case-study-heading, .case-study-eyebrow) { margin-inline-end: 0; }
   .tg-head > .tg-copy { grid-column: 1; grid-row: 3; }
   .tg-stats, #tg-video > .case-study-media { margin-top: var(--case-content-gap); }
   .tg-result .case-study-chapter__inner { gap: var(--case-content-gap); }

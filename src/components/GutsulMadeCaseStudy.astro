@@ -1,4 +1,5 @@
 ---
+import SectionHeading from './SectionHeading.astro';
 import type { Project } from '../data/portfolio';
 import { gutsulHero, gutsulRole, gutsulBranding, gutsulMain, gutsulCatalog, gutsulProduct, gutsulOther, gutsulResponsive, gutsulGuide } from '../data/gutsul-made-case-study';
 import CaseStudyOverview from './CaseStudyOverview.astro';
@@ -19,7 +20,7 @@ const ornament = '/projects/gutsul-made-case-study/ornament-strip.svg';
     <section class="gutsul-band gutsul-charcoal case-study-chapter--inverse" data-color-zone="dark" data-zone-keep="surface section shadows" aria-labelledby="gm-branding">
       <div class="case-study-chapter__inner">
         <div class="case-study-columns gutsul-heading">
-          <div><p class="case-study-eyebrow">Branding</p><h2 class="case-study-heading" id="gm-branding">{gutsulBranding.title}</h2></div>
+          <div><SectionHeading id="gm-branding" label="Branding" layout="stacked" reveal={false}>{gutsulBranding.title}</SectionHeading></div>
           <p class="gutsul-muted">{gutsulBranding.description}</p>
         </div>
         <div class="gutsul-story gutsul-block">{gutsulBranding.steps.map(step => <figure class="gutsul-story-step">
@@ -34,7 +35,7 @@ const ornament = '/projects/gutsul-made-case-study/ornament-strip.svg';
     {([['main', 'Home', gutsulMain], ['catalog', 'Catalog', gutsulCatalog]] as const).map(([id, label, page]) => <section aria-labelledby={`gm-${id}`}>
       <div class="case-study-columns">
         <case-study-sticky class="case-study-sticky gutsul-copy">
-          <div><p class="case-study-eyebrow">{label}</p><h2 class="case-study-heading" id={`gm-${id}`}>{page.title}</h2></div>
+          <div><SectionHeading id={`gm-${id}`} label={label} layout="stacked" reveal={false}>{page.title}</SectionHeading></div>
           <p class="gutsul-muted">{page.description}</p>
           <ul class="gutsul-diamonds">{page.facts.map(fact => <li><strong>{fact.label}</strong> {fact.text}</li>)}</ul>
         </case-study-sticky>
@@ -46,7 +47,7 @@ const ornament = '/projects/gutsul-made-case-study/ornament-strip.svg';
       <div class="gutsul-ornament" aria-hidden="true"><SvgAsset src={ornament} /></div>
       <div class="case-study-chapter__inner gutsul-band-inner">
         <div class="case-study-columns gutsul-heading">
-          <div><p class="case-study-eyebrow">Product</p><h2 class="case-study-heading" id="gm-product">{gutsulProduct.title}</h2></div>
+          <div><SectionHeading id="gm-product" label="Product" layout="stacked" reveal={false}>{gutsulProduct.title}</SectionHeading></div>
           <p>{gutsulProduct.description}</p>
         </div>
         <div class="gutsul-cutouts">{gutsulProduct.cutouts.map(media => <div style={`--gutsul-cutout-width:${media.width}px`}><CaseStudyMedia {...media} presentation="bare" /></div>)}</div>
@@ -59,7 +60,7 @@ const ornament = '/projects/gutsul-made-case-study/ornament-strip.svg';
     </section>
 
     <section aria-labelledby="gm-pages">
-      <p class="case-study-eyebrow">Inner pages</p><h2 class="case-study-heading" id="gm-pages">Cart, news and contacts</h2>
+      <SectionHeading id="gm-pages" label="Inner pages" layout="stacked" reveal={false}>Cart, news and contacts</SectionHeading>
       <div class="case-study-media-grid gutsul-pages gutsul-block">{gutsulOther.map(page => <CaseStudyDecisionCard title={page.title} layout="figure">
         <CaseStudyMedia slot="media" {...page.media} presentation="bare" radius="small" /><p>{page.description}</p>
       </CaseStudyDecisionCard>)}</div>
@@ -69,7 +70,7 @@ const ornament = '/projects/gutsul-made-case-study/ornament-strip.svg';
       <div class="gutsul-ornament" aria-hidden="true"><SvgAsset src={ornament} /></div>
       <div class="case-study-chapter__inner gutsul-band-inner">
         <div class="case-study-columns gutsul-heading">
-          <div><p class="case-study-eyebrow">Responsive</p><h2 class="case-study-heading" id="gm-responsive">{gutsulResponsive.title}</h2></div>
+          <div><SectionHeading id="gm-responsive" label="Responsive" layout="stacked" reveal={false}>{gutsulResponsive.title}</SectionHeading></div>
           <p>{gutsulResponsive.description}</p>
         </div>
         <div class="gutsul-phones">{gutsulResponsive.media.map(phone => <CaseStudyMedia {...phone} />)}</div>
@@ -78,7 +79,7 @@ const ornament = '/projects/gutsul-made-case-study/ornament-strip.svg';
     </section>
 
     <section aria-labelledby="gm-style">
-      <div class="case-study-columns gutsul-heading"><div><p class="case-study-eyebrow">Style guide</p><h2 class="case-study-heading" id="gm-style">{gutsulGuide.title}</h2></div><p class="gutsul-muted">{gutsulGuide.description}</p></div>
+      <div class="case-study-columns gutsul-heading"><div><SectionHeading id="gm-style" label="Style guide" layout="stacked" reveal={false}>{gutsulGuide.title}</SectionHeading></div><p class="gutsul-muted">{gutsulGuide.description}</p></div>
       <div class="gutsul-guide gutsul-block">
         <CaseStudyDecisionCard title={gutsulGuide.icons.title} layout="figure"><div slot="media" class="gutsul-plate gutsul-icons"><CaseStudyMedia {...gutsulGuide.icons.media} presentation="bare" /></div><p>{gutsulGuide.icons.description}</p></CaseStudyDecisionCard>
         <CaseStudyDecisionCard title={gutsulGuide.type.title} layout="figure"><div slot="media" class="gutsul-plate"><p class="gutsul-type" data-typography-exclusion="project-font-specimen">Open Sans<br /><span>Regular &amp; <b>Bold</b></span></p></div><p>{gutsulGuide.type.description}</p></CaseStudyDecisionCard>

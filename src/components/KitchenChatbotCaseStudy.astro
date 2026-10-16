@@ -1,4 +1,5 @@
 ---
+import SectionHeading from './SectionHeading.astro';
 import type { Project } from '../data/portfolio';
 import { kitchenChatbotHero, kitchenChatbotCredit, kitchenChatbotConversation } from '../data/kitchen-chatbot-case-study';
 import CaseStudyOverview from './CaseStudyOverview.astro';
@@ -22,7 +23,7 @@ const [creditBefore, creditAfter] = kitchenChatbotCredit.split(mascotName);
     <section id="kc-conversation" aria-labelledby="kc-conversation-title">
       <div class="case-study-columns kc-conversation">
         <div class="kc-copy">
-          <div><p class="case-study-eyebrow">{conversation.eyebrow}</p><h2 class="case-study-heading" id="kc-conversation-title">{conversation.title}</h2></div>
+          <div><SectionHeading id="kc-conversation-title" label={conversation.eyebrow} layout="stacked" reveal={false}>{conversation.title}</SectionHeading></div>
           {conversation.description.map(text => <p class="kc-muted">{text}</p>)}
         </div>
         <CaseStudyDecisionCard title={conversation.transcriptLabel} titleHidden layout="figure">

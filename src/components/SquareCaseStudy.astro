@@ -1,4 +1,5 @@
 ---
+import SectionHeading from './SectionHeading.astro';
 import type { Project } from '../data/portfolio';
 import { squareHero, squareRole, squareChallenge, squareLookbook, squareLibido } from '../data/square-case-study';
 import CaseStudyOverview from './CaseStudyOverview.astro';
@@ -18,7 +19,7 @@ const { project } = Astro.props;
     <section class="square-challenge case-study-chapter--inverse" data-color-zone="dark" data-zone-keep="surface section shadows" style={`--square-cover:url('${squareChallenge.cover}')`} aria-labelledby="sq-challenge">
       <div class="case-study-chapter__inner">
         <div class="square-challenge-copy">
-          <div><p class="case-study-eyebrow">{squareChallenge.eyebrow}</p><h2 class="case-study-heading" id="sq-challenge">{squareChallenge.title}</h2></div>
+          <div><SectionHeading id="sq-challenge" label={squareChallenge.eyebrow} layout="stacked" reveal={false}>{squareChallenge.title}</SectionHeading></div>
           <p class="square-muted">{squareChallenge.description}</p>
           <Button href={squareChallenge.href} variant="secondary" arrow="up" target="_blank" rel="noopener noreferrer">{squareChallenge.linkLabel}</Button>
         </div>

@@ -1,4 +1,5 @@
 ---
+import SectionHeading from './SectionHeading.astro';
 import type { Project } from '../data/portfolio';
 import { sternfitHero, sternfitRole, sternfitTeam, sternfitSignature, sternfitFirstScreen, sternfitBrands, sternfitPhotos, sternfitMain, sternfitFlow, sternfitPhone, sternfitGuide } from '../data/team-sternfit-case-study';
 import CaseStudyOverview from './CaseStudyOverview.astro';
@@ -19,7 +20,7 @@ const { project } = Astro.props;
     <section class="sternfit-night case-study-chapter--inverse" data-color-zone="dark" data-zone-keep="surface section shadows" aria-labelledby="ts-brands">
       <div class="case-study-chapter__inner sternfit-band-inner">
         <div class="case-study-columns sternfit-row">
-          <div class="sternfit-copy"><div><p class="case-study-eyebrow">First screen</p><h2 class="case-study-heading" id="ts-brands">{sternfitFirstScreen.title}</h2></div><p class="sternfit-muted">{sternfitFirstScreen.description}</p></div>
+          <div class="sternfit-copy"><div><SectionHeading id="ts-brands" label="First screen" layout="stacked" reveal={false}>{sternfitFirstScreen.title}</SectionHeading></div><p class="sternfit-muted">{sternfitFirstScreen.description}</p></div>
           <CaseStudyMedia {...sternfitFirstScreen.media} presentation="shadow" radius="small" />
         </div>
         <div>
@@ -36,7 +37,7 @@ const { project } = Astro.props;
     </section>
 
     <section aria-labelledby="ts-main">
-      <div class="case-study-columns sternfit-section-heading"><div><p class="case-study-eyebrow">Main page</p><h2 class="case-study-heading" id="ts-main">{sternfitMain.title}</h2></div><p class="sternfit-muted">{sternfitMain.description}</p></div>
+      <div class="case-study-columns sternfit-section-heading"><div><SectionHeading id="ts-main" label="Main page" layout="stacked" reveal={false}>{sternfitMain.title}</SectionHeading></div><p class="sternfit-muted">{sternfitMain.description}</p></div>
       <div class="sternfit-blocks">{sternfitMain.blocks.map((block, index) => <div class:list={['case-study-columns', 'sternfit-row', 'sternfit-story-row', index % 2 === 1 && 'sternfit-story-row--reverse']}>
         <div class="sternfit-copy"><blockquote class="sternfit-quote font-heading">“{block.quote}”</blockquote><p class="sternfit-muted">{block.description}</p></div>
         <div class="sternfit-shot"><CaseStudyMedia {...block.media} /></div>
@@ -44,16 +45,16 @@ const { project } = Astro.props;
     </section>
 
     <section aria-labelledby="ts-flow">
-      <div class="case-study-columns sternfit-section-heading"><div><p class="case-study-eyebrow">User flow</p><h2 class="case-study-heading" id="ts-flow">{sternfitFlow.title}</h2></div><p class="sternfit-muted">{sternfitFlow.description}</p></div>
+      <div class="case-study-columns sternfit-section-heading"><div><SectionHeading id="ts-flow" label="User flow" layout="stacked" reveal={false}>{sternfitFlow.title}</SectionHeading></div><p class="sternfit-muted">{sternfitFlow.description}</p></div>
       <CaseStudyMedia {...sternfitFlow.media} />
     </section>
 
     <section aria-labelledby="ts-phone">
-      <div class="case-study-columns sternfit-row"><div class="sternfit-copy"><div><p class="case-study-eyebrow">Responsive</p><h2 class="case-study-heading" id="ts-phone">{sternfitPhone.title}</h2></div><p class="sternfit-muted">{sternfitPhone.description}</p></div><CaseStudyMedia {...sternfitPhone.media} /></div>
+      <div class="case-study-columns sternfit-row"><div class="sternfit-copy"><div><SectionHeading id="ts-phone" label="Responsive" layout="stacked" reveal={false}>{sternfitPhone.title}</SectionHeading></div><p class="sternfit-muted">{sternfitPhone.description}</p></div><CaseStudyMedia {...sternfitPhone.media} /></div>
     </section>
 
     <section aria-labelledby="ts-guide">
-      <div class="case-study-columns sternfit-section-heading"><div><p class="case-study-eyebrow">Style guide</p><h2 class="case-study-heading" id="ts-guide">{sternfitGuide.title}</h2></div><p class="sternfit-muted">{sternfitGuide.description}</p></div>
+      <div class="case-study-columns sternfit-section-heading"><div><SectionHeading id="ts-guide" label="Style guide" layout="stacked" reveal={false}>{sternfitGuide.title}</SectionHeading></div><p class="sternfit-muted">{sternfitGuide.description}</p></div>
       <div class="case-study-media-grid sternfit-type-cards">{sternfitGuide.type.map(type => <CaseStudyDecisionCard title={type.title} layout="figure"><div slot="media" class="sternfit-type-plate"><CaseStudyMedia {...type.media} presentation="bare" /></div><p class="sternfit-muted">{type.description}</p></CaseStudyDecisionCard>)}</div>
       <div class="sternfit-colours"><h3>Colours</h3><ul class="sternfit-palette" aria-label="Colour palette">{sternfitGuide.colours.map(colour => <li><CaseStudyDecisionCard title={colour.label} layout="figure"><div slot="media" class="sternfit-swatch" style={`background:${colour.value}`} aria-hidden="true" /><p><code>{colour.value}</code></p><p>{colour.description}</p></CaseStudyDecisionCard></li>)}</ul></div>
     </section>

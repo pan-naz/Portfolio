@@ -1,3 +1,4 @@
+import {validateSectionHeading} from './validate-section-heading.mjs';
 import {validateProjectCard} from './validate-project-card.mjs';
 import {validateNavigationCatalog} from './validate-navigation-catalog.mjs';
 import {validateChip} from './validate-chip.mjs';
@@ -38,7 +39,7 @@ const websitePages = filesUnder('src/pages').filter(path => path.endsWith('.astr
 function validatePage(path, source) {
   // Routes compose components. Only unstyled page wrappers and script wiring live here.
   const markup = source.replace(/^---[\s\S]*?---/, '').replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '').replace(/<!--[\s\S]*?-->/g, '');
-  const errors = [];
+  const errors = [...validateSectionHeading(root),];
   for (const match of markup.matchAll(/<([a-z][\w-]*)\b([^>]*?)>/g)) {
     if (!['div', 'main'].includes(match[1]) || /\b(?:class(?::list)?|style)\s*=/.test(match[2])) {
       errors.push(`Page must compose shared components: ${path} contains inline <${match[1]}> design.`);

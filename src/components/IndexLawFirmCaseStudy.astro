@@ -1,4 +1,5 @@
 ---
+import SectionHeading from './SectionHeading.astro';
 import type { Project } from '../data/portfolio';
 import { indexLawFirmMedia as media, indexLawFirmHomeSections, indexLawFirmServices, indexLawFirmTileOrder, indexLawFirmPalette } from '../data/index-law-firm-case-study';
 import CaseStudyOverview from './CaseStudyOverview.astro';
@@ -46,7 +47,7 @@ const { project } = Astro.props;
       <section class="case-study-chapter--inverse" data-color-zone="dark" data-zone-keep="surface section shadows" aria-labelledby="index-services">
         <div class="case-study-chapter__inner index-section">
           <div class="case-study-columns index-chapter-heading">
-            <div><p class="case-study-eyebrow">Interaction</p><h2 class="case-study-heading" id="index-services">Service tiles</h2></div>
+            <div><SectionHeading id="index-services" label="Interaction" layout="stacked" reveal={false}>Service tiles</SectionHeading></div>
             <p class="text-body-m index-muted">Each tile shows a service and a short line about it. On hover the line under the title turns orange and a plus appears. A popover shows what the firm does in that area. Hover a tile below to see its details.</p>
           </div>
           <CaseStudyServiceTiles id="index-service-demo" services={indexLawFirmServices} order={indexLawFirmTileOrder} class="index-service-demo">
@@ -74,7 +75,7 @@ const { project } = Astro.props;
 
       <section class="case-study-chapter--inverse" data-color-zone="dark" data-zone-keep="surface section shadows" aria-labelledby="index-style">
         <div class="case-study-chapter__inner index-section">
-          <div><p class="case-study-eyebrow">Style guide</p><h2 class="case-study-heading" id="index-style">Colour, type and grid</h2></div>
+          <div><SectionHeading id="index-style" label="Style guide" layout="stacked" reveal={false}>Colour, type and grid</SectionHeading></div>
           <div class="index-block"><h3>Colour</h3><CaseStudyPalette items={indexLawFirmPalette} class="index-palette" swatchClass="index-swatch" swatchProperty="--index-swatch" /></div>
           <div class="index-block"><h3>Typography</h3><div class="index-specimens">
             <div class="index-specimen"><p class="case-study-eyebrow">Lato Regular · display</p><p class="index-specimen-size text-body-s">26px</p><p class="index-lato index-display-sample" data-typography-exclusion="project-font-specimen">Representation in court</p></div>

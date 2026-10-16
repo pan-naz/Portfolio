@@ -1,4 +1,5 @@
 ---
+import SectionHeading from './SectionHeading.astro';
 import type { Project } from '../data/portfolio';
 import { yellowLeafMedia as media, yellowLeafLinkedIn, yellowLeafHomeSections, yellowLeafEstimateSteps, yellowLeafPalette } from '../data/yellow-leaf-case-study';
 import CaseStudyOverview from './CaseStudyOverview.astro';
@@ -27,7 +28,7 @@ const vector = (name: string) => '/projects/yellow-leaf-case-study/' + name + '.
     </CaseStudyOverview>
 
     <section aria-labelledby="yl-idea">
-      <p class="case-study-eyebrow">Idea</p><h2 class="case-study-heading" id="yl-idea">Keep the site simple</h2>
+      <SectionHeading id="yl-idea" label="Idea" layout="stacked" reveal={false}>Keep the site simple</SectionHeading>
       <div class="case-study-columns yellow-block">
         <div><h3>The agency</h3><p>The team builds web and mobile apps, CRM and CAD systems, online stores and data tools.</p></div>
         <div><h3>The approach</h3><p>The agency builds complex systems, so the site had to feel simple and friendly. Pages are light, headings are bold condensed capitals, and yellow is kept for buttons and accents. Scrolling is smooth, and blocks fade in as you reach them.</p></div>
@@ -37,7 +38,7 @@ const vector = (name: string) => '/projects/yellow-leaf-case-study/' + name + '.
     <section aria-labelledby="yl-home">
       <div class="case-study-columns">
         <case-study-sticky class="case-study-sticky">
-          <p class="case-study-eyebrow">Pages</p><h2 class="case-study-heading" id="yl-home">Main page</h2>
+          <SectionHeading id="yl-home" label="Pages" layout="stacked" reveal={false}>Main page</SectionHeading>
           <p class="yellow-lede">The header stays the same on every page: the logo, an Estimate project button and the menu.</p>
           <CaseStudySteps items={yellowLeafHomeSections} class="yellow-block" />
         </case-study-sticky>
@@ -48,7 +49,7 @@ const vector = (name: string) => '/projects/yellow-leaf-case-study/' + name + '.
     <section class="case-study-chapter--inverse" data-color-zone="dark" data-zone-keep="surface section shadows" aria-labelledby="yl-estimate">
       <div class="case-study-chapter__inner">
         <div class="case-study-columns yellow-chapter-heading">
-          <div><p class="case-study-eyebrow">Feature</p><h2 class="case-study-heading" id="yl-estimate">Project estimate</h2></div>
+          <div><SectionHeading id="yl-estimate" label="Feature" layout="stacked" reveal={false}>Project estimate</SectionHeading></div>
           <p class="text-body-m">The team decided to add an estimate form. A client picks the kind of project and its scope, leaves their contacts and gets an approximate budget. The form opens from the Estimate project button in the header and the footer.</p>
         </div>
         <div class="yellow-block"><CaseStudyMedia {...media.estimate} /></div>
@@ -61,7 +62,7 @@ const vector = (name: string) => '/projects/yellow-leaf-case-study/' + name + '.
 
     <section aria-labelledby="yl-navigation">
       <div class="case-study-columns yellow-chapter-heading">
-        <div><p class="case-study-eyebrow">Interaction</p><h2 class="case-study-heading" id="yl-navigation">Navigation</h2></div>
+        <div><SectionHeading id="yl-navigation" label="Interaction" layout="stacked" reveal={false}>Navigation</SectionHeading></div>
         <p class="text-body-m">The menu opens over the page. The five sections are in the middle, social links on the left, and the language switch, address and contacts on the right. On hover, a yellow line crosses out the item.</p>
       </div>
       <div class="yellow-block"><CaseStudyMedia {...media.navigation} /></div>
@@ -69,7 +70,7 @@ const vector = (name: string) => '/projects/yellow-leaf-case-study/' + name + '.
 
     <section aria-labelledby="yl-responsive">
       <div class="case-study-columns yellow-chapter-heading">
-        <div><p class="case-study-eyebrow">Responsive</p><h2 class="case-study-heading" id="yl-responsive">Tablet and phone</h2></div>
+        <div><SectionHeading id="yl-responsive" label="Responsive" layout="stacked" reveal={false}>Tablet and phone</SectionHeading></div>
         <p class="text-body-m">Every page was also designed for small screens. On a phone the hero keeps its background video, and the menu becomes a single column with the language switch under it.</p>
       </div>
       <div class="case-study-media-grid yellow-phone-grid yellow-block"><CaseStudyMedia {...media.phoneHero} /><CaseStudyMedia {...media.phoneHome} /><CaseStudyMedia {...media.phoneWorks} /></div>
@@ -80,7 +81,7 @@ const vector = (name: string) => '/projects/yellow-leaf-case-study/' + name + '.
     </section>
 
     <section aria-labelledby="yl-pages">
-      <p class="case-study-eyebrow">Pages</p><h2 class="case-study-heading" id="yl-pages">Inner pages</h2>
+      <SectionHeading id="yl-pages" label="Pages" layout="stacked" reveal={false}>Inner pages</SectionHeading>
       <div class="case-study-media-grid yellow-block">{innerPages.map(page => <figure><CaseStudyMedia {...page.media} /><figcaption><h3>{page.title}</h3><p>{page.description}</p></figcaption></figure>)}</div>
       <div class="case-study-columns yellow-block">
         <case-study-sticky class="case-study-sticky"><h3>About us</h3><p>The agency's story, three values and the team. Each person in the team row is shown with their role. The page ends with a photo of the office and a Let's talk link.</p></case-study-sticky>
@@ -90,7 +91,7 @@ const vector = (name: string) => '/projects/yellow-leaf-case-study/' + name + '.
 
     <section aria-labelledby="yl-branding">
       <div class="case-study-columns yellow-chapter-heading">
-        <div><p class="case-study-eyebrow">Branding</p><h2 class="case-study-heading" id="yl-branding">A leaf with a y in it</h2></div>
+        <div><SectionHeading id="yl-branding" label="Branding" layout="stacked" reveal={false}>A leaf with a y in it</SectionHeading></div>
         <p class="text-body-m">The brand was made together with the agency's first website. The logo is a leaf for Leaf, cut by the letter y for Yellow. It was made in colour first, and the site's colours came from it.</p>
       </div>
       <div class="yellow-duo yellow-brand-figures yellow-block">
@@ -116,7 +117,7 @@ const vector = (name: string) => '/projects/yellow-leaf-case-study/' + name + '.
 
     <section class="case-study-chapter--inverse" data-color-zone="dark" data-zone-keep="surface section shadows" aria-labelledby="yl-style">
       <div class="case-study-chapter__inner">
-        <p class="case-study-eyebrow">Style guide</p><h2 class="case-study-heading" id="yl-style">Yellow, black and bold capitals</h2>
+        <SectionHeading id="yl-style" label="Style guide" layout="stacked" reveal={false}>Yellow, black and bold capitals</SectionHeading>
         <div class="yellow-block"><h3>Colour</h3><CaseStudyPalette items={yellowLeafPalette} class="yellow-palette" swatchClass="yellow-swatch" swatchProperty="--yellow-swatch" labelClass="yellow-colour-label" /></div>
         <div class="yellow-block"><h3>Typography</h3><div class="yellow-duo yellow-type-grid">
           <div class="yellow-type-card"><p class="yellow-type-display yellow-oswald yellow-type-bold" aria-hidden="true" data-typography-exclusion="project-font-specimen">Aa</p><div><p class="case-study-eyebrow">Oswald · headings and menu</p><div class="yellow-type-example"><p class="text-body-s">Bold, capitals</p><p class="yellow-type-sample yellow-oswald yellow-type-bold yellow-capitals" data-typography-exclusion="project-font-specimen">Developing complex solutions</p></div><div class="yellow-type-example"><p class="text-body-s">Medium</p><p class="yellow-type-sample yellow-oswald yellow-type-medium" data-typography-exclusion="project-font-specimen">What type of your project?</p></div></div></div>

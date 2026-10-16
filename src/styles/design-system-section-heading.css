@@ -1,0 +1,10 @@
+@layer system, project;
+@layer system {
+.ds-heading-view .ds-stage-bar > .ds-tabs { margin-inline-start:0; }
+.ds-heading-grid { grid-template-columns:minmax(0,1fr); }
+.ds-heading-fit { position:relative; flex:none; }
+.ds-heading-art.ds-specimens { position:absolute; margin:0; width:var(--ds-heading-width); transform:scale(var(--ds-heading-scale,1)); transform-origin:top left; }
+.ds-heading-art .section-heading { margin-bottom:0; }
+.ds-heading-cover { position:absolute; top:50%; left:50%; translate:-50% -50%; }
+.ds-heading-width-probe { position:fixed; top:0; left:0; width:100vw; height:0; visibility:hidden; overflow:hidden; contain:strict; pointer-events:none; }
+}

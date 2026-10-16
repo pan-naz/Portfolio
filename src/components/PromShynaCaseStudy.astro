@@ -1,4 +1,5 @@
 ---
+import SectionHeading from './SectionHeading.astro';
 import type { Project } from '../data/portfolio';
 import { promshynaHero, promshynaRole, promshynaTeam, promshynaPages, promshynaPhones, promshynaPhoneCopy, promshynaOtherPages, promshynaBranding, promshynaBrandCopy, promshynaPalette } from '../data/promshyna-case-study';
 import CaseStudyOverview from './CaseStudyOverview.astro';
@@ -17,7 +18,7 @@ const { project } = Astro.props;
 
     <section class="promshyna-path" aria-labelledby="ps-path">
       <div class="promshyna-path-intro">
-        <p class="case-study-eyebrow">Store pages</p><h2 class="case-study-heading" id="ps-path">From search to delivery</h2>
+        <SectionHeading id="ps-path" label="Store pages" layout="stacked" reveal={false}>From search to delivery</SectionHeading>
         <p class="promshyna-muted">The six pages a buyer goes through to order a tire, in the order they see them.</p>
       </div>
       <div class="promshyna-route">
@@ -44,7 +45,7 @@ const { project } = Astro.props;
     <section class="promshyna-phones" aria-labelledby="ps-responsive">
       <div class="case-study-chapter__inner">
         <div class="case-study-columns promshyna-chapter-heading">
-          <div><p class="case-study-eyebrow">Responsive</p><h2 class="case-study-heading" id="ps-responsive">Phone layouts</h2></div>
+          <div><SectionHeading id="ps-responsive" label="Responsive" layout="stacked" reveal={false}>Phone layouts</SectionHeading></div>
           <p class="promshyna-muted text-body-m">{promshynaPhoneCopy}</p>
         </div>
         <div class="promshyna-phone-row promshyna-block">{promshynaPhones.map((phone, index) => <div class:list={['promshyna-phone', { 'promshyna-phone--wide': index === 1 }]}><CaseStudyMedia {...phone} presentation="bare" /></div>)}</div>
@@ -52,7 +53,7 @@ const { project } = Astro.props;
     </section>
 
     <section aria-labelledby="ps-other">
-      <p class="case-study-eyebrow">Inner pages</p><h2 class="case-study-heading" id="ps-other">Other pages</h2>
+      <SectionHeading id="ps-other" label="Inner pages" layout="stacked" reveal={false}>Other pages</SectionHeading>
       <div class="case-study-media-grid promshyna-other promshyna-block">{promshynaOtherPages.map(page => <CaseStudyDecisionCard title={page.title} layout="figure">
         <CaseStudyMedia slot="media" {...page.media} presentation="bare" radius="small" />
         <p>{page.description}</p>
@@ -61,7 +62,7 @@ const { project } = Astro.props;
 
     <section aria-labelledby="ps-branding">
       <div class="case-study-columns promshyna-chapter-heading">
-        <div><p class="case-study-eyebrow">Branding</p><h2 class="case-study-heading" id="ps-branding">Logo and colours</h2></div>
+        <div><SectionHeading id="ps-branding" label="Branding" layout="stacked" reveal={false}>Logo and colours</SectionHeading></div>
         <p class="promshyna-muted text-body-m">{promshynaBrandCopy}</p>
       </div>
       <div class="case-study-media-grid promshyna-block">{promshynaBranding.map(brand => <CaseStudyDecisionCard title={brand.title} layout="figure">
