@@ -2,7 +2,7 @@
 @layer system, project;
 @layer project {
 .case-study-content--datagpt { padding-bottom: 0; }
-.dg-case { --dg-bubble-cut: 4px; --dg-badge-block-inset: var(--space-1); --dg-badge-inline-inset: var(--space-3); --dg-question-label-advance: 10.96484375em; --dg-answer-label-advance: 12.2096354167em; }
+.dg-case { --dg-bubble-cut: 4px; }
 .dg-lede { max-width: 720px; margin-top: var(--space-6); }
 .dg-copy-width { max-width: 720px; }
 .dg-accent, .dg-accent li::marker { color: var(--color-interactive-accent); }
@@ -19,8 +19,7 @@
 .dg-card > p + p { margin-top: var(--space-2); }
 .dg-card-heading { display: flex; gap: var(--space-3); align-items: flex-start; justify-content: space-between; }
 .dg-card-heading + p { margin-top: var(--space-3); }
-/* Keep the original badge box while its text uses Label/S. */
-.dg-badge { flex-shrink: 0; border-radius: var(--radius-full); padding: var(--dg-badge-block-inset) var(--dg-badge-inline-inset); background: var(--color-bg-surface); box-shadow: var(--shadow-small); min-height: calc(var(--text-label-s) * var(--line-height-body-m) + var(--dg-badge-block-inset) * 2); display: inline-flex; align-items: center; }
+.dg-badge { flex-shrink: 0; border-radius: var(--radius-full); padding: var(--space-1) var(--space-3); background: var(--color-bg-surface); box-shadow: var(--shadow-small); display: inline-flex; align-items: center; white-space: nowrap; }
 .dg-copy-stack { display: grid; gap: var(--space-6); align-content: start; }
 .dg-goal { border-top: 1px solid var(--color-border-default); padding-top: var(--space-6); }
 .dg-goal h3 { color: var(--color-interactive-accent); }
@@ -34,9 +33,6 @@
 .dg-research-stats .stat dt { gap: var(--space-3); }
 .dg-research-stats .stat-label { color: var(--color-text-secondary); }
 .dg-case .dg-outcome-label { margin: var(--space-8) 0 var(--space-3); }
-/* Original Regular glyph advances keep persona headings and later chapters fixed. */
-.dg-persona .dg-badge { inline-size: calc(var(--dg-badge-inline-inset) * 2 + var(--dg-question-label-advance)); white-space: nowrap; }
-.dg-persona--wide .dg-badge { inline-size: calc(var(--dg-badge-inline-inset) * 2 + var(--dg-answer-label-advance)); }
 .dg-personas { margin-top: var(--space-6); }
 .dg-persona--wide { grid-column: 1 / -1; }
 .dg-question { width: fit-content; margin: var(--space-4) 0; padding: var(--space-3) var(--space-4); color: var(--color-bg-canvas); background: var(--color-text-primary); border-radius: var(--radius-medium) var(--radius-medium) var(--radius-medium) var(--dg-bubble-cut); }
