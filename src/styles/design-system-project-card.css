@@ -1,0 +1,17 @@
+@layer system, project;
+@layer system {
+.ds-project-view .ds-stage-bar > .ds-tabs { margin-inline-start:0; }
+.ds-project-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.ds-project-grid .ds-button-card { display:grid; grid-template-rows:subgrid; grid-row:span 3; }
+.ds-project-card--full { grid-column:1 / -1; }
+.ds-project-states { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.ds-project-states .ds-button-card { display:grid; grid-template-rows:subgrid; grid-row:span 2; }
+.ds-project-stage { overflow:visible; }
+.ds-project-fit { position:relative; flex:none; }
+.ds-project-art.ds-specimens { position:absolute; width:var(--ds-project-width); transform-origin:top left; transform:scale(var(--ds-project-scale,1)); }
+.ds-project-art > .project { width:100%; }
+.ds-project-cursor { position:absolute; }
+.ds-project-state--hover .project-surface { --project-rotate-x:calc(var(--project-tilt-angle) * .5deg); --project-rotate-y:calc(var(--project-tilt-angle) * -.5deg); }
+.ds-project-width-probe { position:fixed; top:0; left:0; width:100vw; height:0; visibility:hidden; overflow:hidden; contain:strict; pointer-events:none; }
+@media(max-width:1399px) { .ds-project-grid,.ds-project-states { grid-template-columns:minmax(0,1fr); } }
+}

@@ -1,3 +1,4 @@
+import {validateProjectCard} from './validate-project-card.mjs';
 import {validateNavigationCatalog} from './validate-navigation-catalog.mjs';
 import {validateChip} from './validate-chip.mjs';
 import {validateSystemCleanup} from './validate-system-cleanup.mjs';
@@ -182,7 +183,7 @@ export function validateHiddenDocumentation(records, text) {
   }
   return failures;
 }
-const errors = [...validateNavigationCatalog(root),...validateChip(root),...validateSystemCleanup(root),...validateButtonCatalog(root),...validateIcons(root),...validateMotionContract(root),...validate(registry),...validateColors(),...validateSpaceShape(root),...validateRadiusContract(),...validateFoundationCodeContract(root)];
+const errors = [...validateProjectCard(root),...validateNavigationCatalog(root),...validateChip(root),...validateSystemCleanup(root),...validateButtonCatalog(root),...validateIcons(root),...validateMotionContract(root),...validate(registry),...validateColors(),...validateSpaceShape(root),...validateRadiusContract(),...validateFoundationCodeContract(root)];
 errors.push(...validateLogoWave(read('src/styles/global.css'), read('src/components/Logo.astro'), read('src/styles/tokens.css'), filesUnder('src/scripts').filter(file=>file.endsWith('.ts')&&file!=='src/scripts/design-system-motion.ts').map(read).join('\n')));
 if(JSON.stringify(visibleComponents.map(item=>item.name).sort())!==JSON.stringify([...expectedVisible].sort()))errors.push('Visible catalog must contain exactly the approved eight pages');
 for(const [file,key] of Object.entries(hiddenKeys))if(componentManifest.find(item=>item.file===file)?.documentedHidden!==key)errors.push('Missing documented-hidden classification: '+file);
@@ -210,7 +211,10 @@ export function validateInventoryCoverage(model, documentedComponents, documente
   const failures = [];
   for (const name of model.unusedTokens || []) failures.push(`Unused system token: ${name}`);
   const literalValues = (text) => [...text.matchAll(/#[\da-f]{3,8}\b|rgba?\([^)]*\)/gi)].map(([value]) => value.toLowerCase().replace(/^#([\da-f])([\da-f])([\da-f])$/, '#$1$1$2$2$3$3'));
-  const literals = literalValues(tokenSource + catalogSource);
+  // Genuine project-logo artwork in inert card templates is not a system colour role.
+  // Tokens, catalog styles, text and SVGs outside those source-backed templates remain checked.
+  const roleSource=catalogSource.replace(/<template\b[^>]*data-project-template="(?:full|compact|default|hover|focus)"[^>]*>[\s\S]*?<\/template>/g,template=>template.replace(/<svg\b(?=[^>]*data-svg-src="[^"]+")[^>]*>[\s\S]*?<\/svg>/g,''));
+  const literals = literalValues(tokenSource + roleSource);
   for (const value of model.projectValues || []) if (literals.includes(value)) failures.push(`Project-only literal entered the system: ${value}`);
   for (const value of model.projectBackgroundImages || []) if (tokenSource.includes(value) || catalogSource.includes(value)) failures.push(`Project-only image entered the system: ${value}`);
   const exact = (used, documented, kind) => {

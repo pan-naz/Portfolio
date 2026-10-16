@@ -1,9 +1,8 @@
 @layer system, project;
 @layer system {
 .ds-chip-view .ds-stage-bar > .ds-tabs { margin-inline-start:0; }
-.ds-chip-stage { flex-wrap:wrap; gap:var(--space-2); padding:var(--space-6); }
+.ds-chip-stage { flex-wrap:wrap; gap:var(--space-2); padding:var(--ds-stage-clearance); }
 .ds-chip-stage > div { max-width:100%; }
-.ds-chip-view .ds-button-values dt { white-space:nowrap; flex:none; }
 /* Keep the real raised shadow visible inside the rounded, inert cover. */
 .ds-tile-visual:has(> .ds-chip-cover) { overflow:visible; }
 .ds-chip-cover { position:absolute; left:50%; top:50%; translate:-50% -50%; display:flex; align-items:center; gap:var(--space-2); width:max-content; transform:scale(var(--ds-cover-fit,1)); }

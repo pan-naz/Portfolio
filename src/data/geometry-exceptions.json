@@ -420,7 +420,7 @@
   },
   {
     "file": "src/styles/design-system.css",
-    "selector": ":is(#project-card,#section-heading,#timeline-row) .ds-canvas",
+    "selector": ":is(#section-heading,#timeline-row) .ds-canvas",
     "context": "@layer system",
     "property": "height",
     "value": "400px",
@@ -453,15 +453,6 @@
     "value": "760px",
     "kind": "size",
     "reason": "Approved 760px statistics specimen composition."
-  },
-  {
-    "file": "src/styles/design-system.css",
-    "selector": ".ds-project-example",
-    "context": "@layer system",
-    "property": "width",
-    "value": "min(100%,880px)",
-    "kind": "size",
-    "reason": "Approved 880px genuine project specimen width."
   },
   {
     "file": "src/styles/design-system.css",

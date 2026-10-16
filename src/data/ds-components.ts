@@ -5,5 +5,5 @@ export const dsComponents = reusableComponents.map(item => ({ ...item, name: bas
 export const catalogComponents = dsComponents.filter(item => !item.documentedHidden);
 export const visibleComponents = catalogComponents.filter(item => !item.catalogPage).sort((a,b) => a.title!.localeCompare(b.title!));
 
-/** Overview notes are manifest-derived; Icon already has the Icons foundation. */
-export const overviewHiddenComponents = dsComponents.filter(item => item.documentedHidden && item.name !== 'Icon').sort((a,b) => a.title!.localeCompare(b.title!));
+/** Overview notes are manifest-derived; composed parts already have their parent page. */
+export const overviewHiddenComponents = dsComponents.filter(item => item.documentedHidden && !['Icon','SectionNavigation','Logo','ThemeToggle','ProjectIdentity','ProjectTags'].includes(item.name)).sort((a,b) => a.title!.localeCompare(b.title!));

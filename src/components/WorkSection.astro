@@ -15,7 +15,7 @@ import CaseStudyLayer from './CaseStudyLayer.astro';
       <SectionHeading id="work-title" data-color-zone="dark" data-zone-keep="surface section shadows" label={workCategories.selected.label}>{workCategories.selected.title}<p slot="description" class="section-description text-body-l">{workCategories.selected.description}</p></SectionHeading>
       <div class="work-filter-pill" data-visible="false" inert aria-hidden="true"><SectionNavigation compact theme pill /></div>
       <div id="project-list" class="projects" data-active-filter="selected">
-        <div class="project-collection" data-project-collection="selected">{projects.map((project, index) => <ProjectCard project={project} lead={index === 0} />)}</div>
+        <div class="project-collection" data-project-collection="selected">{projects.map(project => <ProjectCard project={project} />)}</div>
         {(['websites', 'misc'] as const).map(category => <div class="project-collection project-collection--bento" data-project-collection={category} hidden>
           {collectionProjects.filter(project => project.category === category).map(project => <ProjectCard project={project} compact />)}
         </div>)}

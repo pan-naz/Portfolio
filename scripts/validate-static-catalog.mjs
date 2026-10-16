@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import {readFileSync,readdirSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {visibleComponents,catalogComponents,dsComponents} from '../src/data/ds-components.ts';
+import {projectCardProps} from '../src/data/system-project-card.ts';
 import {navigationProps} from '../src/data/system-navigation.ts';
 import {buttonProps} from '../src/data/system-button.ts';
 import {componentPropSpecs} from '../src/data/system-props.ts';
@@ -76,10 +77,11 @@ for(const id of sections)for(const group of ['canvas'])for(let index=0;index<2;i
  assert.ok(new RegExp(`id="${tab}"[^>]*aria-controls="${panel}"`).test(catalog));
  assert.ok(new RegExp(`id="${panel}"[^>]*aria-labelledby="${tab}"`).test(catalog));
 }
-const ids=[...catalog.matchAll(/\bid="([^"]+)"/g)].map(([,id])=>id);assert.equal(ids.length,new Set(ids).size,'Unique document ids');
+const templates=[...catalog.matchAll(/<template\b[^>]*>([\s\S]*?)<\/template>/g)].map(([,body])=>body);
+for(const scope of [catalog.replace(/<template\b[^>]*>[\s\S]*?<\/template>/g,''),...templates]){const ids=[...scope.matchAll(/\bid="([^"]+)"/g)].map(([,id])=>id);assert.equal(ids.length,new Set(ids).size,'Unique ids within each document/template scope');}
 const model=buildSystemInventory(root),names=[...new Set([...catalog.matchAll(/data-ds-component="([^"]+)"/g)].map(([,name])=>name))];
 assert.deepEqual(validateRenderedComponentNames(names,catalogComponents.map(item=>item.name)),[]);
-for(const entry of catalogComponents){const component=model.components.find(item=>item.name===entry.name);const hook=['button','chip','navigation'].includes(entry.section)?`data-ds-component-code="${entry.name}"`:`id="${entry.section}"`;const view=catalog.match(new RegExp(`<section[^>]*${hook}[\\s\\S]*?</section>`))?.[0]||'';const documented=[...view.matchAll(/data-ds-prop="([^"]+)"/g)].map(([,name])=>name);assert.deepEqual(documented,(entry.section==='button'?buttonProps(component):entry.section==='navigation'?navigationProps(component):componentPropSpecs(component)).map(prop=>prop.name),`All source props, including inherited fields: ${entry.name}`);}
+for(const entry of catalogComponents){const component=model.components.find(item=>item.name===entry.name);const hook=['button','chip','navigation','project-card'].includes(entry.section)?`data-ds-component-code="${entry.name}"`:`id="${entry.section}"`;const view=catalog.match(new RegExp(`<section[^>]*${hook}[\\s\\S]*?</section>`))?.[0]||'';const documented=[...view.matchAll(/data-ds-prop="([^"]+)"/g)].map(([,name])=>name);assert.deepEqual(documented,(entry.section==='button'?buttonProps(component):entry.section==='navigation'?navigationProps(component):entry.section==='project-card'?projectCardProps(component):componentPropSpecs(component)).map(prop=>prop.name),`All source props, including inherited fields: ${entry.name}`);}
 const paths=dsComponents.map(item=>item.file),tokens=[...new Set([...catalog.matchAll(/data-ds-token="([^"]+)"/g)].map(([,name])=>name))],icons=[...new Set([...catalog.matchAll(/data-ds-icon="([^"]+)"/g)].map(([,name])=>name))];
 assert.deepEqual(validateInventoryCoverage(model,paths,tokens,icons,read('src/styles/tokens.css'),catalog+styles(catalog)),[]);
 const variantValues=[...catalog.matchAll(/data-ds-variant="([^"]+)"/g)].map(([,value])=>value);assert.deepEqual(validateVariantCoverage(model,variantValues),[]);

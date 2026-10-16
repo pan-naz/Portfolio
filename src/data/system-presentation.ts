@@ -1,9 +1,5 @@
 import { tooltipFollowTiming } from '../scripts/tooltip.ts';
 export const componentPresentation:Record<string,{description:string;hint:string;columns:{title:string;rows:{name:string;detail?:string;token?:string;context?:string;selector?:string;properties?:string}[]}[];rules:string[]}>={
- ProjectCard:{description:'Introduces a project on the home page and opens its case study.',hint:'Hover and click to try states · phones: tap only',columns:[
- {title:'Parts',rows:[{name:'Identity',detail:'Original project mark and name.'},{name:'Tags',detail:'Disciplines as raised chips.'},{name:'Outcome and artwork',detail:'The project\'s outcome and original media.'}]},
- {title:'Sizes',rows:[{name:'Radius',token:'radius-large'},{name:'Name',selector:'.project-identity',properties:'font-size,font-weight'},{name:'Outcome',selector:'.project-outcome',properties:'font-size'},{name:'Logo',selector:'.project-identity .svg-asset',properties:'width'}]},
- {title:'States',rows:[{name:'Pointer',detail:'The website cursor follows the card.'},{name:'Open',detail:'The website opens the case study over the page.'},{name:'Preview',detail:'Navigation is blocked in this catalog.'}]}],rules:['Keep project artwork original, never redrawn.','Keep the outcome, description and tags together.','Project-only brand values stay inside their case study.','Keep the card reachable by keyboard.']},
  SectionHeading:{description:'Opens a section with its number, title and supporting text.',hint:'Scroll the canvas to see all three variants',columns:[
  {title:'Variants',rows:[{name:'Columns',detail:'Section number beside the title.'},{name:'Stacked',detail:'Label above the title.'},{name:'Case study',detail:'Chapter label without a number.'}]},
  {title:'Sizes',rows:[{name:'Title',selector:'.section-heading [data-ds-heading]',properties:'font-size,line-height'},{name:'Label',selector:'.eyebrow',properties:'font-size'},{name:'Column gap',selector:'.section-heading',properties:'gap'}]},

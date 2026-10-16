@@ -1,0 +1,13 @@
+import assert from'node:assert/strict';import{readFileSync}from'node:fs';
+import {validateProjectCard}from'../scripts/validate-project-card.mjs';
+import {projectCardProps,projectCardUsage,projectCardTokenGroups}from'../src/data/system-project-card.ts';
+import {buildSystemInventory}from'../src/data/system-inventory.ts';
+import {validateInventoryCoverage}from'../scripts/validate-design-system.mjs';
+assert.deepEqual(validateProjectCard(),[]);
+const model=buildSystemInventory();for(const name of ['ProjectCard','ProjectIdentity','ProjectTags'])assert.equal(projectCardProps(model.components.find(c=>c.name===name)).length,name==='ProjectCard'?2:name==='ProjectIdentity'?3:1);
+assert(projectCardUsage('ProjectCard').includes('<ProjectCard project={project} compact />'));
+assert(projectCardTokenGroups().find(g=>g.title==='Motion').names.includes('--project-tilt-angle'));
+const literal=model.projectValues[0],common=[model,model.components.filter(c=>model.components.some(v=>v.file===c.file)).map(c=>c.file),model.tokens.map(t=>t.name),model.iconNames,readFileSync('src/styles/tokens.css','utf8')];
+const check=text=>validateInventoryCoverage(...common,text).filter(e=>e.includes('Project-only literal'));
+assert(check('<span>'+literal+'</span>').length);assert.equal(check('<template data-project-template="compact"><svg data-svg-src="/projects/gutsul-made-case-study/logo.svg"><path fill="'+literal+'"/></svg></template>').length,0);assert(check('<svg data-svg-src="/projects/gutsul-made-case-study/logo.svg"><path fill="'+literal+'"/></svg>').length);
+console.log('PASS: genuine project specimens, source API, direct tokens, inert media and shared stage rules; project artwork remains outside system roles.');

@@ -2,11 +2,11 @@
 import '../styles/case-video-player.css';
 import type {SourceComponent} from '../data/system-inventory';
 import DSControl from './DSControl.astro';
-import Stat from './Stat.astro';import TimelineRow from './TimelineRow.astro';import ProjectCard from './ProjectCard.astro';
+import Stat from './Stat.astro';import TimelineRow from './TimelineRow.astro';
 import SectionHeading from './SectionHeading.astro';
 
 import ToolCard from './ToolCard.astro';
-import {projects,impactGroups,experience,tools} from '../data/portfolio';
+import {impactGroups,experience,tools} from '../data/portfolio';
 import {workCategories} from '../data/work-categories';
 interface Props {component:SourceComponent;miniature?:boolean;}
 const {component,miniature=false}=Astro.props,name=component.name;
@@ -18,7 +18,6 @@ const prefix=miniature?'tile-':'example-';
  <div class="work ds-context-work" data-ds-example="heading-columns" data-ds-target=".section-heading"><SectionHeading id={miniature?'work-title':'sample-work-title'} data-color-zone="dark" data-zone-keep="surface section shadows" label={workCategories.selected.label}>{workCategories.selected.title}<p slot="description" class="section-description text-body-l">{workCategories.selected.description}</p></SectionHeading></div>
  {!miniature&&<><div class="case-study-narrative" data-ds-example="heading-stacked" data-ds-target=".section-heading"><SectionHeading id={`${prefix}heading-stacked`} label="Product" layout="stacked" reveal={false}>How it works</SectionHeading></div><div class="case-study-narrative" data-ds-example="heading-case" data-ds-target=".ds-case-heading"><div class="ds-case-heading"><SectionHeading id={`${prefix}heading-case`} label="Pages" appearance="case">Main page</SectionHeading></div></div></>}
 </div>}
-{name==='ProjectCard'&&<div class="ds-project-example" data-ds-example="project-card" data-ds-target=".project"><ProjectCard project={projects[0]} lead /></div>}
 
 {name==='Tooltip'&&<div class="ds-specimen-composition ds-tooltip-composition">
  {!miniature&&<div class="ds-inline-controls">{['Hidden','Visible above','Flipped below','Keyboard focus'].map((state,index)=><DSControl data-ds-tooltip-state={['hidden','above','below','focus'][index]} aria-pressed={index===0?'true':'false'}>{state}</DSControl>)}</div>}

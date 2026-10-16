@@ -66,7 +66,7 @@ if(states){
   const stateHeights=[...states.querySelectorAll<HTMLElement>('.ds-button-state-art')].map(element=>({element,height:element.offsetHeight}));
   const write=(element:HTMLElement,name:string,value:string)=>{if(element.style.getPropertyValue(name)!==value)element.style.setProperty(name,value);};
   for(const art of states.querySelectorAll<HTMLElement>('.ds-button-stage-art')){
-   if(art.parentElement!.clientWidth)writes.push({element:art,scale:Math.min(1,art.parentElement!.clientWidth/art.offsetWidth)});
+   if(art.parentElement!.clientWidth)writes.push({element:art,scale:Math.min(1,(parseFloat(getComputedStyle(art.parentElement!).width)-parseFloat(getComputedStyle(art.parentElement!).paddingLeft)-parseFloat(getComputedStyle(art.parentElement!).paddingRight)-parseFloat(getComputedStyle(art.parentElement!).getPropertyValue('--space-1')))/art.offsetWidth)});
   }
   for(const cover of covers){
    if(!cover.parentElement!.clientWidth)continue;
