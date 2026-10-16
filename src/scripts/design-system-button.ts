@@ -63,6 +63,7 @@ if(states){
    const available=Math.min(...[...group.querySelectorAll<HTMLElement>('.ds-button-state-example')].map(example=>example.clientWidth));
    writes.push({element:group,scale:Math.max(.8,Math.min(1,available/paintWidth(group)))});
   }
+  const stateHeights=[...states.querySelectorAll<HTMLElement>('.ds-button-state-art')].map(element=>({element,height:element.offsetHeight}));
   const write=(element:HTMLElement,name:string,value:string)=>{if(element.style.getPropertyValue(name)!==value)element.style.setProperty(name,value);};
   for(const art of states.querySelectorAll<HTMLElement>('.ds-button-stage-art')){
    if(art.parentElement!.clientWidth)writes.push({element:art,scale:Math.min(1,art.parentElement!.clientWidth/art.offsetWidth)});
@@ -74,6 +75,7 @@ if(states){
    write(cover,'--ds-cover-fit',String(scale));
   }
   for(const {element,scale} of writes)write(element,element.matches('.ds-button-states')?'--ds-state-scale':'--ds-specimen-fit',String(scale));
+  for(const {element,height} of stateHeights)write(element,'--ds-state-art-height',height+'px');
   for(const {element,heights} of metadata)write(element,'--ds-button-value-rows',heights.map(height=>height+'px').join(' '));
  };
  let pending=false;

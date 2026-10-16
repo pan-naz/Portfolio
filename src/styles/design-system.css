@@ -322,8 +322,8 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
 .ds-icons { display:grid; gap:var(--space-12); }
 .ds-icons-section { display:grid; gap:var(--space-4); min-width:0; }
 .ds-icons-section > .text-label-m { color:var(--color-text-secondary); }
-.ds-icons-groups,.ds-icons-weights,.ds-icons-colors { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--space-3); }
-.ds-icons-sizes { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-3); }
+.ds-icons-groups,.ds-icons-colors { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--space-3); }
+.ds-icons-sizes,.ds-icons-weights { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-3); }
 .ds-icons-card { display:flex; flex-direction:column; gap:var(--space-4); }
 .ds-icons-copy { display:grid; gap:var(--space-1); }
 .ds-icons-copy > .text-body-s { color:var(--color-text-secondary); }

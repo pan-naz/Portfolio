@@ -92,6 +92,9 @@ export function validateButtonCatalog(root=process.cwd()){
  if(!css.includes('.ds-tile-visual:has(> .ds-button-cover) { overflow:visible; }'))errors.push('The cover must not clip native shadows at the preview separator.');
  if(!states.includes('--ds-cover-fit'))errors.push('Cover must fit its actual tile with token-sized clearance.');
  if(!css.includes('.ds-button-stage:has(> p) { padding:var(--space-6); }'))errors.push('Inline prose keeps an unscaled Space6 inset.');
+ if(!css.includes('grid-template-rows:var(--space-6) repeat(4,calc(var(--space-16) + var(--space-6)))')||css.includes('.ds-button-state-cell:has(.ds-button-turn)'))errors.push('Stacked title and all State rows must have the same token-defined height.');
+ if(!css.includes('[data-labels="above"] .ds-button-state-column { row-gap:var(--space-6); }')||!css.includes('justify-content:flex-start; gap:var(--space-2);')||!css.includes('var(--ds-state-art-height)'))errors.push('Above labels need a small own-specimen gap, a larger inter-state gap, and scale-aware bounds.');
+ if(buttonGroups[2].cards.find(card=>card.id==='link-compact').value!=='Body/M Strong'||buttonProps(model.components.find(c=>c.name==='TextLink')).find(prop=>prop.name==='compact').description!=='Keeps the arrow right after the text.')errors.push('Compact describes its real Body/M Strong type and arrow placement.');
  const propsCss=read('src/styles/design-system.css');
  if(!propsCss.includes('.ds-props-table :is(th,td):nth-child(3) { grid-column:2; grid-row:1; }')||!propsCss.includes('.ds-props-table tbody tr { border-top:1px solid var(--color-border-default); }'))errors.push('Phone Props header and rows must share placement and per-prop separators.');
  return errors;

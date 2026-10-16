@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {createRequire} from 'node:module';
 import {icons} from '../src/data/icons.ts';
-import {iconGroups,decorativeIconCount,decorativeIcons,coverIcons,coverIconScatter} from '../src/data/system-icons.ts';
+import {iconGroups,decorativeIconCount,decorativeIcons,coverIcons,coverIconScatter,iconWeights} from '../src/data/system-icons.ts';
 import {waterfallIconNodes} from '../src/scripts/waterfall/waterfall-icon-data.ts';
 const require=createRequire(import.meta.url),astro=path.dirname(require.resolve('astro/package.json')),vite=path.dirname(require.resolve('vite/package.json',{paths:[astro]})),postcss=require(require.resolve('postcss',{paths:[vite]}));
 /** One group per source icon; never a parallel drawing or a manually maintained count. */
@@ -19,6 +19,13 @@ export function validateIconStyles(css,file='fixture.css'){
   if(!/(?:\.icon\b|\.icon--|\.arrow\b|\.arrow--|theme-icon-glyph|theme-toggle-glyph|data-icon-hover)/.test(rule.selector))return;
   if(/footer-icon-pile-rest/.test(rule.selector))return;
   rule.walkDecls(decl=>{if(/^(?:width|height|stroke-width|rotate|transform)$/.test(decl.prop)&&/(?:-?\d*\.?\d+(?:px|deg)\b|^\d*\.?\d+$)/.test(decl.value.replace(/rotate\(0deg\)/g,'rotate(identity)'))&&!/^0(?:px|deg)?$/.test(decl.value)&&!/^rotate\(0deg\)$/.test(decl.value)&&!/^translateY\(0\) rotate\(0deg\) scale\(1\)$/.test(decl.value))errors.push(`Typed icon geometry: ${file} ${rule.selector} ${decl.prop}: ${decl.value}`);});
+ });return errors;
+}
+/** Interface strokes have two roles; only the weight demonstration may choose either role through its source alias. */
+export function validateUIIconStrokes(css,file='fixture.css'){
+ const errors=[];postcss.parse(css).walkRules(rule=>{
+  if(!/(?:\.icon\b|\.icon--|\.arrow\b|\.arrow--|theme-icon-glyph|theme-toggle-glyph)/.test(rule.selector)||/footer-icon-pile-rest/.test(rule.selector))return;
+  rule.walkDecls('stroke-width',decl=>{if(!/^var\(--icon-stroke-(?:regular|strong)\)$/.test(decl.value)&&!(file==='src/styles/design-system.css'&&rule.selector==='.ds-icons-weight .icon'&&decl.value==='var(--ds-icon-stroke)'))errors.push('Interface stroke must use Regular or Strong: '+file+' '+rule.selector);});
  });return errors;
 }
 /** The approved decorative composition is fixed data, not grid rules or randomness. */
@@ -45,6 +52,10 @@ export function validateIcons(root=process.cwd()){
  const read=f=>fs.readFileSync(path.join(root,f),'utf8'),errors=[...validateIconGroups(),...validateIconScatter()];
  if(icons.close.nodes!==icons.plus.nodes||icons.close.weight!=='strong'||!icons.close.close)errors.push('Close must reuse Plus nodes at Strong, with token-driven rotation.');
  if(icons.equals.weight!=='strong')errors.push('Equals must use Strong.');
+ if(JSON.stringify(iconWeights.map(weight=>[weight.name,weight.token]))!==JSON.stringify([['Regular','icon-stroke-regular'],['Strong','icon-stroke-strong']]))errors.push('Icons show exactly Regular and Strong.');
+ if(iconWeights[1]?.description!=='Plus, close, play, pause, shield, equals, and the arrows in buttons and text links.')errors.push('Strong documents both arrow consumers.');
+ if(!/\.text-link \.arrow path\s*\{\s*stroke-width:\s*var\(--icon-stroke-strong\)/.test(read('src/styles/global.css')))errors.push('TextLink arrows must use Strong.');
+ for(const definition of Object.values(icons))for(const [,attrs]of definition.nodes)if('stroke-width'in attrs&&!/^var\(--icon-stroke-(?:regular|strong)\)$/.test(attrs['stroke-width']))errors.push('Interface SVG nodes cannot override their stroke with raw geometry.');
  if(!/--rotation-icon-close:\s*45deg;/.test(read('src/styles/tokens.css')))errors.push('Missing close rotation token.');
  const preview=read('src/components/DSIcons.astro'),cover=read('src/components/DSDashboard.astro'),model=read('src/data/system-icons.ts'),renderer=read('src/components/Icon.astro');
  if(!preview.includes('iconGroups.map')||!preview.includes('group.icons.map')||!preview.includes('<Icon name={name}')||/<svg|<path|<Tooltip/.test(preview))errors.push('Icon tiles must use the genuine shared set, with no copied geometry or tooltips.');
@@ -57,7 +68,8 @@ export function validateIcons(root=process.cwd()){
  if(/\.ds-icon-tile[^{}]*:nth-child/.test(catalogCSS)||!catalogCSS.includes('inset:var(--space-8)'))errors.push('Cover needs an inset scatter, never nth-child grid geometry.');
  if(!preview.includes('ds-icons-sample ds-icons-accent')||!catalogCSS.includes('.ds-icons-accent .icon { width:var(--space-12); height:var(--space-12); }'))errors.push('One accent must show the genuine Layers at 48px.');
  const walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(d,e.name)):[path.join(d,e.name)]);
- for(const f of walk(path.join(root,'src'))){const file=path.relative(root,f);if(file.endsWith('.css')&&!file.endsWith('tokens.css'))errors.push(...validateIconStyles(fs.readFileSync(f,'utf8'),file),...validateProjectIconSizes(fs.readFileSync(f,'utf8'),file));
+ for(const f of walk(path.join(root,'src'))){const file=path.relative(root,f);if(/\.(?:css|astro|ts)$/.test(file))for(const [token]of fs.readFileSync(f,'utf8').matchAll(/--icon-stroke-[\w-]+/g))if(!['--icon-stroke-regular','--icon-stroke-strong'].includes(token))errors.push('Only two interface stroke tokens: '+file+' '+token);
+  if(file.endsWith('.css')&&!file.endsWith('tokens.css'))errors.push(...validateIconStyles(fs.readFileSync(f,'utf8'),file),...validateUIIconStrokes(fs.readFileSync(f,'utf8'),file),...validateProjectIconSizes(fs.readFileSync(f,'utf8'),file));
   if(!file.endsWith('.astro'))continue;const source=fs.readFileSync(f,'utf8');for(const [,css] of source.matchAll(/<style(?:\s[^>]*)?>([\s\S]*?)<\/style>/g))errors.push(...validateProjectIconSizes(css,file));
   for(const [markup]of source.matchAll(/<Icon\b[\s\S]*?\/>/g))if((/\b(?:size|strokeWidth)=\{[\d.]+\}/.test(markup)||/\bstyle=["'][^"']*(?:rotate\([\d.-]+deg\)|(?:width|height|stroke-width):\s*[\d.]+)/.test(markup))&&!iconGeometryExceptions.some(e=>e.file===file))errors.push('Typed Icon prop/style: '+file);
  }

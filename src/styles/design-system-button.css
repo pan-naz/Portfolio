@@ -48,16 +48,17 @@
 .ds-button-state-name--phone { display:none; }
 .ds-button-state-section[data-layout="stacked"] .ds-button-states { grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:none; background:none; padding:0; gap:var(--space-4); }
 .ds-button-state-section[data-layout="stacked"] .ds-button-state-labels { display:none; }
-.ds-button-state-section[data-layout="stacked"] .ds-button-state-column { grid-row:auto; grid-template-rows:minmax(var(--space-6),auto) repeat(4,minmax(var(--space-16),auto)); padding:var(--space-6); border-radius:var(--radius-medium); background:var(--color-bg-canvas); }
+.ds-button-state-section[data-layout="stacked"] .ds-button-state-column { grid-row:auto; grid-template-rows:var(--space-6) repeat(4,calc(var(--space-16) + var(--space-6))); padding:var(--space-6); border-radius:var(--radius-medium); background:var(--color-bg-canvas); }
 .ds-button-state-section[data-layout="stacked"] .ds-button-state-column > p { text-align:left; }
 .ds-button-state-section[data-layout="stacked"] .ds-button-state-name--desktop { display:none; }
 .ds-button-state-section[data-layout="stacked"] .ds-button-state-name--phone { display:inline; }
 .ds-button-state-section[data-layout="stacked"] .ds-button-state-cell { justify-content:space-between; gap:var(--space-2); }
 .ds-button-state-section[data-layout="stacked"] .ds-button-state-cell > span { display:block; flex:none; }
 .ds-button-state-section[data-layout="stacked"] .ds-button-state-example { flex:1; width:auto; }
-.ds-button-state-section[data-layout="stacked"] .ds-button-state-cell:has(.ds-button-turn) { min-height:calc(var(--space-16) + var(--space-6)); }
-.ds-button-state-section[data-labels="above"] .ds-button-state-cell { flex-direction:column; align-items:start; }
-.ds-button-state-section[data-labels="above"] .ds-button-state-example { flex:none; width:100%; min-height:var(--space-16); }
+.ds-button-state-section[data-labels="above"] .ds-button-state-column { row-gap:var(--space-6); }
+.ds-button-state-section[data-labels="above"] .ds-button-state-cell { flex-direction:column; align-items:start; justify-content:flex-start; gap:var(--space-2); }
+.ds-button-state-section[data-labels="above"] .ds-button-state-example { flex:none; width:100%; }
+.ds-button-state-section[data-labels="above"] .ds-button-state-art { margin-block:calc((var(--ds-state-scale,1) - 1) * var(--ds-state-art-height) / 2); }
 @media(max-width:1279px) {
  .ds-button-grid,.ds-button-grid--three { grid-template-columns:repeat(2,minmax(0,1fr)); }
 }

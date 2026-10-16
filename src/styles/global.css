@@ -408,7 +408,7 @@ html[data-work-stage-layout='true'] .about-details::before { left: max(0px, calc
 .text-link--inline { display: inline; min-height: 0; text-decoration: underline; text-decoration-thickness: from-font; text-underline-offset: .15em; }
 .text-link--accent { color: var(--color-interactive-accent); }
 .text-link .arrow { width: var(--icon-size-compact); height: var(--icon-size-compact); }
-.text-link .arrow path { stroke-width: var(--icon-stroke-emphasis); }
+.text-link .arrow path { stroke-width: var(--icon-stroke-strong); }
 @media (hover: hover) and (pointer: fine) {
 .text-link:hover .arrow { transform: translateX(var(--distance-icon-shift)); }
 }

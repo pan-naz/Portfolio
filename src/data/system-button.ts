@@ -20,7 +20,7 @@ export const buttonGroups=[
  {name:'Text links',description:'A link next to or inside text.',cards:[
   {id:'link-default',name:'Default',description:'A destination after text.',used:'Contact',value:'Body/M Strong'},
   {id:'link-accent',name:'Accent',description:'A highlighted destination.',used:'Contact',value:'Body/M Strong'},
-  {id:'link-compact',name:'Compact',description:'A short link in a case-study header.',used:'Case studies, 404',value:'Body/S'},
+  {id:'link-compact',name:'Compact',description:'A short link in a case-study header.',used:'Case studies, 404',value:'Body/M Strong'},
   {id:'link-inline',name:'Inline',description:'Underlined, inside a sentence.',used:'Case-study copy',value:'Inherits the text'},
  ]},
 ] as const;
@@ -33,7 +33,7 @@ export const buttonStates=['Default','Hover','Focus','Active'] as const;
 const componentDescriptions:Record<string,Record<string,string>>={
  Button:{href:'Link destination. Without it, renders a button.',variant:'Filled or outlined.',size:'48px or 36px tall.',arrow:'Adds the destination arrow. On primary it sits in the circle that fills the button.',download:'Downloads the file instead of opening it.',appearance:'Comparison makes a two-choice toggle. Pair it with aria-pressed.'},
  IconButton:{label:'Spoken name. There is no visible text.',icon:'Any icon from the Icons page.',href:'Link destination. Without it, renders a button.',variant:'Plain, outlined, or raised on a white surface over content.',size:'44px, or 36px with a 44px tap area.'},
- TextLink:{href:'Destination. Outside links open in a new tab.',accent:'Orange label.',compact:'Smaller text (Body/S).',inline:'Underlined link inside a sentence.'},
+ TextLink:{href:'Destination. Outside links open in a new tab.',accent:'Orange label.',compact:'Keeps the arrow right after the text.',inline:'Underlined link inside a sentence.'},
 };
 export const buttonAccessibility=[
  'Tab reaches every button and link.',
