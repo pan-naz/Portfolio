@@ -21,7 +21,7 @@ const researchMetrics = [
   </div>
   <div class="case-study-body case-study-narrative dg-case">
     <CaseStudyOverview project={project} titleId="dg-title">
-      <Fragment slot="role"><p>Solo product designer</p><p>I owned the product end to end:</p><ul><li>Discovery and stakeholder interviews</li><li>Personas and competitor mapping</li><li>Prototypes and usability testing</li><li>UI, design system, developer hand-off</li><li>Pilot and post-release testing</li><li>Website, promo videos and marketing materials</li></ul></Fragment>
+      <Fragment slot="role"><p>Solo product designer</p><ul><li>Discovery and stakeholder interviews</li><li>Personas and competitor mapping</li><li>Prototypes and usability testing</li><li>UI, design system, developer hand-off</li><li>Pilot and post-release testing</li><li>Website, promo videos and marketing materials</li></ul></Fragment>
       <ul slot="secondary"><li>Product owner</li><li>Product manager</li><li>Engineering team</li></ul>
     </CaseStudyOverview>
     <section aria-labelledby="dg-problem">
@@ -37,7 +37,7 @@ const researchMetrics = [
     </section>
     <section aria-labelledby="dg-research">
       <p class="case-study-eyebrow">Discovery &amp; Research</p><h2 class="case-study-heading" id="dg-research">Traditional BI was too slow and too complex for everyday decisions</h2>
-      <p class="dg-lede">I started with stakeholder interviews and a review of the conversational-analytics market. Executives, data analysts, marketers and product managers described the same problem. They didn't want more charts. They wanted answers on demand.</p>
+      <p class="dg-lede">I started with stakeholder interviews and a review of the conversational-analytics market. Executives, data analysts, marketers and product managers described the same problem. They wanted answers when the question came up.</p>
       <div class="dg-block"><CaseStudyMedia {...media.research} /></div>
       <dl class="dg-grid dg-grid--three dg-research-stats">{researchMetrics.map(metric => <Stat {...metric} />)}</dl>
       <h3 class="dg-outcome-label">Outcome</h3><div class="dg-grid dg-grid--three">{researchOutcomes.map(([title, body]) => <article class="dg-card"><h3>{title}</h3><p>{body}</p></article>)}</div>
@@ -49,7 +49,7 @@ const researchMetrics = [
       </div>
     </section>
     <section aria-labelledby="dg-competitors">
-      <p class="case-study-eyebrow">Competitor mapping</p><h2 class="case-study-heading" id="dg-competitors">Many "AI analytics" tools, few that explain why</h2><p class="dg-lede">We mapped the landscape of “conversational analytics” tools – from established BI giants to emerging AI solutions:</p>
+      <p class="case-study-eyebrow">Competitor mapping</p><h2 class="case-study-heading" id="dg-competitors">Many "AI analytics" tools, few that explain why</h2><p class="dg-lede">We compared conversational analytics tools, from large BI suites to new AI startups:</p>
       <div class="dg-grid dg-grid--three dg-block">{competitors.map(([title, body, logo]) => <article class="dg-card"><div class="dg-competitor-heading"><SvgAsset src={logo} width="40" height="40" /><h3>{title}</h3></div><p>{body}</p></article>)}</div>
       <div class="dg-block"><CaseStudyMedia {...media.competitors} /></div>
       <h3 class="dg-outcome-label">Outcome</h3><div class="dg-grid dg-grid--three">{competitorOutcomes.map(([title, body]) => <article class="dg-card"><h3>{title}</h3><p>{body}</p></article>)}</div>
@@ -86,8 +86,8 @@ const researchMetrics = [
         </div>
       </div>
     </section>
-    <section aria-labelledby="dg-website"><p class="case-study-eyebrow">Extending the Experience</p><h2 class="case-study-heading" id="dg-website">Website</h2><p class="dg-lede">As DataGPT grew from a prototype into a full platform, it needed a public face that explained its value. I designed the website, the promo videos and the marketing materials. The site uses the same clarity and explainability as the product.</p><div class="dg-block"><CaseStudyMedia {...media.website} /></div></section>
-    <section aria-labelledby="dg-conclusion"><h2 class="case-study-heading" id="dg-conclusion">Conclusion</h2><p class="dg-lede">I focused on designing an intuitive, conversational analytics experience that makes data exploration accessible to both technical and non technical users. By simplifying how people ask, understand, and validate data, i helped DataGPT evolve from a chat concept into a transparent, insight driven workspace.</p><p class="dg-copy-width dg-conclusion-lead"><strong>Through iterative testing and real world feedback, we introduced key features that shaped the product’s maturity:</strong></p><div class="dg-grid dg-grid--three dg-media-gap">{conclusions.map(([title, body]) => <article class="dg-card"><h3>{title}</h3><p>{body}</p></article>)}</div></section>
+    <section aria-labelledby="dg-website"><p class="case-study-eyebrow">Marketing</p><h2 class="case-study-heading" id="dg-website">Website</h2><p class="dg-lede">I designed the website, the promo videos and the marketing materials. The site shows a demo conversation with DataGPT.</p><div class="dg-block"><CaseStudyMedia {...media.website} /></div></section>
+    <section aria-labelledby="dg-conclusion"><h2 class="case-study-heading" id="dg-conclusion">Conclusion</h2><p class="dg-lede">DataGPT started as a chat concept. It shipped as one screen where technical and non-technical users ask a question, see which data and dates the answer used, and check it in the Data Navigator.</p><p class="dg-copy-width dg-conclusion-lead"><strong>Three changes came out of testing</strong></p><div class="dg-grid dg-grid--three dg-media-gap">{conclusions.map(([title, body]) => <article class="dg-card"><h3>{title}</h3><p>{body}</p></article>)}</div></section>
   </div>
 </article>
 
