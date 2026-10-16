@@ -9,7 +9,7 @@ assert.deepEqual(validateAccentMixes('.brand{background:color-mix(in srgb,var(--
 const sources=Object.fromEntries(['LogoLink','SiteHeader','DSNavigation','DSPreview'].map(name=>['src/components/'+name+'.astro',fs.readFileSync('src/components/'+name+'.astro','utf8')]));
 assert.deepEqual(validateLogoLinks(sources),[]);
 assert(validateLogoLinks({...sources,'src/components/Rogue.astro':'<a aria-label="naz.wtf — home"><Logo /></a>'}).length);
-assert(validateLogoLinks({...sources,'src/components/DSPreview.astro':sources['src/components/DSPreview.astro'].replace('<LogoLink','<a')}).length);
+assert(validateLogoLinks({...sources,'src/components/SiteHeader.astro':sources['src/components/SiteHeader.astro'].replace('<LogoLink','<a')}).length);
 console.log('Shared home links, accent role, canonical DataGPT labels and original quote/hero constraints pass.');
 
 const tokens=fs.readFileSync('src/styles/tokens.css','utf8');

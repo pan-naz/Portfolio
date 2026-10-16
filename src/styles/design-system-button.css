@@ -8,9 +8,10 @@
 .ds-button-grid--three { grid-template-columns:repeat(3,minmax(0,1fr)); }
 .ds-button-card { min-width:0; display:flex; flex-direction:column; gap:var(--space-6); padding:var(--space-6); background:var(--color-bg-canvas); border-radius:var(--radius-medium); }
 .ds-button-card--wide { grid-column:span 2; }
-.ds-button-stage { min-width:0; min-height:calc(var(--space-16) * 2); display:flex; align-items:center; justify-content:center; gap:var(--space-4); padding:0; border-radius:var(--radius-small); background:var(--color-bg-surface); }
+.ds-button-stage { --ds-stage-clearance:var(--space-6); min-width:0; min-height:calc(var(--space-16) * 2); display:flex; align-items:center; justify-content:center; gap:var(--space-4); padding:var(--ds-stage-clearance); border-radius:var(--radius-small); background:var(--color-bg-surface); }
 .ds-button-values { display:grid; grid-template-rows:var(--ds-button-value-rows,auto); gap:var(--space-1); margin: auto 0 0; }
 .ds-button-values > div { display:flex; justify-content:space-between; gap:var(--space-2); align-items:start; }
+.ds-button-values dt { white-space:nowrap; flex:none; }
 .ds-button-values dd { min-width:0; margin:0; text-align:right; }
 .ds-button-state-column,.ds-button-state-labels { min-width:0; display:grid; grid-row:span 5; grid-template-rows:subgrid; }
 .ds-button-state-group + .ds-button-state-group { margin-top:var(--space-8); }
@@ -40,7 +41,6 @@
 .ds-tile-visual:has(> .ds-button-cover) { overflow:visible; }
 .ds-button-cover { position:absolute; left:50%; top:50%; translate:-50% -50%; display:grid; justify-items:center; gap:var(--space-3); width:max-content; flex:none; transform:scale(var(--ds-cover-fit,1)); }
 .ds-button-cover .case-comparison-controls { margin:0; }
-.ds-button-stage:has(> p) { padding:var(--space-6); }
 .ds-button-cover-icons { display:flex; gap:var(--space-6); align-items:center; }
 .ds-button-view .ds-comparison-switch { height:auto; overflow:visible; min-width:0; }
 .ds-button-view .ds-comparison-switch .case-comparison-images { display:none; }
@@ -63,6 +63,7 @@
  .ds-button-grid,.ds-button-grid--three { grid-template-columns:repeat(2,minmax(0,1fr)); }
 }
 @media(max-width:767px) {
+ .ds-button-stage { --ds-stage-clearance:var(--space-4); }
  .ds-button-grid,.ds-button-grid--three,.ds-button-code-grid { grid-template-columns:minmax(0,1fr); }
  .ds-button-card--wide { grid-column:auto; }
  .ds-button-state-section[data-layout="stacked"] .ds-button-states { grid-template-columns:minmax(0,1fr); }

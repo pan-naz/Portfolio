@@ -8,7 +8,7 @@ const mark = wordmarks[compact ? 'compact' : 'full'];
 const ink = mark.letters.filter(letter => !letter.accent).map(letter => letter.path).join('');
 const accent = mark.letters.find(letter => letter.accent)?.path;
 ---
-<svg class="wordmark" width={mark.width} height={mark.height} viewBox={`0 ${mark.viewBoxY} ${mark.width} ${mark.height}`} style={`width:${mark.width}px;height:${mark.height}px`} fill="currentColor" role="img" aria-label={compact ? 'naz' : 'naz.wtf'}>
+<svg class="wordmark" width={mark.width} height={mark.height} viewBox={`0 ${mark.viewBoxY} ${mark.width} ${mark.height}`} style={`width:${mark.width}px;height:${mark.height}px;--wordmark-baseline-outset:${mark.height + mark.viewBoxY - mark.baseline}px`} fill="currentColor" role="img" aria-label={compact ? 'naz' : 'naz.wtf'}>
   <g data-logo-rest><path d={ink} />{accent && <path class="wordmark-dot" d={accent} />}</g>
   <g data-logo-glyphs>{mark.letters.map((letter, index) => <path style={`--logo-letter-index:${index}`} data-logo-letter={letter.glyph} class:list={{ 'wordmark-dot': letter.accent }} d={letter.path} />)}</g>
 </svg>

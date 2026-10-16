@@ -57,7 +57,7 @@ const researchMetrics = [
     <section aria-labelledby="dg-models">
       <p class="case-study-eyebrow">Chat or dashboard?</p><h2 class="case-study-heading" id="dg-models">I prototyped two interaction models and we shipped a hybrid</h2><p class="dg-lede">Before committing to a direction, I tested two ways for people to work with their data through AI.</p>
       <div class="dg-block"><CaseStudyMedia {...media.prototypes} /></div>
-      <div class="dg-grid dg-grid--three dg-block">{models.map((model, i) => <article class:list={['dg-card dg-model', i === 2 && 'dg-model--shipped']} data-theme={i === 2 ? 'dark' : undefined}><div class="dg-card-heading"><h3>{model.title}</h3><span class="dg-badge text-label-s">{model.label}</span></div><p>{model.body}</p><p class="dg-accent">{model.quote}</p>{model.outcome && <p class="dg-muted">{model.outcome}</p>}</article>)}</div>
+      <div class="dg-grid dg-grid--three dg-block">{models.map((model, i) => <article class:list={['dg-card dg-model', i === 2 && 'dg-model--shipped']} data-theme={i === 2 ? 'dark' : undefined}><div class="dg-card-heading"><h3>{model.title}</h3><span class="dg-badge text-label-s"><span class="text-caps-centred">{model.label}</span></span></div><p>{model.body}</p><p class="dg-accent">{model.quote}</p>{model.outcome && <p class="dg-muted">{model.outcome}</p>}</article>)}</div>
     </section>
     <section class="dg-dark" aria-labelledby="dg-shipped" data-theme="dark">
       <div class="dg-dark-inner"><p class="case-study-eyebrow">What shipped?</p><h2 class="case-study-heading" id="dg-shipped">AI analyst to talk to</h2>

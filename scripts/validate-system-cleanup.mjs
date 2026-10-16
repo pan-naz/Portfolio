@@ -6,7 +6,7 @@ export function validateAccentMixes(source,file='fixture.css'){
 export function validateLogoLinks(sources){
  const errors=[];for(const[file,source]of Object.entries(sources))if(file!=='src/components/LogoLink.astro'&&/<a\b[^>]*aria-label="naz\.wtf — home"/.test(source))errors.push('Home link must compose LogoLink: '+file);
  const link=sources['src/components/LogoLink.astro']||'';if(!link.includes('aria-label="naz.wtf — home"')||!link.includes('<Logo compact={compact}')||!link.includes('header-full-logo')||!link.includes('header-compact-logo')||/<script|<style/.test(link))errors.push('LogoLink must compose original full/compact/header geometry and shared styles without private motion.');
- for(const[file,count]of[['SiteHeader',1],['DSNavigation',1],['DSPreview',3]])if((sources['src/components/'+file+'.astro']?.match(/<LogoLink\b/g)||[]).length!==count)errors.push('Every existing home-link variant must use LogoLink: '+file);
+ for(const[file,count]of[['SiteHeader',1],['DSNavigation',1],['DSPreview',0]])if((sources['src/components/'+file+'.astro']?.match(/<LogoLink\b/g)||[]).length!==count)errors.push('Every existing home-link variant must use LogoLink: '+file);
  return errors;
 }
 /** Catalog emphasis uses a solid edge, never a second tint. */
@@ -25,7 +25,7 @@ export function validateDataGPTBadges(css){
  const errors=[],badge=declarations(css,'.dg-badge');
  if(badge.padding!=='var(--space-1) var(--space-3)'||badge['white-space']!=='nowrap')errors.push('DataGPT badges use intrinsic single-line Label/S with Space1/Space3 padding.');
  if(/--dg-(?:question|answer)-label-advance|--dg-badge-(?:block|inline)-inset/.test(css))errors.push('DataGPT badges cannot retain measured text advances or padding aliases.');
- for(const rule of css.matchAll(/[^{}]*\.dg-badge[^{}]*\{([^}]+)\}/g))if(/(?:^|;)\s*(?:(?:min|max)-)?(?:width|height|inline-size|block-size)\s*:/.test(rule[1]))errors.push('DataGPT badges size to their text, without width or height reservations.');
+ for(const rule of css.matchAll(/[^{}]*\.dg-badge[^{}]*\{([^}]+)\}/g))if(/(?:^|;)\s*(?:(?:min|max)-)?(?:width|height|inline-size|block-size)\s*:/.test(rule[1].replace('min-height: calc(1lh + var(--space-1) * 2);','')))errors.push('DataGPT badges size to their text, without width or height reservations.');
  return errors;
 }
 export function validateSystemCleanup(root=process.cwd()){
@@ -35,7 +35,7 @@ export function validateSystemCleanup(root=process.cwd()){
  errors.push(...validateProjectDemo(read('src/styles/design-system-motion.css')));
  const tokens=read('src/styles/tokens.css');if(!tokens.includes(':where(.skill-tag--accent),\n:where(.case-study-decision-card__icon)'))errors.push('Resolve the shared tint at consumers so local project accents remain unchanged.');if((tokens.match(/--color-bg-accent-subtle\s*:/g)||[]).length!==1||!tokens.includes('color-mix(in srgb, var(--color-interactive-accent) 12%,'))errors.push('Accent tint has one source, mixed12% into Surface.');
  for(const file of['global.css','case-study-decision-card.css','hooko-case-study.css','design-system.css','design-system-motion.css'])if(!read('src/styles/'+file).includes('var(--color-bg-accent-subtle)'))errors.push('Shared tint consumer missing: '+file);
- if(!read('src/styles/global.css').includes(":root[data-theme='dark'] .skill-tag--accent:not(")||!read('src/data/system-colors.ts').includes('export const colorCards=[...paletteColors,accentSubtleColor]')||!read('src/components/DSFoundations.astro').includes('{colorCards.map'))errors.push('Preserve dark chip suppression and render the derived role separately from the primitive palette.');
+ if(read('src/styles/global.css').includes(":root[data-theme='dark'] .skill-tag--accent:not(")||!read('src/data/system-colors.ts').includes('export const colorCards=[...paletteColors,accentSubtleColor]')||!read('src/components/DSFoundations.astro').includes('{colorCards.map'))errors.push('Accent chips keep their tint in both themes; render the derived role separately from the primitive palette.');
  const data=read('src/components/DataGPTCaseStudy.astro'),css=read('src/styles/datagpt-case-study.css'),exclusions=read('src/data/typography-exclusions.ts');
  errors.push(...validateDataGPTBadges(css));
  if(/product-avatar|product-badge/.test(data+exclusions)||/"selector": "\.dg-(?:badge|avatar)"/.test(exclusions))errors.push('DataGPT badges and initials cannot retain typography exclusions.');

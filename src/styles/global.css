@@ -229,10 +229,10 @@ main, .footer { position: relative; }
 .role-cycle { position: relative; isolation: isolate; color: var(--color-interactive-accent); }
 .hero-description { max-width: 600px; margin-top: var(--space-6); }
 .accent-stat { color: var(--color-interactive-accent); white-space: nowrap; }
-.skill-tag { display: inline-flex; align-items: center; justify-content: center; width: max-content; max-width: 100%; min-height: 28px; padding: 5px 11px; border: 1px solid var(--color-border-default); border-radius: var(--radius-full); white-space: normal; overflow-wrap: anywhere; text-align: center; background: var(--color-bg-surface); }
-.skill-tag--plain { min-height: 0; padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--color-text-secondary); text-align: left; }
+/* Round the Label/S line to the spacing grid to avoid fractional-pixel pill heights. */
+.skill-tag { display: inline-flex; align-items: center; justify-content: center; width: max-content; max-width: 100%; min-height: calc(var(--text-label-s) + var(--space-1) + var(--space-3)); min-height: calc(round(var(--text-label-s) * var(--line-height-label-s), var(--space-1)) + var(--space-3)); padding: var(--space-1) calc(var(--space-3) - 1px); border: 1px solid var(--color-border-default); border-radius: var(--radius-full); white-space: normal; overflow-wrap: anywhere; text-align: center; background: var(--color-bg-surface); }
+.process-tag { display: inline-flex; align-items: center; justify-content: center; width: max-content; max-width: 100%; white-space: normal; overflow-wrap: anywhere; color: var(--color-text-secondary); text-align: left; }
 .skill-tag--accent { border-color: transparent; color: var(--color-interactive-accent); background: var(--color-bg-accent-subtle); text-transform: uppercase; box-shadow: none; }
-:root[data-theme='dark'] .skill-tag--accent:not([data-theme='light'] .skill-tag--accent,[data-color-zone='light'] .skill-tag--accent,.case-study-decision-card--figure .skill-tag--accent,.case-study-service-demo .skill-tag--accent) { background: var(--color-bg-surface); }
 .process-tags { position: absolute; left: calc(var(--header-inset) + var(--safe-left)); top: calc(108px + var(--safe-top)); display: grid; justify-items: start; gap: var(--space-2); }
 .hero-cta-entrance:has(:focus-visible) { opacity: 1 !important; transform: none !important; filter: none !important; }
 .enhanced .hero-cta-entrance.is-restored { opacity: 1; transform: none; }
@@ -493,6 +493,12 @@ html[data-work-stage-layout='true'] .about-details::before { left: max(0px, calc
 .button.cta-morph-managed { transition-property: background-color; }
 .header-pill-surface { position: absolute; top: 0; height: var(--header-height); border-radius: var(--radius-full); opacity: 0; pointer-events: none; }
 .header-full-logo { display: inline-flex; }
+/* The full SVG's source baseline meets Body/M Strong's native line baseline.
+   Keep the original centred mark when the section links do not fit. */
+@media (min-width:335px) {
+.site-header:has(.desktop-nav:not([hidden])) .header-full-logo { display: block; height: calc(var(--text-body-m-strong) * var(--line-height-body-m-strong)); }
+.site-header:has(.desktop-nav:not([hidden])) .header-full-logo .wordmark { display: inline-block; margin-top: calc(var(--text-body-m-strong) * -1); vertical-align: calc(var(--wordmark-baseline-outset) * -1); }
+}
 .header-compact-logo { position: absolute; left: 0; top: 0; display: inline-flex; width: 100%; min-height: var(--control-icon); align-items: center; justify-content: center; opacity: 0; }
 .header-cta { position: absolute; top: 0; left: 0; margin: 0; pointer-events: auto; white-space: nowrap; z-index: var(--layer-content); transition: background-color var(--duration-fast); }
 @media (min-width: 1440px) { .hero-content { width: calc(100% - var(--hero-gutter) * 2 - var(--safe-left) - var(--safe-right)); margin-inline: calc(var(--hero-gutter) + var(--safe-left)) calc(var(--hero-gutter) + var(--safe-right)); } }

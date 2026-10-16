@@ -1,0 +1,39 @@
+---
+import '../styles/design-system-button.css';import '../styles/design-system-project-card.css';
+import type {SourceComponent} from '../data/system-inventory';import {componentVariants} from '../data/system-variants';
+import {projectCardDescription,projectCardCards,projectCardStates,projectCardUsage,projectCardProps,projectCardTokenGroups,projectCardAccessibility} from '../data/system-project-card';
+import DSProjectCardSpecimen from './DSProjectCardSpecimen.astro';import DSTabs from './DSTabs.astro';
+interface Props {components:SourceComponent[];}
+const {components}=Astro.props,titles:Record<string,string>={ProjectCard:'Project card',ProjectIdentity:'Project identity',ProjectTags:'Project tags'};
+const tokenGroups=projectCardTokenGroups();
+const tokenCode=tokenGroups.map(group=>`/* ${group.title} */\n`+group.names.join('\n')).join('\n\n');
+---
+<section id="project-card" class="ds-view ds-project-view" data-ds-view data-ds-component="ProjectCard" data-title="Project card" data-group="Components" data-description={projectCardDescription} hidden>
+ <div class="ds-project-width-probe" inert aria-hidden="true"><div class="container work-content"><div class="project-collection project-collection--bento"/></div></div>
+ <div class="ds-stage" data-ds-card>
+  <div class="ds-stage-bar"><DSTabs id="project-card-canvas" labels={['Preview','Code']}/></div>
+  <div id="project-card-canvas-panel-0" role="tabpanel" aria-labelledby="project-card-canvas-tab-0" class="ds-button-preview">
+   <section class="ds-button-group"><p class="text-label-m">Project card</p><p class="text-body-s ds-button-secondary">One card per project in Work.</p>
+    <div class="ds-button-grid ds-project-grid">{projectCardCards.map(card=><article class:list={['ds-button-card',`ds-project-card--${card.id}`]} data-project-card={card.id}>
+     <div class="ds-button-stage ds-project-stage" inert aria-hidden="true"><DSProjectCardSpecimen kind={card.id}/></div>
+     <div><p class="text-body-m-strong">{card.name}</p><p class="text-body-s ds-button-secondary">{card.description}</p></div>
+     <dl class="ds-button-values text-body-s"><div><dt>Used in</dt><dd>{card.used}</dd></div><div><dt>Style</dt><dd>{card.style}</dd></div></dl>
+    </article>)}</div>
+   </section>
+   <section class="ds-button-group"><p class="text-label-m">Project card states</p><p class="text-body-s ds-button-secondary">The whole card is one link to the case study.</p>
+    <div class="ds-button-grid ds-project-states">{projectCardStates.map(state=><article class:list={['ds-button-card',`ds-project-state--${state.toLowerCase()}`]} data-project-state={state.toLowerCase()}>
+     <p class="text-body-s ds-button-secondary">{state}</p><div class="ds-button-stage ds-project-stage" inert aria-hidden="true"><DSProjectCardSpecimen kind={state.toLowerCase() as 'default'|'hover'|'focus'}/></div>
+    </article>)}</div>
+   </section>
+  </div>
+  <div id="project-card-canvas-panel-1" role="tabpanel" aria-labelledby="project-card-canvas-tab-1" class="ds-code ds-button-code" hidden>
+   {components.map(component=><section data-ds-component-code={component.name}><p class="text-label-m">{titles[component.name]}</p><pre><code data-ds-usage={component.name}>{'/* Usage · '+component.file+' */\n'+projectCardUsage(component.name)}</code></pre>
+    <div class="ds-button-props"><p class="ds-code-comment">/* Props */</p><div class="ds-props-table"><table><thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>What it does</th></tr></thead><tbody>{projectCardProps(component).map(prop=><tr data-ds-prop={prop.name}><th scope="row"><code>{prop.name}</code></th><td><code>{prop.type}</code></td><td><code>{prop.default==='Required'?'required':prop.default==='Not set'?'—':prop.default}</code></td><td>{prop.description}</td></tr>)}</tbody></table></div></div>
+   </section>)}
+   <section>{tokenGroups.flatMap(group=>group.names).map(name=><span data-ds-token={name.slice(2)}/>)}<p class="text-label-m">Shared</p><div class="ds-button-code-grid"><pre><code>{tokenCode}</code></pre><div class="ds-button-code-panel"><p class="ds-code-comment">/* Accessibility */</p><ul>{projectCardAccessibility.map(point=><li>{point}</li>)}</ul></div></div>
+    <div class="ds-button-code-panel"><p class="ds-code-comment">/* Source */</p>{components.map(component=><div><p>{component.file}</p><ul>{[...new Set(component.usages.map(usage=>usage.file))].sort().map(file=><li>{file}</li>)}</ul>{component.name==='ProjectCard'&&componentVariants(component).map(variant=><span data-ds-variant={`${component.name}:${variant}`}/>)}</div>)}</div>
+   </section>
+  </div>
+ </div>
+</section>
+<script>import '../scripts/design-system-project-card';</script>

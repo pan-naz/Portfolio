@@ -1,3 +1,4 @@
+import {compareTokenNames} from '../src/data/system-component-tokens.ts';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import ts from 'typescript';
@@ -81,7 +82,7 @@ export function validateButtonCatalog(root=process.cwd()){
  const actionComponents=model.components.filter(item=>['Button','IconButton','TextLink'].includes(item.name));
  const direct=buttonTokens(actionComponents),groups=buttonTokenGroups(actionComponents);
  if(direct.some(name=>/^--(?:font-|text-|line-height-|letter-spacing-|color-(?:white|paper|ink|night|charcoal|graphite))/.test(name)))errors.push('Action Tokens must omit palette and typography internals.');
- if(JSON.stringify(groups.map(group=>group.title))!==JSON.stringify(['Color','Size','Spacing','Shape','Motion'])||JSON.stringify(groups.flatMap(group=>group.names).sort())!==JSON.stringify(direct))errors.push('Every direct token belongs to one of the five action groups.');
+ if(JSON.stringify(groups.map(group=>group.title))!==JSON.stringify(['Color','Size','Spacing','Shape','Elevation','Motion'])||JSON.stringify(groups.flatMap(group=>group.names).sort(compareTokenNames))!==JSON.stringify(direct))errors.push('Every direct token belongs to one of the six action groups.');
  const ids=buttonGroups.flatMap(group=>group.cards.map(card=>card.id));
  if(ids.length!==13||new Set(ids).size!==13)errors.push('Exactly thirteen used variants must be shown once.');
  if(!read('src/components/IconButton.astro').includes("const fixedLight = variant === 'raised';"))errors.push('Raised owns its fixed Light zone.');
@@ -115,7 +116,7 @@ export function validateButtonCatalog(root=process.cwd()){
  if(!states.includes("writes.push({element:group,scale:")||!states.includes("section.dataset.layout=layout")||!states.includes("column/paintWidth(group)<.8")||!css.includes('transform:scale(var(--ds-state-scale,1))'))errors.push('States require one block-wide scale, a minimum of80%, and whole-section card fallback.');
  if(!css.includes('.ds-tile-visual:has(> .ds-button-cover) { overflow:visible; }'))errors.push('The cover must not clip native shadows at the preview separator.');
  if(!states.includes('--ds-cover-fit'))errors.push('Cover must fit its actual tile with token-sized clearance.');
- if(!css.includes('.ds-button-stage:has(> p) { padding:var(--space-6); }'))errors.push('Inline prose keeps an unscaled Space6 inset.');
+ if(!css.includes('padding:var(--ds-stage-clearance)'))errors.push('Inline prose shares the responsive component-stage inset.');
  if(!css.includes('grid-template-rows:var(--space-6) repeat(4,calc(var(--space-16) + var(--space-6)))')||css.includes('.ds-button-state-cell:has(.ds-button-turn)'))errors.push('Stacked title and all State rows must have the same token-defined height.');
  if(!css.includes('[data-labels="above"] .ds-button-state-column { row-gap:var(--space-6); }')||!css.includes('justify-content:flex-start; gap:var(--space-2);')||!css.includes('var(--ds-state-art-height)'))errors.push('Above labels need a small own-specimen gap, a larger inter-state gap, and scale-aware bounds.');
  if(buttonGroups[2].cards.find(card=>card.id==='link-compact').value!=='Body/M Strong'||buttonProps(model.components.find(c=>c.name==='TextLink')).find(prop=>prop.name==='compact').description!=='Keeps the arrow right after the text.')errors.push('Compact describes its real Body/M Strong type and arrow placement.');

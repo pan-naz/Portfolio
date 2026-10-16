@@ -1,3 +1,4 @@
+import {compareTokenNames} from '../src/data/system-component-tokens.ts';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {validateButtonCatalog,validateCatalogControls,missingUsageNames} from '../scripts/validate-button.mjs';
@@ -30,7 +31,7 @@ const actions=model.components.filter(component=>['Button','IconButton','TextLin
 const tokens=buttonTokens(actions);
 assert(tokens.includes('--color-text-primary')&&tokens.includes('--control-icon')&&tokens.includes('--ease-button-fill'));
 assert(!tokens.includes('--color-ink')&&!tokens.includes('--font-family-body')&&!tokens.includes('--ease-entrance'));
-assert.deepEqual(buttonTokenGroups(actions).flatMap(group=>group.names).sort(),tokens);
+assert.deepEqual(buttonTokenGroups(actions).flatMap(group=>group.names).sort(compareTokenNames),tokens);
 const iconUsage=buttonUsage('IconButton');
 assert.equal(iconUsage.match(/<IconButton(?=\s|\/>)/g)?.length,2);
 assert(!iconUsage.includes('{...'));

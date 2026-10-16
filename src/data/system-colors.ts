@@ -19,7 +19,7 @@ export const paletteColors:PaletteColor[]=[
 ];
 /** A derived role stays separate from the named primitive palette. */
 export const accentSubtleColor:PaletteColor={name:'Accent tint',token:'color-bg-accent-subtle',uses:[
- use('light','Accent chips'),
+ use('both','Accent chips'),
  use('both','Decision cards and Hooko','color-bg-accent-subtle'),
  use('both','Spacing, layout and motion demos'),
 ]};
@@ -34,4 +34,4 @@ export const strokeCards=[
 export const paletteTokenNames=paletteColors.flatMap(color=>[color.token,...(color.shades||[]).map(shade=>shade.token)]);
 
 /** Reviewed external Color contract; local guards verify its body when present. */
-export const colorDocumentationReceipt={"section":"Color","sha256":"7ec6b03a2c4cde85e6d88584a703d19b80778290fe66c01ece277c2edcd55ca8","characters":7410};
+export const colorDocumentationReceipt={"section":"Color","sha256":"b4de992bb736398baa7a4d8ed745cb5e78e186fac46372cccee9b53c9142a7f0","characters":7404};

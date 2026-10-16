@@ -1,38 +1,23 @@
 ---
 import '../styles/case-video-player.css';
 import type {SourceComponent} from '../data/system-inventory';
-import Button from './Button.astro';import DSControl from './DSControl.astro';
-import Chip from './Chip.astro';import Stat from './Stat.astro';import TimelineRow from './TimelineRow.astro';import ProjectCard from './ProjectCard.astro';
-import SectionHeading from './SectionHeading.astro';import SectionNavigation from './SectionNavigation.astro';import NavLinks from './NavLinks.astro';import LogoLink from './LogoLink.astro';
+import DSControl from './DSControl.astro';
+import Stat from './Stat.astro';import TimelineRow from './TimelineRow.astro';
+import SectionHeading from './SectionHeading.astro';
 
-import ToolCard from './ToolCard.astro';import ThemeToggle from './ThemeToggle.astro';
-import {projects,impactGroups,experience,profile,tools} from '../data/portfolio';
+import ToolCard from './ToolCard.astro';
+import {impactGroups,experience,tools} from '../data/portfolio';
 import {workCategories} from '../data/work-categories';
 interface Props {component:SourceComponent;miniature?:boolean;}
 const {component,miniature=false}=Astro.props,name=component.name;
 const prefix=miniature?'tile-':'example-';
 ---
-{name==='Chip'&&<div class="ds-specimen-composition">
- <div class="ds-labelled-specimen"><span>Default</span><div data-ds-example="chip-default" data-ds-target=".skill-tag"><Chip label="Accessibility" /></div></div>
- {!miniature&&<><div class="ds-labelled-specimen"><span>Raised</span><div class="ds-project-context" data-ds-example="chip-raised" data-ds-target=".skill-tag"><Chip label={projects[0].tags[0]} variant="raised" /></div></div>
- <div class="ds-labelled-specimen"><span>Accent</span><div data-ds-example="chip-accent" data-ds-target=".skill-tag"><Chip label="Context" variant="accent" /></div></div>
- <div class="ds-labelled-specimen"><span>Plain</span><div data-ds-example="chip-plain" data-ds-target=".skill-tag"><Chip label="Workflows" variant="plain" /></div></div></>}
-</div>}
-{name==='NavigationItem'&&<div class="ds-specimen-composition ds-navigation-composition">
- <div class="ds-labelled-specimen"><span>Top header</span><div class="ds-inline-controls"><LogoLink data-ds-example="nav-top-logo" data-ds-target=".wordmark" /><div class="ds-inline-controls"><div data-ds-example="nav-top" data-ds-target=".desktop-nav"><NavLinks showDS={false} /></div><div data-ds-example="nav-top-theme" data-ds-target=".icon-button"><ThemeToggle /></div></div></div></div>
- {!miniature&&<><div class="ds-labelled-specimen"><span>Compact header</span><div class="ds-inline-controls"><LogoLink data-ds-example="nav-compact-logo" data-ds-target=".wordmark" /><div data-ds-example="nav-compact-theme" data-ds-target=".icon-button"><ThemeToggle /></div></div></div>
- <div class="ds-labelled-specimen"><span>Work pill</span><div class="ds-filter-specimen" data-ds-pill data-ds-example="nav-work-pill" data-ds-target=".section-navigation"><SectionNavigation compact theme pill /></div></div>
- <div class="ds-labelled-specimen"><span>Small Work pill</span><div class="ds-filter-specimen" data-ds-pill data-ds-phone-filter data-ds-example="nav-small-filter" data-ds-target=".section-navigation"><SectionNavigation compact theme pill /></div></div>
- <div class="ds-labelled-specimen"><span>Desktop floating header</span><div class="ds-floating-header floating-navigation-theme floating-navigation-surface"><LogoLink compact data-ds-example="nav-wordmark" data-ds-target=".wordmark" /><div data-ds-example="nav-floating" data-ds-target=".desktop-nav"><NavLinks showDS={false} /></div><div data-ds-example="nav-floating-theme" data-ds-target=".icon-button"><ThemeToggle /></div><div data-ds-example="nav-action" data-ds-target=".button"><Button href={`mailto:${profile.email}`} arrow="up">Get in touch</Button></div></div></div>
- <div class="ds-labelled-specimen"><span>Side filter</span><div data-ds-example="nav-filter" data-ds-target=".section-navigation"><SectionNavigation /></div></div></>}
-</div>}
 {name==='Stat'&&<dl class="ds-stat-composition">{[impactGroups[0].metrics[0],...(!miniature?[impactGroups[0].metrics[1],impactGroups[1].metrics[1]]:[])].map((metric,index)=><div data-ds-example={`stat-${index}`} data-ds-target=".stat"><Stat {...metric} revealValue/></div>)}</dl>}
 {name==='TimelineRow'&&<div class="about-details ds-context-about" data-color-zone="dark" data-zone-keep="section large-shadow"><ol class="experience-list" data-ds-example="timeline" data-ds-target=".experience-list">{experience.map(item=><TimelineRow item={item}/>)}</ol></div>}
 {name==='SectionHeading'&&<div class="ds-heading-composition">
  <div class="work ds-context-work" data-ds-example="heading-columns" data-ds-target=".section-heading"><SectionHeading id={miniature?'work-title':'sample-work-title'} data-color-zone="dark" data-zone-keep="surface section shadows" label={workCategories.selected.label}>{workCategories.selected.title}<p slot="description" class="section-description text-body-l">{workCategories.selected.description}</p></SectionHeading></div>
  {!miniature&&<><div class="case-study-narrative" data-ds-example="heading-stacked" data-ds-target=".section-heading"><SectionHeading id={`${prefix}heading-stacked`} label="Product" layout="stacked" reveal={false}>How it works</SectionHeading></div><div class="case-study-narrative" data-ds-example="heading-case" data-ds-target=".ds-case-heading"><div class="ds-case-heading"><SectionHeading id={`${prefix}heading-case`} label="Pages" appearance="case">Main page</SectionHeading></div></div></>}
 </div>}
-{name==='ProjectCard'&&<div class="ds-project-example" data-ds-example="project-card" data-ds-target=".project"><ProjectCard project={projects[0]} lead /></div>}
 
 {name==='Tooltip'&&<div class="ds-specimen-composition ds-tooltip-composition">
  {!miniature&&<div class="ds-inline-controls">{['Hidden','Visible above','Flipped below','Keyboard focus'].map((state,index)=><DSControl data-ds-tooltip-state={['hidden','above','below','focus'][index]} aria-pressed={index===0?'true':'false'}>{state}</DSControl>)}</div>}

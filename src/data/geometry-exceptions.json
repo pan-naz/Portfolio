@@ -420,7 +420,7 @@
   },
   {
     "file": "src/styles/design-system.css",
-    "selector": ":is(#project-card,#section-heading,#timeline-row,#navigation) .ds-canvas",
+    "selector": ":is(#section-heading,#timeline-row) .ds-canvas",
     "context": "@layer system",
     "property": "height",
     "value": "400px",
@@ -453,15 +453,6 @@
     "value": "760px",
     "kind": "size",
     "reason": "Approved 760px statistics specimen composition."
-  },
-  {
-    "file": "src/styles/design-system.css",
-    "selector": ".ds-project-example",
-    "context": "@layer system",
-    "property": "width",
-    "value": "min(100%,880px)",
-    "kind": "size",
-    "reason": "Approved 880px genuine project specimen width."
   },
   {
     "file": "src/styles/design-system.css",
@@ -701,19 +692,10 @@
     "file": "src/styles/global.css",
     "selector": ".skill-tag",
     "context": "@layer system",
-    "property": "min-height",
-    "value": "28px",
-    "kind": "size",
-    "reason": "Existing 28px tag height and optical 5/11px insets preserve the ticker."
-  },
-  {
-    "file": "src/styles/global.css",
-    "selector": ".skill-tag",
-    "context": "@layer system",
     "property": "padding",
-    "value": "5px 11px",
+    "value": "var(--space-1) calc(var(--space-3) - 1px)",
     "kind": "spacing",
-    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
+    "reason": "Subtract the literal 1px outline from Space3 so the visible side inset remains exactly 12px."
   },
   {
     "file": "src/styles/global.css",

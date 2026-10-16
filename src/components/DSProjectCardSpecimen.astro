@@ -1,0 +1,15 @@
+---
+import ProjectCard from './ProjectCard.astro';import ProjectIdentity from './ProjectIdentity.astro';import ProjectTags from './ProjectTags.astro';import IconButton from './IconButton.astro';
+import {projects,collectionProjects} from '../data/portfolio';
+interface Props {kind:'full'|'compact'|'identity'|'default'|'hover'|'focus';}
+const {kind}=Astro.props,project=kind==='compact'?collectionProjects.find(project=>project.id==='yellow-leaf')!:['default','hover','focus'].includes(kind)?collectionProjects.find(project=>project.id==='peak-hotel')!:projects[0];
+---
+<div class="ds-project-fit" data-project-fit={kind}>
+ <div class="ds-project-art ds-specimens" data-project-art={kind} data-ds-example={kind==='full'?'project-card':kind==='compact'?'project-card-compact':undefined} data-ds-target={['full','compact'].includes(kind)?'.project':undefined}>
+  <!-- Inert template scopes retain genuine component markup without duplicate live ids or video startup. -->
+  <template data-project-template={kind}>
+   {kind==='identity'?<div class="project ds-project-identity"><div class="project-details"><h3 class="project-heading"><ProjectIdentity title={project.title} logo={project.logo} logoBackground={project.logoBackground}/></h3><ProjectTags tags={project.tags}/></div></div>:<ProjectCard project={project} compact={kind!=='full'}/>}
+   {kind==='hover'&&<div class="project-cursor is-visible ds-project-cursor" aria-hidden="true"><IconButton label="Project cursor" tabindex="-1" variant="raised" icon="plus"/></div>}
+  </template>
+ </div>
+</div>

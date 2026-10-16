@@ -1,20 +1,31 @@
+import {validateNavigationCatalog} from '../scripts/validate-navigation-catalog.mjs';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
-import { validateNavigationExamples, validateWorkPill } from '../scripts/validate-design-system.mjs';
-const preview = readFileSync(new URL('../src/components/DSPreview.astro', import.meta.url), 'utf8');
-const controller = readFileSync(new URL('../src/scripts/design-system.ts', import.meta.url), 'utf8');
-assert.deepEqual(validateNavigationExamples(preview, controller), []);
-for (const example of ['nav-top-logo', 'nav-compact-theme', 'nav-work-pill', 'nav-small-filter']) {
-  assert.ok(validateNavigationExamples(preview.replace(`data-ds-example="${example}"`, ''), controller).length, `Missing ${example} fails`);
-}
-assert.ok(validateNavigationExamples(preview.replaceAll('<ThemeToggle', '<IconButton'), controller).length, 'Reject a local copy of the theme control');
-assert.ok(validateNavigationExamples(preview.replaceAll('<SectionNavigation compact theme pill', '<div'), controller).length, 'Reject a drawn filter copy');
-assert.ok(validateNavigationExamples(preview, controller.replace('data-small-work-type', 'inventedSize')).length, 'Require source-derived phone typography');
-assert.ok(validateNavigationExamples(preview, `${controller}\nitem.style.fontSize='14px';`).length, 'Reject a private literal font size');
-console.log('PASS: actual header/pill variants, shared theme/filter compositions and source-derived small typography');
-const read = file => readFileSync(new URL(`../${file}`, import.meta.url), 'utf8');
-const parts = [read('src/components/WorkSection.astro'), read('src/scripts/work-filter/work-filter-pill.ts'), read('src/styles/global.css'), read('src/data/system-presentation.ts')];
-assert.deepEqual(validateWorkPill(...parts), []);
-for (const obsolete of ['work-compact-filter', 'work-filter-anchor', 'is-filter-docked']) assert.ok(validateWorkPill(parts[0] + obsolete, ...parts.slice(1)).length);
-assert.ok(validateWorkPill(parts[0], parts[1].replace('wrapper.inert = !visible', ''), ...parts.slice(2)).length);
-assert.ok(validateWorkPill(...parts.slice(0, 3), parts[3].replace("token:'duration-header-enter'", '')).length);
+import {readFileSync} from 'node:fs';
+import {validateNavigationExamples,validateWorkPill} from '../scripts/validate-design-system.mjs';
+import {navigationGroups,navigationStates,navigationUsage,navigationProps,navigationTokenGroups} from '../src/data/system-navigation.ts';
+import {buildSystemInventory} from '../src/data/system-inventory.ts';
+import {missingUsageNames} from '../scripts/validate-button.mjs';
+assert.deepEqual(validateNavigationCatalog(),[]);
+const read=file=>readFileSync(file,'utf8'),specimen=read('src/components/DSNavigationSpecimen.astro'),controller=read('src/scripts/design-system-navigation.ts');
+assert.deepEqual(validateNavigationExamples(specimen,controller),[]);
+for(const component of ['SiteHeader','SectionNavigation','Button'])assert(validateNavigationExamples(specimen.replaceAll('<'+component,'<div'),controller).length);
+assert(validateNavigationExamples(specimen,controller.replace('pillGeometry(','wrongGeometry(')).length);
+assert(validateNavigationExamples(specimen,controller+"\nitem.style.fontSize='14px';").length);
+assert.deepEqual(navigationGroups.flatMap(group=>group.cards.map(card=>card.id)),['top','floating','side','pill']);
+assert.deepEqual(navigationStates,['Default','Hover','Focus','Selected']);
+const inventory=buildSystemInventory();
+for(const name of ['NavigationItem','SectionNavigation','LogoLink']){assert.deepEqual(missingUsageNames(navigationUsage(name)),[]);const component=inventory.components.find(c=>c.name===name);assert(navigationProps(component).every(p=>p.description));assert(component.usages.every(u=>!u.file.includes('/DS')));}
+assert.deepEqual(navigationProps(inventory.components.find(c=>c.name==='NavigationItem')).map(p=>p.name),['label','href','filter','controls','pressed']);
+assert.deepEqual(navigationProps(inventory.components.find(c=>c.name==='LogoLink')).map(p=>p.name),['href','compact','morph']);
+const names=navigationTokenGroups().flatMap(g=>g.names);for(const token of ['duration-header-enter','duration-header-exit','ease-header-pill'])assert(names.includes('--'+token));
+const parts=[read('src/components/WorkSection.astro'),read('src/scripts/work-filter/work-filter-pill.ts'),read('src/styles/global.css'),read('src/styles/global.css')];
+assert.deepEqual(validateWorkPill(...parts),[]);
+for(const obsolete of ['work-compact-filter','work-filter-anchor','is-filter-docked'])assert(validateWorkPill(parts[0]+obsolete,...parts.slice(1)).length);
+assert(validateWorkPill(parts[0],parts[1].replace('wrapper.inert = !visible',''),...parts.slice(2)).length);
+assert(validateWorkPill(...parts.slice(0,3),parts[3].replaceAll('var(--duration-header-enter)','')).length);
+console.log('PASS: four genuine navigation compositions, shared states/geometry, source Usage/Props/consumers and Work pill motion.');
+
+assert.equal(navigationTokenGroups().find(g=>g.title==='Elevation').names.includes('--layer-header'),true);
+const {compareTokenNames}=await import('../src/data/system-component-tokens.ts');
+assert.deepEqual(['--space-16','--space-4','--space-2','--space-3','--space-6'].sort(compareTokenNames),['--space-2','--space-3','--space-4','--space-6','--space-16']);
+assert.equal(read('src/styles/design-system-navigation.css').includes('.ds-nav-specimen--top .site-header { height:var(--control-icon); }'),true);

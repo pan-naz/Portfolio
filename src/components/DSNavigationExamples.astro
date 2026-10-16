@@ -1,0 +1,42 @@
+---
+import '../styles/design-system-button.css';
+import '../styles/design-system-navigation.css';
+import type {SourceComponent} from '../data/system-inventory';
+import {navigationDescription,navigationGroups,navigationStates,navigationUsage,navigationProps,navigationTokenGroups,navigationAccessibility} from '../data/system-navigation';
+import {componentVariants} from '../data/system-variants';
+import DSNavigationSpecimen from './DSNavigationSpecimen.astro';
+import NavigationItem from './NavigationItem.astro';
+import DSTabs from './DSTabs.astro';
+interface Props {components:SourceComponent[];}
+const {components}=Astro.props;
+const docs=components.map(component=>({component,props:navigationProps(component),usage:'/* Usage · '+component.file+' */\n'+navigationUsage(component.name)}));
+const titles:Record<string,string>={NavigationItem:'Navigation item',SectionNavigation:'Work filter',LogoLink:'Logo link'};
+const tokenCode=navigationTokenGroups().map(group=>`/* ${group.title} */\n`+group.names.join('\n')).join('\n\n');
+---
+<section id="navigation" class="ds-view ds-navigation-view" data-ds-view data-ds-component="NavigationItem" data-title="Navigation" data-group="Components" data-description={navigationDescription} hidden>
+ <div class="ds-stage" data-ds-card>
+  <div class="ds-stage-bar"><DSTabs id="navigation-canvas" labels={['Preview','Code']}/></div>
+  <div id="navigation-canvas-panel-0" role="tabpanel" aria-labelledby="navigation-canvas-tab-0" class="ds-button-preview">
+   {navigationGroups.map(group=><section class="ds-button-group"><p class="text-label-m">{group.name}</p><p class="text-body-s ds-button-secondary">{group.description}</p>
+    <div class="ds-button-grid ds-nav-grid">{group.cards.map(card=><article class="ds-button-card" data-navigation-card={card.id}>
+     <div class="ds-button-stage ds-nav-stage" inert aria-hidden="true"><DSNavigationSpecimen kind={card.id}/></div>
+     <div class="ds-nav-card-title"><p class="text-body-m-strong">{card.name}</p><p class="text-body-s ds-button-secondary">{card.description}</p></div>
+     <dl class="ds-button-values text-body-s"><div><dt>Used in</dt><dd>{card.used}</dd></div><div><dt>Style</dt><dd>{card.style}</dd></div></dl>
+    </article>)}</div>
+   </section>)}
+   <section class="ds-button-group"><p class="text-label-m">Navigation item states</p><p class="text-body-s ds-button-secondary">Page links and Work filters share these states.</p>
+    <div class="ds-nav-states">{navigationStates.map(state=><article class="ds-nav-state"><p class="text-body-s ds-button-secondary">{state}</p><div inert aria-hidden="true"><NavigationItem label="Work" href="/#work" data-ds-state={state==='Selected'?undefined:state.toLowerCase()} aria-current={state==='Selected'?'page':undefined}/></div></article>)}</div>
+   </section>
+  </div>
+  <div id="navigation-canvas-panel-1" role="tabpanel" aria-labelledby="navigation-canvas-tab-1" class="ds-code ds-button-code" hidden>
+   {docs.map(({component,props,usage})=><section data-ds-component-code={component.name}><p class="text-label-m">{titles[component.name]}</p>
+    <pre><code data-ds-usage={component.name}>{usage}</code></pre>
+    <div class="ds-button-props"><p class="ds-code-comment">/* Props */</p><div class="ds-props-table"><table><thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>What it does</th></tr></thead><tbody>{props.map(prop=><tr data-ds-prop={prop.name}><th scope="row"><code>{prop.name}</code></th><td><code>{prop.type}</code></td><td><code>{prop.default==='Not set'?'—':prop.default==='Required'?'required':prop.default}</code></td><td>{prop.description}</td></tr>)}</tbody></table></div></div>
+   </section>)}
+   <section><p class="text-label-m">Shared</p><div class="ds-button-code-grid"><pre><code>{tokenCode}</code></pre><div class="ds-button-code-panel"><p class="ds-code-comment">/* Accessibility */</p><ul>{navigationAccessibility.map(point=><li>{point}</li>)}</ul></div></div>
+    <div class="ds-button-code-panel"><p class="ds-code-comment">/* Source */</p>{components.map(component=><div><p>{component.file}</p><ul>{[...new Set(component.usages.map(usage=>usage.file))].sort().map(file=><li>{file}</li>)}</ul>{componentVariants(component).map(variant=><span data-ds-variant={component.name==='NavigationItem'?`${component.name}:${variant}`:undefined}/>)}</div>)}</div>
+   </section>
+  </div>
+ </div>
+</section>
+<script>import '../scripts/design-system-navigation';</script>

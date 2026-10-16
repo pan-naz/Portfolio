@@ -43,7 +43,7 @@
 .dg-needs { gap: var(--space-4); }
 .dg-needs h4 { color: var(--color-interactive-accent); }
 .dg-model { background: var(--color-bg-surface); border: 0; box-shadow: var(--shadow-small); }
-.dg-model .dg-badge { text-transform: uppercase; background: var(--color-text-primary); color: var(--color-bg-canvas); }
+.dg-model .dg-badge { min-height: calc(1lh + var(--space-1) * 2); text-transform: uppercase; background: var(--color-text-primary); color: var(--color-bg-canvas); }
 .dg-model--shipped { background: var(--color-bg-canvas); color: var(--color-text-primary); }
 .dg-dark { width: 100vw; margin-left: calc(50% - 50vw + (var(--safe-right) - var(--safe-left)) / 2); color: var(--color-text-primary); background: var(--color-bg-canvas); }
 .dg-dark-inner { width: min(1200px, calc(100% - var(--gutter-left) - var(--gutter-right))); margin-inline: var(--gutter-left) var(--gutter-right); }

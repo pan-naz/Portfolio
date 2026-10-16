@@ -1,0 +1,35 @@
+---
+import '../styles/design-system-button.css';
+import '../styles/design-system-chip.css';
+import type {SourceComponent} from '../data/system-inventory';
+import {chipDescription,chipCards,chipUsage,chipProps,chipTokenGroups,chipAccessibility,chipConsumers} from '../data/system-chip';
+import {componentVariants} from '../data/system-variants';
+import Chip from './Chip.astro';import DSTabs from './DSTabs.astro';
+interface Props {component:SourceComponent;}
+const {component}=Astro.props;
+const tokenCode=chipTokenGroups().map(group=>`/* ${group.title} */\n`+group.names.join('\n')).join('\n\n');
+---
+<section id="chip" class="ds-view ds-chip-view" data-ds-view data-ds-component="Chip" data-title="Chip" data-group="Components" data-description={chipDescription} hidden>
+ <div class="ds-stage" data-ds-card>
+  <div class="ds-stage-bar"><DSTabs id="chip-canvas" labels={['Preview','Code']}/></div>
+  <div id="chip-canvas-panel-0" role="tabpanel" aria-labelledby="chip-canvas-tab-0" class="ds-button-preview">
+   <section class="ds-button-group"><p class="text-label-m">Chips</p><p class="text-body-s ds-button-secondary">Three variants, all Label/S and 28px tall.</p>
+    <div class="ds-button-grid ds-button-grid--three">{chipCards.map(card=><article class="ds-button-card" data-chip-card={card.variant}>
+     <div class="ds-button-stage ds-chip-stage" inert aria-hidden="true">{card.labels.map((label,index)=><div data-ds-example={index===0?`chip-${card.variant}`:undefined} data-ds-target={index===0?'.skill-tag':undefined}><Chip label={label} variant={card.variant}/></div>)}</div>
+     <div><p class="text-body-m-strong">{card.name}</p><p class="text-body-s ds-button-secondary">{card.description}</p></div>
+     <dl class="ds-button-values text-body-s"><div><dt>Used in</dt><dd>{card.used}</dd></div><div><dt>Style</dt><dd>Label/S · 28px</dd></div></dl>
+    </article>)}</div>
+   </section>
+  </div>
+  <div id="chip-canvas-panel-1" role="tabpanel" aria-labelledby="chip-canvas-tab-1" class="ds-code ds-button-code" hidden>
+   <section data-ds-component-code="Chip"><p class="text-label-m">Chip</p>
+    <pre><code data-ds-usage="Chip">{'/* Usage · '+component.file+' */\n'+chipUsage()}</code></pre>
+    <div class="ds-button-props"><p class="ds-code-comment">/* Props */</p><div class="ds-props-table"><table><thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>What it does</th></tr></thead><tbody>{chipProps(component).map(prop=><tr data-ds-prop={prop.name}><th scope="row"><code>{prop.name}</code></th><td><code>{prop.type}</code></td><td><code>{prop.default==='Required'?'required':prop.default}</code></td><td>{prop.description}</td></tr>)}</tbody></table></div></div>
+   </section>
+   <section><p class="text-label-m">Shared</p><div class="ds-button-code-grid">
+    <pre><code>{tokenCode}</code></pre>
+    <div class="ds-button-code-panel"><p class="ds-code-comment">/* Accessibility */</p><ul>{chipAccessibility.map(point=><li>{point}</li>)}</ul></div>
+   </div><div class="ds-button-code-panel"><p class="ds-code-comment">/* Source */</p><p>{component.file}</p><ul>{chipConsumers(component).map(file=><li>{file}</li>)}</ul>{componentVariants(component).map(variant=><span data-ds-variant={`Chip:${variant}`}/>)}</div></section>
+  </div>
+ </div>
+</section>

@@ -85,12 +85,12 @@ body,
 
 /* body-m-strong · canonical role and actual website consumers */
 .text-body-m-strong,
+:where(.identity),
 :where(.case-study-narrative) :where(th),
 :where(.case-study-narrative .stat-label),
 :where(.ds-tile-link strong),
 :where(.ds-color-card-heading strong),
 :where(.ds-stroke-card > strong),
-:where(.skill-tag--plain),
 :where(.stat-label),
 :where(.hk-stxt :is(h3, .hk-n)),
 :where(.hk-v),
@@ -179,4 +179,8 @@ body,
   font-family: var(--font-label-s); font-size: var(--text-label-s); font-weight: var(--font-weight-label-s);
   line-height: var(--line-height-label-s); letter-spacing: var(--letter-spacing-label-s);
 }
+
+/* Capitals in pills · trim only the text, preserving the surrounding box. */
+.text-caps-centred { display: block; text-box-trim: trim-both; text-box-edge: cap alphabetic; }
+
 }

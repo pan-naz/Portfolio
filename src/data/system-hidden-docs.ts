@@ -42,13 +42,13 @@ export const hiddenDocumentation = [
   },
   {
     "section": "Project identity",
-    "sha256": "c3e993e516ec333e12780038595dc36d6aadc006279004391d1d2631dda4e632",
-    "characters": 371
+    "sha256": "375332927be3b1d2d645d1e936c3cfe695c769ba157736b52ad38eee89499e42",
+    "characters": 544
   },
   {
     "section": "Project tags",
-    "sha256": "0e90dd84518dfcb2ccf8b1f31bf146b18340600a619f6fcbc91e4db0875ae19e",
-    "characters": 320
+    "sha256": "2511fd97ead07d752a49aca9a9315be12a64683cffef8d047d550c0d34ba9b8f",
+    "characters": 464
   },
   {
     "section": "Project filter",

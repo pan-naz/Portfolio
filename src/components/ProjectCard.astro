@@ -8,8 +8,8 @@ import ProjectTags from './ProjectTags.astro';
 import HookoHero from './HookoHero.astro';
 import { hookoHero } from '../data/hooko-case-study';
 import { mediaCanvasStyle, mediaCrop } from '../scripts/media-canvas';
-interface Props { project: Project; lead?: boolean; compact?: boolean; }
-const { project, lead = false, compact = false } = Astro.props;
+interface Props { project: Project; compact?: boolean; }
+const { project, compact = false } = Astro.props;
 const caseUrl = `/case-studies/${project.id}/`;
 const imageSrcSet = project.imageSrcSet ?? `${project.image.replace('.webp', '-800.webp')} 800w, ${project.image} 1800w`;
 const imageSizes = compact ? '(max-width: 767px) calc(100vw - 48px), (max-width: 1328px) calc((100vw - 152px) / 2), 588px' : '(max-width: 767px) calc(100vw - 48px), (max-width: 1328px) calc(100vw - 128px), 1200px';
@@ -23,7 +23,7 @@ const crop = mediaCrop({ width: mediaWidth, height: mediaHeight, cropPixels: pro
 const videoStyle = project.video ? [mediaCanvasStyle(project.video), crop.style].filter(Boolean).join(';') || undefined : undefined;
 const canvasColor = project.video?.canvasColor ?? project.imageCanvasColor;
 ---
-<article id={`project-${project.id}`} class:list={['project', { 'project--lead': lead, 'project--compact': compact }]} data-project-category={project.category} data-project-reveal={!compact || undefined} data-section-item={!compact || undefined}>
+<article id={`project-${project.id}`} class:list={['project', { 'project--compact': compact }]} data-project-category={project.category} data-project-reveal={!compact || undefined} data-section-item={!compact || undefined}>
   <a class="project-surface" href={caseUrl} tabindex="0" data-case-link={project.id} aria-label={`View ${project.title} case study`}>
     <div class="project-caption">
       <div class="project-details"><h3 class="project-heading"><ProjectIdentity title={project.title} logo={project.logo} logoBackground={project.logoBackground} />{project.href && <Arrow direction="up" />}</h3><ProjectTags tags={project.tags} /></div>

@@ -30,14 +30,6 @@ navigation.addEventListener('keydown',event=>{
  if(next!==undefined&&current>=0){event.preventDefault();visible[next].focus({preventScroll:horizontal()});revealNavigationLink(visible[next]);}
 });
 
-// Show the actual website pill state, and pin its real phone typography when
-// the small specimen is viewed in a desktop catalog. No private size value.
-for(const specimen of document.querySelectorAll<HTMLElement>('[data-ds-pill][data-ds-phone-filter]')){
- const nav=specimen.querySelector<HTMLElement>('.section-navigation')!;
- nav.dataset.themeFit='false';
- nav.toggleAttribute('data-small-work-type',true);
-}
-
 // Preserve genuine shared typography while removing specimen heading semantics.
 // Replacement selectors and declarations come from the loaded shared CSSOM.
 const headingSelector=(selector:string)=>selector.replace(/(^|[^\w-])h([1-6])\b/g,'$1:is(h$2,:where([data-ds-heading="$2"]))');
@@ -49,10 +41,13 @@ const headingRules=(rules:CSSRuleList):string=>[...rules].map(rule=>{
 }).join('\n');
 const style=document.createElement('style');style.dataset.dsHeadingStyles='';
 style.textContent=[...document.styleSheets].map(sheet=>{try{return headingRules(sheet.cssRules);}catch{return '';}}).join('\n');document.head.append(style);
-for(const heading of document.querySelectorAll<HTMLElement>('.ds-specimens :is(h1,h2,h3,h4,h5,h6)')){
+export const prepareSpecimenHeadings=(root:ParentNode)=>{
+for(const heading of root.querySelectorAll<HTMLElement>('h1,h2,h3,h4,h5,h6')){
  const replacement=document.createElement('div');for(const attribute of heading.attributes)replacement.setAttribute(attribute.name,attribute.value);
  replacement.dataset.dsHeading=heading.tagName.slice(1);replacement.replaceChildren(...heading.childNodes);heading.replaceWith(replacement);
 }
+};
+document.querySelectorAll('.ds-specimens').forEach(prepareSpecimenHeadings);
 const refreshMarkup=(view:HTMLElement)=>{
  const specimen=view.querySelector('.ds-specimens'),code=view.querySelector('[data-ds-markup]');if(!specimen||!code)return;
  const clone=specimen.cloneNode(true) as HTMLElement;clone.querySelectorAll('script,style').forEach(node=>node.remove());
