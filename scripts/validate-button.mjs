@@ -35,6 +35,29 @@ export function missingUsageNames(usage){
  return ts.createProgram([file],options,host).getSemanticDiagnostics().filter(diagnostic=>diagnostic.code===2304).map(diagnostic=>ts.flattenDiagnosticMessageText(diagnostic.messageText,' '));
 }
 
+/** Catalog state colors must remain independent of website Secondary role overrides. */
+export function validateCatalogControls(control,css){
+ const errors=[],rules=[...css.replace(/\/\*[\s\S]*?\*\//g,'').matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(([,selector,body])=>({selector:selector.trim(),body}));
+ if(!control.includes('button--catalog')||/button--secondary|import\s+Button\b/.test(control))errors.push('DSControl must own catalog states without website Secondary.');
+ const catalog=rules.filter(rule=>rule.selector.includes('.button--catalog'));
+ if(catalog.some(rule=>/--color-[\w-]+\s*:|!important/.test(rule.body)))errors.push('DSControl must read theme roles without local color overrides.');
+ const rule=selector=>catalog.find(rule=>rule.selector===selector)?.body||'';
+ const rest=rule('.button.button--catalog');
+ if(!/background:transparent;/.test(rest)||!rest.includes('color:var(--color-text-secondary);'))errors.push('Unselected catalog controls need transparent secondary rest.');
+ for(const state of ['hover','active']){
+  const body=rule('.button.button--catalog:not([aria-selected=true],[aria-pressed=true]):'+state);
+  if(!body.includes('background:var(--color-bg-surface-subtle);')||!body.includes('color:var(--color-text-primary);'))errors.push('Unselected catalog '+state+' needs subtle fill and primary ink.');
+ }
+ if(!rule('.button.button--catalog:active').includes('transform:none;'))errors.push('Catalog press must keep the pill and label stationary in every selection state.');
+ for(const [attribute,background,color] of [['aria-selected','--color-bg-surface-subtle','--color-text-primary'],['aria-pressed','--color-text-primary','--color-bg-canvas']]){
+  const body=rule('.button.button--catalog['+attribute+'=true]');
+  if(!body.includes('background:var('+background+');')||!body.includes('color:var('+color+');'))errors.push('Selected catalog '+attribute+' must keep its theme roles.');
+ }
+ const focus=rule('.button.button--catalog:focus-visible');
+ if(!focus.includes('outline:1px solid var(--color-focus-ring);')||!focus.includes('outline-offset:2px;')||/(?:background|color)\s*:/.test(focus))errors.push('Catalog focus must add only its existing ring, preserving state colors.');
+ return errors;
+}
+
 export function validateButtonCatalog(root=process.cwd()){
  const read=file=>fs.readFileSync(root+'/'+file,'utf8'),errors=[];
  const expected=['Button','Chip','Navigation','Project card','Section heading','Statistic','Timeline row','Tooltip'];
@@ -65,6 +88,7 @@ export function validateButtonCatalog(root=process.cwd()){
  if(!read('src/components/WorkSection.astro').includes('variant="raised"')||!read('src/components/CaseStudyPage.astro').includes('variant="raised"'))errors.push('Website cursor and close must use raised.');
  if(/button--arrow-fill\.button--small/.test(read('src/styles/global.css')))errors.push('Unused small primary-arrow CSS remains.');
  for(const file of ['DSTabs','DSTokenNames','SegmentedControl'])if(!read('src/components/'+file+'.astro').includes('DSControl'))errors.push(file+' must use the catalog control helper.');
+ errors.push(...validateCatalogControls(read('src/components/DSControl.astro'),read('src/styles/design-system.css')));
  const states=read('src/scripts/design-system-button.ts');
  if(!states.includes('CSSStyleRule')||!states.includes('rule.style.cssText')||!states.includes('rule.cssText.startsWith(\'@layer\')'))errors.push('Frozen states must read actual shared CSS without changing its layer.');
  const page=read('src/components/DSButtons.astro');

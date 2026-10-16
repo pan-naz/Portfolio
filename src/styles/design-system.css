@@ -177,10 +177,11 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
 }
 @media (max-width:599px) { .ds-navigation { grid-template-columns:minmax(0,1fr); } }
 @media (max-width:359px) { .ds-tile-grid { grid-template-columns:minmax(0,1fr); } }
-/* Native DSControl keeps these catalog-only class hooks and shared tokens. */
+/* DSControl owns its state colors; website Secondary role overrides must not apply. */
 .button.button--catalog { min-height:var(--space-8); padding:var(--space-2) var(--space-3); border-color:transparent; background:transparent; color:var(--color-text-secondary); }
-@media (hover:hover) and (pointer:fine) { .button.button--catalog:hover { background:var(--color-bg-surface-subtle); color:var(--color-text-primary); transform:none; } }
-.button.button--catalog:active { background:var(--color-bg-surface-subtle); color:var(--color-text-primary); transform:none; }
+@media (hover:hover) and (pointer:fine) { .button.button--catalog:not([aria-selected=true],[aria-pressed=true]):hover { background:var(--color-bg-surface-subtle); color:var(--color-text-primary); transform:none; } }
+.button.button--catalog:not([aria-selected=true],[aria-pressed=true]):active { background:var(--color-bg-surface-subtle); color:var(--color-text-primary); transform:none; }
+.button.button--catalog:active { transform:none; }
 .button.button--catalog[aria-selected=true] { background:var(--color-bg-surface-subtle); color:var(--color-text-primary); }
 .button.button--catalog:focus-visible { outline:1px solid var(--color-focus-ring); outline-offset:2px; }
 .button.button--catalog[aria-pressed=true] { background:var(--color-text-primary); color:var(--color-bg-canvas); }

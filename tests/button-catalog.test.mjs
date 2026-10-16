@@ -1,9 +1,15 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {validateButtonCatalog,missingUsageNames} from '../scripts/validate-button.mjs';
+import {validateButtonCatalog,validateCatalogControls,missingUsageNames} from '../scripts/validate-button.mjs';
 import {buttonGroups,buttonStateGroups,buttonProps,buttonUsage,buttonTokens,buttonTokenGroups} from '../src/data/system-button.ts';
 import {buildSystemInventory} from '../src/data/system-inventory.ts';
 assert.deepEqual(validateButtonCatalog(),[]);
+const catalogControl=readFileSync('src/components/DSControl.astro','utf8'),catalogCss=readFileSync('src/styles/design-system.css','utf8');
+assert.deepEqual(validateCatalogControls(catalogControl,catalogCss),[]);
+assert(validateCatalogControls(catalogControl.replace('button--catalog','button--secondary button--catalog'),catalogCss).length);
+assert(validateCatalogControls(catalogControl,catalogCss.replace('.button.button--catalog:focus-visible {','.button.button--catalog:focus-visible { background:var(--color-bg-surface);')).length);
+assert(validateCatalogControls(catalogControl,catalogCss.replace('background:transparent; color:var(--color-text-secondary);','background:transparent; --color-text-primary:var(--color-ink); color:var(--color-text-secondary);')).length);
+assert(validateCatalogControls(catalogControl,catalogCss.replaceAll(':not([aria-selected=true],[aria-pressed=true])','')).length);
 const model=buildSystemInventory();
 for(const name of ['Button','IconButton','TextLink']){
  const component=model.components.find(component=>component.name===name);
