@@ -8,9 +8,16 @@ export function validateLogoLinks(sources){
  for(const[file,count]of[['SiteHeader',1],['DSNavigation',1],['DSPreview',3]])if((sources['src/components/'+file+'.astro']?.match(/<LogoLink\b/g)||[]).length!==count)errors.push('Every existing home-link variant must use LogoLink: '+file);
  return errors;
 }
+/** Catalog emphasis uses a solid edge, never a second tint. */
+export function validateCatalogAccentEdges(spacing,motion){
+ const errors=[],declarations=(source,selector)=>{const escaped=selector.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),body=source.match(new RegExp(escaped+'\\s*\\{([^}]+)\\}'))?.[1]||'';return Object.fromEntries(body.split(';').filter(part=>part.includes(':')).map(part=>{const i=part.indexOf(':');return[part.slice(0,i).trim(),part.slice(i+1).trim()];}));};
+ for(const[source,selector,edge]of[[spacing,'.ds-spacing-tile::before','border-inline'],[motion,'.ds-motion-project [data-motion-caption]','border-top']]){const rule=declarations(source,selector);if(rule.background!=='var(--color-bg-accent-subtle)'||rule[edge]!=='1px solid var(--color-interactive-accent)')errors.push('Catalog emphasis must keep the shared tint and solid accent edge: '+selector);}
+ return errors;
+}
 export function validateSystemCleanup(root=process.cwd()){
  const walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(d,e.name)):[path.join(d,e.name)]),sources=Object.fromEntries(walk(path.join(root,'src')).filter(f=>/\.(?:astro|css|ts)$/.test(f)).map(f=>[path.relative(root,f),fs.readFileSync(f,'utf8')])),read=f=>sources[f]||'',errors=validateLogoLinks(sources);
  for(const[file,source]of Object.entries(sources))errors.push(...validateAccentMixes(source,file));
+ errors.push(...validateCatalogAccentEdges(read('src/styles/design-system.css'),read('src/styles/design-system-motion.css')));
  const tokens=read('src/styles/tokens.css');if(!tokens.includes(':where(.skill-tag--accent),\n:where(.case-study-decision-card__icon)'))errors.push('Resolve the shared tint at consumers so local project accents remain unchanged.');if((tokens.match(/--color-bg-accent-subtle\s*:/g)||[]).length!==1||!tokens.includes('color-mix(in srgb, var(--color-interactive-accent) 12%,'))errors.push('Accent tint has one source, mixed12% into Surface.');
  for(const file of['global.css','case-study-decision-card.css','hooko-case-study.css','design-system.css','design-system-motion.css'])if(!read('src/styles/'+file).includes('var(--color-bg-accent-subtle)'))errors.push('Shared tint consumer missing: '+file);
  if(!read('src/styles/global.css').includes(":root[data-theme='dark'] .skill-tag--accent:not(")||!read('src/data/system-colors.ts').includes('export const colorCards=[...paletteColors,accentSubtleColor]')||!read('src/components/DSFoundations.astro').includes('{colorCards.map'))errors.push('Preserve dark chip suppression and render the derived role separately from the primitive palette.');

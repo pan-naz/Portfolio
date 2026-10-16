@@ -81,7 +81,7 @@
 .ds-motion-project span { position:absolute; border:1px solid var(--color-interactive-accent); border-radius:var(--radius-medium); background:var(--color-bg-accent-subtle); }
 .ds-motion-project [data-motion-panel] { inset:0; transform:scale(var(--motion-panel-ratio,1)); transform-origin:left bottom; border-radius:var(--radius-large); }
 .ds-motion-project [data-motion-artwork] { opacity:0; inset:var(--space-3) var(--space-16) var(--space-3) var(--space-8); border-radius:var(--radius-small); }
-.ds-motion-project [data-motion-caption] { left:0; bottom:0; width:var(--space-16); height:var(--space-12); background:var(--color-bg-accent-subtle); border:0; border-radius:var(--radius-small); }
+.ds-motion-project [data-motion-caption] { left:0; bottom:0; width:var(--space-16); height:var(--space-12); background:var(--color-bg-accent-subtle); border:0; border-top:1px solid var(--color-interactive-accent); border-radius:var(--radius-small); }
 .ds-motion-header { position:relative; display:flex; align-items:center; justify-content:space-evenly; width:calc(var(--space-24) * 2); height:var(--control-height); max-width:100%; overflow:hidden; border-radius:var(--radius-full); background:var(--color-bg-surface); box-shadow:var(--shadow-large); }
 .ds-motion-header [data-motion-header-items] { display:flex; align-items:center; justify-content:space-evenly; flex:none; width:calc(var(--space-24) * 2); height:100%; }
 .ds-motion-header span { width:var(--space-8); height:var(--space-1); border-radius:var(--radius-full); background:var(--color-text-secondary); }

@@ -151,7 +151,7 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
 .ds-type-tile > div { display:grid; gap:var(--space-2); justify-items:center; }
 .ds-type-tile .icon { width:var(--icon-size-compact); height:var(--icon-size-compact); color:var(--color-text-secondary); }
 .ds-spacing-tile { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-3); padding:var(--space-4); width:calc(100% - var(--space-8)); height:var(--space-16); border-radius:var(--radius-small); background:repeating-linear-gradient(135deg,var(--color-bg-accent-subtle) 0 var(--space-1),transparent var(--space-1) var(--space-2)); position:relative; }
-.ds-spacing-tile::before { content:''; position:absolute; inset:var(--space-4) calc(50% - var(--space-3) / 2); background:var(--color-bg-accent-subtle); }
+.ds-spacing-tile::before { content:''; position:absolute; inset:var(--space-4) calc(50% - var(--space-3) / 2); background:var(--color-bg-accent-subtle); border-inline:1px solid var(--color-interactive-accent); }
 .ds-spacing-tile > span { position:relative; background:var(--color-bg-surface); border-radius:var(--radius-small); box-shadow:var(--shadow-small); }
 .ds-project-tile { position:absolute; left:50%; top:50%; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:center; gap:var(--space-6); width:480px; transform:translate(-50%,-50%) scale(.35); transform-origin:center; }
 .ds-project-tile img { display:block; width:100%; height:auto; margin-top:var(--space-4); border-radius:var(--radius-medium); }
