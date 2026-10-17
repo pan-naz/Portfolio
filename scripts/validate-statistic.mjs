@@ -1,5 +1,6 @@
 import fs from 'node:fs';import path from 'node:path';
-import {statisticDescription,statisticCards,statisticExamples,statisticNumber,statisticUsage,statisticProps,statisticTokenGroups,statisticTokenCode} from '../src/data/system-statistic.ts';
+import {statisticDescription,statisticCards,statisticExamples,statisticNumber,statisticUsage,statisticProps,statisticTokenGroups} from '../src/data/system-statistic.ts';
+import {compareTokenNames} from '../src/data/system-component-tokens.ts';
 import {buildSystemInventory} from '../src/data/system-inventory.ts';
 import {missingUsageNames} from './validate-button.mjs';
 export function validateStatistic(root=process.cwd()){
@@ -18,8 +19,10 @@ export function validateStatistic(root=process.cwd()){
   const usage=statisticUsage(name);if(missingUsageNames(usage).length||usage.split('\n').some(line=>line.length>80)||/\.\.\./.test(usage))errors.push(name+' Usage must be self-contained with written-out props and ≤80-character lines.');
   if(component.usages.some(u=>u.file.includes('/DS')))errors.push(name+' Source lists website consumers only.');
  }
- const expected=['--color-border-default','--color-interactive-accent','--color-text-secondary','--text-body-m','--text-body-m-strong','--text-body-s','--text-heading-l','--space-1','--space-4','--distance-title-reveal','--duration-title-reveal','--ease-entrance','--stagger-title-reveal'].sort();
+ const expected=['--color-border-default','--color-interactive-accent','--color-text-secondary',...['heading-l','body-m-strong','body-m','body-s'].flatMap(role=>['font','font-weight','letter-spacing','line-height','text'].map(prefix=>`--${prefix}-${role}`)),'--space-1','--space-4','--distance-title-reveal','--duration-title-reveal','--ease-entrance','--stagger-title-reveal'].sort();
  if(statisticTokenGroups().flatMap(g=>g.names).sort().join()!==expected.join())errors.push('Statistic direct Color/Type/Spacing/Motion tokens must follow the shared source.');
- if(statisticTokenCode().split('\n').some(line=>line.length>60))errors.push('Statistic half-width token lines must be ≤60 characters.');
+ const groups=statisticTokenGroups(),tokenCode=groups.map(group=>`/* ${group.title} */\n`+group.names.join('\n')).join('\n\n');
+ if(!page.includes("tokenCode=groups.map(group=>`/* ${group.title} */\\n`+group.names.join('\\n')).join('\\n\\n')")||groups.some(group=>group.names.some((name,index)=>index>0&&compareTokenNames(group.names[index-1],name)>=0)))errors.push('Statistic uses the common group-comment, naturally sorted names-only token format.');
+ if(tokenCode.split('\n').some(line=>line.length>60))errors.push('Statistic half-width token lines must be ≤60 characters.');
  return errors;
 }

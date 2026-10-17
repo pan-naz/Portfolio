@@ -1,10 +1,10 @@
 ---
 import '../styles/design-system-button.css';import '../styles/design-system-statistic.css';
 import type {SourceComponent} from '../data/system-inventory';import {componentVariants} from '../data/system-variants';
-import {statisticDescription,statisticCards,statisticUsage,statisticProps,statisticTokenGroups,statisticTokenCode,statisticAccessibility,statisticProbeCss} from '../data/system-statistic';
+import {statisticDescription,statisticCards,statisticUsage,statisticProps,statisticTokenGroups,statisticAccessibility,statisticProbeCss} from '../data/system-statistic';
 import DSStatisticSpecimen from './DSStatisticSpecimen.astro';import DSTabs from './DSTabs.astro';
 interface Props {components:SourceComponent[];}
-const {components}=Astro.props,groups=statisticTokenGroups();
+const {components}=Astro.props,groups=statisticTokenGroups(),tokenCode=groups.map(group=>`/* ${group.title} */\n`+group.names.join('\n')).join('\n\n');
 ---
 <style is:inline set:html={`@layer system, project;@layer system{${statisticProbeCss()}}`}/>
 <div class="ds-stat-width-probe" inert aria-hidden="true"><div class="container">
@@ -29,7 +29,7 @@ const {components}=Astro.props,groups=statisticTokenGroups();
     <pre><code data-ds-usage={component.name}>{'/* Usage · '+component.file+' */\n'+statisticUsage(component.name)}</code></pre>
     <div class="ds-button-props"><p class="ds-code-comment">/* Props */</p><div class="ds-props-table"><table><thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>What it does</th></tr></thead><tbody>{statisticProps(component).map(prop=><tr data-ds-prop={prop.name}><th scope="row"><code>{prop.name}</code></th><td><code>{prop.type}</code></td><td><code>{prop.default}</code></td><td>{prop.description}</td></tr>)}</tbody></table></div></div>
    </section>)}
-   <section><p class="text-label-m">Shared</p>{groups.flatMap(group=>group.names).map(name=><span data-ds-token={name.slice(2)}/>)}<div class="ds-button-code-grid"><pre><code>{statisticTokenCode()}</code></pre><div class="ds-button-code-panel"><p class="ds-code-comment">/* Accessibility */</p><ul>{statisticAccessibility.map(point=><li>{point}</li>)}</ul></div></div>
+   <section><p class="text-label-m">Shared</p>{groups.flatMap(group=>group.names).map(name=><span data-ds-token={name.slice(2)}/>)}<div class="ds-button-code-grid"><pre><code>{tokenCode}</code></pre><div class="ds-button-code-panel"><p class="ds-code-comment">/* Accessibility */</p><ul>{statisticAccessibility.map(point=><li>{point}</li>)}</ul></div></div>
     <div class="ds-button-code-panel"><p class="ds-code-comment">/* Source */</p>{components.map(component=><><p>{component.file}</p><ul>{[...new Set(component.usages.map(usage=>usage.file))].sort().map(file=><li>{file}</li>)}</ul>{component.name==='Stat'&&componentVariants(component).map(variant=><span data-ds-variant={`${component.name}:${variant}`}/>)}</>)}</div>
    </section>
   </div>

@@ -35,17 +35,9 @@ export const statisticProps=(component:SourceComponent)=>componentPropSpecs(comp
 export function statisticTokenGroups(){
  const css=read('src/styles/global.css').replace(/\/\*[\s\S]*?\*\//g,''),type=read('src/styles/typography.css'),motion=read('src/scripts/section-reveals.ts');
  const rules=[...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].filter(([,selector])=>/^\s*\.stat(?:\s|\s*\{|[-.])/.test(selector)&&!selector.includes('.impact')).map(([, ,body])=>body).join('\n');
- const roles=['heading-l','body-m-strong','body-m','body-s'];
- const names=[...new Set([...rules.matchAll(/var\((--[\w-]+)/g)].map(([,name])=>name).concat(roles.filter(role=>type.includes(`var(--text-${role})`)).map(role=>`--text-${role}`),[...motion.matchAll(/['"](--(?:duration|stagger|distance)-title-reveal|--ease-entrance)['"]/g)].map(([,name])=>name)))].sort(compareTokenNames);
+ const roles=['heading-l','body-m-strong','body-m','body-s'].map(role=>type.match(new RegExp('/\\* '+role+' ·[\\s\\S]*?\\{([^}]+)\\}'))![1]).join('\n');
+ const names=[...new Set([...rules.matchAll(/var\((--[\w-]+)/g)].map(([,name])=>name).concat([...roles.matchAll(/var\((--[\w-]+)/g)].map(([,name])=>name),[...motion.matchAll(/['"](--(?:duration|stagger|distance)-title-reveal|--ease-entrance)['"]/g)].map(([,name])=>name)))].sort(compareTokenNames);
  return [{title:'Color',pattern:patterns.color},{title:'Type',pattern:patterns.type},{title:'Spacing',pattern:patterns.spacing},{title:'Motion · revealValue',pattern:patterns.motion}].map(({title,pattern})=>({title,names:names.filter(name=>pattern.test(name))}));
-}
-export function statisticTokenCode(){
- const tokens=read('src/styles/tokens.css'),labels:Record<string,string>={'color-interactive-accent':'Accent · number','color-text-secondary':'Secondary text · note','color-border-default':'Border · phone line','text-heading-l':'Heading/L · number','text-body-m-strong':'Body/M Strong · label','text-body-m':'Body/M · note','text-body-s':'Body/S · case-study note'};
- return statisticTokenGroups().map(group=>`/* ${group.title} */\n`+group.names.map(token=>{
-  const name=token.slice(2),raw=tokens.match(new RegExp(`${token}:\\s*([^;]+);`))?.[1],space=name.startsWith('space-'),detail=space?`Space ${name.slice(6)} · ${parseFloat(raw!)/16}rem (${raw})`:labels[name];
-  // A separate comment keeps source-derived names readable in half-width columns.
-  return detail?`/* ${detail} */\n${token}`:token;
- }).join('\n')).join('\n\n');
 }
 export const statisticAccessibility=[
  'Results sit in a description list: the number and label are the term, the note is the description.',
