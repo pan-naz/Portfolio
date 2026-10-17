@@ -17,7 +17,7 @@ const tokenCode=chipTokenGroups().map(group=>`/* ${group.title} */\n`+group.name
     <div class="ds-button-grid ds-button-grid--three">{chipCards.map(card=><article class="ds-button-card" data-chip-card={card.variant}>
      <div class="ds-button-stage ds-chip-stage" inert aria-hidden="true">{card.labels.map((label,index)=><div data-ds-example={index===0?`chip-${card.variant}`:undefined} data-ds-target={index===0?'.skill-tag':undefined}><Chip label={label} variant={card.variant}/></div>)}</div>
      <div><p class="text-body-m-strong">{card.name}</p><p class="text-body-s ds-button-secondary">{card.description}</p></div>
-     <dl class="ds-button-values text-body-s"><div><dt>Used in</dt><dd>{card.used}</dd></div><div><dt>Style</dt><dd>Label/S · 28px</dd></div></dl>
+     <dl class="ds-button-values text-body-s"><div><dt>Used in</dt><dd>{card.used.split(/( · |, )/).map((item,index)=>index%2?item:<span class="ds-value-item">{item}</span>)}</dd></div><div><dt>Style</dt><dd>Label/S · 28px</dd></div></dl>
     </article>)}</div>
    </section>
   </div>

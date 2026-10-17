@@ -14,14 +14,14 @@ const value=(name:string)=>inventory.tokens.find(token=>token.name===name)!.reso
   <div class="ds-icons-groups">{iconGroups.map(group=><article class="ds-icons-card" data-ds-icon-group={group.title}>
    <div class="ds-icons-copy"><p class="text-body-m-strong">{group.title}</p><p class="text-body-s">{group.description}</p></div>
    <ul class="ds-icons-grid">{group.icons.map(name=><li data-ds-icon={name}>
-    <div class:list={["ds-icon-control",(name==='sun'||name==='moon')&&'theme-icon-control']} tabindex="0" role="img" aria-label={iconLabels[name]} data-icon-sample data-icon-hover={name==='sun'||name==='moon'?'theme':name}><Icon name={name} class={name==='arrow'?'arrow':name==='sun'||name==='moon'?'theme-icon-glyph':undefined}/></div>
-    <span class="text-body-s"><DSTokenNames label={iconLabels[name]} token={name}/></span>
+    <div class="ds-icon-control" role="img" aria-label={iconLabels[name]} data-icon-sample><Icon name={name}/></div>
+    <span class="text-body-s ds-icon-name">{iconLabels[name]}</span>
    </li>)}</ul>
   </article>)}</div>
  </section>
  <section class="ds-icons-section"><p class="text-label-m">Size</p><div class="ds-icons-sizes">
   {['icon-size','icon-size-compact'].map((token,index)=><article class="ds-icons-card">
-   <div class="ds-icons-sample" inert aria-hidden="true">{index===0?<Button href={squareChallenge.href} variant="secondary" arrow="up" target="_blank" rel="noopener noreferrer">{squareChallenge.linkLabel}</Button>:<IconButton href="/design-system/" label="Design system" variant="secondary" size="small" icon="layers"/>}<Icon name="arrow" size={Number.parseFloat(value(token))}/></div>
+   <div class="ds-icons-sample ds-icons-size-stage" inert aria-hidden="true"><div class="ds-icons-size-art">{index===0?<Button href={squareChallenge.href} variant="secondary" arrow="up" target="_blank" rel="noopener noreferrer">{squareChallenge.linkLabel}</Button>:<IconButton href="/design-system/" label="Design system" variant="secondary" size="small" icon="layers"/>}<Icon name="arrow" size={Number.parseFloat(value(token))}/></div></div>
    <div class="ds-icons-copy"><p class="text-body-m-strong"><DSTokenNames label={`${index===0?'Default':'Compact'} · ${value(token)}`} token={'--'+token}/></p><p class="text-body-s">{index===0?'Buttons, links, theme switch, media controls.':'Small icon buttons and text links.'}</p></div>
   </article>)}
  </div></section>

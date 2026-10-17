@@ -1,4 +1,4 @@
-import {splitSelectors} from './design-system';
+import {splitSelectors,fitCatalogColumns} from './design-system';
 /** Freeze the actual shared pseudo-class rules; never redraw component states. */
 const states=document.querySelector<HTMLElement>('#button');
 if(states){
@@ -20,6 +20,12 @@ if(states){
  const fit=()=>{
   const writes:{element:HTMLElement;scale:number}[]=[];
   const metadata:{element:HTMLElement;heights:number[]}[]=[];
+  for(const grid of states.querySelectorAll<HTMLElement>('[data-ds-component="Button"] .ds-button-grid,[data-ds-component="TextLink"] .ds-button-grid')){
+   if(!grid.clientWidth)continue;
+   const arts=[...grid.querySelectorAll<HTMLElement>('.ds-button-stage-art')];
+   const required=Math.max(...arts.map(art=>{const stage=getComputedStyle(art.parentElement!),card=getComputedStyle(art.closest('.ds-button-card')!);return art.offsetWidth+parseFloat(stage.paddingLeft)+parseFloat(stage.paddingRight)+parseFloat(card.paddingLeft)+parseFloat(card.paddingRight)+parseFloat(stage.getPropertyValue('--space-1'));}));
+   fitCatalogColumns(grid,innerWidth<768?1:innerWidth<1280?2:grid.matches('.ds-button-grid--three')?3:4,required);
+  }
   for(const grid of document.querySelectorAll<HTMLElement>('#button .ds-button-grid,#chip .ds-button-grid')){
    if(!grid.clientWidth)continue;
    const rows=new Map<number,HTMLElement[]>();
@@ -65,8 +71,15 @@ if(states){
   }
   const stateHeights=[...states.querySelectorAll<HTMLElement>('.ds-button-state-art')].map(element=>({element,height:element.offsetHeight}));
   const write=(element:HTMLElement,name:string,value:string)=>{if(element.style.getPropertyValue(name)!==value)element.style.setProperty(name,value);};
-  for(const art of states.querySelectorAll<HTMLElement>('.ds-button-stage-art')){
-   if(art.parentElement!.clientWidth)writes.push({element:art,scale:Math.min(1,(parseFloat(getComputedStyle(art.parentElement!).width)-parseFloat(getComputedStyle(art.parentElement!).paddingLeft)-parseFloat(getComputedStyle(art.parentElement!).paddingRight)-parseFloat(getComputedStyle(art.parentElement!).getPropertyValue('--space-1')))/art.offsetWidth)});
+  // Reflow cards first; all variants in a group retain one comparable scale.
+  for(const grid of states.querySelectorAll<HTMLElement>('.ds-button-grid')){
+   const arts=[...grid.querySelectorAll<HTMLElement>('.ds-button-stage-art')];
+   if(!grid.clientWidth||!arts.length)continue;
+   const scale=Math.min(1,...arts.map(art=>{
+    const stage=art.parentElement!,css=getComputedStyle(stage);
+    return (stage.clientWidth-parseFloat(css.paddingLeft)-parseFloat(css.paddingRight)-parseFloat(css.getPropertyValue('--space-1')))/art.offsetWidth;
+   }));
+   for(const element of arts)writes.push({element,scale});
   }
   for(const cover of covers){
    if(!cover.parentElement!.clientWidth)continue;

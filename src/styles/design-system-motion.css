@@ -31,6 +31,7 @@
 .ds-motion-description { margin:0; color:var(--color-text-secondary); }
 .ds-motion-values { display:grid; gap:0; margin:var(--space-4) 0 0; }
 .ds-motion-values > div { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:start; gap:var(--space-2); }
+.ds-motion-values .ds-token-swap { align-items:start; }
 .ds-motion-values dt { color:var(--color-text-secondary); min-width:0; }
 .ds-motion-values dd { margin:0; text-align:right; }
 .ds-motion-timeline { position:relative; display:grid; gap:var(--space-2); margin-top:var(--space-6); }
@@ -59,6 +60,7 @@
 .ds-motion-curve-card > div { border-radius:var(--radius-small); background:var(--color-bg-surface); }
 .ds-motion-curve-card p { margin:var(--space-2) 0; }
 .ds-motion-curve-card .ds-token-swap { align-items:start; }
+.ds-motion-curve-card .ds-token-human { white-space:nowrap; }
 .ds-motion-curve { width:100%; height:auto; display:block; color:var(--color-interactive-accent); }
 .ds-motion-curve-line { fill:none; stroke:currentColor; stroke-width:var(--icon-stroke-regular); }
 .ds-motion-curve circle { fill:currentColor; }
@@ -66,7 +68,8 @@
 .ds-motion-reduced > p + p { margin-top:var(--space-1); color:var(--color-text-secondary); }
 .ds-motion-tile { width:calc(var(--space-16) * 2); height:var(--space-24); border:0; }
 .ds-motion-tile .ds-motion-curve { width:100%; height:100%; }
-.ds-motion-arrow-parts { display:flex; white-space:nowrap; align-items:center; justify-content:center; gap:var(--space-4); }
+
+.ds-motion-arrow-parts { display:flex; width:max-content; white-space:nowrap; align-items:center; justify-content:center; gap:var(--space-4); }
 .ds-motion-mini-card { display:grid; grid-template-rows:1fr var(--space-1); gap:var(--space-2); padding:var(--space-2); background:var(--color-bg-canvas); border-radius:var(--radius-small); box-shadow:var(--shadow-small); }
 .ds-motion-mini-thumbnail { background:var(--color-bg-surface-subtle); border-radius:var(--radius-small); }
 .ds-motion-mini-title { width:100%; background:var(--color-text-secondary); border-radius:var(--radius-full); }
@@ -107,6 +110,7 @@
 .ds-motion-skills .skill-tag { min-height:0; padding:0 var(--space-2); }
 @media(max-width:1199px) { .ds-motion-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .ds-motion-curves { grid-template-columns:repeat(5,minmax(0,1fr)); } }
 @media(max-width:767px) {
+ .ds-motion-arrow-parts { flex-direction:column; }
  .ds-motion-grid { grid-template-columns:minmax(0,1fr); } .ds-motion-wide { grid-column:auto; } .ds-motion-full { grid-column:1 / -1; }
  .ds-motion-curves { grid-template-columns:repeat(2,minmax(0,1fr)); }
  #motion .ds-stage-bar { display:grid; grid-template-columns:1fr; }

@@ -65,6 +65,17 @@ export function validateIcons(root=process.cwd()){
  if(!model.includes('export const coverIconScatter = [')||/Math\.random|Date\.now/.test(model))errors.push('Cover placements must be one fixed source list.');
  for(const field of ['x','y','size','opacity','rotation'])if(!cover.includes('${icon.'+field+'}'))errors.push('Cover must render source scatter '+field);
  const catalogCSS=read('src/styles/design-system.css');
+ const interfaceMarkup=preview.slice(preview.indexOf('class="ds-icons-groups"'),preview.indexOf('<section class="ds-icons-section"><p class="text-label-m">Size'));
+ if(/tabindex|data-icon-hover|theme-icon-control|theme-icon-glyph/.test(interfaceMarkup)||!interfaceMarkup.includes('role="img" aria-label={iconLabels[name]}'))errors.push('Interface tiles are named pictures, never focusable or animated controls.');
+ const catalogScript=read('src/scripts/design-system.ts');
+ if(catalogScript.includes('fitIconNames')||catalogScript.includes('fitCatalogColumns(grid,4')||!catalogScript.includes('fitCatalogColumns(iconGroups,')||!catalogScript.includes("minimum=token('--control-icon'),maximum=token('--space-16')"))errors.push('Interface pictures need common 44–64px slots; reflow group cards, never the four icon slots.');
+ postcss.parse(catalogCSS).walkRules(rule=>{
+  if(!/\.ds-icon-control\b|\.ds-icons-grid\b|\.ds-icon-name\b/.test(rule.selector))return;
+  if(/:(?:hover|focus|active)/.test(rule.selector))errors.push('Interface pictures cannot have pointer or focus states: '+rule.selector);
+  rule.walkDecls(decl=>{if(/^(?:animation|transition|transform)(?:-|$)/.test(decl.prop))errors.push('Interface pictures cannot animate: '+rule.selector);});
+ });
+ if(!catalogCSS.includes('repeat(4,var(--ds-icon-tile-size')||!catalogCSS.includes('.ds-icon-name { justify-self:center; width:max-content; white-space:nowrap; }'))errors.push('Interface names stay centred and whole beneath fixed, nonstretching picture slots.');
+
  if(/\.ds-icon-tile[^{}]*:nth-child/.test(catalogCSS)||!catalogCSS.includes('inset:var(--space-8)'))errors.push('Cover needs an inset scatter, never nth-child grid geometry.');
  if(!preview.includes('ds-icons-sample ds-icons-accent')||!catalogCSS.includes('.ds-icons-accent .icon { width:var(--space-12); height:var(--space-12); }'))errors.push('One accent must show the genuine Layers at 48px.');
  const walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(d,e.name)):[path.join(d,e.name)]);

@@ -5,7 +5,7 @@ import { initializeSmoothScroll, destroySmoothScroll, pauseScroll, resumeScroll,
 import { refreshViewportPointer } from '../viewport-pointer';
 import { initializeCaseStudyVideos } from './case-study-videos';
 import { initializeCaseStudyImages } from './case-study-images';
-import { borrowHeroImage, reserveHeroImage, restoreHeroImage, type HeroImageTransfer } from './case-study-artwork';
+import { prepareHeroImage, borrowHeroImage, reserveHeroImage, restoreHeroImage, type HeroImageTransfer } from './case-study-artwork';
 import { readCaseStudyMotion } from './case-study-motion';
 import { suspendCaseStudyScrollRestoration } from './case-study-navigation';
 import { rescopeSvgAssets } from '../svg-asset';
@@ -28,7 +28,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
   let control: HTMLElement | null = null;
   let clone: HTMLElement | null = null;
   let artwork: HTMLElement | null = null;
-  let borrowedVideo: { video: HTMLVideoElement; home: HTMLElement; hidden: string | null; label: string | null } | null = null;
+  let borrowedVideo: { video: HTMLVideoElement; home: HTMLElement; hidden: string | null; label: string | null; aspectRatio: string } | null = null;
   let borrowedImage: HeroImageTransfer | undefined;
   let travelingImage: HeroImageTransfer | undefined;
   let phase: 'closed' | 'opening' | 'open' | 'closing' = 'closed';
@@ -84,7 +84,8 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
   };
   const videoSource = (video: HTMLVideoElement) => {
     const source = video.querySelector('source');
-    return video.currentSrc || video.src || (source && new URL(source.dataset.src || source.src, document.baseURI).href);
+    // Deferred sources retain the canonical desktop identity after mobile selection.
+    return source?.dataset.src ? new URL(source.dataset.src, document.baseURI).href : video.currentSrc || video.src || source?.src;
   };
   const createArtwork = (source: HTMLElement) => {
     artwork = document.createElement('div');
@@ -136,7 +137,12 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
         portfolioCaseOrigin: { url: returnUrl, top: window.scrollY },
       }, '', link.href);
     }
-    scroll.replaceChildren(template.content.cloneNode(true));
+    const content = template.content.cloneNode(true) as DocumentFragment;
+    const pendingHero = content.querySelector<HTMLElement>('.case-study-artwork')!;
+    const preparedImage = prepareHeroImage(template, media);
+    // Transfer before attachment: the discarded hero must never request its own copy.
+    borrowedImage = borrowHeroImage(media, pendingHero);
+    scroll.replaceChildren(content);
     const title = scroll.querySelector<HTMLElement>('[data-case-title]')!;
     if (!title.id) title.id = 'active-case-title';
     dialog.setAttribute('aria-labelledby', title.id);
@@ -175,13 +181,14 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     const cardVideo = media.querySelector('video');
     const heroVideo = hero.querySelector('video');
     if (cardVideo && heroVideo && videoSource(cardVideo) === videoSource(heroVideo)) {
-      borrowedVideo = { video: cardVideo, home: cardVideo.parentElement!, hidden: cardVideo.getAttribute('aria-hidden'), label: cardVideo.getAttribute('aria-label') };
+      borrowedVideo = { video: cardVideo, home: cardVideo.parentElement!, hidden: cardVideo.getAttribute('aria-hidden'), label: cardVideo.getAttribute('aria-label'), aspectRatio: cardVideo.style.aspectRatio };
       reserveVideoSpace(cardVideo);
+      // Retain explicit hero geometry when the phone encode rounds its native ratio.
+      if (heroVideo.style.aspectRatio) cardVideo.style.aspectRatio = heroVideo.style.aspectRatio;
       cardVideo.removeAttribute('aria-hidden');
       cardVideo.setAttribute('aria-label', heroVideo.getAttribute('aria-label') || '');
       heroVideo.replaceWith(cardVideo);
     }
-    borrowedImage = borrowHeroImage(media, hero);
     createArtwork(hero);
     // Include the traveling video as well as the case's body videos. It keeps
     // the same owner when it moves into the hero after the flight.
@@ -226,6 +233,12 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     }
     hero.style.removeProperty('visibility');
     artwork?.remove(); artwork = null;
+    if (preparedImage && borrowedImage && preparedImage.src !== borrowedImage.image.currentSrc) {
+      void preparedImage.decode().then(() => {
+        if (ticket !== revision || phase !== 'open' || !borrowedImage) return;
+        borrowedImage.node.replaceWith(preparedImage);
+      }).catch(() => { /* Keep the decoded card image if the larger file fails. */ });
+    }
     // Release the real hero at the shared travel endpoint, while the decorative
     // radius finish continues independently.
     lockScroll(false);
@@ -304,8 +317,9 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     window.removeEventListener('scroll', followPageScroll);
     if (ticket !== revision) return;
     if (borrowedVideo) {
-      const { video, home, hidden, label } = borrowedVideo;
+      const { video, home, hidden, label, aspectRatio } = borrowedVideo;
       home.replaceChildren(video);
+      video.style.aspectRatio = aspectRatio;
       for (const [name, value] of [['aria-hidden', hidden], ['aria-label', label]] as const) {
         if (value === null) video.removeAttribute(name);
         else video.setAttribute(name, value);
@@ -357,6 +371,12 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     if (history.state?.caseStudy) history.back();
     else { history.replaceState(history.state, '', returnUrl); void close(); }
   }
+  const prepareCard = (event: Event) => {
+    const link = event.target instanceof Element ? event.target.closest<HTMLElement>('[data-case-link]') : null;
+    const template = link && document.querySelector<HTMLTemplateElement>(`template[data-case-template="${link.dataset.caseLink}"]`);
+    if (link && template) prepareHeroImage(template, link);
+  };
+  for (const type of ['pointerover', 'focusin', 'pointerdown']) document.querySelector('#work')?.addEventListener(type, prepareCard);
   document.querySelector('#work')?.addEventListener('click', event => {
     if (!(event instanceof MouseEvent) || event.button !== 0 || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
     const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('[data-case-link]') : null;
