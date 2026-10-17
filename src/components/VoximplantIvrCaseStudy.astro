@@ -1,4 +1,5 @@
 ---
+import SectionHeading from './SectionHeading.astro';
 import type { Project } from '../data/portfolio';
 import { voximplantIvrHero, voximplantIvrRole, voximplantIvrTeam, voximplantIvrFlow } from '../data/voximplant-ivr-case-study';
 import CaseStudyOverview from './CaseStudyOverview.astro';
@@ -18,7 +19,7 @@ const { project } = Astro.props;
     <section id="ivr-flow" aria-labelledby="ivr-flow-title">
       <div class="case-study-columns ivr-row">
         <div class="ivr-copy">
-          <div><p class="case-study-eyebrow">{voximplantIvrFlow.eyebrow}</p><h2 class="case-study-heading" id="ivr-flow-title">{voximplantIvrFlow.title}</h2></div>
+          <div><SectionHeading id="ivr-flow-title" label={voximplantIvrFlow.eyebrow} layout="stacked" reveal={false}>{voximplantIvrFlow.title}</SectionHeading></div>
           {voximplantIvrFlow.description.map(text => <p class="ivr-muted">{text}</p>)}
         </div>
         <CaseStudyMedia {...voximplantIvrFlow.media} presentation="shadow" />

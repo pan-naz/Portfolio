@@ -3,14 +3,22 @@ const require=createRequire(import.meta.url),astro=path.dirname(require.resolve(
 import {readSystemTokens} from '../src/data/system-inventory.ts';
 import {paletteColors,colorCards,paletteTokenNames,colorRoles,strokeCards,colorDocumentationReceipt} from '../src/data/system-colors.ts';
 const root=path.resolve(import.meta.dirname,'..');
-export function validateColorUses(css,colors=colorCards,strokes=strokeCards){
- const tokens=readSystemTokens(css),errors=[],seen={light:new Map(),dark:new Map()};
+export function validateColorUses(css,colors=colorCards,strokes=strokeCards,cardCss=fs.readFileSync(path.join(root,'src/styles/global.css'),'utf8')){
+ const tokens=readSystemTokens(css),errors=[],seen={light:new Map(),dark:new Map()},cardPalettes={light:{...tokens.light},dark:{...tokens.dark}};
+ // Read the real card override; the page default alone cannot document Dark cards.
+ postcss.parse(cardCss).walkDecls('--color-media-frame',decl=>{
+  if(decl.parent.selector==='.project-surface')for(const mode of ['light','dark'])cardPalettes[mode]['color-media-frame']=decl.value;
+  else if(decl.parent.selector===":root[data-theme='dark'] .project-surface:not([data-theme='light'] .project-surface, [data-color-zone='light'] .project-surface)")cardPalettes.dark['color-media-frame']=decl.value;
+ });
+ let cardUses=0;
  for(const color of colors){
   if(!color.uses.length)errors.push('Palette color has no use: '+color.token);
   for(const use of color.uses)for(const mode of use.mode==='both'?['light','dark']:[use.mode])for(const role of use.roles){
-   const palette=tokens[use.zone||mode],primitive=use.shade||color.token;
+   if(use.context&&!(use.context==='project-card'&&mode==='dark'&&role==='color-media-frame'&&!use.zone))errors.push('Unexpected scoped Color use');
+   const palette=use.context==='project-card'?cardPalettes[mode]:tokens[use.zone||mode],primitive=use.shade||color.token;
    if(tokens.value(palette,role)!==tokens.value(palette,primitive))errors.push(`${primitive}: ${role} does not resolve to this color in ${mode}`);
-   if(!use.zone)seen[mode].set(role,(seen[mode].get(role)||0)+1);
+   if(use.context)cardUses++;
+   else if(!use.zone)seen[mode].set(role,(seen[mode].get(role)||0)+1);
   }
  }
  for(const stroke of strokes)for(const mode of ['light','dark']){
@@ -20,6 +28,14 @@ export function validateColorUses(css,colors=colorCards,strokes=strokeCards){
  }
  const declaredPageRoles=[...new Set([...colorRoles,...Object.keys({...tokens.light,...tokens.dark}).filter(name=>name.startsWith('color-')&&!paletteTokenNames.includes(name)&&name!=='color-backdrop')])];
  for(const mode of ['light','dark'])for(const role of declaredPageRoles)if(seen[mode].get(role)!==1)errors.push(`${mode}: ${role} must appear exactly once`);
+ if(cardUses!==1)errors.push('Dark project-card frame must have exactly one scoped Color use');
+ if(colors.some(color=>color.token==='color-media-frame'))errors.push('Hero frames belong under their actual palette colours, not a separate card');
+ for(const [token,mode,label,previous,context] of [['color-paper','light','Hero frames','Page',undefined],['color-ink','dark','Case-study hero frames','Page',undefined],['color-charcoal','dark','Project card hero frames','Cards and surfaces','project-card']]){
+  const uses=colors.find(color=>color.token===token)?.uses||[],index=uses.findIndex(use=>use.mode===mode&&use.label===label&&use.roles.includes('color-media-frame')&&use.context===context);
+  if(index<1||uses[index-1].label!==previous||uses[index-1].mode!==mode)errors.push(`${token}: ${label} must follow ${previous}`);
+ }
+ const lightFrame=colors.find(color=>color.token==='color-paper')?.uses.find(use=>use.label==='Hero frames');
+ if(lightFrame&&tokens.value(cardPalettes.light,'color-media-frame')!==tokens.value(tokens.light,'color-paper'))errors.push('Light Hero frames must also match the real card frame');
  for(const [token,role,label] of [['color-charcoal','color-bg-surface','Cards and surfaces'],['color-night','color-bg-section','Work and About']]){
   const use=colors.find(color=>color.token===token)?.uses.find(use=>use.mode==='dark'&&use.roles.includes(role));
   if(use?.label!==label)errors.push(`${token}: dark role label must be ${label}`);

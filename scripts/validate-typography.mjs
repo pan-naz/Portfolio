@@ -36,7 +36,7 @@ export function validateCatalogTypographyLayout(css,catalog,toggle){
 export const approvedTypography={
  'heading-xl':['Funnel Display',400,.909091,[4.75,-.048],[3,-.046],[2.5,-.045]],
  'heading-l':['Funnel Display',400,1.142857,[3.5,-.047],[2.25,-.044],[1.625,-.042]],
- 'heading-m':['Funnel Display',500,1.333333,[1.5,-.036],[1.375,-.034],[1.375,-.034]],
+ 'heading-m':['Funnel Display',500,1.333333,[1.5,-.034],[1.375,-.032],[1.375,-.032]],
  'body-l':['Urbanist',400,1.5,[1.25,0],[1.125,0],[1.125,0]],
  'body-m':['Urbanist',400,1.5,[1,0],[1,0],[1,0]],
  'body-m-strong':['Urbanist',500,1.5,[1,0],[1,0],[1,0]],

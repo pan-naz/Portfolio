@@ -1,4 +1,5 @@
 ---
+import SectionHeading from './SectionHeading.astro';
 import type { Project } from '../data/portfolio';
 import { offfHero, offfPage } from '../data/offf-conference-case-study';
 import { professionsInDigitalHero, professionsInDigitalPage } from '../data/professions-in-digital-case-study';
@@ -23,7 +24,7 @@ if (!study) throw new Error(`Missing recording case study for ${project.id}`);
 
     <section id={`${study.prefix}-page`} aria-labelledby={`${study.prefix}-page-title`}>
       <div class="case-study-columns recording-heading">
-        <div><p class="case-study-eyebrow">{study.page.eyebrow}</p><h2 class="case-study-heading" id={`${study.prefix}-page-title`}>{study.page.title}</h2></div>
+        <div><SectionHeading id={`${study.prefix}-page-title`} label={study.page.eyebrow} layout="stacked" reveal={false}>{study.page.title}</SectionHeading></div>
         <p class="recording-muted">{study.page.description}</p>
       </div>
       <CaseStudyMedia {...study.page.media} />

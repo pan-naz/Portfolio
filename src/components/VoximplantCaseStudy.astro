@@ -1,4 +1,5 @@
 ---
+import SectionHeading from './SectionHeading.astro';
 import ResponsiveImage from './ResponsiveImage.astro';
 import SvgAsset from './SvgAsset.astro';
 import type { Project } from '../data/portfolio';
@@ -100,8 +101,7 @@ const impactMetrics = [
     </CaseStudyOverview>
 
     <section class="vox-section vox-problem" aria-labelledby="vox-problem-title">
-      <p class="case-study-eyebrow">Problem</p>
-      <h2 id="vox-problem-title" class="case-study-heading">Setting up a contact center on Voximplant needed developers.</h2>
+      <SectionHeading id="vox-problem-title" label="Problem" layout="stacked" reveal={false}>Setting up a contact center on Voximplant needed developers.</SectionHeading>
       <div class="vox-problem-grid case-study-columns">
         <div class="vox-copy-stack">
           <div><h3>Business context</h3><p>Voximplant is a cloud communications platform with voice, video and messaging embedded through APIs and SDKs. But its customers' contact-center teams <strong class="vox-accent">are not developers.</strong></p></div>
@@ -113,8 +113,7 @@ const impactMetrics = [
     </section>
 
     <section class="vox-section" aria-labelledby="vox-discovery-title">
-      <p class="case-study-eyebrow">Process</p>
-      <h2 id="vox-discovery-title" class="case-study-heading">Discovery</h2>
+      <SectionHeading id="vox-discovery-title" label="Process" layout="stacked" reveal={false}>Discovery</SectionHeading>
       <div class="vox-two-column vox-research case-study-columns">
         <div class="vox-copy-stack">
           <div><h3>Research</h3><p>With the product manager, I built user portraits from the interviews, then buyer personas. Later I ran usability tests on the MVP and interviewed call-center managers to validate the flows and the terminology.</p><p>I put every finding into a table, one per product area, and compared Kit with competitors.</p></div>
@@ -165,8 +164,7 @@ const impactMetrics = [
     </section>
 
     <section class="vox-section" aria-labelledby="vox-ideation-title">
-      <p class="case-study-eyebrow">Process</p>
-      <h2 id="vox-ideation-title" class="case-study-heading">Ideation</h2>
+      <SectionHeading id="vox-ideation-title" label="Process" layout="stacked" reveal={false}>Ideation</SectionHeading>
       <div class="vox-copy-narrow"><h3>Hypotheses that shaped release 1</h3><p>Every interview finding went into one table per product area.</p></div>
       <ol class="vox-hypotheses">{hypotheses.map(([hypothesis, responseStart, responseAccent, responseEnd], index) => <li><span>{String(index + 1).padStart(2, '0')}</span><div><strong>{hypothesis}</strong><p>{responseStart}<strong>{responseAccent}</strong>{responseEnd}</p></div></li>)}</ol>
       <div class="vox-copy-narrow"><h3>IA and structure</h3><p>I structured and validated the information architecture, confirmed the core functionality with the team, and mapped primary and secondary flows for every key interaction. A user-story map set the priorities for the first release.</p></div>

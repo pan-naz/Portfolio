@@ -65,6 +65,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     left: `${-parseFloat(frame.left)}px`, top: `${-parseFloat(frame.top)}px`,
   });
   const contentOffset = () => reduced.matches ? 'none' : `translateY(${motion.copyDistance}px)`;
+  const frameColor = (element: HTMLElement) => getComputedStyle(element).getPropertyValue('--color-media-frame').trim();
   // Both the panel and artwork animate with the same easing. Local coordinates
   // compose into a single viewport path from the actual source to destination.
   const artworkFrame = (element: HTMLElement, container: { left: number; top: number }) => {
@@ -192,7 +193,10 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     const source = cardFrame();
     // Keep the card silhouette throughout the flight, then gently remove the radius.
     const travel = play(panel, [source, { ...fullFrame(), borderRadius: source.borderRadius }]);
-    const imageTravel = play(artwork!, [sourceArtwork, destinationArtwork]);
+    const imageTravel = play(artwork!, [
+      { ...sourceArtwork, borderColor: frameColor(media) },
+      { ...destinationArtwork, borderColor: frameColor(hero) },
+    ]);
     // Counter the panel's movement so copy stays in viewport coordinates and
     // only its own vertical fade is visible, regardless of the card's column.
     play(scroll, [viewportPosition(source), { left: '0px', top: '0px' }]);
@@ -247,7 +251,11 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     const start = { left: panelStyle.left, top: panelStyle.top, width: panelStyle.width, height: panelStyle.height, borderRadius: panelStyle.borderRadius };
     const hero = scroll.querySelector<HTMLElement>('.case-study-artwork')!;
     // During an interrupted opening, continue from the traveling image itself.
-    const imageStart = artworkFrame(artwork ?? hero, panel.getBoundingClientRect());
+    const imageStart = {
+      ...artworkFrame(artwork ?? hero, panel.getBoundingClientRect()),
+      // Capture an interrupted flight's painted colour before cancelling it.
+      borderColor: getComputedStyle(artwork ?? hero).borderTopColor,
+    };
     const restoreHero = !artwork && scroll.scrollTop > 0;
     if (restoreHero) imageStart.top = `${parseFloat(imageStart.top) + scroll.scrollTop}px`;
     if (!artwork) createArtwork(hero);
@@ -291,7 +299,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     const followPageScroll = () => { panel.style.transform = `translateY(${returnScrollY - window.scrollY}px)`; };
     window.addEventListener('scroll', followPageScroll, { passive: true });
     const travel = play(panel, [{ ...start, borderRadius: destination.borderRadius }, destination], { duration: motion.closeDuration });
-    const imageTravel = play(artwork!, [imageStart, imageDestination], { duration: motion.closeDuration });
+    const imageTravel = play(artwork!, [imageStart, { ...imageDestination, borderColor: frameColor(cardMedia) }], { duration: motion.closeDuration });
     await Promise.all([travel, imageTravel, captionFade]);
     window.removeEventListener('scroll', followPageScroll);
     if (ticket !== revision) return;

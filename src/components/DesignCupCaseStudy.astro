@@ -1,4 +1,5 @@
 ---
+import SectionHeading from './SectionHeading.astro';
 import type { Project } from '../data/portfolio';
 import { designCupHero, designCupRole, designCupPage, designCupJury, designCupEnding, designCupGuide } from '../data/design-cup-case-study';
 import CaseStudyOverview from './CaseStudyOverview.astro';
@@ -15,13 +16,13 @@ const { project } = Astro.props;
     </CaseStudyOverview>
 
     <section id="dc-page" aria-labelledby="dc-page-title">
-      <div class="case-study-columns dc-heading"><div><p class="case-study-eyebrow">{designCupPage.eyebrow}</p><h2 class="case-study-heading" id="dc-page-title">{designCupPage.title}</h2></div><p class="dc-muted">{designCupPage.description}</p></div>
+      <div class="case-study-columns dc-heading"><div><SectionHeading id="dc-page-title" label={designCupPage.eyebrow} layout="stacked" reveal={false}>{designCupPage.title}</SectionHeading></div><p class="dc-muted">{designCupPage.description}</p></div>
       <div class="dc-landing"><CaseStudyMedia {...designCupPage.media} presentation="shadow" /></div>
     </section>
 
     <section class="case-study-chapter--inverse dc-jury" data-color-zone="dark" data-zone-keep="surface section shadows" id="dc-jury" aria-labelledby="dc-jury-title">
       <div class="case-study-chapter__inner case-study-columns dc-row">
-        <div class="dc-copy"><div><p class="case-study-eyebrow">{designCupJury.eyebrow}</p><h2 class="case-study-heading" id="dc-jury-title">{designCupJury.title}</h2></div><p class="dc-muted">{designCupJury.description}</p></div>
+        <div class="dc-copy"><div><SectionHeading id="dc-jury-title" label={designCupJury.eyebrow} layout="stacked" reveal={false}>{designCupJury.title}</SectionHeading></div><p class="dc-muted">{designCupJury.description}</p></div>
         <CaseStudyMedia {...designCupJury.media} presentation="bare" />
       </div>
     </section>
@@ -37,7 +38,7 @@ const { project } = Astro.props;
 
     <section class="case-study-chapter--inverse dc-guide" data-color-zone="dark" data-zone-keep="surface section shadows" id="dc-style" aria-labelledby="dc-style-title">
       <div class="case-study-chapter__inner dc-guide-inner">
-        <div class="case-study-columns dc-heading"><div><p class="case-study-eyebrow">{designCupGuide.eyebrow}</p><h2 class="case-study-heading" id="dc-style-title">{designCupGuide.title}</h2></div><p class="dc-muted">{designCupGuide.description}</p></div>
+        <div class="case-study-columns dc-heading"><div><SectionHeading id="dc-style-title" label={designCupGuide.eyebrow} layout="stacked" reveal={false}>{designCupGuide.title}</SectionHeading></div><p class="dc-muted">{designCupGuide.description}</p></div>
         <CaseStudyDecisionCard title={designCupGuide.lettering.title} layout="figure">
           <div class="case-study-columns dc-row dc-lettering">
             <p class="dc-muted">{designCupGuide.lettering.description}</p>

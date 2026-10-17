@@ -21,7 +21,7 @@ const { project } = Astro.props;
     </CaseStudyOverview>
 
     <section aria-labelledby="cv-concept">
-      <SectionHeading appearance="case" label="Concept" id="cv-concept">How Cravus works</SectionHeading>
+      <SectionHeading layout="stacked" reveal={false} label="Concept" id="cv-concept">How Cravus works</SectionHeading>
       <div class="case-study-media-grid cravus-block">{cravusConcepts.map(([title, description]) => <div><h3>{title}</h3><p>{description}</p></div>)}</div>
       <div class="cravus-block"><CaseStudyMedia {...media.laptop} /></div>
     </section>
@@ -29,7 +29,7 @@ const { project } = Astro.props;
     <section aria-labelledby="cv-home">
       <div class="case-study-columns">
         <case-study-sticky class="case-study-sticky">
-          <p class="case-study-eyebrow"><span class="cravus-number">01</span> / 09</p><h2 class="case-study-heading" id="cv-home">Main page</h2>
+          <SectionHeading id="cv-home" label="01 / 09" layout="stacked" reveal={false}><p slot="index" class="case-study-eyebrow"><span class="cravus-number">01</span> / 09</p>Main page</SectionHeading>
           <CaseStudySteps items={cravusHomeSections} class="cravus-home-steps" />
         </case-study-sticky>
         <CaseStudyMedia {...media.home} />
@@ -38,7 +38,7 @@ const { project } = Astro.props;
 
     <section aria-labelledby="cv-pages">
       <div class="case-study-columns cravus-chapter-heading">
-        <div><SectionHeading appearance="case" label="02–09" id="cv-pages">Inner pages</SectionHeading></div>
+        <div><SectionHeading layout="stacked" reveal={false} label="02–09" id="cv-pages">Inner pages</SectionHeading></div>
         <p class="text-body-m cravus-muted">Besides the main page, the app has eight pages. Every page uses the same header, cards and footer.</p>
       </div>
       <div class="cravus-pages cravus-block">{cravusPages.map(page => <div class="case-study-columns">
@@ -52,14 +52,14 @@ const { project } = Astro.props;
 
     <CaseStudyBand class="cravus-band cravus-mobile" labelledBy="cv-mobile">
         <div class="case-study-columns cravus-chapter-heading">
-          <div><SectionHeading appearance="case" label="Mobile" id="cv-mobile">Phone layouts</SectionHeading><p class="cravus-breakpoint text-body-s">320px +</p></div>
+          <div><SectionHeading layout="stacked" reveal={false} label="Mobile" id="cv-mobile">Phone layouts</SectionHeading><p class="cravus-breakpoint text-body-s">320px +</p></div>
           <p class="text-body-m cravus-muted">Every page has a phone layout. The menu folds into a button in the top-left corner, and cards and tables stack in one column.</p>
         </div>
         <div class="cravus-block"><CaseStudyMedia {...media.phones} /></div>
       </CaseStudyBand>
 
     <CaseStudyBand inverse class="cravus-style" labelledBy="cv-style">
-        <SectionHeading appearance="case" label="Style guide" id="cv-style">Colour, type and UI elements</SectionHeading>
+        <SectionHeading layout="stacked" reveal={false} label="Style guide" id="cv-style">Colour, type and UI elements</SectionHeading>
         <div class="cravus-block"><h3>Colour</h3><CaseStudyPalette items={cravusPalette} class="cravus-palette" swatchClass="cravus-swatch" swatchProperty="--cravus-swatch" /></div>
         <div class="cravus-block"><h3>Typography</h3>
           <div class="cravus-specimens">

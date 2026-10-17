@@ -420,7 +420,7 @@
   },
   {
     "file": "src/styles/design-system.css",
-    "selector": ":is(#section-heading,#timeline-row) .ds-canvas",
+    "selector": "#timeline-row .ds-canvas",
     "context": "@layer system",
     "property": "height",
     "value": "400px",
@@ -519,7 +519,7 @@
   },
   {
     "file": "src/styles/design-system.css",
-    "selector": ".ds-tile-mini--section-heading,.ds-tile-mini--timeline-row",
+    "selector": ".ds-tile-mini--timeline-row",
     "context": "@layer system",
     "property": "width",
     "value": "880px",

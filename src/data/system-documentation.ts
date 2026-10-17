@@ -33,7 +33,7 @@ export const componentPurposes: Record<string, string> = {
   'src/components/ProjectIdentity.astro': 'Pairs a project name with an optional mark.',
   'src/components/ProjectTags.astro': 'Groups a project’s discipline chips.',
   'src/components/ResponsiveImage.astro': 'Selects a suitable image size while retaining the original fallback.',
-  'src/components/SectionHeading.astro': 'Introduces a section with a title and optional supporting text.',
+  'src/components/SectionHeading.astro': 'The label and title that open each section.',
   'src/components/SectionNavigation.astro': 'Lets readers choose a work category.',
   'src/components/SiteFooter.astro': 'Ends the page with portfolio details and decorative icons.',
   'src/components/SiteHeader.astro': 'Provides the wordmark, navigation and theme control.',

@@ -1,4 +1,5 @@
 ---
+import SectionHeading from './SectionHeading.astro';
 import type { Project } from '../data/portfolio';
 import { petCareHero, petCareAnimation, petCareRole, petCareCompetition, petCareResearch, petCarePrototype, petCareMain, petCarePhysical, petCareEmotional, petCareNeeds, petCareGuide } from '../data/pet-care-case-study';
 import CaseStudyOverview from './CaseStudyOverview.astro';
@@ -21,7 +22,7 @@ const { project } = Astro.props;
 
     <section class="case-study-chapter--inverse pc-pink" data-color-zone="dark" data-zone-keep="surface section shadows" aria-labelledby="pc-competition">
       <div class="case-study-chapter__inner pc-band-inner">
-        <div class="case-study-columns pc-heading"><div><p class="case-study-eyebrow">{petCareCompetition.eyebrow}</p><h2 class="case-study-heading" id="pc-competition">{petCareCompetition.title}</h2></div><p class="pc-muted">{petCareCompetition.description}</p></div>
+        <div class="case-study-columns pc-heading"><div><SectionHeading id="pc-competition" label={petCareCompetition.eyebrow} layout="stacked" reveal={false}>{petCareCompetition.title}</SectionHeading></div><p class="pc-muted">{petCareCompetition.description}</p></div>
         <div class="pc-competition-cards">
           <ul class="pc-stats" aria-label="Competition in numbers">{petCareCompetition.stats.map(stat => <li>
             <CaseStudyDecisionCard title={stat.label} layout="figure">
@@ -43,38 +44,38 @@ const { project } = Astro.props;
     </section>
 
     <section aria-labelledby="pc-research">
-      <div class="case-study-columns pc-heading"><div><p class="case-study-eyebrow">{petCareResearch.eyebrow}</p><h2 class="case-study-heading" id="pc-research">{petCareResearch.title}</h2></div><p class="pc-muted">{petCareResearch.description}</p></div>
+      <div class="case-study-columns pc-heading"><div><SectionHeading id="pc-research" label={petCareResearch.eyebrow} layout="stacked" reveal={false}>{petCareResearch.title}</SectionHeading></div><p class="pc-muted">{petCareResearch.description}</p></div>
       <div class="pc-research-cards">{petCareResearch.cards.map(card => <CaseStudyDecisionCard title={card.title} layout="figure"><ul class="pc-muted">{card.items.map(item => <li>{item}</li>)}</ul>{card.note && <p>{card.note}</p>}</CaseStudyDecisionCard>)}</div>
     </section>
 
     <section aria-labelledby="pc-prototype">
-      <div class="case-study-columns pc-heading"><div><p class="case-study-eyebrow">{petCarePrototype.eyebrow}</p><h2 class="case-study-heading" id="pc-prototype">{petCarePrototype.title}</h2></div><p class="pc-muted">{petCarePrototype.description}</p></div>
+      <div class="case-study-columns pc-heading"><div><SectionHeading id="pc-prototype" label={petCarePrototype.eyebrow} layout="stacked" reveal={false}>{petCarePrototype.title}</SectionHeading></div><p class="pc-muted">{petCarePrototype.description}</p></div>
       <div class="pc-wireframes"><CaseStudyMedia {...petCarePrototype.media} /></div>
     </section>
 
     <section aria-labelledby="pc-main">
       <div class="case-study-columns pc-row">
-        <div class="pc-copy"><div><p class="case-study-eyebrow">{petCareMain.eyebrow}</p><h2 class="case-study-heading" id="pc-main">{petCareMain.title}</h2></div><ul class="pc-points">{petCareMain.points.map(point => <li><h3>{point.title}</h3><p class="pc-muted">{point.description}</p></li>)}</ul></div>
+        <div class="pc-copy"><div><SectionHeading id="pc-main" label={petCareMain.eyebrow} layout="stacked" reveal={false}>{petCareMain.title}</SectionHeading></div><ul class="pc-points">{petCareMain.points.map(point => <li><h3>{point.title}</h3><p class="pc-muted">{point.description}</p></li>)}</ul></div>
         <div class="pc-main-preview"><CaseStudyMedia {...petCareMain.media} /></div>
       </div>
     </section>
 
     <section class="case-study-chapter--inverse pc-coral" data-color-zone="dark" data-zone-keep="surface section shadows" aria-labelledby="pc-physical">
       <div class="case-study-chapter__inner pc-band-inner">
-        <div class="case-study-columns pc-row"><div class="pc-copy"><div><p class="case-study-eyebrow">{petCarePhysical.eyebrow}</p><h2 class="case-study-heading" id="pc-physical">{petCarePhysical.title}</h2></div>{petCarePhysical.paragraphs.map(text => <p class="pc-muted">{text}</p>)}</div><div class="pc-phone pc-phone--physical"><CaseStudyMedia {...petCarePhysical.media} /></div></div>
+        <div class="case-study-columns pc-row"><div class="pc-copy"><div><SectionHeading id="pc-physical" label={petCarePhysical.eyebrow} layout="stacked" reveal={false}>{petCarePhysical.title}</SectionHeading></div>{petCarePhysical.paragraphs.map(text => <p class="pc-muted">{text}</p>)}</div><div class="pc-phone pc-phone--physical"><CaseStudyMedia {...petCarePhysical.media} /></div></div>
         <CaseStudyMedia {...petCarePhysical.cards} />
       </div>
     </section>
 
     <section class="case-study-chapter--inverse pc-cream" data-color-zone="dark" data-zone-keep="surface section shadows" aria-label="Emotional state and the pet's needs">
       <div class="case-study-chapter__inner pc-band-inner">
-        <div class="case-study-columns pc-row" aria-labelledby="pc-emotional"><div class="pc-copy"><div><p class="case-study-eyebrow">{petCareEmotional.eyebrow}</p><h2 class="case-study-heading" id="pc-emotional">{petCareEmotional.title}</h2></div>{petCareEmotional.paragraphs.map(text => <p class="pc-muted">{text}</p>)}</div><div class="pc-phone pc-phone--emotional"><CaseStudyMedia {...petCareEmotional.media} /></div></div>
-        <div class="case-study-columns pc-row pc-row--reverse" aria-labelledby="pc-needs"><div class="pc-copy"><div><p class="case-study-eyebrow">{petCareNeeds.eyebrow}</p><h2 class="case-study-heading" id="pc-needs">{petCareNeeds.title}</h2></div>{petCareNeeds.paragraphs.map(text => <p class="pc-muted">{text}</p>)}</div><div class="pc-phone pc-phone--needs"><CaseStudyMedia {...petCareNeeds.media} /></div></div>
+        <div class="case-study-columns pc-row" aria-labelledby="pc-emotional"><div class="pc-copy"><div><SectionHeading id="pc-emotional" label={petCareEmotional.eyebrow} layout="stacked" reveal={false}>{petCareEmotional.title}</SectionHeading></div>{petCareEmotional.paragraphs.map(text => <p class="pc-muted">{text}</p>)}</div><div class="pc-phone pc-phone--emotional"><CaseStudyMedia {...petCareEmotional.media} /></div></div>
+        <div class="case-study-columns pc-row pc-row--reverse" aria-labelledby="pc-needs"><div class="pc-copy"><div><SectionHeading id="pc-needs" label={petCareNeeds.eyebrow} layout="stacked" reveal={false}>{petCareNeeds.title}</SectionHeading></div>{petCareNeeds.paragraphs.map(text => <p class="pc-muted">{text}</p>)}</div><div class="pc-phone pc-phone--needs"><CaseStudyMedia {...petCareNeeds.media} /></div></div>
       </div>
     </section>
 
     <section aria-labelledby="pc-guide">
-      <div class="case-study-columns pc-heading"><div><p class="case-study-eyebrow">{petCareGuide.eyebrow}</p><h2 class="case-study-heading" id="pc-guide">{petCareGuide.title}</h2></div><p class="pc-muted">{petCareGuide.description}</p></div>
+      <div class="case-study-columns pc-heading"><div><SectionHeading id="pc-guide" label={petCareGuide.eyebrow} layout="stacked" reveal={false}>{petCareGuide.title}</SectionHeading></div><p class="pc-muted">{petCareGuide.description}</p></div>
       <div class="pc-guide">
         <div><h3>Colours</h3><ul class="pc-palette" aria-label="Colour palette">{petCareGuide.colours.map(colour => <li><CaseStudyDecisionCard title={colour.label} layout="figure"><div slot="media" class="pc-swatch" style={`background:${colour.value}`} aria-hidden="true" /><p class="text-body-s"><code>{colour.value}</code></p><p class="pc-muted">{colour.description}</p></CaseStudyDecisionCard></li>)}</ul></div>
         <div class="case-study-media-grid pc-type-cards">

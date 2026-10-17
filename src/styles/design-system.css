@@ -47,7 +47,7 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
 .ds-canvas { height:300px; max-height:400px; overflow:auto; display:grid; align-items:center; padding:var(--space-6); border-radius:0 0 var(--radius-large) var(--radius-large); }
 /* One dot pattern shared by the live canvas and inert Overview previews. */
 .ds-canvas,.ds-tile-visual::before { background-image:radial-gradient(var(--color-border-default) .75px,transparent .75px); background-size:var(--space-4) var(--space-4); }
-:is(#section-heading,#timeline-row) .ds-canvas { height:400px; align-items:start; }
+#timeline-row .ds-canvas { height:400px; align-items:start; }
 /* Reset documentation inheritance, never the component’s own type roles. */
 .ds-specimens { min-width:0; width:100%; color:var(--color-text-primary); }
 .ds-specimen-composition { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:var(--space-6); }
@@ -61,8 +61,6 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
 .ds-stat-composition { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--space-6); max-width:760px; margin:0 auto; }
 .ds-context-about { padding:var(--space-6); background:var(--color-bg-section); border-radius:var(--radius-medium); }
 .ds-context-about::before { display:none; }
-.ds-context-work { margin:0; padding:var(--space-6); background:var(--color-bg-section); border-radius:var(--radius-medium); }
-.ds-heading-composition { display:grid; gap:var(--space-6); }
 .ds-specs-card { margin-top:var(--space-4); padding:var(--space-6); }
 .ds-spec-columns { display:grid; grid-template-columns:1.1fr 1fr 1fr; gap:var(--space-8); }
 .ds-column-title { margin-bottom:var(--space-2); }
@@ -136,7 +134,7 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
 .ds-tile-link > span { color:var(--color-text-secondary); }
 .ds-tile-mini { position:absolute; left:50%; top:50%; width:320px; transform:translate(-50%,-50%) scale(.5); }
 .ds-tile-mini .ds-labelled-specimen > span { display:none; }
-.ds-tile-mini--section-heading,.ds-tile-mini--timeline-row { width:880px; transform:translate(-50%,-50%) scale(.16); }
+.ds-tile-mini--timeline-row { width:880px; transform:translate(-50%,-50%) scale(.16); }
 .ds-tile-mini--statistic .ds-stat-composition { grid-template-columns:minmax(0,1fr); }
 .ds-tile-mini--statistic { width:240px; transform:translate(-50%,-50%) scale(.65); }
 /* Inset centres keep even a rotated 26px glyph at least space-4 from every edge. */

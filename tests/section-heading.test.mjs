@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {buildSystemInventory} from '../src/data/system-inventory.ts';
+import {sectionHeadingProps,sectionHeadingExamples,sectionHeadingUsage} from '../src/data/system-section-heading.ts';
+import {validateSectionHeading} from '../scripts/validate-section-heading.mjs';
+assert.deepEqual(validateSectionHeading(),[]);
+const component=buildSystemInventory().components.find(c=>c.name==='SectionHeading');
+assert.deepEqual(sectionHeadingProps(component).map(p=>[p.name,p.default]),[['id','Required'],['label','Required'],['reveal','true'],['layout',"'columns'"]]);
+assert.equal(sectionHeadingExamples.columns.label,'02 / Impact');
+assert.equal(sectionHeadingExamples.action.title,'A decade of experience');
+assert.equal(sectionHeadingExamples.stacked.label,'Problem');
+assert(sectionHeadingUsage().replace(/\s+/g,' ').includes(sectionHeadingExamples.columns.description),'Usage retains actual website copy rather than a second documentation version.');
+assert(sectionHeadingUsage().split('\n').every(line=>line.length<=76),'Usage follows the shared desktop line limit.');
+console.log('Shared chapter headings and source-derived catalog contract pass.');

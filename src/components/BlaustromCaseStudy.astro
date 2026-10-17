@@ -24,7 +24,7 @@ const { project } = Astro.props;
     <section aria-labelledby="bs-home">
       <div class="case-study-columns">
         <case-study-sticky class="case-study-sticky">
-          <p class="case-study-eyebrow"><span class="blaustrom-number">01</span> / 05</p><h2 class="case-study-heading" id="bs-home">Main page</h2>
+          <SectionHeading id="bs-home" label="01 / 05" layout="stacked" reveal={false}><p slot="index" class="case-study-eyebrow"><span class="blaustrom-number">01</span> / 05</p>Main page</SectionHeading>
           <p class="blaustrom-lede text-body-m">The site is one long page with five sections, one for each menu item. The first section opens on a dark screen with the logo, followed by a slider with three slides on the blue gradient.</p>
           <CaseStudySteps items={blaustromHomeSections} class="blaustrom-block" />
         </case-study-sticky>
@@ -34,21 +34,21 @@ const { project } = Astro.props;
 
     <section aria-labelledby="bs-about">
       <div class="case-study-columns">
-        <div><p class="case-study-eyebrow"><span class="blaustrom-number">02</span> / 05</p><h2 class="case-study-heading" id="bs-about">About us</h2><p class="blaustrom-lede text-body-m">The text explains how Blaustrom differs from a usual energy supplier. Customers produce most of their electricity with their own solar system, and Blaustrom delivers only small amounts of Bavarian electricity from the grid. Next to the text is the founder, Fabian Eckl, with a short bio and links to his profiles.</p></div>
+        <div><SectionHeading id="bs-about" label="02 / 05" layout="stacked" reveal={false}><p slot="index" class="case-study-eyebrow"><span class="blaustrom-number">02</span> / 05</p>About us</SectionHeading><p class="blaustrom-lede text-body-m">The text explains how Blaustrom differs from a usual energy supplier. Customers produce most of their electricity with their own solar system, and Blaustrom delivers only small amounts of Bavarian electricity from the grid. Next to the text is the founder, Fabian Eckl, with a short bio and links to his profiles.</p></div>
         <CaseStudyMedia {...media.about} />
       </div>
     </section>
 
     <section aria-labelledby="bs-products">
       <div class="case-study-columns">
-        <div><p class="case-study-eyebrow"><span class="blaustrom-number">03</span> / 05</p><h2 class="case-study-heading" id="bs-products">Product partners</h2><p class="blaustrom-lede text-body-m">A slider with the four brands Blaustrom installs: BYD batteries, SolaX inverters, LG solar modules and ABL charging stations. Each slide has three key points with icons, a short text, the brand logo, a link to the brand’s website, a datasheet download and a video.</p></div>
+        <div><SectionHeading id="bs-products" label="03 / 05" layout="stacked" reveal={false}><p slot="index" class="case-study-eyebrow"><span class="blaustrom-number">03</span> / 05</p>Product partners</SectionHeading><p class="blaustrom-lede text-body-m">A slider with the four brands Blaustrom installs: BYD batteries, SolaX inverters, LG solar modules and ABL charging stations. Each slide has three key points with icons, a short text, the brand logo, a link to the brand’s website, a datasheet download and a video.</p></div>
         <CaseStudyMedia {...media.products} />
       </div>
     </section>
 
     <CaseStudyBand class="blaustrom-band blaustrom-configurator" labelledBy="bs-configurator">
         <div class="case-study-columns">
-          <div><p class="case-study-eyebrow"><span class="blaustrom-number">04</span> / 05</p><h2 class="case-study-heading" id="bs-configurator">Configurator</h2><p class="blaustrom-lede text-body-m">The configurator plans a system in four steps. Each step is its own screen, and the bar at the top shows which steps are done. The first screen asks for the address and whether the customer already has a solar system.</p></div>
+          <div><SectionHeading id="bs-configurator" label="04 / 05" layout="stacked" reveal={false}><p slot="index" class="case-study-eyebrow"><span class="blaustrom-number">04</span> / 05</p>Configurator</SectionHeading><p class="blaustrom-lede text-body-m">The configurator plans a system in four steps. Each step is its own screen, and the bar at the top shows which steps are done. The first screen asks for the address and whether the customer already has a solar system.</p></div>
           <CaseStudyMedia {...media.configurator} />
         </div>
         <div class="blaustrom-config-grid blaustrom-block">{blaustromConfiguratorSteps.map(step => <CaseStudyDecisionCard title={step.title} label={step.label} layout="figure"><CaseStudyMedia slot="media" {...step.media} /><p>{step.description}</p></CaseStudyDecisionCard>)}</div>
@@ -56,21 +56,21 @@ const { project } = Astro.props;
 
     <section aria-labelledby="bs-contact">
       <div class="case-study-columns">
-        <case-study-sticky class="case-study-sticky"><p class="case-study-eyebrow"><span class="blaustrom-number">05</span> / 05</p><h2 class="case-study-heading" id="bs-contact">Contact</h2><p class="blaustrom-lede text-body-m">A form with name, email, phone and message, and a Google map where the office is marked with the b from the logo. The dark footer has the address, social links and the line from the first screen, so the page ends the way it starts.</p></case-study-sticky>
+        <case-study-sticky class="case-study-sticky"><SectionHeading id="bs-contact" label="05 / 05" layout="stacked" reveal={false}><p slot="index" class="case-study-eyebrow"><span class="blaustrom-number">05</span> / 05</p>Contact</SectionHeading><p class="blaustrom-lede text-body-m">A form with name, email, phone and message, and a Google map where the office is marked with the b from the logo. The dark footer has the address, social links and the line from the first screen, so the page ends the way it starts.</p></case-study-sticky>
         <CaseStudyMedia {...media.contact} />
       </div>
     </section>
 
     <CaseStudyBand class="blaustrom-band blaustrom-responsive" labelledBy="bs-responsive">
         <div class="case-study-columns">
-          <div><SectionHeading appearance="case" label="Responsive" id="bs-responsive">Tablet and phone layouts</SectionHeading><p class="blaustrom-breakpoint text-body-s">320px +</p><p class="blaustrom-lede text-body-m">On smaller screens the menu folds into a round button in the top-left corner and opens over the page. Slides and text stack in one column. The configurator needs a screen at least 720px wide, so phones show a short message about that in its place.</p></div>
+          <div><SectionHeading layout="stacked" reveal={false} label="Responsive" id="bs-responsive">Tablet and phone layouts</SectionHeading><p class="blaustrom-breakpoint text-body-s">320px +</p><p class="blaustrom-lede text-body-m">On smaller screens the menu folds into a round button in the top-left corner and opens over the page. Slides and text stack in one column. The configurator needs a screen at least 720px wide, so phones show a short message about that in its place.</p></div>
           <CaseStudyMedia {...media.menu} />
         </div>
         <div class="blaustrom-block"><CaseStudyMedia {...media.responsive} /></div>
       </CaseStudyBand>
 
     <CaseStudyBand inverse class="blaustrom-style" labelledBy="bs-style">
-        <SectionHeading appearance="case" label="Style guide" id="bs-style">Colour, type and controls</SectionHeading>
+        <SectionHeading layout="stacked" reveal={false} label="Style guide" id="bs-style">Colour, type and controls</SectionHeading>
         <div class="blaustrom-block"><h3>Colour</h3><CaseStudyPalette items={blaustromPalette} class="blaustrom-palette" swatchClass="blaustrom-swatch" swatchProperty="--blaustrom-swatch" gradientClass="blaustrom-swatch--gradient" /></div>
         <div class="blaustrom-block"><h3>Typography</h3>
           <div class="case-study-media-grid blaustrom-type-grid">

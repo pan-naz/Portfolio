@@ -3,6 +3,17 @@ import {validateColorPalette,validateColorUses,validateCatalogInnerPanels,valida
 import {paletteColors,colorCards,strokeCards} from '../src/data/system-colors.ts';import {readSystemTokens} from '../src/data/system-inventory.ts';
 const read=name=>fs.readFileSync(new URL('../'+name,import.meta.url),'utf8'),css=read('src/styles/tokens.css'),tokens=readSystemTokens(css);
 assert.deepEqual(validateColors(),[]);
+assert(!colorCards.some(color=>color.token==='color-media-frame'),'No separate Hero frame card');
+const frameCards=structuredClone(colorCards),charcoalFrame=frameCards.find(color=>color.token==='color-charcoal').uses[1];
+assert.equal(charcoalFrame.label,'Project card hero frames');
+assert.equal(charcoalFrame.context,'project-card');
+delete charcoalFrame.context;
+assert(validateColorUses(css,frameCards).length,'Charcoal cannot be validated against the page-default Ink role');
+const globalCss=read('src/styles/global.css');
+assert(validateColorUses(css,colorCards,strokeCards,globalCss.replace('--color-media-frame: var(--color-bg-surface);','--color-media-frame: var(--color-bg-canvas);')).length,'A wrong real Dark-card override fails the Charcoal row');
+const repeatedFrames=structuredClone(colorCards);repeatedFrames.find(color=>color.token==='color-charcoal').uses.push({...colorCards.find(color=>color.token==='color-charcoal').uses[1]});
+assert(validateColorUses(css,repeatedFrames).length,'Repeated scoped frame uses fail');
+for(const token of ['color-paper','color-ink','color-charcoal']){const wrongOrder=structuredClone(colorCards),uses=wrongOrder.find(color=>color.token===token).uses,index=uses.findIndex(use=>use.roles.includes('color-media-frame'));[uses[index-1],uses[index]]=[uses[index],uses[index-1]];assert(validateColorUses(css,wrongOrder).length,'Hero-frame use order is guarded: '+token);}
 assert.equal(paletteColors.length, 12);
 const catalogCss=read('src/styles/design-system.css');
 assert.deepEqual(validateCatalogBoxStyles(catalogCss),[]);
