@@ -1,0 +1,38 @@
+---
+import '../styles/design-system-button.css';import '../styles/design-system-statistic.css';
+import type {SourceComponent} from '../data/system-inventory';import {componentVariants} from '../data/system-variants';
+import {statisticDescription,statisticCards,statisticUsage,statisticProps,statisticTokenGroups,statisticTokenCode,statisticAccessibility,statisticProbeCss} from '../data/system-statistic';
+import DSStatisticSpecimen from './DSStatisticSpecimen.astro';import DSTabs from './DSTabs.astro';
+interface Props {components:SourceComponent[];}
+const {components}=Astro.props,groups=statisticTokenGroups();
+---
+<style is:inline set:html={`@layer system, project;@layer system{${statisticProbeCss()}}`}/>
+<div class="ds-stat-width-probe" inert aria-hidden="true"><div class="container">
+ <div class="impact-group"><div/><dl class="impact-metrics"><div data-stat-width="default"/></dl></div>
+ <dl class="ds-stat-width--case"><div data-stat-width="case"/></dl>
+ <dl class="ds-stat-width--bare"><div data-stat-width="bare"/></dl>
+</div></div>
+<section id="statistic" class="ds-view ds-stat-view" data-ds-view data-ds-component="Stat" data-title="Statistic" data-group="Components" data-description={statisticDescription} hidden>
+ <div class="ds-stage" data-ds-card>
+  <div class="ds-stage-bar"><DSTabs id="statistic-canvas" labels={['Preview','Code']}/></div>
+  <div id="statistic-canvas-panel-0" role="tabpanel" aria-labelledby="statistic-canvas-tab-0" class="ds-button-preview">
+   <section class="ds-button-group"><p class="text-label-m">Statistic</p><p class="text-body-s ds-button-secondary">Results in Impact and the case studies.</p>
+    <div class="ds-button-grid ds-stat-grid">{statisticCards.map(card=><article class="ds-button-card" data-stat-card={card.id}>
+     <div class="ds-button-stage ds-stat-stage" inert aria-hidden="true"><DSStatisticSpecimen kind={card.id}/></div>
+     <div><p class="text-body-m-strong">{card.name}</p><p class="text-body-s ds-button-secondary">{card.description}</p></div>
+     <dl class="ds-button-values text-body-s">{[['Used in',card.used],['Style',card.style]].map(([label,value])=><div><dt>{label}</dt><dd>{value.split(/( · |, )/).map((item,index)=>index%2?item:<span class="ds-value-item">{item}</span>)}</dd></div>)}</dl>
+    </article>)}</div>
+   </section>
+  </div>
+  <div id="statistic-canvas-panel-1" role="tabpanel" aria-labelledby="statistic-canvas-tab-1" class="ds-code ds-button-code" hidden>
+   {components.map(component=><section data-ds-component-code={component.name}><p class="text-label-m">{component.name==='Stat'?'Statistic':'Number'}</p>
+    <pre><code data-ds-usage={component.name}>{'/* Usage · '+component.file+' */\n'+statisticUsage(component.name)}</code></pre>
+    <div class="ds-button-props"><p class="ds-code-comment">/* Props */</p><div class="ds-props-table"><table><thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>What it does</th></tr></thead><tbody>{statisticProps(component).map(prop=><tr data-ds-prop={prop.name}><th scope="row"><code>{prop.name}</code></th><td><code>{prop.type}</code></td><td><code>{prop.default}</code></td><td>{prop.description}</td></tr>)}</tbody></table></div></div>
+   </section>)}
+   <section><p class="text-label-m">Shared</p>{groups.flatMap(group=>group.names).map(name=><span data-ds-token={name.slice(2)}/>)}<div class="ds-button-code-grid"><pre><code>{statisticTokenCode()}</code></pre><div class="ds-button-code-panel"><p class="ds-code-comment">/* Accessibility */</p><ul>{statisticAccessibility.map(point=><li>{point}</li>)}</ul></div></div>
+    <div class="ds-button-code-panel"><p class="ds-code-comment">/* Source */</p>{components.map(component=><><p>{component.file}</p><ul>{[...new Set(component.usages.map(usage=>usage.file))].sort().map(file=><li>{file}</li>)}</ul>{component.name==='Stat'&&componentVariants(component).map(variant=><span data-ds-variant={`${component.name}:${variant}`}/>)}</>)}</div>
+   </section>
+  </div>
+ </div>
+</section>
+<script>import '../scripts/design-system-statistic';</script>

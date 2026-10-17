@@ -58,7 +58,6 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
 .ds-media-backdrop { padding:var(--space-6); background:var(--color-bg-section); border-radius:var(--radius-medium); }
 .ds-media-backdrop .ds-media-controls { display:flex; align-items:center; gap:var(--space-2); position:static; opacity:1; pointer-events:auto; padding:var(--space-1); }
 .ds-comparison-switch { height:60px; overflow:hidden; min-width:180px; }
-.ds-stat-composition { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--space-6); max-width:760px; margin:0 auto; }
 .ds-context-about { padding:var(--space-6); background:var(--color-bg-section); border-radius:var(--radius-medium); }
 .ds-context-about::before { display:none; }
 .ds-specs-card { margin-top:var(--space-4); padding:var(--space-6); }
@@ -135,8 +134,6 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
 .ds-tile-mini { position:absolute; left:50%; top:50%; width:320px; transform:translate(-50%,-50%) scale(.5); }
 .ds-tile-mini .ds-labelled-specimen > span { display:none; }
 .ds-tile-mini--timeline-row { width:880px; transform:translate(-50%,-50%) scale(.16); }
-.ds-tile-mini--statistic .ds-stat-composition { grid-template-columns:minmax(0,1fr); }
-.ds-tile-mini--statistic { width:240px; transform:translate(-50%,-50%) scale(.65); }
 /* Inset centres keep even a rotated 26px glyph at least space-4 from every edge. */
 .ds-icon-tile { position:absolute; inset:var(--space-8); color:var(--color-rain-icon); }
 .ds-icon-tile .icon { position:absolute; left:var(--ds-scatter-x); top:var(--ds-scatter-y); width:var(--ds-scatter-size); height:var(--ds-scatter-size); opacity:var(--ds-scatter-opacity); transform:translate(-50%,-50%) rotate(var(--ds-scatter-rotation)); }
@@ -160,7 +157,6 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
  .ds-canvas { height:400px; }
  .ds-item-header { align-items:flex-start; flex-direction:column; gap:var(--space-4); }
  .ds-foundation-row,.ds-spec-columns { grid-template-columns:minmax(0,1fr); gap:var(--space-4); }
- .ds-stat-composition { grid-template-columns:minmax(0,1fr); gap:var(--space-4); }
  .ds-spec-footer { flex-direction:column; gap:var(--space-4); }
  .ds-tile-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
  .ds-props-table tr { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }

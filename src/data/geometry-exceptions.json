@@ -1,7 +1,7 @@
 [
   {
     "file": "src/components/HookoCaseStudy.astro",
-    "selector": "[inline-style-21920]",
+    "selector": "[inline-style-21863]",
     "context": "",
     "property": "max-width",
     "value": "760px",
@@ -444,15 +444,6 @@
     "value": "180px",
     "kind": "size",
     "reason": "Original 60px-high /180px-wide comparison specimen slot."
-  },
-  {
-    "file": "src/styles/design-system.css",
-    "selector": ".ds-stat-composition",
-    "context": "@layer system",
-    "property": "max-width",
-    "value": "760px",
-    "kind": "size",
-    "reason": "Approved 760px statistics specimen composition."
   },
   {
     "file": "src/styles/design-system.css",

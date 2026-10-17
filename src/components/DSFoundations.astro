@@ -48,7 +48,7 @@ const typePercent=(value:number)=>Number((value*100).toFixed(2));
       {stroke.demo==='video'&&<div class="ds-video-track-demo"><span/></div>}
      </div>
      <strong><DSTokenNames label={stroke.name} token={'--'+stroke.role}/></strong><p>{stroke.description}</p>
-     <div class="ds-stroke-values">{(['light','dark'] as const).map(mode=>{const value=strokeValue(stroke.role,mode);return <div class="ds-icon-text-row" data-ds-stroke-value={mode}><span class="ds-color-mode"><Icon name={mode==='light'?'sun':'moon'}/></span><span class="ds-stroke-swatch" style={`--ds-swatch-shade:var(--${value.token});--ds-swatch-base:var(--${mode==='light'?'color-white':'color-ink'})`} aria-hidden="true"/><span class="ds-mode-text" title={value.value}>{value.label}</span></div>;})}</div>
+     <div class="ds-stroke-values">{(['light','dark'] as const).map(mode=>{const value=strokeValue(stroke.role,mode);return <div class="ds-icon-text-row" data-ds-stroke-value={mode}><span class="ds-color-mode"><Icon name={mode==='light'?'sun':'moon'}/></span><span class="ds-stroke-swatch" style={`--ds-swatch-shade:var(--${value.token});--ds-swatch-base:var(--${mode==='light'?'color-white':'color-ink'})`} aria-hidden="true"/><span class="ds-mode-text">{value.label}</span></div>;})}</div>
     </article>)}</div>
    </div>}
    {item.id==='typography'&&<div class="ds-type-table">

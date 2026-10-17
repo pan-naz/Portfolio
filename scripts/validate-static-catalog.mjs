@@ -1,3 +1,4 @@
+import {validateBuiltNativeTooltips} from './validate-native-tooltips.mjs';
 import {validateRenderedIcons} from './validate-icons.mjs';
 import {foundationSourceCode} from '../src/data/system-code.ts';
 import {validateRenderedFoundationCode,validateRenderedThemeZones} from './validate-foundation-code.mjs';
@@ -6,6 +7,7 @@ import assert from 'node:assert/strict';
 import {readFileSync,readdirSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {visibleComponents,catalogComponents,dsComponents} from '../src/data/ds-components.ts';
+import {statisticProps} from '../src/data/system-statistic.ts';
 import {sectionHeadingProps} from '../src/data/system-section-heading.ts';
 import {projectCardProps} from '../src/data/system-project-card.ts';
 import {navigationProps} from '../src/data/system-navigation.ts';
@@ -15,6 +17,7 @@ import {buildSystemInventory} from '../src/data/system-inventory.ts';
 import {validateInventoryCoverage,validateVariantCoverage,validateRenderedComponentNames,validateOverviewHiddenEntries} from './validate-design-system.mjs';
 const root=resolve(import.meta.dirname,'..'),read=file=>readFileSync(resolve(root,file),'utf8');
 const catalog=read('dist/design-system/index.html'),home=read('dist/index.html');
+assert.deepEqual(validateBuiltNativeTooltips(root),[],'No rendered page or popup template may create a native browser tooltip');
 assert.deepEqual(validateRenderedIcons(catalog),[]);
 const styles=html=>[...html.matchAll(/<link[^>]*href="([^"]+\.css)"[^>]*>/g)].map(([,file])=>read('dist'+file)).concat([...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map(([,css])=>css)).join('\n');
 assert.equal((catalog.match(/\bdata-theme-control/g)||[]).length,1,'Only the header controls the page theme');
@@ -82,7 +85,7 @@ const templates=[...catalog.matchAll(/<template\b[^>]*>([\s\S]*?)<\/template>/g)
 for(const scope of [catalog.replace(/<template\b[^>]*>[\s\S]*?<\/template>/g,''),...templates]){const ids=[...scope.matchAll(/\bid="([^"]+)"/g)].map(([,id])=>id);assert.equal(ids.length,new Set(ids).size,'Unique ids within each document/template scope');}
 const model=buildSystemInventory(root),names=[...new Set([...catalog.matchAll(/data-ds-component="([^"]+)"/g)].map(([,name])=>name))];
 assert.deepEqual(validateRenderedComponentNames(names,catalogComponents.map(item=>item.name)),[]);
-for(const entry of catalogComponents){const component=model.components.find(item=>item.name===entry.name);const hook=['button','chip','navigation','project-card','section-heading'].includes(entry.section)?`data-ds-component-code="${entry.name}"`:`id="${entry.section}"`;const view=catalog.match(new RegExp(`<section[^>]*${hook}[\\s\\S]*?</section>`))?.[0]||'';const documented=[...view.matchAll(/data-ds-prop="([^"]+)"/g)].map(([,name])=>name);assert.deepEqual(documented,(entry.section==='button'?buttonProps(component):entry.section==='navigation'?navigationProps(component):entry.section==='project-card'?projectCardProps(component):entry.section==='section-heading'?sectionHeadingProps(component):componentPropSpecs(component)).map(prop=>prop.name),`All source props, including inherited fields: ${entry.name}`);}
+for(const entry of catalogComponents){const component=model.components.find(item=>item.name===entry.name);const hook=['button','chip','navigation','project-card','section-heading','statistic'].includes(entry.section)?`data-ds-component-code="${entry.name}"`:`id="${entry.section}"`;const view=catalog.match(new RegExp(`<section[^>]*${hook}[\\s\\S]*?</section>`))?.[0]||'';const documented=[...view.matchAll(/data-ds-prop="([^"]+)"/g)].map(([,name])=>name);assert.deepEqual(documented,(entry.section==='button'?buttonProps(component):entry.section==='navigation'?navigationProps(component):entry.section==='project-card'?projectCardProps(component):entry.section==='statistic'?statisticProps(component):entry.section==='section-heading'?sectionHeadingProps(component):componentPropSpecs(component)).map(prop=>prop.name),`All source props, including inherited fields: ${entry.name}`);}
 const paths=dsComponents.map(item=>item.file),tokens=[...new Set([...catalog.matchAll(/data-ds-token="([^"]+)"/g)].map(([,name])=>name))],icons=[...new Set([...catalog.matchAll(/data-ds-icon="([^"]+)"/g)].map(([,name])=>name))];
 assert.deepEqual(validateInventoryCoverage(model,paths,tokens,icons,read('src/styles/tokens.css'),catalog+styles(catalog)),[]);
 const variantValues=[...catalog.matchAll(/data-ds-variant="([^"]+)"/g)].map(([,value])=>value);assert.deepEqual(validateVariantCoverage(model,variantValues),[]);

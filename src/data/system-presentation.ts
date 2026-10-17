@@ -1,9 +1,5 @@
 import { tooltipFollowTiming } from '../scripts/tooltip.ts';
 export const componentPresentation:Record<string,{description:string;hint:string;columns:{title:string;rows:{name:string;detail?:string;token?:string;context?:string;selector?:string;properties?:string}[]}[];rules:string[]}>={
- Stat:{description:'A result: the number, what it measures and its context.',hint:'Static',columns:[
- {title:'Parts',rows:[{name:'Value',detail:'The number in accent.'},{name:'Label',detail:'What it measures.'},{name:'Note',detail:'Its source or comparison.'}]},
- {title:'Sizes',rows:[{name:'Value',selector:'.stat-value',properties:'font-size,line-height,font-weight'},{name:'Label',selector:'.stat-label',properties:'font-size,font-weight'},{name:'Note',selector:'.stat dd',properties:'font-size'}]},
- {title:'Colors',rows:[{name:'Accent',token:'color-interactive-accent',detail:'Value.'},{name:'Ink',token:'color-text-primary',detail:'Label.'},{name:'Muted',token:'color-text-secondary',detail:'Context.'}]}],rules:['Use only sourced results.','Read project metrics from left to right.','Keep the note and accessible text with the number.']},
  Tooltip:{description:'Shows a short name beside a tool card.',hint:'Hover to follow the mouse · keyboard focus centres on the tool card',columns:[
  {title:'States',rows:[{name:'Hidden',detail:'At rest and on touch devices.'},{name:'Visible above',detail:'Follows the mouse with shared smoothing.'},{name:'Flipped below',detail:'Moves below the pointer near the top edge.'},{name:'Keyboard focus',detail:'Centred on the tool card.'}]},
  {title:'Sizes',rows:[{name:'Padding',selector:'.tooltip',properties:'padding'},{name:'Radius',token:'radius-full'},{name:'Body/M',selector:'.tooltip',properties:'font-size,line-height'}]},

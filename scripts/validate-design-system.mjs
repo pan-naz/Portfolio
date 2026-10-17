@@ -1,3 +1,5 @@
+import {validateNativeTooltipSources} from './validate-native-tooltips.mjs';
+import {validateStatistic} from './validate-statistic.mjs';
 import {validateHeroFrame} from './validate-hero-frame.mjs';
 import {validateSectionHeading} from './validate-section-heading.mjs';
 import {validateProjectCard} from './validate-project-card.mjs';
@@ -185,7 +187,7 @@ export function validateHiddenDocumentation(records, text) {
   }
   return failures;
 }
-const errors = [...validateProjectCard(root),...validateNavigationCatalog(root),...validateChip(root),...validateSystemCleanup(root),...validateButtonCatalog(root),...validateIcons(root),...validateMotionContract(root),...validate(registry),...validateColors(),...validateSpaceShape(root),...validateRadiusContract(),...validateFoundationCodeContract(root)];
+const errors = [...validateNativeTooltipSources(root),...validateStatistic(root),...validateProjectCard(root),...validateNavigationCatalog(root),...validateChip(root),...validateSystemCleanup(root),...validateButtonCatalog(root),...validateIcons(root),...validateMotionContract(root),...validate(registry),...validateColors(),...validateSpaceShape(root),...validateRadiusContract(),...validateFoundationCodeContract(root)];
 errors.push(...validateLogoWave(read('src/styles/global.css'), read('src/components/Logo.astro'), read('src/styles/tokens.css'), filesUnder('src/scripts').filter(file=>file.endsWith('.ts')&&file!=='src/scripts/design-system-motion.ts').map(read).join('\n')));
 if(JSON.stringify(visibleComponents.map(item=>item.name).sort())!==JSON.stringify([...expectedVisible].sort()))errors.push('Visible catalog must contain exactly the approved eight pages');
 for(const [file,key] of Object.entries(hiddenKeys))if(componentManifest.find(item=>item.file===file)?.documentedHidden!==key)errors.push('Missing documented-hidden classification: '+file);

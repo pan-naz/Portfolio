@@ -1,0 +1,25 @@
+import fs from 'node:fs';import path from 'node:path';
+import {statisticDescription,statisticCards,statisticExamples,statisticNumber,statisticUsage,statisticProps,statisticTokenGroups,statisticTokenCode} from '../src/data/system-statistic.ts';
+import {buildSystemInventory} from '../src/data/system-inventory.ts';
+import {missingUsageNames} from './validate-button.mjs';
+export function validateStatistic(root=process.cwd()){
+ const read=file=>fs.readFileSync(path.join(root,file),'utf8'),errors=[],page=read('src/components/DSStatistics.astro'),specimen=read('src/components/DSStatisticSpecimen.astro'),css=read('src/styles/design-system-statistic.css'),stat=read('src/components/Stat.astro');
+ if(statisticDescription!=='A result with its label and an optional note.'||statisticCards.map(c=>c.id).join()!=='default,case,bare,number')errors.push('Statistic has its exact four approved cards and description.');
+ if(statisticExamples.default.value!=='$1.5M'||statisticExamples.case.value!=='≈87%'||statisticExamples.bare.value!=='30+'||statisticNumber!=='10+')errors.push('Statistic specimens must read the actual website results.');
+ if(!/note\?: string/.test(stat)||!stat.includes('{note && <dd')||read('src/styles/datagpt-case-study.css').includes('dd:empty')||/note:\s*''/.test(read('src/components/DataGPTCaseStudy.astro')+read('src/data/datagpt-case-study.ts')))errors.push('Stat omits absent/empty notes; DataGPT needs no empty-note markup or style.');
+ if(/DSTokenNames|data-ds-names|ds-hint|ds-specs-card|data-ds-markup|ds-canvas|States/.test(page)||!page.includes('<DSTabs id="statistic-canvas"'))errors.push('Statistic uses only the shared component-page Preview/Code frame, no states or token switch.');
+ if(!specimen.includes('<Stat {...statisticExamples[kind]}/>')||!specimen.includes('<MetricValue value={statisticNumber} as="strong"/>')||/revealValue|reveal=/.test(specimen)||!page.includes('inert aria-hidden="true"'))errors.push('Statistic composes settled inert Stat/MetricValue examples.');
+ if(!css.includes('grid-template-columns:repeat(2,minmax(0,1fr))')||!css.includes('grid-template-rows:subgrid')||!css.includes('width:min(100%,var(--ds-stat-width))')||/transform:scale/.test(css.replace(/\.ds-stat-cover \.ds-stat-art\s*\{[^}]+\}/,'')))errors.push('Statistic uses full-size, width-limited specimens and aligned two-column cards.');
+ if(!read('src/components/DSDashboard.astro').includes('<DSStatisticSpecimen kind="default" cover/>')||/ds-stat-composition|ds-tile-mini--statistic/.test(read('src/components/DSPreview.astro')+read('src/styles/design-system.css')))errors.push('Overview uses the same genuine Default result, with no retired stat composition.');
+ const model=buildSystemInventory(root);
+ for(const name of ['Stat','MetricValue']){
+  const component=model.components.find(c=>c.name===name),props=statisticProps(component),expected=name==='Stat'?['value','label','note','revealValue']:['value','as','class','reveal'];
+  if(props.map(p=>p.name).join()!==expected.join()||props.some(p=>!p.description))errors.push(name+' Props must follow source order with exact descriptions.');
+  const usage=statisticUsage(name);if(missingUsageNames(usage).length||usage.split('\n').some(line=>line.length>80)||/\.\.\./.test(usage))errors.push(name+' Usage must be self-contained with written-out props and ≤80-character lines.');
+  if(component.usages.some(u=>u.file.includes('/DS')))errors.push(name+' Source lists website consumers only.');
+ }
+ const expected=['--color-border-default','--color-interactive-accent','--color-text-secondary','--text-body-m','--text-body-m-strong','--text-body-s','--text-heading-l','--space-1','--space-4','--distance-title-reveal','--duration-title-reveal','--ease-entrance','--stagger-title-reveal'].sort();
+ if(statisticTokenGroups().flatMap(g=>g.names).sort().join()!==expected.join())errors.push('Statistic direct Color/Type/Spacing/Motion tokens must follow the shared source.');
+ if(statisticTokenCode().split('\n').some(line=>line.length>60))errors.push('Statistic half-width token lines must be ≤60 characters.');
+ return errors;
+}

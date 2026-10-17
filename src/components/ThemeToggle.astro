@@ -5,7 +5,7 @@ import SegmentedControl from './SegmentedControl.astro';
 interface Props { appearance?: 'icon' | 'segmented'; }
 const { appearance = 'icon' } = Astro.props;
 ---
-{appearance === 'segmented' ? <SegmentedControl theme label="Color theme" attribute="data-theme-choice" choices={[{value:'light',label:'Light',icon:'sun'},{value:'dark',label:'Dark',icon:'moon'}]}/> : <IconButton class="theme-toggle theme-icon-control" label="Switch to dark theme" title="Switch theme">
+{appearance === 'segmented' ? <SegmentedControl theme label="Color theme" attribute="data-theme-choice" choices={[{value:'light',label:'Light',icon:'sun'},{value:'dark',label:'Dark',icon:'moon'}]}/> : <IconButton class="theme-toggle theme-icon-control" label="Switch to dark theme">
   <span class="theme-toggle-glyph theme-icon-glyph" aria-hidden="true">
   <Icon name="sun" class="theme-sun" />
   <Icon name="moon" class="theme-moon" />

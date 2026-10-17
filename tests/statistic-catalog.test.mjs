@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
+import {validateStatistic} from '../scripts/validate-statistic.mjs';
+import {statisticProps,statisticUsage,statisticExamples} from '../src/data/system-statistic.ts';
+import {buildSystemInventory} from '../src/data/system-inventory.ts';
+assert.deepEqual(validateStatistic(),[]);
+const stat=buildSystemInventory().components.find(c=>c.name==='Stat');
+assert.equal(statisticProps(stat).find(p=>p.name==='note').default,'—');
+assert.equal(statisticProps(stat).find(p=>p.name==='revealValue').default,'false');
+assert(!('note' in statisticExamples.bare));
+assert(!/note:\s*''/.test(readFileSync('src/data/datagpt-case-study.ts','utf8')),'All DataGPT result records omit empty notes');
+const calls=statisticUsage('Stat');assert(calls.includes('revealValue'));assert(calls.includes('corridor tests and moderated sessions'));assert(!calls.split('<!-- DataGPT case study -->')[1].includes('note='));
+const html=readFileSync('dist/case-studies/datagpt/index.html','utf8');
+assert(!/<dd\b[^>]*>\s*<\/dd>/.test(html),'No empty description remains on DataGPT');
+assert(html.includes('stakeholder interviews'),'The no-note result keeps its real label');
+console.log('PASS: Statistic source content, optional notes, explicit Usage and direct token contract.');

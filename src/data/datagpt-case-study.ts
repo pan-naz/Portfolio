@@ -49,15 +49,15 @@ export const features = [
   { title: 'Three layers, documented in Figma', body: 'Every component shipped with interaction states, usage guidelines and behaviour rules. Engineers could build new features, from conversation flows to charts.', points: ['Base tokens', 'Core components', 'Analytical components'], media: dataGPTMedia.system },
 ];
 export const queryResults = [
-  { value: '−64%', label: 'Ambiguous queries (requiring clarification or rephrasing)', note: '' },
-  { value: '+58%', label: 'First try query Success Rate', note: '' },
-  { value: '+41%', label: 'Average session depth (queries per session) grew by', note: '' },
-  { value: '2m → 30s', label: 'Average Time to Insight', note: '' },
+  { value: '−64%', label: 'Ambiguous queries (requiring clarification or rephrasing)' },
+  { value: '+58%', label: 'First try query Success Rate' },
+  { value: '+41%', label: 'Average session depth (queries per session) grew by' },
+  { value: '2m → 30s', label: 'Average Time to Insight' },
 ];
 export const contextResults = [
-  { value: '+27%', label: 'Conversation satisfaction (thumbs-up ratio in chat)', note: '' },
-  { value: '58%', label: 'Engagement Retention', note: '' },
-  { value: '89%', label: 'Context Visibility Confidence (post-chat data clarity check)', note: '' },
+  { value: '+27%', label: 'Conversation satisfaction (thumbs-up ratio in chat)' },
+  { value: '58%', label: 'Engagement Retention' },
+  { value: '89%', label: 'Context Visibility Confidence (post-chat data clarity check)' },
 ];
 export const conclusions = [
   ['Hybrid insight view', 'Allowed users to explore metrics and follow up through conversation within the same screen.'],
