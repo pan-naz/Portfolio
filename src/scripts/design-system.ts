@@ -131,3 +131,67 @@ const showTooltipExample=(state:string)=>{
 };
 for(const button of document.querySelectorAll<HTMLElement>('[data-ds-tooltip-state]'))button.addEventListener('click',()=>showTooltipExample(button.dataset.dsTooltipState!));
 if(matchMedia('(hover: none), (pointer: coarse)').matches)showTooltipExample('focus');
+
+/** Keep the existing column count unless a real, unwrapped specimen needs more room. */
+export const fitCatalogColumns=(grid:HTMLElement,maximum:number,required:number)=>{
+ const gap=parseFloat(getComputedStyle(grid).columnGap)||0;
+ let count=maximum;
+ while(count>1&&(grid.clientWidth-gap*(count-1))/count<required)count--;
+ const columns=`repeat(${count},minmax(0,1fr))`;
+ if(grid.style.gridTemplateColumns!==columns)grid.style.gridTemplateColumns=columns;
+ grid.dataset.dsColumns=String(count);
+};
+
+const observeCatalogFit=(element:HTMLElement,fit:()=>void)=>{
+ let pending=false;
+ const schedule=()=>{if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;fit();});};
+ new ResizeObserver(schedule).observe(element);
+ document.fonts.ready.then(schedule);
+};
+
+// Icons size specimens reflow first and share one scale across the complete row.
+const iconSizes=document.querySelector<HTMLElement>('.ds-icons-sizes');
+if(iconSizes){
+ const fitIconSizes=()=>{
+  const arts=[...iconSizes.querySelectorAll<HTMLElement>('.ds-icons-size-art')];
+  if(!iconSizes.clientWidth)return;
+  const required=Math.max(...arts.map(art=>{const stage=getComputedStyle(art.parentElement!),card=getComputedStyle(art.closest('.ds-icons-card')!),css=getComputedStyle(art),widths=[...art.children].map(child=>(child as HTMLElement).offsetWidth),width=css.flexDirection==='column'?Math.max(...widths):widths.reduce((sum,width)=>sum+width,0)+parseFloat(css.columnGap)*(widths.length-1);return width+parseFloat(stage.paddingLeft)+parseFloat(stage.paddingRight)+parseFloat(card.paddingLeft)+parseFloat(card.paddingRight);}));
+  fitCatalogColumns(iconSizes,innerWidth<768?1:2,required);
+  const scale=Math.min(1,...arts.map(art=>{const stage=art.parentElement!,css=getComputedStyle(stage);return (stage.clientWidth-parseFloat(css.paddingLeft)-parseFloat(css.paddingRight))/art.offsetWidth;}));
+  iconSizes.style.setProperty('--ds-icons-row-scale',String(scale));
+ };
+ observeCatalogFit(iconSizes,fitIconSizes);
+}
+
+const strokeCards=document.querySelector<HTMLElement>('.ds-stroke-cards');
+if(strokeCards){
+ const fitStrokeCards=()=>{
+  if(!strokeCards.clientWidth)return;
+  const required=Math.max(...[...strokeCards.querySelectorAll<HTMLElement>('.ds-stroke-sample > .button')].map(button=>{const card=getComputedStyle(button.closest('.ds-stroke-card')!);return button.offsetWidth+parseFloat(card.paddingLeft)+parseFloat(card.paddingRight);}));
+  fitCatalogColumns(strokeCards,innerWidth<768?1:innerWidth<1100?2:4,required);
+ };
+ observeCatalogFit(strokeCards,fitStrokeCards);
+}
+
+// Interface pictures keep four fixed slots; only the surrounding cards may reflow.
+const iconGroups=document.querySelector<HTMLElement>('.ds-icons-groups');
+if(iconGroups){
+ const fitIconCards=()=>{
+  if(!iconGroups.clientWidth)return;
+  const css=getComputedStyle(iconGroups),token=(name:string)=>parseFloat(css.getPropertyValue(name));
+  const minimum=token('--control-icon'),maximum=token('--space-16');
+  const grid=iconGroups.querySelector<HTMLElement>('.ds-icons-grid')!,card=grid.closest<HTMLElement>('.ds-icons-card')!;
+  const cardCSS=getComputedStyle(card),padding=parseFloat(cardCSS.paddingLeft)+parseFloat(cardCSS.paddingRight);
+  const gap=innerWidth<768?token('--space-1'):token('--space-2');
+  const labels=[...iconGroups.querySelectorAll<HTMLElement>('.ds-icon-name')];
+  const labelWidth=Math.max(...labels.map(label=>label.getBoundingClientRect().width));
+  fitCatalogColumns(iconGroups,innerWidth<768?1:innerWidth<1100?2:3,4*Math.max(minimum,labelWidth-gap)+3*gap+padding);
+  const room=grid.getBoundingClientRect().width;
+  // Use the existing half-space only when it lets four full-size phone pictures fit.
+  const tileGap=innerWidth<768&&room>=4*maximum+3*gap/2?gap/2:gap;
+  const size=Math.max(minimum,Math.min(maximum,(room-3*tileGap)/4));
+  iconGroups.style.setProperty('--ds-icon-tile-size',`${size}px`);
+  iconGroups.style.setProperty('--ds-icon-tile-gap',`${tileGap}px`);
+ };
+ observeCatalogFit(iconGroups,fitIconCards);
+}

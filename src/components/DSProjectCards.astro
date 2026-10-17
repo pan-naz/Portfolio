@@ -17,7 +17,7 @@ const tokenCode=tokenGroups.map(group=>`/* ${group.title} */\n`+group.names.join
     <div class="ds-button-grid ds-project-grid">{projectCardCards.map(card=><article class:list={['ds-button-card',`ds-project-card--${card.id}`]} data-project-card={card.id}>
      <div class="ds-button-stage ds-project-stage" inert aria-hidden="true"><DSProjectCardSpecimen kind={card.id}/></div>
      <div><p class="text-body-m-strong">{card.name}</p><p class="text-body-s ds-button-secondary">{card.description}</p></div>
-     <dl class="ds-button-values text-body-s"><div><dt>Used in</dt><dd>{card.used}</dd></div><div><dt>Style</dt><dd>{card.style}</dd></div></dl>
+     <dl class="ds-button-values text-body-s"><div><dt>Used in</dt><dd>{card.used.split(/( · |, )/).map((item,index)=>index%2?item:<span class="ds-value-item">{item}</span>)}</dd></div><div><dt>Style</dt><dd>{card.style.split(/( · |, )/).map((item,index)=>index%2?item:<span class="ds-value-item">{item}</span>)}</dd></div></dl>
     </article>)}</div>
    </section>
    <section class="ds-button-group"><p class="text-label-m">Project card states</p><p class="text-body-s ds-button-secondary">The whole card is one link to the case study.</p>

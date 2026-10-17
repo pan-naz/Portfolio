@@ -1,0 +1,31 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';
+const read=file=>fs.readFileSync(new URL('../'+file,import.meta.url),'utf8');
+const artwork=read('src/scripts/case-study/case-study-artwork.ts'),controller=read('src/scripts/case-study/case-studies.ts');
+assert(artwork.includes("reservation.content.ownerDocument.importNode(node, true)"),'Image reservations are inert before loading attributes are removed');
+assert(artwork.includes("originalImage(cardImage) !== originalImage(heroImage)"),'Asset identity must not depend on the selected responsive URL');
+assert(controller.indexOf('borrowedImage = borrowHeroImage(media, pendingHero)')<controller.indexOf('scroll.replaceChildren(content)'),'Transfer the loaded card image before the destination can request another size');
+assert(controller.includes("source?.dataset.src ? new URL(source.dataset.src, document.baseURI).href"),'Mobile and desktop versions share their deferred source identity');
+assert(controller.includes("for (const type of ['pointerover', 'focusin', 'pointerdown'])"),'Hover, keyboard focus and press prepare the destination');
+assert.match(controller,/preparedImage\.decode\(\)\.then\(\(\) => \{\s*if \(ticket !== revision \|\| phase !== 'open' \|\| !borrowedImage\) return;/,'Only a decoded destination can replace a settled, current image');
+assert(!/currentTime\s*=/.test(artwork+controller),'A media handoff never rewinds playback');
+for(const file of ['DSButtons','DSChips','DSProjectCards','DSNavigationExamples']){
+ const source=read('src/components/'+file+'.astro');assert(source.includes('class="ds-value-item"'),file+' preserves each semantic value item');assert(!/<dd>\{card\.(?:used|style|value)\}<\/dd>/.test(source),file+' must not break inside a value item');
+}
+const css=read('src/styles/design-system.css'),button=read('src/styles/design-system-button.css'),motion=read('src/styles/design-system-motion.css'),fit=read('src/scripts/design-system-button.ts');
+assert(button.includes('.ds-value-item { display:inline-block; white-space:nowrap; }'));
+assert(motion.includes('.ds-motion-values .ds-token-swap { align-items:start; }'),'Hidden tokens must not vertically centre visible labels');
+assert(motion.includes('.ds-motion-curve-card .ds-token-human { white-space:nowrap; }'));
+assert(css.includes('.ds-icons-size-art {')&&css.includes('--ds-icons-row-scale'),'The Icons size row shares its scale');
+assert(fit.includes('for(const grid of states.querySelectorAll<HTMLElement>')&&fit.includes('for(const element of arts)writes.push({element,scale});'),'All Button variants in a group share one scale after reflow');
+assert(!fit.includes("writes.push({element:art,scale:Math.min"),'Individual card specimens cannot shrink independently');
+const catalog=read('src/scripts/design-system.ts');
+assert(catalog.includes('while(count>1&&(grid.clientWidth-gap*(count-1))/count<required)count--'),'Reflow only when the real specimen cannot fit the current columns');
+assert(fit.includes('fitCatalogColumns(grid,')&&catalog.includes('fitCatalogColumns(strokeCards,')&&catalog.includes('fitCatalogColumns(iconSizes,'),'All affected rows use measured reflow before scaling');
+assert(artwork.includes('pin.width === innerWidth || !pin.card.contains(image)'), 'Only a genuine viewport resize releases a returned card candidate');
+assert(artwork.includes("element.setAttribute('srcset', selection)"), 'Reparenting keeps exactly the candidate already decoded at the click');
+const pictures=read('src/components/DSIcons.astro').split('<p class="text-label-m">Size')[0];
+assert(!/tabindex|data-icon-hover|theme-icon-control/.test(pictures),'Interface tiles are noninteractive pictures');
+assert(pictures.includes('role="img" aria-label={iconLabels[name]}'),'Pictures retain their accessible names');
+assert(!catalog.includes('fitIconNames')&&!catalog.includes('fitCatalogColumns(grid,4'),'Four icon slots never collapse or stretch');
+assert(catalog.includes('fitCatalogColumns(iconGroups,')&&css.includes('repeat(4,var(--ds-icon-tile-size'),'Only surrounding group cards reflow');
+console.log('PASS: decoded media ownership, one-size preparation, inert reservations, and responsive catalog row rules.');

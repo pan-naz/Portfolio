@@ -36,7 +36,9 @@ if(root){
    const scale=Math.min(1,holder.clientWidth/pill.offsetWidth);pill.style.transform=`translateX(-50%) scale(${scale})`;holder.style.height=`${pill.offsetHeight*scale}px`;
   };
   if(id==='filter'){new ResizeObserver(fitPill).observe(art);fitPill();}
-  const arrowParts=art.querySelector<HTMLElement>('.ds-motion-arrow-parts');if(arrowParts)new ResizeObserver(()=>{arrowParts.style.transform=`scale(${Math.min(1,(art.clientWidth-parseFloat(getComputedStyle(art).paddingLeft)*2)/arrowParts.offsetWidth)})`;}).observe(art);
+  // The whole arrow composition shares one scale after its phone layout stacks.
+  const arrowParts=art.querySelector<HTMLElement>('.ds-motion-arrow-parts');if(arrowParts){let pending=false;new ResizeObserver(()=>{if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;if(!art.clientWidth)return;const css=getComputedStyle(art),card=art.closest<HTMLElement>('.ds-motion-card')!,grid=card.parentElement!,gridCSS=getComputedStyle(grid),cardCSS=getComputedStyle(card),columns=innerWidth<768?1:gridCSS.gridTemplateColumns.split(' ').length,gap=parseFloat(gridCSS.columnGap),single=(grid.clientWidth-gap*(columns-1))/columns-parseFloat(cardCSS.paddingLeft)-parseFloat(cardCSS.paddingRight)-parseFloat(css.paddingLeft)-parseFloat(css.paddingRight);card.style.gridColumn=columns>1&&arrowParts.offsetWidth>single?'span 2':'auto';const room=art.clientWidth-parseFloat(css.paddingLeft)-parseFloat(css.paddingRight);arrowParts.style.transform=`scale(${Math.min(1,room/arrowParts.offsetWidth)})`;});}).observe(art);}
+
   const build=()=>{
    cleanup();total=0;commitEnd=()=>{};
    if(id==='logo'){
