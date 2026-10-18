@@ -8,7 +8,7 @@
 .yellow-lede { margin-top: var(--space-6); color: var(--color-text-secondary); }
 .yellow-stack { display: grid; gap: var(--space-6); }
 .yellow-chapter-heading { align-items: end; }
-.yellow-chapter-heading > p { color: var(--color-text-secondary); }
+.yellow-chapter-heading > .title-align-line p { color: var(--color-text-secondary); }
 .yellow-duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--grid-gap); align-items: start; }
 .yellow-duo > * { min-width: 0; }
 .yellow-brand-card { display: grid; align-content: space-between; gap: var(--space-6); height: 100%; margin: 0; padding: var(--space-8); background: var(--color-bg-surface); border-radius: var(--radius-medium); box-shadow: var(--shadow-small); }

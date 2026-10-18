@@ -1,4 +1,5 @@
 ---
+import AlignedChapterCopy from './AlignedChapterCopy.astro';
 import SectionHeading from './SectionHeading.astro';
 import type { Project } from '../data/portfolio';
 import { offfHero, offfPage } from '../data/offf-conference-case-study';
@@ -23,9 +24,9 @@ if (!study) throw new Error(`Missing recording case study for ${project.id}`);
     <CaseStudyOverview project={project} titleId={`${study.prefix}-title`} presentation="compact" />
 
     <section id={`${study.prefix}-page`} aria-labelledby={`${study.prefix}-page-title`}>
-      <div class="case-study-columns recording-heading">
+      <div class="case-study-columns recording-heading title-pair">
         <div><SectionHeading id={`${study.prefix}-page-title`} label={study.page.eyebrow} layout="stacked" reveal={false}>{study.page.title}</SectionHeading></div>
-        <p class="recording-muted">{study.page.description}</p>
+        <AlignedChapterCopy><p class="recording-muted">{study.page.description}</p></AlignedChapterCopy>
       </div>
       <CaseStudyMedia {...study.page.media} />
     </section>

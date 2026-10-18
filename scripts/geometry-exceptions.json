@@ -1308,16 +1308,6 @@
     "file": "src/styles/promshyna-case-study.css",
     "selector": ".promshyna-badge",
     "context": "@layer project",
-    "property": "z-index",
-    "value": "1",
-    "kind": "layer",
-    "project": true,
-    "reason": "Project-only promshyna artwork geometry; preserve its supplied composition, not a system token."
-  },
-  {
-    "file": "src/styles/promshyna-case-study.css",
-    "selector": ".promshyna-badge",
-    "context": "@layer project",
     "property": "width",
     "value": "42px",
     "kind": "size",

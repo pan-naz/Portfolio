@@ -22,7 +22,8 @@
 .promshyna-rail::before, .promshyna-rail::after { content: ''; position: absolute; inset-block: 0; width: 9px; }
 .promshyna-rail::before { left: calc(50% - 9px); background: repeating-linear-gradient(-45deg, transparent 0 5px, var(--promshyna-tread) 5px 9px); }
 .promshyna-rail::after { left: 50%; background: repeating-linear-gradient(45deg, transparent 0 5px, var(--promshyna-tread) 5px 9px); }
-.promshyna-badge { position: sticky; top: calc(var(--space-6) + var(--safe-top)); z-index: 1; display: grid; place-items: center; width: 42px; height: 60px; margin-inline: auto; border: 5px solid var(--promshyna-dark); border-radius: var(--radius-full); color: var(--color-text-primary); background: var(--color-bg-canvas); font-variant-numeric: tabular-nums; }
+.promshyna-rail > .title-align-control { z-index: var(--layer-content); position: sticky; top: calc(var(--space-6) + var(--safe-top)); }
+.promshyna-badge { display: grid; place-items: center; width: 42px; height: 60px; margin-inline: auto; border: 5px solid var(--promshyna-dark); border-radius: var(--radius-full); color: var(--color-text-primary); background: var(--color-bg-canvas); font-variant-numeric: tabular-nums; }
 .promshyna-delivery { --color-border-default: var(--color-paper-8); padding-block: var(--case-section-space); background: var(--promshyna-dark); }
 .promshyna-delivery .promshyna-badge { border-color: var(--promshyna-orange); background: var(--promshyna-dark); }
 .promshyna-phones { --color-text-primary: var(--color-ink); --color-text-secondary: var(--color-ink-64); width: 100vw; margin-left: calc(50% - 50vw + (var(--safe-right) - var(--safe-left)) / 2); color: var(--color-text-primary); background: var(--promshyna-orange); }

@@ -1,4 +1,5 @@
 ---
+import AlignedChapterCopy from './AlignedChapterCopy.astro';
 import SectionHeading from './SectionHeading.astro';
 import type { Project } from '../data/portfolio';
 import { designCupHero, designCupRole, designCupPage, designCupJury, designCupEnding, designCupGuide } from '../data/design-cup-case-study';
@@ -16,7 +17,7 @@ const { project } = Astro.props;
     </CaseStudyOverview>
 
     <section id="dc-page" aria-labelledby="dc-page-title">
-      <div class="case-study-columns dc-heading"><div><SectionHeading id="dc-page-title" label={designCupPage.eyebrow} layout="stacked" reveal={false}>{designCupPage.title}</SectionHeading></div><p class="dc-muted">{designCupPage.description}</p></div>
+      <div class="case-study-columns dc-heading title-pair" data-title-pair-align="center"><div><SectionHeading id="dc-page-title" label={designCupPage.eyebrow} layout="stacked" reveal={false}>{designCupPage.title}</SectionHeading></div><AlignedChapterCopy><p class="dc-muted">{designCupPage.description}</p></AlignedChapterCopy></div>
       <div class="dc-landing"><CaseStudyMedia {...designCupPage.media} presentation="shadow" /></div>
     </section>
 
@@ -38,7 +39,7 @@ const { project } = Astro.props;
 
     <section class="case-study-chapter--inverse dc-guide" data-color-zone="dark" data-zone-keep="surface section shadows" id="dc-style" aria-labelledby="dc-style-title">
       <div class="case-study-chapter__inner dc-guide-inner">
-        <div class="case-study-columns dc-heading"><div><SectionHeading id="dc-style-title" label={designCupGuide.eyebrow} layout="stacked" reveal={false}>{designCupGuide.title}</SectionHeading></div><p class="dc-muted">{designCupGuide.description}</p></div>
+        <div class="case-study-columns dc-heading title-pair" data-title-pair-align="center"><div><SectionHeading id="dc-style-title" label={designCupGuide.eyebrow} layout="stacked" reveal={false}>{designCupGuide.title}</SectionHeading></div><AlignedChapterCopy><p class="dc-muted">{designCupGuide.description}</p></AlignedChapterCopy></div>
         <CaseStudyDecisionCard title={designCupGuide.lettering.title} layout="figure">
           <div class="case-study-columns dc-row dc-lettering">
             <p class="dc-muted">{designCupGuide.lettering.description}</p>

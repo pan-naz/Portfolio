@@ -94,7 +94,7 @@
       "width": 416,
       "height": 208,
       "bytes": 2592,
-      "sha256": "3389684bd0b97ae525630189153fe150703e958c431757b426cc7778f7943395"
+      "sha256": "4201672b2c43a292cf4c9382fc4bb2abba47efc81e0169a6e4857c7df9f9bb9c"
     },
     {
       "id": "statistic",
@@ -197,8 +197,8 @@
       "theme": "dark",
       "width": 416,
       "height": 208,
-      "bytes": 2608,
-      "sha256": "b008595807e0e0c71d136936dbed65e0638385db5071b931b29957152dc1f394"
+      "bytes": 2612,
+      "sha256": "fe7f2e85a20724bc06810abc1e932290172bb7098e898a036b36ebe5e938def4"
     },
     {
       "id": "statistic",

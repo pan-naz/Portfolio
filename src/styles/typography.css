@@ -178,3 +178,62 @@ body,
 .text-caps-centred { display: block; text-box-trim: trim-both; text-box-edge: cap alphabetic; }
 
 }
+
+@layer system {
+/* Title alignment · native cap baselines from the shared title type role.
+   The invisible line preserves the title's normal leading without measuring it. */
+.title-align-text, .title-align-control { display: contents; }
+.section-index > :is(.title-align-text, .title-align-control) { display: block; }
+@media (min-width: 768px) {
+  .title-align-line {
+    font-family: var(--font-heading-l);
+    font-size: var(--text-heading-l);
+    font-weight: var(--font-weight-heading-l);
+    line-height: var(--line-height-heading-l);
+    letter-spacing: var(--letter-spacing-heading-l);
+  }
+  .title-align-line::after { content: '\200b'; }
+  .title-align-line > :is(.title-align-text, .title-align-control) {
+    display: inline-grid;
+    vertical-align: baseline;
+    inline-size: 100%;
+    font-family: var(--font-body-m);
+    font-size: var(--text-body-m);
+    font-weight: var(--font-weight-body-m);
+    line-height: var(--line-height-body-m);
+    letter-spacing: var(--letter-spacing-body-m);
+  }
+  .title-align-line > :is(.title-align-text, .title-align-control)::before {
+    content: '';
+    grid-area: 1 / 1;
+    inline-size: 0;
+    block-size: 1cap;
+    font-family: var(--font-heading-l);
+    font-size: var(--text-heading-l);
+    font-weight: var(--font-weight-heading-l);
+    line-height: var(--line-height-heading-l);
+  }
+  .title-align-line > :is(.title-align-text, .title-align-control) > * { grid-area: 1 / 1; }
+  .title-align-line > .title-align-text > * { align-self: start; }
+  .title-align-line > .title-align-text > :first-child,
+  .title-align-line > .title-align-text > :first-child > p:first-child {
+    text-box-trim: trim-start;
+    text-box-edge: cap alphabetic;
+  }
+  /* Empty control reference · use only the cap and control’s intrinsic row. */
+  .title-align-line > .title-align-control { line-height: 0; grid-template-rows: max-content; }
+  .title-align-line > .title-align-control::before, .title-align-line > .title-align-control > * { align-self: center; }
+  .title-align-line > .title-align-control > * { justify-self: start; }
+}
+
+@media (min-width: 768px) {
+  .title-pair:has(.text-heading-xl) .title-align-line,
+  .title-pair:has(.text-heading-xl) .title-align-text::before {
+    font-family: var(--font-heading-xl);
+    font-size: var(--text-heading-xl);
+    font-weight: var(--font-weight-heading-xl);
+    line-height: var(--line-height-heading-xl);
+  }
+}
+
+}

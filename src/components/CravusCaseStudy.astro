@@ -1,4 +1,5 @@
 ---
+import AlignedChapterCopy from './AlignedChapterCopy.astro';
 import type { Project } from '../data/portfolio';
 import { cravusMedia as media, cravusRole, cravusTeam, cravusConcepts, cravusHomeSections, cravusPages, cravusPalette } from '../data/cravus-case-study';
 import CaseStudyOverview from './CaseStudyOverview.astro';
@@ -37,9 +38,9 @@ const { project } = Astro.props;
     </section>
 
     <section aria-labelledby="cv-pages">
-      <div class="case-study-columns cravus-chapter-heading">
+      <div class="case-study-columns cravus-chapter-heading title-pair">
         <div><SectionHeading layout="stacked" reveal={false} label="02–09" id="cv-pages">Inner pages</SectionHeading></div>
-        <p class="text-body-m cravus-muted">Besides the main page, the app has eight pages. Every page uses the same header, cards and footer.</p>
+        <AlignedChapterCopy><p class="text-body-m cravus-muted">Besides the main page, the app has eight pages. Every page uses the same header, cards and footer.</p></AlignedChapterCopy>
       </div>
       <div class="cravus-pages cravus-block">{cravusPages.map(page => <div class="case-study-columns">
         <case-study-sticky class="case-study-sticky cravus-page-copy">
@@ -51,9 +52,9 @@ const { project } = Astro.props;
     </section>
 
     <CaseStudyBand class="cravus-band cravus-mobile" labelledBy="cv-mobile">
-        <div class="case-study-columns cravus-chapter-heading">
+        <div class="case-study-columns cravus-chapter-heading title-pair">
           <div><SectionHeading layout="stacked" reveal={false} label="Mobile" id="cv-mobile">Phone layouts</SectionHeading><p class="cravus-breakpoint text-body-s">320px +</p></div>
-          <p class="text-body-m cravus-muted">Every page has a phone layout. The menu folds into a button in the top-left corner, and cards and tables stack in one column.</p>
+          <AlignedChapterCopy><p class="text-body-m cravus-muted">Every page has a phone layout. The menu folds into a button in the top-left corner, and cards and tables stack in one column.</p></AlignedChapterCopy>
         </div>
         <div class="cravus-block"><CaseStudyMedia {...media.phones} /></div>
       </CaseStudyBand>

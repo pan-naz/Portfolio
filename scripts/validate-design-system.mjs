@@ -1,3 +1,4 @@
+import {validateTitleAlignment} from './validate-title-alignment.mjs';
 import {validateOverviewCovers} from './validate-overview-covers.mjs';
 import {validateNativeTooltipSources} from './validate-native-tooltips.mjs';
 import {validateStatistic} from './validate-statistic.mjs';
@@ -168,6 +169,7 @@ function validate(entries) {
     }
   }
   const tokens = read('src/styles/tokens.css');
+  errors.push(...validateTitleAlignment());
   errors.push(...validateTypographySystem(tokens, read('src/styles/typography.css'), read('src/components/DSFoundations.astro')));
   errors.push(...validateCatalogTypographyLayout(read('src/styles/design-system.css'), read('src/components/DSFoundations.astro'), read('src/components/ThemeToggle.astro')));
   errors.push(...validateStaticTypography(Object.fromEntries(filesUnder('src/styles').filter(file=>file.endsWith('.css')).map(file=>[file,read(file)])),typographyCssExclusions));
