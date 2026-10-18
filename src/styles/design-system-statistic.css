@@ -1,0 +1,18 @@
+@layer system, project;
+@layer system {
+.ds-stat-view .ds-stage-bar > .ds-tabs { margin-inline-start:0; }
+.ds-stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.ds-stat-grid .ds-button-card { display:grid; grid-row:span 3; grid-template-rows:subgrid; }
+.ds-stat-stage { min-height:calc(var(--space-24) * 2); }
+.ds-stat-fit { min-width:0; width:100%; }
+.ds-stat-fit > .ds-stat-art { width:min(100%,var(--ds-stat-width)); margin:0 auto; }
+.ds-stat-art dl { margin:0; }
+.ds-stat-view .ds-props-table :is(th,td) { overflow-wrap:normal; }
+.ds-stat-width-probe { position:fixed; inset:0 auto auto 0; width:100vw; height:0; visibility:hidden; overflow:hidden; contain:strict; pointer-events:none; }
+.ds-stat-width--case,.ds-stat-width--bare { display:grid; margin:0; }
+.ds-stat-width--bare { grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--grid-gap); }
+@media(max-width:767px) {
+ .ds-stat-grid { grid-template-columns:minmax(0,1fr); }
+ .ds-stat-width--bare { grid-template-columns:minmax(0,1fr); }
+}
+}

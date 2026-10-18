@@ -135,7 +135,6 @@ export function validateMotionContract(root=process.cwd()){
  for(const [,name]of model.matchAll(/(?:token|duration|delay|stagger|distance|curve):'([^']+)'/g))if(!defined.has(name))errors.push('Motion specimen references an unknown source token: '+name);
  const ids=[...model.matchAll(/\{id:'([^']+)'/g)].map(match=>match[1]);
  if(ids.join(',')!=='logo,button,arrow,tooltip,theme,tilt,project,header,text,role,filter,skills,other')errors.push('Motion must document all thirteen effects in the reviewed order.');
- if(!read('src/components/DSDashboard.astro').includes('<div class="ds-tile-visual" inert aria-hidden="true">')||!read('src/components/DSDashboard.astro').includes('<div class="ds-motion-tile"><DSMotionCurve cover'))errors.push('The Motion cover must be inert and hidden from assistive technology.');
  const code=read('src/data/system-code.ts'),catalogCss=read('src/styles/design-system.css');
  if(!code.includes("motion:block('motion','Motion','Icons')")||!code.includes('scroll.indexOf(\'/** Section scroll ·\')'))errors.push('Motion Code must show the verbatim Motion source and exact scroll function.');
  if(!catalogCss.includes('repeat(auto-fit,minmax(min(100%,calc(60ch + var(--space-6) * 2)),1fr))'))errors.push('Paired Code blocks need two complete sixty-character columns before sitting side by side.');

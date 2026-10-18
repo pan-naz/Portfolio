@@ -28,7 +28,6 @@ const freeze=(rules:CSSRuleList):string=>[...rules].map(rule=>{
 }).join('\n');
 const frozen=document.createElement('style');frozen.dataset.dsProjectStates='';frozen.textContent='@layer system {'+[...document.styleSheets].map(sheet=>{try{return freeze(sheet.cssRules)}catch{return ''}}).join('\n')+'}';document.head.append(frozen);
 const view=document.querySelector<HTMLElement>('#project-card')!,probe=view.querySelector<HTMLElement>('.ds-project-width-probe .work-content')!;
-const covers=[...document.querySelectorAll<HTMLElement>('.ds-project-tile')];
 const write=(element:HTMLElement,name:string,value:string)=>{if(element.style.getPropertyValue(name)!==value)element.style.setProperty(name,value);};
 const fit=()=>{
  if(probe.getClientRects().length){
@@ -75,11 +74,9 @@ const fit=()=>{
    }
   }
  }
- for(const cover of covers){if(!cover.parentElement!.clientWidth)continue;const css=getComputedStyle(cover),stage=cover.parentElement!,clearance=parseFloat(css.getPropertyValue('--space-4'))*2+parseFloat(css.getPropertyValue('--space-1'));
-  write(cover,'--ds-cover-fit',String(Math.min(parseFloat(css.getPropertyValue('--ds-cover-base-scale')),(parseFloat(getComputedStyle(stage).width)-clearance)/cover.offsetWidth,(stage.clientHeight-clearance)/cover.offsetHeight)));
- }
+
  view.dataset.projectReady='true';
 };
 let pending=false;const schedule=()=>{if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;fit();});};
-const observer=new ResizeObserver(schedule);view.querySelectorAll('.ds-project-grid,.ds-project-states,.ds-project-art').forEach(el=>observer.observe(el));covers.forEach(cover=>observer.observe(cover.parentElement!));
+const observer=new ResizeObserver(schedule);view.querySelectorAll('.ds-project-grid,.ds-project-states,.ds-project-art').forEach(el=>observer.observe(el));
 window.addEventListener('resize',schedule);document.fonts.ready.then(schedule);view.querySelectorAll('img').forEach(img=>img.addEventListener('load',schedule));

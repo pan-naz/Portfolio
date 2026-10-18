@@ -38,7 +38,7 @@ export const componentPurposes: Record<string, string> = {
   'src/components/SiteFooter.astro': 'Ends the page with portfolio details and decorative icons.',
   'src/components/SiteHeader.astro': 'Provides the wordmark, navigation and theme control.',
   'src/components/SkillMarquee.astro': 'Shows the skill labels in a repeating row.',
-  'src/components/Stat.astro': 'Pairs a result with its label and note.',
+  'src/components/Stat.astro': 'A result with its label and an optional note.',
   'src/components/SvgAsset.astro': 'Renders an original vector as genuine SVG geometry.',
   'src/components/TextLink.astro': 'Provides an inline or compact text destination.',
   'src/components/ThemeToggle.astro': 'Switches the page between Light and Dark.',

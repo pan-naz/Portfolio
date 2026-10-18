@@ -1,0 +1,228 @@
+{
+  "renderer": "tools/visual-check/render-overview-covers.mjs",
+  "browser": "155.0.8059.84",
+  "scale": 2,
+  "canvas": {
+    "width": 208,
+    "height": 104
+  },
+  "content": {
+    "width": 176,
+    "height": 72,
+    "fullHeight": [
+      "motion",
+      "timeline-row",
+      "tooltip"
+    ]
+  },
+  "covers": [
+    {
+      "id": "color",
+      "theme": "light",
+      "width": 416,
+      "height": 208,
+      "bytes": 2738,
+      "sha256": "f89af21079671cca74fce91b3049f017df2d5c445387da749bcf2b6a69d218a2"
+    },
+    {
+      "id": "typography",
+      "theme": "light",
+      "width": 416,
+      "height": 208,
+      "bytes": 2356,
+      "sha256": "ced7b57b1edf6e228d2f0a9787b7fed587a7fff52411c54b814dc0f5f6eb1197"
+    },
+    {
+      "id": "spacing-layout",
+      "theme": "light",
+      "width": 416,
+      "height": 208,
+      "bytes": 9236,
+      "sha256": "10db5cc4995bc3d5c1d2c102778bb8bc417f44ce0fed291753678e2878f2d647"
+    },
+    {
+      "id": "motion",
+      "theme": "light",
+      "width": 416,
+      "height": 208,
+      "bytes": 1526,
+      "sha256": "0b4f25520ad8f9e371ac90aef233fd4c0f03f17c365c68c3717477a9adbf2a08"
+    },
+    {
+      "id": "icons",
+      "theme": "light",
+      "width": 416,
+      "height": 208,
+      "bytes": 8316,
+      "sha256": "07bfc6063b05fe898b38d25ae45b80d49c141cacec4fe4f9a34ed2ddad8dc56b"
+    },
+    {
+      "id": "button",
+      "theme": "light",
+      "width": 416,
+      "height": 208,
+      "bytes": 8318,
+      "sha256": "021192eba64c0550c3c1dd4b290df185e10860700184193df572e936c28ac86c"
+    },
+    {
+      "id": "chip",
+      "theme": "light",
+      "width": 416,
+      "height": 208,
+      "bytes": 4332,
+      "sha256": "21ee0ffce8cdc214c68b5c0c0f1fece24e58574047b553e417a4f6171c88e3dc"
+    },
+    {
+      "id": "navigation",
+      "theme": "light",
+      "width": 416,
+      "height": 208,
+      "bytes": 5212,
+      "sha256": "d1d638d148441c1ee0204f3031e2ce3872bc8beb1ced2b24e63e917f46ae084c"
+    },
+    {
+      "id": "project-card",
+      "theme": "light",
+      "width": 416,
+      "height": 208,
+      "bytes": 16396,
+      "sha256": "97ab411cb80a8ee3364b233fcb1694d40e1719659e271b9467add29d7c76577b"
+    },
+    {
+      "id": "section-heading",
+      "theme": "light",
+      "width": 416,
+      "height": 208,
+      "bytes": 2592,
+      "sha256": "3389684bd0b97ae525630189153fe150703e958c431757b426cc7778f7943395"
+    },
+    {
+      "id": "statistic",
+      "theme": "light",
+      "width": 416,
+      "height": 208,
+      "bytes": 4206,
+      "sha256": "61e49b5bb5ba230de8751183a77ef663172aed8b786ba55f57aa1512c3d60578"
+    },
+    {
+      "id": "timeline-row",
+      "theme": "light",
+      "width": 416,
+      "height": 208,
+      "bytes": 4800,
+      "sha256": "069ceb77a35ee3178ef501812fb4abbc66268dd69095105334040920d8405228"
+    },
+    {
+      "id": "tooltip",
+      "theme": "light",
+      "width": 416,
+      "height": 208,
+      "bytes": 2970,
+      "sha256": "dd11a2ed411365af75f37d5b52b893304484f22468bf3f479183bb9fc281292e"
+    },
+    {
+      "id": "color",
+      "theme": "dark",
+      "width": 416,
+      "height": 208,
+      "bytes": 2742,
+      "sha256": "7290d6754782475a6d6860f81b81ff402f81d75886cbbb1f2ad08801792d46d3"
+    },
+    {
+      "id": "typography",
+      "theme": "dark",
+      "width": 416,
+      "height": 208,
+      "bytes": 2364,
+      "sha256": "bd995fc2d05679bd5580a5eb3393313f06845837837d5177e90250b56d834ba6"
+    },
+    {
+      "id": "spacing-layout",
+      "theme": "dark",
+      "width": 416,
+      "height": 208,
+      "bytes": 14198,
+      "sha256": "af37422f7aa7cb75f986df9fc21bb74dcf5d85058aebca3e48ad4945b39f6d6c"
+    },
+    {
+      "id": "motion",
+      "theme": "dark",
+      "width": 416,
+      "height": 208,
+      "bytes": 1436,
+      "sha256": "be8ac5d949a1e5b37df60c02f696b1c3f47020019ca679a4b3e4a74ced62011e"
+    },
+    {
+      "id": "icons",
+      "theme": "dark",
+      "width": 416,
+      "height": 208,
+      "bytes": 9024,
+      "sha256": "ff3896d2bed245cbe47fb1f3357be43b5c4d508168bd94ad2b695b6c7b0b04e3"
+    },
+    {
+      "id": "button",
+      "theme": "dark",
+      "width": 416,
+      "height": 208,
+      "bytes": 11326,
+      "sha256": "e49cada080c22796254bea2c2c3eb20a9e8603d51ea4a46c4f080776b8297f6d"
+    },
+    {
+      "id": "chip",
+      "theme": "dark",
+      "width": 416,
+      "height": 208,
+      "bytes": 6094,
+      "sha256": "559e1fb552135d1d9e5da8cce1c1178cb77abd8227de9f494f5aa7d3f08e028c"
+    },
+    {
+      "id": "navigation",
+      "theme": "dark",
+      "width": 416,
+      "height": 208,
+      "bytes": 6706,
+      "sha256": "793f00a3956b22678b5c35cefbc5324e9e2c9c2668e582ab9a49154a99f476fb"
+    },
+    {
+      "id": "project-card",
+      "theme": "dark",
+      "width": 416,
+      "height": 208,
+      "bytes": 16314,
+      "sha256": "547730b1c7eb8758a8cabfd8e01be5e24bf21c6f5b61370db8c00128f0712070"
+    },
+    {
+      "id": "section-heading",
+      "theme": "dark",
+      "width": 416,
+      "height": 208,
+      "bytes": 2608,
+      "sha256": "b008595807e0e0c71d136936dbed65e0638385db5071b931b29957152dc1f394"
+    },
+    {
+      "id": "statistic",
+      "theme": "dark",
+      "width": 416,
+      "height": 208,
+      "bytes": 4190,
+      "sha256": "3de5ab82cc5c1b4fbce0df2031c56033144a54c8b8653751132a7b9031ce931e"
+    },
+    {
+      "id": "timeline-row",
+      "theme": "dark",
+      "width": 416,
+      "height": 208,
+      "bytes": 4934,
+      "sha256": "10b7959b4b930d8c0ccff9271329c687bf13ae943e71a8a3840aa8d62bda01da"
+    },
+    {
+      "id": "tooltip",
+      "theme": "dark",
+      "width": 416,
+      "height": 208,
+      "bytes": 2718,
+      "sha256": "b1722fbb1949af4ad4431050b5f93e37a6d9efe0fba2c869505a7dd4bdf04c8f"
+    }
+  ]
+}

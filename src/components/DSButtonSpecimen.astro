@@ -5,16 +5,16 @@ import {squareChallenge} from '../data/square-case-study';
 import {dataGPTMedia} from '../data/datagpt-case-study';
 import Button from './Button.astro';import IconButton from './IconButton.astro';import TextLink from './TextLink.astro';import ThemeToggle from './ThemeToggle.astro';import CaseStudyComparison from './CaseStudyComparison.astro';import Icon from './Icon.astro';
 import '../styles/case-video-player.css';
-interface Props {id:ButtonSpecimenId;state?:string;cover?:boolean;}
-const {id,state,cover=false}=Astro.props;
+interface Props {id:ButtonSpecimenId;state?:string;}
+const {id,state}=Astro.props;
 const stateAttributes=state?{'data-ds-state':state}:{};
 ---
 {id==='primary'&&<Button {...stateAttributes} href={`mailto:${profile.email}`} arrow="up">Get in touch</Button>}
 {id==='secondary'&&<Button {...stateAttributes} href={cvUrl} variant="secondary" download>Download CV (PDF)</Button>}
 {id==='small'&&<Button {...stateAttributes} href={cvUrl} variant="secondary" size="small" download>Download CV (PDF)</Button>}
 {id==='outside'&&<Button {...stateAttributes} href={squareChallenge.href} variant="secondary" arrow="up" target="_blank" rel="noopener noreferrer">{squareChallenge.linkLabel}</Button>}
-{id==='toggle'&&(state?<Button {...stateAttributes} appearance="comparison" size="small" variant={state==='active'?'primary':'secondary'} aria-pressed={state==='active'}>Before</Button>:cover?<div class="case-comparison-controls" role="group" aria-label="Compare before and after"><Button appearance="comparison" size="small" variant="secondary" aria-pressed="false">Before</Button><Button appearance="comparison" size="small" aria-pressed="true">After</Button></div>:<div class="ds-comparison-switch text-body-m"><CaseStudyComparison before={dataGPTMedia.before} after={dataGPTMedia.after} label="Compare date and filter visibility"/></div>)}
-{id==='raised'&&<div class="ds-inline-controls"><div data-ds-example={cover?undefined:'icon-cursor'} data-ds-target=".icon-button"><IconButton label="Project cursor" variant="raised" icon="plus"/></div>{!cover&&<div class="case-study-direct-close ds-close-holder" data-ds-example="icon-close" data-ds-target=".icon-button"><IconButton href="/#work" icon="close" variant="raised" label="Close case study"/></div>}</div>}
+{id==='toggle'&&(state?<Button {...stateAttributes} appearance="comparison" size="small" variant={state==='active'?'primary':'secondary'} aria-pressed={state==='active'}>Before</Button>:<div class="ds-comparison-switch text-body-m"><CaseStudyComparison before={dataGPTMedia.before} after={dataGPTMedia.after} label="Compare date and filter visibility"/></div>)}
+{id==='raised'&&<div class="ds-inline-controls"><div data-ds-example="icon-cursor" data-ds-target=".icon-button"><IconButton label="Project cursor" variant="raised" icon="plus"/></div><div class="case-study-direct-close ds-close-holder" data-ds-example="icon-close" data-ds-target=".icon-button"><IconButton href="/#work" icon="close" variant="raised" label="Close case study"/></div></div>}
 {id==='close'&&<div class="case-study-direct-close ds-close-holder"><IconButton {...stateAttributes} href="/#work" icon="close" variant="raised" label="Close case study"/></div>}
 {id==='plain'&&<ThemeToggle/>}
 {id==='layers'&&<IconButton {...stateAttributes} href="/design-system/" icon="layers" variant="secondary" size="small" label="Design system"/>}

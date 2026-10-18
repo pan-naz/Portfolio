@@ -1,0 +1,11 @@
+---
+import Stat from './Stat.astro';import MetricValue from './MetricValue.astro';
+import {statisticExamples,statisticNumber,type StatisticKind} from '../data/system-statistic';
+interface Props {kind:StatisticKind;}
+const {kind}=Astro.props;
+---
+<div class="ds-stat-fit" data-stat-fit>
+ <div class:list={['ds-stat-art',kind==='default'?'impact':'case-study-narrative']} data-stat-art={kind} data-ds-example={`stat-${kind}`} data-ds-target={kind==='number'?'.text-heading-l':'.stat'}>
+  {kind==='number'?<MetricValue value={statisticNumber} as="strong"/>:<dl><Stat {...statisticExamples[kind]}/></dl>}
+ </div>
+</div>

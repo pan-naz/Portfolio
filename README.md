@@ -49,3 +49,7 @@ Verified derivative bundles live in ignored `node_modules/.cache/responsive-imag
 ## Pre-launch indexing
 
 The production origin is `https://naz.wtf`. All pages retain `noindex, nofollow` through `indexingEnabled = false` in `src/data/site-config.ts`. Change that flag only when launch is approved, then rebuild. Robots allows crawling and lists the generated sitemap. Static sharing JPGs live in `public/og/`; home and the catalog use `home.jpg`. `vercel.json` contains the approved response headers.
+
+### Overview cover images
+
+The thirteen Overview covers are committed transparent Light/Dark WebP pairs generated from the real catalog specimens at the settled 1440px composition. The 176×72 content keeps its scale and wrapping; Motion, Timeline row and Tooltip retain their taller artwork. Images include transparent padding through the full 208×104 visual (2×416×208) to retain shadows inside it. CSS centres the composition without upscaling, shrinking only when the content box is narrower. After a component, foundation or cover changes, build and publish the local preview, then run `node ../tools/visual-check/render-overview-covers.mjs` from this repository and rebuild. Run it with `--check` against the completed preview to reject stale images. The workspace visual runner includes this gate. Its Playwright/Chrome dependencies and render recipes live in the sibling local tools; Vercel never runs a browser. Build/check validate the asset manifest and decorative, dimensioned image markup.

@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
+import {validateRenderedNativeTooltips as html,validateNativeTooltipScripts as js,validateNativeTooltipSources} from '../scripts/validate-native-tooltips.mjs';
+assert.deepEqual(html('<html><head><title>Page</title></head><body><span data-title="Label">Label</span><code>&lt;svg&gt;</code></body></html>'),[]);
+for(const bad of ['<button title="Switch theme">','<svg><title>Description</title></svg>','<template><button title="Hidden until opened"></button></template>','<svg><path title="Shape" /></svg>','<span TITLE=hint>'])assert(html(bad).length,bad);
+assert.deepEqual(js('document.title = title.textContent;'),[]);
+for(const bad of ["button.setAttribute('title','hint')","button.title = 'hint'","document.createElementNS(ns,'title')"])assert(js(bad).length,bad);
+assert.deepEqual(validateNativeTooltipSources(),[]);
+const hooko=readFileSync('src/components/HookoCaseStudy.astro','utf8'),name='Hooko architecture: the Flutter app talks to Supabase, which calls Gemini for analysis and the YouTube Data API for examples. RevenueCat connects the app to App Store subscriptions. The v0-built site is hosted on Vercel and links to the App Store.';
+assert(hooko.includes('role="img" aria-label="'+name+'"'),'Diagram keeps its complete accessible name');assert(!hooko.includes('hk-arch-t'));
+assert(readFileSync('src/components/ThemeToggle.astro','utf8').includes('label="Switch to dark theme"'));
+console.log('PASS: head titles retained, rendered native tooltips forbidden, runtime creation rejected and accessible names retained.');

@@ -58,8 +58,7 @@
 .vox-hypotheses p { margin-top: var(--space-1); }
 .vox-hypotheses p strong { color: var(--color-interactive-accent); }
 .vox-section > img, .vox-section > picture > img { margin-top: var(--space-6); }
-.vox-stats { display: grid; gap: var(--space-8); margin: var(--space-12) 0 0; }
-.vox-stats--four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.vox-stats { margin: var(--space-12) 0 0; }
 .vox-decisions { display: grid; grid-template-columns: repeat(3, 1fr); align-items: start; gap: var(--grid-gap); margin-top: var(--space-6); }
 
 .vox-solution .case-study-eyebrow { color: var(--color-text-primary); }
@@ -83,14 +82,13 @@
 .vox-product-feature--design-system > :is(h3, ul) { grid-column: 1 / -1; }
 .vox-product-feature--design-system > img, .vox-product-feature--design-system > picture > img { border-radius: var(--radius-medium); box-shadow: var(--shadow-small); }
 
-.vox-stats--impact { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: var(--space-16); }
+.vox-stats--impact { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .vox-final-cards { display: grid; grid-template-columns: 1fr 1fr; gap: var(--grid-gap); margin-top: var(--space-24); }
 .vox-final-cards article { padding: var(--space-8); border: 1px solid var(--color-border-default); border-radius: var(--radius-medium); }
 .vox-final-cards ul { margin-top: var(--space-2); }
 
 @media (max-width: 1023px) {
   .vox-outcomes, .vox-decisions { grid-template-columns: 1fr; }
-  .vox-stats--four { grid-template-columns: repeat(2, 1fr); }
   .vox-solution-stats { gap: var(--space-6); }
   .vox-solution-stats > div { grid-template-columns: 1fr; }
 }
@@ -105,7 +103,7 @@
   .vox-outcomes { gap: var(--space-4); }
   .vox-outcomes article { padding: var(--space-4); }
   .vox-hypotheses li { grid-template-columns: 36px minmax(0, 1fr); }
-  .vox-stats--four, .vox-stats--impact { grid-template-columns: 1fr; gap: var(--space-6); }
+  .vox-stats--impact { grid-template-columns: 1fr; }
   .vox-stats .stat { border-top: 1px solid var(--color-border-default); padding-top: var(--space-4); }
   .vox-decisions { gap: var(--space-4); }
   .vox-solution-stats { grid-template-columns: 1fr; }

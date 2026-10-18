@@ -1,13 +1,14 @@
 import {readFileSync} from 'node:fs';
+import {impactHeading,experienceHeading,hookoProblemHeading} from './section-copy.ts';
 import type {SourceComponent} from './system-inventory';
 import {componentPropSpecs} from './system-props.ts';
 import {compareTokenNames,componentTokenPatterns as patterns} from './system-component-tokens.ts';
 export const sectionHeadingDescription='The label and title that open each section.';
+const headingCopy:Record<string,{label:string;title:string;description?:string}>={impactHeading,experienceHeading,hookoProblemHeading};
 const read=(file:string)=>readFileSync(`src/components/${file}.astro`,'utf8');
-const call=(file:string,id:string)=>read(file).match(new RegExp(`<SectionHeading\\b[^>]*id="${id}"[^>]*>[\\s\\S]*?</SectionHeading>`))![0];
-const impact=call('ImpactSection','impact-title'),experience=call('AboutSection','details-title'),problem=call('HookoCaseStudy','hk-problem-h');
-const content=(source:string)=>({label:source.match(/\blabel="([^"]+)"/)![1],title:source.replace(/^<SectionHeading\b[^>]*>/,'').replace(/<Fragment[\s\S]*?<\/Fragment>/,'').replace(/<p[\s\S]*?<\/p>/,'').replace('</SectionHeading>','').trim(),description:source.match(/<p slot="description"[^>]*>([\s\S]*?)<\/p>/)?.[1].trim()});
-export const sectionHeadingExamples={columns:content(impact),action:content(experience),stacked:content(problem)};
+const call=(file:string,id:string)=>read(file).match(new RegExp(`<SectionHeading\\b[^>]*id="${id}"[^>]*>[\\s\\S]*?</SectionHeading>`))![0].replace(/label=\{(impactHeading|experienceHeading|hookoProblemHeading)\.label\}/g,(_,key:string)=>'label="'+headingCopy[key].label+'"').replace(/\{(impactHeading|experienceHeading|hookoProblemHeading)\.(title|description)\}/g,(_,key:string,field:'title'|'description')=>(headingCopy[key] as {title:string;description?:string})[field]||'');
+const impact=call('ImpactSection','impact-title'),problem=call('HookoCaseStudy','hk-problem-h');
+export const sectionHeadingExamples={columns:impactHeading,action:experienceHeading,stacked:hookoProblemHeading};
 export const sectionHeadingCards=[
  {id:'columns',name:'Two columns',description:'The label on the left, the title and a short description on the right. On phones they stack.',used:'Impact, Work',style:'Label/M · Heading/L · Body/L'},
  {id:'action',name:'With an action',description:'A button takes the place of the label.',used:'Experience',style:'Heading/L · Body/L'},

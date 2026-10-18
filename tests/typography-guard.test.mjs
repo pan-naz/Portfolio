@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync,readdirSync} from 'node:fs';
 import {validateTypographySystem,validateStaticTypography,validateCatalogTypographyLayout} from '../scripts/validate-typography.mjs';
-import {typographyCssExclusions,typographyExclusions} from '../src/data/typography-exclusions.ts';
+import {typographyCssExclusions,typographyExclusions} from '../scripts/typography-exclusions.ts';
 const root=new URL('../',import.meta.url),read=file=>readFileSync(new URL(file,root),'utf8');
 const tokens=read('src/styles/tokens.css'),styles=read('src/styles/typography.css'),catalog=read('src/components/DSFoundations.astro');
 assert.deepEqual(validateTypographySystem(tokens,styles,catalog),[]);
