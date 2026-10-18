@@ -131,7 +131,7 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
 .ds-tile-visual::after { content:''; position:absolute; inset:auto var(--space-4) 0; border-bottom:1px solid var(--color-border-default); pointer-events:none; }
 .ds-tile-link { display:grid; gap:var(--space-1); padding:var(--space-4); align-content:start; }
 .ds-tile-link > span { color:var(--color-text-secondary); }
-.ds-cover-image { position:absolute; inset:var(--space-4); width:calc(100% - var(--space-8)); height:calc(100% - var(--space-8)); object-fit:contain; pointer-events:none; }
+.ds-cover-image { position:absolute; left:50%; top:50%; translate:-50% -50%; width:min(var(--ds-cover-width),calc((100% - var(--space-8)) * var(--ds-cover-scale))); height:auto; object-fit:contain; pointer-events:none; }
 .ds-cover-image--dark { visibility:hidden; }
 [data-theme='dark'] .ds-cover-image--light { visibility:hidden; }
 [data-theme='dark'] .ds-cover-image--dark { visibility:visible; }

@@ -66,7 +66,7 @@ for(const card of overviewCards){
  assert.equal(previews,1,'Each Overview card has one inert preview');
  const images=[...card.matchAll(/<img\b[^>]+>/g)].map(m=>m[0]);
  assert.equal(images.length,2,'Each cover has one Light and one Dark image');
- for(const image of images){assert.match(image,/alt=""/);assert.match(image,/aria-hidden="true"/);assert.match(image,/width="608"/);assert.match(image,/height="208"/);assert.match(image,/src="\/design-system\/covers\/[^"/]+-(?:light|dark)\.webp"/);}
+ for(const image of images){assert.match(image,/alt=""/);assert.match(image,/aria-hidden="true"/);assert.match(image,/width="416"/);assert.match(image,/height="208"/);assert.match(image,/src="\/design-system\/covers\/[^"/]+-(?:light|dark)\.webp"/);}
  assert.doesNotMatch(card,/<svg\b|<video\b|<button\b|<script\b/,'No live cover controls or scripts ship');
  assert.equal(reachableLinks.length,1,'One link outside the Overview preview');
  assert.match(reachableLinks[0],/\bclass="ds-tile-link"/,'The reachable link is the stretched title');

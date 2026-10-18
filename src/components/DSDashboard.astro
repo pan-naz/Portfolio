@@ -3,11 +3,12 @@ import {foundations} from '../data/design-system';import {visibleComponents,over
 const summaries:Record<string,string>={color:'Color roles and themes.',typography:'The shared text styles.','spacing-layout':'Gaps, radius and grids.',motion:'Durations and easing.',icons:'Interface icons and the decorative library.',button:'Buttons, icon buttons and text links.',chip:'Short labels for skills, project tags and design decisions.','icon-button':'Named icon actions.',navigation:'The header, the Work filter and their links.','project-card':'Each project in Work, opening its case study.','section-heading':'The label and title that open each section.',statistic:'A result with its label and an optional note.','text-link':'Text links to pages and profiles.','timeline-row':'Roles and experience.',tooltip:'Short names beside visual items.'};
 import covers from '../../public/design-system/covers/manifest.json';
 const dimensions=covers.canvas;
+const coverFor=(id:string,theme:string)=>covers.covers.find(cover=>cover.id===id&&cover.theme===theme)!;
 ---
-<section id="dashboard" class="ds-view ds-dashboard" data-ds-view data-title="Design system" data-group="" data-description="The foundations and components behind this portfolio, taken from the live code.">
+<section id="dashboard" class="ds-view ds-dashboard" data-ds-view data-title="Design system" data-group="" data-description="The foundations and components behind this portfolio, taken from the live code." style={`--ds-cover-width:${dimensions.width}px;--ds-cover-scale:${dimensions.width/covers.content.width}`}>
  {['Foundations','Components'].map(group=><div class="ds-dashboard-group"><h2 class="ds-dashboard-title">{group}</h2><div class="ds-tile-grid">
  {(group==='Foundations'?foundations.map(item=>({id:item.id,title:item.title})):visibleComponents.map(item=>({id:item.section,title:item.title!}))).map(item=><article class="ds-tile-frame"><div class="ds-tile"><div class="ds-tile-visual" inert aria-hidden="true">
-  {['light','dark'].map(theme=><img class={`ds-cover-image ds-cover-image--${theme}`} src={`/design-system/covers/${item.id}-${theme}.webp`} width={dimensions.width*2} height={dimensions.height*2} alt="" aria-hidden="true" loading="eager" decoding="sync"/>)}
+  {['light','dark'].map(theme=>{const cover=coverFor(item.id,theme);return <img class={`ds-cover-image ds-cover-image--${theme}`} src={`/design-system/covers/${item.id}-${theme}.webp`} width={cover.width} height={cover.height} alt="" aria-hidden="true" loading="eager" decoding="sync"/>;})}
  </div><a tabindex="0" class="ds-tile-link" href={`#${item.id}`} data-ds-nav><strong>{item.title}</strong><span>{summaries[item.id]}</span></a></div></article>)}
  </div></div>)}
  <div class="ds-dashboard-group"><h2 class="ds-dashboard-title">What is not included</h2><div class="ds-exclusions-box">
