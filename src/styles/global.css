@@ -30,7 +30,6 @@ a[href] { cursor: pointer; }
 :is(.project-surface, .project-cursor.is-case-control .icon-button)[data-case-pointer-focus]:focus { outline: none; }
 .project-surface[data-case-pointer-focus]:focus { box-shadow: none; }
 [tabindex='-1']:focus { outline: none; }
-::selection { color: var(--color-text-on-primary); background: var(--color-text-primary); }
 h1,h2,h3,p { margin: 0; }
 h1,h2,h3,h4,h5,h6 { text-wrap: balance; }
 .text-heading-l { text-wrap: balance; }
