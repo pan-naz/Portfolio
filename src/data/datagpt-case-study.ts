@@ -64,3 +64,9 @@ export const conclusions = [
   ['Schema level LLM instructions', 'aligned AI responses with business terminology, cutting ambiguous interpretations by 64%.'],
   ['Date range presets', 'Saved date ranges for recurring analyses, shown above Chat and Data Navigator.'],
 ];
+
+export const researchMetrics = [
+  { value: '30+', label: 'stakeholder interviews' },
+  { value: '4', label: 'user types synthesised' },
+  { value: '4', label: 'competitor groups mapped' },
+];

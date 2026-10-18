@@ -1,15 +1,14 @@
 ---
 import '../styles/design-system-button.css';import '../styles/design-system-statistic.css';
 import type {SourceComponent} from '../data/system-inventory';import {componentVariants} from '../data/system-variants';
-import {statisticDescription,statisticCards,statisticUsage,statisticProps,statisticTokenGroups,statisticAccessibility,statisticProbeCss} from '../data/system-statistic';
+import {statisticDescription,statisticCards,statisticUsage,statisticProps,statisticTokenGroups,statisticAccessibility} from '../data/system-statistic';
 import DSStatisticSpecimen from './DSStatisticSpecimen.astro';import DSTabs from './DSTabs.astro';
 interface Props {components:SourceComponent[];}
 const {components}=Astro.props,groups=statisticTokenGroups(),tokenCode=groups.map(group=>`/* ${group.title} */\n`+group.names.join('\n')).join('\n\n');
 ---
-<style is:inline set:html={`@layer system, project;@layer system{${statisticProbeCss()}}`}/>
 <div class="ds-stat-width-probe" inert aria-hidden="true"><div class="container">
  <div class="impact-group"><div/><dl class="impact-metrics"><div data-stat-width="default"/></dl></div>
- <dl class="ds-stat-width--case"><div data-stat-width="case"/></dl>
+ <dl class="ds-stat-width--case metric-grid metric-grid--four"><div data-stat-width="case"/></dl>
  <dl class="ds-stat-width--bare"><div data-stat-width="bare"/></dl>
 </div></div>
 <section id="statistic" class="ds-view ds-stat-view" data-ds-view data-ds-component="Stat" data-title="Statistic" data-group="Components" data-description={statisticDescription} hidden>

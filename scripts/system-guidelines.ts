@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { readSystemTokens } from './system-inventory.ts';
-import { contrastRatio, passesNormalTextAA } from '../../scripts/text-contrast.ts';
+import { readSystemTokens } from '../src/data/system-inventory.ts';
+import { contrastRatio, passesNormalTextAA } from './text-contrast.ts';
 
 export function systemGuidelines(root = process.cwd()) {
   const css = readFileSync(resolve(root, 'src/styles/global.css'), 'utf8');

@@ -78,7 +78,7 @@ export function spaceUsageCounts(root=process.cwd()){
  return counts;
 }
 export function validateGeometry(root=process.cwd(),allowlist){
- const errors=[],allowed=allowlist??JSON.parse(fs.readFileSync(path.join(root,'src/data/geometry-exceptions.json'),'utf8'));
+ const errors=[],allowed=allowlist??JSON.parse(fs.readFileSync(path.join(root,'scripts/geometry-exceptions.json'),'utf8'));
  const key=r=>JSON.stringify([r.file,r.selector,r.context,r.property,r.value]);
  const keys=new Map(allowed.map(r=>[key(r),r]));
  const normalize=value=>value.toLowerCase().replace(/\s+/g,'').replace(/0px/g,'0').replace(/(?<=[/,(])0\./g,'.').replace(/\d*\.\d+/g,number=>String(Number(number)));

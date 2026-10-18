@@ -4,8 +4,12 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import ts from 'typescript';
 const frames = new Set(), listeners = new Map(), documentListeners = new Map(), queries = [];
-let created = [], lagSmoothing, precise = false, reduced = false, scrolled, loads = 0;
-const gsap = { ticker: { add: fn => frames.add(fn), remove: fn => frames.delete(fn), lagSmoothing: value => { lagSmoothing = value; } } };
+let created = [], precise = false, reduced = false, scrolled, loads = 0;
+let clockNow = 0;
+const originalNow = Date.now; Date.now = () => clockNow;
+globalThis.requestAnimationFrame = fn => { frames.add(fn); return fn; };
+globalThis.cancelAnimationFrame = fn => frames.delete(fn);
+const advanceFrame = delta => { clockNow += delta; const pending = [...frames]; frames.clear(); pending.forEach(fn=>fn(clockNow)); };
 class Lenis {
   constructor(options) { this.options = options; created.push(this); }
   get actualScroll() { return this.options.wrapper === window ? window.scrollY : this.options.wrapper.scrollTop; }
@@ -13,7 +17,7 @@ class Lenis {
   start() { this.stopped = false; } destroy() { this.destroyed = true; }
   scrollTo(...args) { this.travel = args; }
 }
-globalThis.scrollMocks = { gsap, Lenis, readMotionToken, scrollPolicy, easeSectionScroll };
+globalThis.scrollMocks = { Lenis, readMotionToken, scrollPolicy, easeSectionScroll };
 globalThis.getComputedStyle=()=>({getPropertyValue:name=>name==='--duration-section-scroll'?'650ms':''});
 globalThis.window = {
   scrollY: 400,
@@ -34,7 +38,7 @@ globalThis.document = { documentElement: { dataset: {}, hasAttribute:()=>false }
 const compile = source => ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
 const url = js => `data:text/javascript;base64,${Buffer.from(js).toString('base64')}`;
 let engineSource = readFileSync('src/scripts/scroll-engine.ts', 'utf8').replace(/^import .*;\n/gm, '');
-const { createScrollEngine } = await import(url(compile('const {gsap, Lenis, scrollPolicy} = globalThis.scrollMocks;\n'+engineSource)));
+const { createScrollEngine } = await import(url(compile('const {Lenis, scrollPolicy} = globalThis.scrollMocks;\n'+engineSource)));
 globalThis.loadScrollEngine = async () => { loads++; return { createScrollEngine }; };
 let source = readFileSync('src/scripts/smooth-scroll.ts', 'utf8').replace(/^import .*;\n/gm, '').replace("typeof import('./scroll-engine').createScrollEngine",'any').replace("import('./scroll-engine')", 'globalThis.loadScrollEngine()');
 source='const {readMotionToken,scrollPolicy,easeSectionScroll}=globalThis.scrollMocks;\n'+source+'\nexport { installTouchBoundaries };';
@@ -57,7 +61,7 @@ repositionWork(-50); assert.deepEqual(scrolled, { top: 0, behavior: 'instant' })
 precise = true;
 for (const agent of ['Safari', 'Chrome', 'Firefox']) {
  navigator.userAgent = agent; const controller = initializeSmoothScroll(); await controller.ready; const lenis = created.at(-1);
- assert.equal(initializeSmoothScroll(), controller, 'Repeated registration returns the same live root'); assert.equal(frames.size, 1); assert.equal(lagSmoothing, 0); [...frames][0](2); assert.equal(lenis.time, 2000, 'Same GSAP seconds-to-milliseconds clock');
+ assert.equal(initializeSmoothScroll(), controller, 'Repeated registration returns the same live root'); assert.equal(frames.size, 1); advanceFrame(2000); assert.equal(lenis.time, clockNow, 'The unsmoothed clock retains integer millisecond time');
  pauseScroll(); assert.equal(lenis.stopped, true); resumeScroll(); assert.equal(lenis.stopped, false);
  scrollToSection(target); assert.equal(lenis.travel[0], target); listeners.get('keydown')({key:'Tab'}); assert.deepEqual(lenis.travel, [400, {immediate:true}]);
  controller.destroy(); assert.equal(frames.size, 0); assert.equal(lenis.destroyed, true); assert.equal(queries.at(-1).handlers.size, 0);
@@ -69,7 +73,7 @@ for (let open = 0; open < 3; open++) {
  for (const setting of ['lerp', 'smoothWheel', 'syncTouch', 'anchors']) assert.equal(caseLenis.options[setting], homeLenis.options[setting]);
  assert.equal(caseLenis.options.lerp, .18); assert.equal(caseLenis.options.wrapper, wrapper); assert.equal(caseLenis.options.content, caseContent); assert.equal(homeLenis.stopped, true); assert.notEqual(caseLenis.stopped, true);
  wrapper.closest = () => wrapper; wrapper.matches = selector => selector === '.case-study-scroll'; assert.equal(homeLenis.options.prevent(wrapper), true); assert.equal(caseLenis.options.prevent(wrapper), false);
- assert.equal(frames.size, 2); for (const tick of frames) tick(2); assert.equal(caseLenis.time, homeLenis.time);
+ assert.equal(frames.size, 1, 'All roots share one animation-frame clock'); advanceFrame(16); assert.equal(caseLenis.time, homeLenis.time);
  caseListeners.get('keydown')({key:'PageDown'}); assert.deepEqual(caseLenis.travel,[180,{immediate:true}]); caseScroll.destroy(); assert.equal(caseLenis.destroyed, true); assert.equal(caseListeners.size, 0); assert.equal(frames.size, 1);
 }
 resumeScroll(); assert.equal(homeLenis.stopped, false); homeScroll.destroy(); assert.equal(frames.size, 0); document.querySelector = () => null;
@@ -80,6 +84,7 @@ const count = created.length, pending = cold.initializeSmoothScroll(); pending.d
 const coldAgain = await import(url(compile(source+'\n// another cold import')));
 const changing = coldAgain.initializeSmoothScroll(); reduced = true; queries.at(-1).emit(); release({ createScrollEngine }); await changing.ready; assert.equal(created.length, count, 'Reduced motion during loading cancels initialization'); changing.destroy(); reduced = false;
 assert.equal(frames.size, 0); assert.ok(readFileSync('src/components/CaseStudyPage.astro', 'utf8').includes('initializeMotion();'));
+Date.now = originalNow;
 console.log('PASS: unchanged wheel options/clock, native touch, input isolation, native keyboard cancellation, repeated cleanup, unused-context loading and pending-load cancellation.');
 
 // The real docking controller should sleep once settled, even during a stream

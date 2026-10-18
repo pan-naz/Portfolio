@@ -1,4 +1,5 @@
 ---
+import { hookoProblemHeading } from '../data/section-copy';
 import ResponsiveImage from './ResponsiveImage.astro';
 import { hookoAppUrl, type Project } from '../data/portfolio';
 import { hookoTools, hookoDemo } from '../data/hooko-case-study';
@@ -41,7 +42,7 @@ const productLinks = [
   </CaseStudyOverview>
 
   <section class="hk-wrap hk-section" id="hk-problem" aria-labelledby="hk-problem-h">
-    <SectionHeading id="hk-problem-h" label="Problem" layout="stacked" reveal={false}>Virality scores don't tell creators what to change</SectionHeading>
+    <SectionHeading id="hk-problem-h" label={hookoProblemHeading.label} layout="stacked" reveal={false}>{hookoProblemHeading.title}</SectionHeading>
     <div class="hk-col-2 case-study-columns">
         <div class="hk-cell">
           <h3 class="text-body-m-strong">Creators</h3>

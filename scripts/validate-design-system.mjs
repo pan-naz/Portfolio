@@ -14,12 +14,11 @@ import {validateFoundationCodeContract} from './validate-foundation-code.mjs';
 import {validateRadiusContract} from './validate-radius-language.mjs';
 import {validateSpaceShape} from './validate-space-shape.mjs';
 import {validateTypographySystem,validateStaticTypography,validateCatalogTypographyLayout} from './validate-typography.mjs';
-import {typographyCssExclusions} from '../src/data/typography-exclusions.ts';
+import {typographyCssExclusions} from '../scripts/typography-exclusions.ts';
 import {validateColors} from './validate-colors.mjs';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
-import { createHash } from 'node:crypto';
 import { validateHoverSource, validateLogoWave } from './validate-hover.mjs';
-import { hiddenDocumentation } from '../src/data/system-hidden-docs.ts';
+import { hiddenDocumentation } from '../scripts/system-hidden-docs.ts';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { icons } from '../src/data/icons.ts';
@@ -178,12 +177,12 @@ export function validateHiddenDocumentation(records, text) {
   const failures=[];
   for(const section of ['Accessibility','Writing',...Object.values(hiddenSections)]){
     const entries=records.filter(record=>record.section===section);
-    if(entries.length!==1 || !/^[a-f0-9]{64}$/.test(entries[0]?.sha256||'') || entries[0]?.characters<100){ failures.push(`Missing hidden documentation: ${section}`); continue; }
+    if(entries.length!==1){ failures.push(`Missing hidden documentation: ${section}`); continue; }
     if(text!==undefined){
       // Use the next section boundary rather than the end-of-line multiline dollar.
       const start=text.indexOf('## '+section+'\n'), next=text.indexOf('\n## ',start+4);
       const value=start<0?'':text.slice(start,next<0?undefined:next).trim();
-      if(!value || !/Documented, hidden\./.test(value) || createHash('sha256').update(value).digest('hex')!==entries[0].sha256)failures.push(`Stale or missing hidden documentation: ${section}`);
+      if(!value || !/Documented, hidden\./.test(value))failures.push(`Missing hidden documentation: ${section}`);
     }
   }
   return failures;

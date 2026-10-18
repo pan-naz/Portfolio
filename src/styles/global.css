@@ -590,4 +590,16 @@ html.case-study-open { overflow: hidden; scrollbar-gutter: stable; }
   .icon-button--raised[data-icon='close']:hover svg > g, [data-icon-hover='close']:is(:hover, :focus-visible) svg > g { transform: rotate(var(--rotation-icon-turn)); }
 }
 
+/* The website metric list and its catalog width probe share one responsive grid. */
+.metric-grid { display: grid; gap: var(--space-8); }
+.metric-grid--four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.metric-grid--impact { row-gap: var(--space-16); }
+@media (max-width: 1023px) {
+  .metric-grid--four { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 767px) {
+  .metric-grid { gap: var(--space-6); }
+  .metric-grid--four { grid-template-columns: 1fr; }
+}
+
 }

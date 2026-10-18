@@ -1,4 +1,5 @@
 ---
+import { experienceHeading } from '../data/section-copy';
 import { experience, cvUrl } from '../data/portfolio';
 import SectionHeading from './SectionHeading.astro';
 import ExperienceList from './ExperienceList.astro';
@@ -7,7 +8,7 @@ import ToolsSection from './ToolsSection.astro';
 ---
 <section id="about" class="about-details chapter" data-color-zone="dark" data-zone-keep="section large-shadow" aria-labelledby="details-title">
   <div class="container">
-    <SectionHeading id="details-title" label="03 / Experience"><Fragment slot="index"><Button href={cvUrl} variant="secondary" size="small" download>Download CV (PDF)</Button></Fragment>A decade of experience<p slot="description" class="section-description text-body-l">Every role taught me something different. All of it shows up in my work.</p></SectionHeading>
+    <SectionHeading id="details-title" label={experienceHeading.label}><Fragment slot="index"><Button href={cvUrl} variant="secondary" size="small" download>Download CV (PDF)</Button></Fragment>{experienceHeading.title}<p slot="description" class="section-description text-body-l">{experienceHeading.description}</p></SectionHeading>
     <ExperienceList items={experience} />
     <ToolsSection />
   </div>

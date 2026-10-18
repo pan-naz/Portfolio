@@ -14,7 +14,6 @@ export const typeStyles=[
  {id:'label-m',name:'Label/M',sample:'01 / Selected work',use:'Section labels'},
  {id:'label-s',name:'Label/S',sample:'Product design',use:'Tags and chips'},
 ] as const;
-export type TypeStyleId=typeof typeStyles[number]['id'];
 export type TypeDevice='desktop'|'tablet'|'phone';
 export function readTypographyTokens(css:string){
  const source=readSystemTokens(css),base=source.light;

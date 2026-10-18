@@ -9,6 +9,7 @@ import DeferredVideo from './DeferredVideo.astro';
 import CaseStudyOverview from './CaseStudyOverview.astro';
 import Stat from './Stat.astro';
 import MetricValue from './MetricValue.astro';
+import { testingMetrics, impactMetrics, solutionMetric } from '../data/voximplant-case-study';
 import TextLink from './TextLink.astro';
 
 interface Props { project: Project; }
@@ -68,21 +69,7 @@ const hypotheses = [
   ['If buying a number add to onboarding, users will not hit a dead end later.', 'Add ', 'numbers', ', to onboarding flow.'],
 ];
 
-const testingMetrics = [
-  { value: '10+', label: 'core pages prototyped', note: '30+ screens each' },
-  { value: '2', label: 'test formats', note: 'corridor tests and moderated sessions' },
-  { value: '15+', label: 'participants', note: 'current MVP users, prospects and call-center managers' },
-  { value: '≈87%', label: 'task completion', note: 'unassisted, on the redesigned flows in the final round' },
-];
 
-const impactMetrics = [
-  { value: '4.8/5', label: 'rating on G2', note: 'Voximplant Kit, verified user reviews' },
-  { value: '20K', label: 'calls automated per month', note: "Skyeng's outbound campaigns, with a 17% increase in call volume" },
-  { value: '≤ 30 min', label: 'to launch a contact center', note: 'self-serve, without engineers' },
-  { value: '80%', label: 'of routine calls can be automated', note: 'with AI and IVR scenarios' },
-  { value: '5', label: 'enterprise clients in production', note: 'Rappi, KFC, Burger King, Hyundai, Jaguar' },
-  { value: '10+', label: 'designers led', note: 'across product, brand and web, plus a research function' },
-];
 ---
 <article class="case-study-content case-study-content--voximplant" data-case-content>
   <div class="case-study-artwork">
@@ -172,7 +159,7 @@ const impactMetrics = [
       <div class="vox-copy-narrow"><h3>Prototyping and usability testing</h3><p>Clickable prototypes covered full journeys, from the start page to password recovery: 10+ core pages with 30+ screens each. Testing ran in two formats. Corridor tests inside Voximplant gave fast answers on single screens. Moderated sessions with current MVP users, potential customers and call-center managers covered whole tasks: build a scenario, launch a campaign, handle a call.</p></div>
       <ResponsiveImage src={asset('prototypes', 'png')} alt="Low-fidelity Voximplant Kit prototypes covering the scenario editor and campaign flows." width="1248" height="467" loading="lazy" decoding="async" />
       <div class="vox-copy-narrow"><h3>What changed after testing</h3><ul><li>Terminology. Labels for queues, skills, scenarios and campaigns were validated before they went into the UI.</li><li>Test mode inside the editor was validated in sessions, replacing the old routine of publishing a scenario and calling the number to check it.</li><li>The canvas was confirmed over a step-by-step form.</li><li>Every flow was validated before visual design started, so UI work did not reopen structure.</li></ul></div>
-      <dl class="vox-stats vox-stats--four">{testingMetrics.map(metric => <Stat {...metric} />)}</dl>
+      <dl class="vox-stats metric-grid metric-grid--four">{testingMetrics.map(metric => <Stat {...metric} />)}</dl>
 
       <h3 class="vox-section-title">Key decisions</h3>
       <div class="vox-decisions">
@@ -193,7 +180,7 @@ const impactMetrics = [
 
     <section class="vox-solution case-study-chapter--inverse" data-color-zone="dark" data-zone-keep="surface section shadows" aria-labelledby="vox-solution-title">
       <div class="case-study-chapter__inner">
-        <div class="vox-solution-head case-study-columns"><p class="case-study-eyebrow">Solution</p><div class="vox-solution-stats"><div><MetricValue as="strong" value="10+" /><span>product sections fully designed and validated</span></div><div><MetricValue as="strong" value="∞" /><span>user flows created, tested and documented</span></div></div></div>
+        <div class="vox-solution-head case-study-columns"><p class="case-study-eyebrow">Solution</p><div class="vox-solution-stats"><div><MetricValue as="strong" value={solutionMetric} /><span>product sections fully designed and validated</span></div><div><MetricValue as="strong" value="∞" /><span>user flows created, tested and documented</span></div></div></div>
         <h2 id="vox-solution-title" class="sr-only">Solution</h2>
         <div class="vox-product-feature"><h3>Onboarding</h3><ul><li>The first screen after sign-up asks one question: what did you come here to do?</li><li>Three guided tours — AI-powered outbound calls, interactive voice recognition, and the contact center — take four steps each, and the tour a user picks becomes their first task.</li></ul><CaseStudyMedia src={asset('onboarding', 'mp4')} poster={asset('onboarding')} alt="Voximplant Kit onboarding flow showing navigation areas and guided product tours." width={1920} height={1036} /></div>
         <div class="vox-product-feature"><h3>Visual scenario editor</h3><ul><li>Users build a scenario, the call flow, on a canvas from blocks: speech-to-text, text-to-speech, interactive menu, data verification, call forwarding, HTTP request and more.</li><li>Blocks connect with lines, so a large inbound or outbound scenario stays readable. An onboarding tour shows how to make the first connection.</li></ul><CaseStudyMedia src={asset('scenario-editor', 'mp4')} poster={asset('scenario-editor')} alt="Voximplant visual scenario editor with connected call-flow blocks." width={1280} height={684} controls /></div>
@@ -220,7 +207,7 @@ const impactMetrics = [
 
     <section class="vox-impact" aria-labelledby="vox-impact-title">
       <div class="vox-chapter-head case-study-columns"><p class="case-study-eyebrow">Impact</p><div><h2 id="vox-impact-title" class="case-study-heading">Kit in numbers.</h2><p>Results from Voximplant Kit, a product I designed from scratch and took to launch.</p></div></div>
-      <dl class="vox-stats vox-stats--impact">{impactMetrics.map(metric => <Stat {...metric} />)}</dl>
+      <dl class="vox-stats vox-stats--impact metric-grid metric-grid--impact">{impactMetrics.map(metric => <Stat {...metric} />)}</dl>
       <div class="vox-final-cards">
         <article><h3>For the business</h3><ul><li>Kit became one of Voximplant's two product lines.</li><li>Companies that needed months and a development team to set up a contact center now do it themselves in 30 minutes or less.</li></ul></article>
         <article><h3>For the team</h3><ul><li>As Kit grew, the design team grew with it.</li><li>I led a team of 10+ across product, brand and web, and started a research function.</li></ul></article>

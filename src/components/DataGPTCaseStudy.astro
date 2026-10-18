@@ -1,7 +1,7 @@
 ---
 import SectionHeading from './SectionHeading.astro';
 import type { Project } from '../data/portfolio';
-import { dataGPTMedia as media, dataGPTPersonas, researchOutcomes, competitors, competitorOutcomes, models, features, queryResults, contextResults, conclusions } from '../data/datagpt-case-study';
+import { dataGPTMedia as media, dataGPTPersonas, researchOutcomes, competitors, competitorOutcomes, models, features, queryResults, contextResults, conclusions, researchMetrics } from '../data/datagpt-case-study';
 import CaseStudyOverview from './CaseStudyOverview.astro';
 import Stat from './Stat.astro';
 import SvgAsset from './SvgAsset.astro';
@@ -10,11 +10,6 @@ import DeferredVideo from './DeferredVideo.astro';
 import CaseStudyComparison from './CaseStudyComparison.astro';
 interface Props { project: Project; }
 const { project } = Astro.props;
-const researchMetrics = [
-  { value: '30+', label: 'stakeholder interviews' },
-  { value: '4', label: 'user types synthesised' },
-  { value: '4', label: 'competitor groups mapped' },
-];
 ---
 <article class="case-study-content case-study-content--datagpt" data-case-content>
   <div class="case-study-artwork">

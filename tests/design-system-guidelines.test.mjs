@@ -1,7 +1,7 @@
 import { isReusableComponent, componentManifest } from '../src/data/system-components.ts';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { systemGuidelines } from '../src/data/system-guidelines.ts';
+import { systemGuidelines } from '../scripts/system-guidelines.ts';
 import { buildSystemInventory } from '../src/data/system-inventory.ts';
 import { componentVariants } from '../src/data/system-variants.ts';
 import { validateVariantCoverage } from '../scripts/validate-design-system.mjs';

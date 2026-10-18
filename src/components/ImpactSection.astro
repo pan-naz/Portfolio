@@ -1,10 +1,11 @@
 ---
+import { impactHeading } from '../data/section-copy';
 import { projects, impactGroups } from '../data/portfolio';
 import SectionHeading from './SectionHeading.astro';
 import ProjectIdentity from './ProjectIdentity.astro';
 import Stat from './Stat.astro';
 ---
 <section id="impact" class="impact container chapter" aria-labelledby="impact-title">
-  <SectionHeading id="impact-title" label="02 / Impact">The numbers behind the latest work.<p slot="description" class="section-description text-body-l">Results from DataGPT and Voximplant Kit — products I helped take from zero to launch.</p></SectionHeading>
+  <SectionHeading id="impact-title" label={impactHeading.label}>{impactHeading.title}<p slot="description" class="section-description text-body-l">{impactHeading.description}</p></SectionHeading>
   <div class="impact-groups">{impactGroups.map(group => { const project = projects.find(p => p.id === group.projectId)!; return <section class="impact-group" aria-label={`${project.title} results`} data-section-item data-title-reveal-row><h3 data-reveal-copy><span class="impact-company-line text-heading-l"><span class="impact-company-cap"><ProjectIdentity title={project.title} logo={project.logo} /></span></span></h3><dl class="impact-metrics">{group.metrics.map(metric => <Stat {...metric} revealValue />)}</dl></section>; })}</div>
 </section>

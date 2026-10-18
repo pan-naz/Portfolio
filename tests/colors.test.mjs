@@ -24,7 +24,7 @@ assert.ok(validateCatalogInnerPanels(catalogCss.replace(/(\.ds-code pre \{[^}]*b
 for(const token of ['color-charcoal','color-night']){const wrongLabel=structuredClone(colorCards);wrongLabel.find(color=>color.token===token).uses[0].label='Wrong label';assert.ok(validateColorUses(css,wrongLabel).length,'Dark role labels are guarded');}
 for(const role of ['color-smoke','color-bg-raised','color-bg-raised-hover']) assert.ok(!(role in tokens.light) && !(role in tokens.dark), 'Retired role stays removed: ' + role);
 assert.ok(validateColorPalette(css+'\n:root {--color-bg-raised:var(--color-white);}').length, 'Merged role cannot return');
-assert.deepEqual(validateColorDocumentation(undefined),[],'Vercel validates the reviewed receipt when external docs are absent');
+assert.deepEqual(validateColorDocumentation(undefined),[],'Vercel does not require external documentation');
 assert.ok(validateColorDocumentation('## Colour\nIncorrect or incomplete contract.').length,'Changed/missing Colour contract fails');
 const fixture=fs.mkdtempSync(path.join(os.tmpdir(),'palette-guard-'));
 try{fs.mkdirSync(path.join(fixture,'src/data'),{recursive:true});fs.writeFileSync(path.join(fixture,'src/data/shared.ts'),'export const background = "#123456";');assert.ok(validateSharedColorLiterals(fixture).length,'Shared data colour literals fail');fs.renameSync(path.join(fixture,'src/data/shared.ts'),path.join(fixture,'src/data/example-case-study.ts'));assert.deepEqual(validateSharedColorLiterals(fixture),[],'Private project data stays excluded');}finally{fs.rmSync(fixture,{recursive:true,force:true});}

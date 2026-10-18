@@ -54,11 +54,9 @@
 .section-description,
 .project-outcome,
 body,
-.case-study-intro,
 .dg-lede,
 .contact-description,
-.text-body-l :where(strong,b),
-.case-study-intro :where(strong,b) {
+.text-body-l :where(strong,b) {
   font-family: var(--font-body-l); font-size: var(--text-body-l); font-weight: var(--font-weight-body-l);
   line-height: var(--line-height-body-l); letter-spacing: var(--letter-spacing-body-l);
 }
@@ -117,7 +115,6 @@ body,
 :where(.ds-spec-list li),
 :where(.ds-spec-list strong),
 :where(.ds-rules),
-:where(.ds-meta strong),
 :where(.ds-colors),
 :where(.ds-stroke-values),
 :where(.project--compact .project-description),
@@ -160,9 +157,6 @@ body,
 :where(.ds-props-table table),
 :where(.ds-props-table th,.ds-props-table td),
 :where(.ds-props-table th),
-:where(.ds-meta),
-:where(.ds-spacing-scale),
-:where(.ds-shape-grid),
 :where(.ds-icon-grid li),
 :where(.ds-tile-link > span),
 :where(.button.button--catalog),
