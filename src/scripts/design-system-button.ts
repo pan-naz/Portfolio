@@ -15,7 +15,6 @@ if(states){
  style.textContent='@layer system {'+[...document.styleSheets].map(sheet=>{try{return rules(sheet.cssRules)}catch{return ''}}).join('\n')+'}';
  document.head.append(style);
  for(const art of states.querySelectorAll<HTMLElement>('[data-button-state]'))for(const control of art.querySelectorAll<HTMLElement>('.button,.icon-button,.text-link'))if(!control.dataset.dsState)control.dataset.dsState=art.dataset.buttonState;
- const covers=[...document.querySelectorAll<HTMLElement>('.ds-button-cover,.ds-chip-cover')];
  const groups=[...states.querySelectorAll<HTMLElement>('.ds-button-states')];
  const fit=()=>{
   const writes:{element:HTMLElement;scale:number}[]=[];
@@ -81,21 +80,13 @@ if(states){
    }));
    for(const element of arts)writes.push({element,scale});
   }
-  for(const cover of covers){
-   if(!cover.parentElement!.clientWidth)continue;
-   const room=parseFloat(getComputedStyle(cover).getPropertyValue('--space-4'))*2
-    +(cover.matches('.ds-chip-cover')?parseFloat(getComputedStyle(cover).getPropertyValue('--space-1')):0);
-   const width=cover.matches('.ds-chip-cover')?parseFloat(getComputedStyle(cover).width):cover.offsetWidth;
-   const available=cover.matches('.ds-chip-cover')?Math.floor(parseFloat(getComputedStyle(cover.parentElement!).width)):cover.parentElement!.clientWidth;
-   const scale=Math.min(1,(available-room)/width,(cover.parentElement!.clientHeight-room)/cover.offsetHeight);
-   write(cover,'--ds-cover-fit',String(scale));
-  }
+
   for(const {element,scale} of writes)write(element,element.matches('.ds-button-states')?'--ds-state-scale':'--ds-specimen-fit',String(scale));
   for(const {element,height} of stateHeights)write(element,'--ds-state-art-height',height+'px');
   for(const {element,heights} of metadata)write(element,'--ds-button-value-rows',heights.map(height=>height+'px').join(' '));
  };
  let pending=false;
  const schedule=()=>{if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;fit();});};
- const observer=new ResizeObserver(schedule);[...groups,...document.querySelectorAll('#button .ds-button-grid,#chip .ds-button-grid'),...covers.map(cover=>cover.parentElement!)].forEach(group=>observer.observe(group));
+ const observer=new ResizeObserver(schedule);[...groups,...document.querySelectorAll('#button .ds-button-grid,#chip .ds-button-grid')].forEach(group=>observer.observe(group));
  document.fonts.ready.then(schedule);
 }

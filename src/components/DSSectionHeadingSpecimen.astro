@@ -1,15 +1,15 @@
 ---
 import SectionHeading from './SectionHeading.astro';import Button from './Button.astro';
 import {sectionHeadingExamples} from '../data/system-section-heading';import {cvUrl} from '../data/portfolio';
-interface Props {kind:'columns'|'action'|'stacked';cover?:boolean;}
-const {kind,cover=false}=Astro.props,example=sectionHeadingExamples[kind];
+interface Props {kind:'columns'|'action'|'stacked';}
+const {kind}=Astro.props,example=sectionHeadingExamples[kind];
 ---
-<div class:list={['ds-heading-fit',cover&&'ds-heading-cover']} data-heading-fit>
- <div class:list={['ds-heading-art','ds-specimens',kind==='stacked'?'case-study-narrative':'impact chapter']} data-heading-art={kind} data-ds-example={cover?'tile-heading-columns':`heading-${kind}`} data-ds-target=".section-heading">
+<div class="ds-heading-fit" data-heading-fit>
+ <div class:list={['ds-heading-art','ds-specimens',kind==='stacked'?'case-study-narrative':'impact chapter']} data-heading-art={kind} data-ds-example={`heading-${kind}`} data-ds-target=".section-heading">
   {kind==='action'?<SectionHeading id="ds-heading-action" label={example.label} reveal={false}>
    <Button href={cvUrl} slot="index" variant="secondary" size="small" download>Download CV (PDF)</Button>
    {example.title}<p slot="description" class="section-description text-body-l">{example.description}</p>
-  </SectionHeading>:<SectionHeading id={`ds-${cover?'tile-':''}heading-${kind}`} label={example.label} layout={kind==='stacked'?'stacked':'columns'} reveal={false}>
+  </SectionHeading>:<SectionHeading id={`ds-heading-${kind}`} label={example.label} layout={kind==='stacked'?'stacked':'columns'} reveal={false}>
    {example.title}{example.description&&<p slot="description" class="section-description text-body-l">{example.description}</p>}
   </SectionHeading>}
  </div>

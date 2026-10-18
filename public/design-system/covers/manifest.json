@@ -1,0 +1,219 @@
+{
+  "renderer": "tools/visual-check/render-overview-covers.mjs",
+  "browser": "155.0.8059.84",
+  "scale": 2,
+  "canvas": {
+    "width": 304,
+    "height": 104
+  },
+  "covers": [
+    {
+      "id": "color",
+      "theme": "light",
+      "width": 608,
+      "height": 208,
+      "bytes": 2792,
+      "sha256": "888dff22ba95c8f629b9d6034f7dcac14f890880e2157beb03c8b4e206432f11"
+    },
+    {
+      "id": "typography",
+      "theme": "light",
+      "width": 608,
+      "height": 208,
+      "bytes": 2382,
+      "sha256": "0b7ab8d23699eb76ac6886115d7a3d541f3c61f92f525bd7d18c8df1b473704c"
+    },
+    {
+      "id": "spacing-layout",
+      "theme": "light",
+      "width": 608,
+      "height": 208,
+      "bytes": 10584,
+      "sha256": "f0974ce3d1f9b16f82ed8e52791d74358f247ce4e5b254fcd9ca2affaeb853bd"
+    },
+    {
+      "id": "motion",
+      "theme": "light",
+      "width": 608,
+      "height": 208,
+      "bytes": 1544,
+      "sha256": "95204d72399260aebe37ff842754da3e6b4ad2c77abff48dda867b1df5831cc7"
+    },
+    {
+      "id": "icons",
+      "theme": "light",
+      "width": 608,
+      "height": 208,
+      "bytes": 8490,
+      "sha256": "9eb60e46954f85b6d49898fa39c30a400957496f203274711fa55c8fc0daf9f9"
+    },
+    {
+      "id": "button",
+      "theme": "light",
+      "width": 608,
+      "height": 208,
+      "bytes": 8454,
+      "sha256": "8196668f22f60156bec283a20d54a8c6aad5e3c1deee1368091fffcb2f36a120"
+    },
+    {
+      "id": "chip",
+      "theme": "light",
+      "width": 608,
+      "height": 208,
+      "bytes": 6522,
+      "sha256": "a2b9314572b7ac2212f25fcdc1a4f13949da66fdead3340cb56423719a32a037"
+    },
+    {
+      "id": "navigation",
+      "theme": "light",
+      "width": 608,
+      "height": 208,
+      "bytes": 7634,
+      "sha256": "44ec857e8843b5343304aab2d49ce969aef740281cea54419c8d963cbd4cc535"
+    },
+    {
+      "id": "project-card",
+      "theme": "light",
+      "width": 608,
+      "height": 208,
+      "bytes": 15896,
+      "sha256": "3d979fd20c016548ff040a8c4bc0eb1f5c7862fd281d1f5699b08ba1734d1945"
+    },
+    {
+      "id": "section-heading",
+      "theme": "light",
+      "width": 608,
+      "height": 208,
+      "bytes": 4102,
+      "sha256": "77047a3c316a482ea9a4c244da1021d7b3a16ed8fb3f84ea8d65f345dc2bcf38"
+    },
+    {
+      "id": "statistic",
+      "theme": "light",
+      "width": 608,
+      "height": 208,
+      "bytes": 4240,
+      "sha256": "ddeb36bd577abf2627b70a15d42e28fca2462b70b416680a3b0bbc3cf1111c40"
+    },
+    {
+      "id": "timeline-row",
+      "theme": "light",
+      "width": 608,
+      "height": 208,
+      "bytes": 4842,
+      "sha256": "2a415273ce01909ecd7a98bf3efabd3a80c2eb265383e7645ebcc8173ab41f0c"
+    },
+    {
+      "id": "tooltip",
+      "theme": "light",
+      "width": 608,
+      "height": 208,
+      "bytes": 2986,
+      "sha256": "40b500e894263a6acb556b8fc04604c1cb061bf675978458d79a1c8125c69f35"
+    },
+    {
+      "id": "color",
+      "theme": "dark",
+      "width": 608,
+      "height": 208,
+      "bytes": 2788,
+      "sha256": "f6a8bd1880428bdd43c8a77205367f5f6f2536532ee4c9c3c68cb22bd5a96c5b"
+    },
+    {
+      "id": "typography",
+      "theme": "dark",
+      "width": 608,
+      "height": 208,
+      "bytes": 2398,
+      "sha256": "a367c9e7f65fa1818d91c94ac82f6a08ee4aa08cd50f1b9099a67547031d6472"
+    },
+    {
+      "id": "spacing-layout",
+      "theme": "dark",
+      "width": 608,
+      "height": 208,
+      "bytes": 16948,
+      "sha256": "3795017979fd77494f474f90f29e9712dd89288783243fb6117b2e865091d325"
+    },
+    {
+      "id": "motion",
+      "theme": "dark",
+      "width": 608,
+      "height": 208,
+      "bytes": 1456,
+      "sha256": "708375e0bcc562276f257a47b0de08010c9a68af5bb972dac908ca48109ec180"
+    },
+    {
+      "id": "icons",
+      "theme": "dark",
+      "width": 608,
+      "height": 208,
+      "bytes": 9166,
+      "sha256": "533e9a3d64381f2afa0ad3f9919dce2e2f09fd4df5843425dd418db6092db575"
+    },
+    {
+      "id": "button",
+      "theme": "dark",
+      "width": 608,
+      "height": 208,
+      "bytes": 11488,
+      "sha256": "fce537c921dd8e4e5a68caa8d1653aefeb28d34382cfaaa4e05e82e16c8e3133"
+    },
+    {
+      "id": "chip",
+      "theme": "dark",
+      "width": 608,
+      "height": 208,
+      "bytes": 10584,
+      "sha256": "2e49f7772ce743088e72d8e94a1ebe202b1cd9083fea3bc4d08c15cf722c9b3a"
+    },
+    {
+      "id": "navigation",
+      "theme": "dark",
+      "width": 608,
+      "height": 208,
+      "bytes": 10314,
+      "sha256": "e8aeca7b644e7e2c7dbbe777abe3641dd5f1b5ec3dbc9c13ee73374488f6ad04"
+    },
+    {
+      "id": "project-card",
+      "theme": "dark",
+      "width": 608,
+      "height": 208,
+      "bytes": 16166,
+      "sha256": "78751190d4bc2e58c4923fd0c353129d46f54f682704e4ffba26e5175f0d4ed4"
+    },
+    {
+      "id": "section-heading",
+      "theme": "dark",
+      "width": 608,
+      "height": 208,
+      "bytes": 4102,
+      "sha256": "67ee67d518ee35ec5bd9cee33549e1d9fa337b026caa39e349ef6b43dab05c08"
+    },
+    {
+      "id": "statistic",
+      "theme": "dark",
+      "width": 608,
+      "height": 208,
+      "bytes": 4222,
+      "sha256": "1e5cdbf2d3dc062eff7f9ac53ab669d5d142f1c608e88ae151f18c63c7c4ab91"
+    },
+    {
+      "id": "timeline-row",
+      "theme": "dark",
+      "width": 608,
+      "height": 208,
+      "bytes": 4976,
+      "sha256": "32fae6ec858124df09affd3b3f89867d67a4e09be60d88d033cf2e5ab6b2862a"
+    },
+    {
+      "id": "tooltip",
+      "theme": "dark",
+      "width": 608,
+      "height": 208,
+      "bytes": 2726,
+      "sha256": "1aa6c5c01983956e62be90d391ee18a689d8ab05f4e2b2b224125ce379082c19"
+    }
+  ]
+}

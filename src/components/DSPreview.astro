@@ -6,12 +6,11 @@ import TimelineRow from './TimelineRow.astro';
 
 import ToolCard from './ToolCard.astro';
 import {experience,tools} from '../data/portfolio';
-interface Props {component:SourceComponent;miniature?:boolean;}
-const {component,miniature=false}=Astro.props,name=component.name;
-const prefix=miniature?'tile-':'example-';
+interface Props {component:SourceComponent;}
+const {component}=Astro.props,name=component.name;
 ---
 {name==='TimelineRow'&&<div class="about-details ds-context-about" data-color-zone="dark" data-zone-keep="section large-shadow"><ol class="experience-list" data-ds-example="timeline" data-ds-target=".experience-list">{experience.map(item=><TimelineRow item={item}/>)}</ol></div>}
 {name==='Tooltip'&&<div class="ds-specimen-composition ds-tooltip-composition">
- {!miniature&&<div class="ds-inline-controls">{['Hidden','Visible above','Flipped below','Keyboard focus'].map((state,index)=><DSControl data-ds-tooltip-state={['hidden','above','below','focus'][index]} aria-pressed={index===0?'true':'false'}>{state}</DSControl>)}</div>}
- <div class="ds-labelled-specimen"><span>{tools[0].name}</span><div class="about-details ds-context-about ds-tooltip-tool" data-color-zone="dark" data-zone-keep="section large-shadow" data-ds-example="tooltip-tool" data-ds-target=".tool-card"><ToolCard tool={tools[0]} tooltipId={`${prefix}tool-tooltip`} /></div></div>
+ <div class="ds-inline-controls">{['Hidden','Visible above','Flipped below','Keyboard focus'].map((state,index)=><DSControl data-ds-tooltip-state={['hidden','above','below','focus'][index]} aria-pressed={index===0?'true':'false'}>{state}</DSControl>)}</div>
+ <div class="ds-labelled-specimen"><span>{tools[0].name}</span><div class="about-details ds-context-about ds-tooltip-tool" data-color-zone="dark" data-zone-keep="section large-shadow" data-ds-example="tooltip-tool" data-ds-target=".tool-card"><ToolCard tool={tools[0]} tooltipId="example-tool-tooltip" /></div></div>
 </div>}

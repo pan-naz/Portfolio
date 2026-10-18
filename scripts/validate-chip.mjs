@@ -14,7 +14,7 @@ export function validateChip(root=process.cwd()){
  if((type.match(/\.text-caps-centred\s*\{/g)||[]).length!==1||!type.includes('text-box-trim: trim-both; text-box-edge: cap alphabetic;')||!chip.includes("'text-caps-centred'")||!read('src/components/DataGPTCaseStudy.astro').includes('<span class="text-caps-centred">{model.label}</span>'))errors.push('One shared capitals rule trims only Accent and model badge text.');
  for(const file of walk(path.join(root,'src/styles')).filter(f=>f.endsWith('.css')&&!f.endsWith('/typography.css')))if(/text-box-(?:trim|edge)\s*:/.test(fs.readFileSync(file,'utf8'))&&!file.endsWith('/design-system.css'))errors.push('Pill trimming belongs in typography.css: '+file);
  if(/DSTokenNames|data-ds-names|States|data-ds-markup/.test(catalog)||!catalog.includes('<DSTabs id="chip-canvas"'))errors.push('Chip has left Preview/Code tabs and no token switch, states or raw rendered markup.');
- if(chipCards.map(c=>c.variant).join(',')!=='default,raised,accent'||!catalog.includes('chipCards.map')||!read('src/components/DSDashboard.astro').includes('class="ds-chip-cover"'))errors.push('Chip cards and cover render all three real variants.');
+ if(chipCards.map(c=>c.variant).join(',')!=='default,raised,accent'||!catalog.includes('chipCards.map'))errors.push('Chip cards render all three real variants.');
  const model=buildSystemInventory(root).components.find(c=>c.name==='Chip'),props=chipProps(model);
  if(props.map(p=>p.name).join(',')!=='label,index,variant'||props.map(p=>p.default).join(',')!=="Required,0,'default'")errors.push('Chip Props follow the source contract.');
  if(missingUsageNames(chipUsage()).length||chipUsage().split('<Chip ').length!==4)errors.push('Usage must be self-contained and render each source variant.');

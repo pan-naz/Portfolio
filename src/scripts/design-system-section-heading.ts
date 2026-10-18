@@ -8,9 +8,9 @@ const fit=()=>{
  for(const art of arts){
   const holder=art.parentElement!,stage=holder.parentElement!;if(!stage.getClientRects().length)continue;
   write(art,'--ds-heading-width',native+'px');
-  const css=getComputedStyle(stage),cover=holder.classList.contains('ds-heading-cover'),clearance=cover?parseFloat(css.getPropertyValue('--space-4'))+parseFloat(css.getPropertyValue('--space-1')):parseFloat(css.paddingLeft);
+  const css=getComputedStyle(stage),clearance=parseFloat(css.paddingLeft);
   const room=parseFloat(css.width)-clearance*2;if(room<=0)continue;
-  const previousScale=parseFloat(getComputedStyle(art).getPropertyValue('--ds-heading-scale'))||1,height=art.getBoundingClientRect().height/previousScale,scale=Math.min(1,room/native,...(cover?[(stage.clientHeight-clearance*2)/height]:[]));if(scale<=0)continue;
+  const previousScale=parseFloat(getComputedStyle(art).getPropertyValue('--ds-heading-scale'))||1,height=art.getBoundingClientRect().height/previousScale,scale=Math.min(1,room/native);if(scale<=0)continue;
   write(art,'--ds-heading-scale',String(scale));holder.style.width=native*scale+'px';holder.style.height=height*scale+'px';
  }
  view.dataset.headingReady='true';

@@ -22,28 +22,4 @@ export const decorativeIcons = decorativeIconNames.map(name=>{
  return {name,nodes:waterfallIconNodes[index]};
 });
 export const decorativeIconCount = waterfallIconNodes.length;
-/** Fixed catalog artwork: centres, pixel sizes, alpha and degrees match the approved scatter. */
-export const coverIconScatter = [
- {name:'heart',x:0,y:0,size:22,opacity:.9,rotation:-7},
- {name:'sparkles',x:20,y:6,size:24,opacity:.5,rotation:8},
- {name:'archive',x:40,y:1,size:26,opacity:.8,rotation:10},
- {name:'at-sign',x:60,y:7,size:23,opacity:.6,rotation:-5},
- {name:'award',x:80,y:2,size:25,opacity:.9,rotation:4},
- {name:'bell',x:100,y:5,size:21,opacity:.4,rotation:-8},
- {name:'bookmark',x:9,y:46,size:24,opacity:.4,rotation:12},
- {name:'calendar',x:28,y:53,size:22,opacity:.8,rotation:-9},
- {name:'camera',x:47,y:44,size:20,opacity:.6,rotation:7},
- {name:'chart-column',x:66,y:51,size:26,opacity:.9,rotation:-3},
- {name:'code',x:85,y:45,size:18,opacity:.4,rotation:5},
- {name:'compass',x:99,y:52,size:22,opacity:.8,rotation:-12},
- {name:'image',x:1,y:94,size:24,opacity:.9,rotation:11},
- {name:'grid-2x2',x:21,y:100,size:18,opacity:.6,rotation:2},
- {name:'link',x:41,y:92,size:25,opacity:.9,rotation:-10},
- {name:'lock',x:61,y:99,size:23,opacity:.4,rotation:-8},
- {name:'mail',x:81,y:93,size:24,opacity:.8,rotation:9},
- {name:'map-pin',x:98,y:98,size:26,opacity:.6,rotation:4},
-] as const;
-export const coverIcons = coverIconScatter.map(placement=>({
- ...placement,nodes:decorativeIcons.find(icon=>icon.name===placement.name)!.nodes,
-}));
 export const interfaceIconNames = Object.keys(icons) as IconName[];

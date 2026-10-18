@@ -41,11 +41,6 @@
 .ds-button-code-panel ul { padding-left:var(--space-4); }
 .ds-button-code-panel li + li { margin-top:var(--space-2); }
 .ds-button-code-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-3); align-items:stretch; }
-/* Let native shadows fade past the preview separator inside the rounded tile. */
-.ds-tile-visual:has(> .ds-button-cover) { overflow:visible; }
-.ds-button-cover { position:absolute; left:50%; top:50%; translate:-50% -50%; display:grid; justify-items:center; gap:var(--space-3); width:max-content; flex:none; transform:scale(var(--ds-cover-fit,1)); }
-.ds-button-cover .case-comparison-controls { margin:0; }
-.ds-button-cover-icons { display:flex; gap:var(--space-6); align-items:center; }
 .ds-button-view .ds-comparison-switch { height:auto; overflow:visible; min-width:0; }
 .ds-button-view .ds-comparison-switch .case-comparison-images { display:none; }
 .ds-button-view .ds-button-stage .case-comparison-controls { margin:0; }

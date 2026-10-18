@@ -33,7 +33,6 @@ const fit=()=>{
   for(const[name,selector]of Object.entries(examples)){const el=specimen.querySelector<HTMLElement>(selector)!;el.dataset.dsExample=name;el.dataset.dsTarget=selector.includes('logo')?'.wordmark':selector;}
   const stage=specimen.closest<HTMLElement>('.ds-nav-stage');if(stage?.clientWidth){const style=getComputedStyle(stage),room=parseFloat(style.width)-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight)-parseFloat(style.getPropertyValue('--space-1'));specimen.style.setProperty('--ds-specimen-fit',String(Math.min(1,room/parseFloat(getComputedStyle(specimen).width))));}
  }
- for(const cover of document.querySelectorAll<HTMLElement>('.ds-navigation-cover')){const stage=cover.parentElement!;if(!stage.clientWidth)continue;const style=getComputedStyle(cover),clearance=parseFloat(style.getPropertyValue('--space-4'))*2+parseFloat(style.getPropertyValue('--space-1'));cover.style.setProperty('--ds-cover-fit',String(Math.min(1,(Math.floor(parseFloat(getComputedStyle(stage).width))-clearance)/parseFloat(getComputedStyle(cover).width),(stage.clientHeight-clearance)/cover.offsetHeight)));}
 };
 // Freeze only the actual shared pseudo-class declarations, including fine-pointer hover.
 const freeze=(list:CSSRuleList):string=>[...list].map(rule=>{
@@ -42,5 +41,5 @@ const freeze=(list:CSSRuleList):string=>[...list].map(rule=>{
 }).join('\n');
 const frozen=document.createElement('style');frozen.dataset.dsNavigationStates='';frozen.textContent='@layer system {'+[...document.styleSheets].map(sheet=>{try{return freeze(sheet.cssRules)}catch{return ''}}).join('\n')+'}';document.head.append(frozen);
 let pending=false;const schedule=()=>{if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;fit();});};
-const observer=new ResizeObserver(schedule);document.querySelectorAll('.ds-nav-stage,.ds-navigation-cover').forEach(el=>observer.observe(el));
+const observer=new ResizeObserver(schedule);document.querySelectorAll('.ds-nav-stage').forEach(el=>observer.observe(el));
 window.addEventListener('resize',schedule);document.fonts.ready.then(schedule);

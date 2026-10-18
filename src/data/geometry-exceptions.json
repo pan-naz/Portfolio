@@ -501,42 +501,6 @@
   },
   {
     "file": "src/styles/design-system.css",
-    "selector": ".ds-tile-mini",
-    "context": "@layer system",
-    "property": "width",
-    "value": "320px",
-    "kind": "size",
-    "reason": "Approved 320px source width before uniform miniature scaling."
-  },
-  {
-    "file": "src/styles/design-system.css",
-    "selector": ".ds-tile-mini--timeline-row",
-    "context": "@layer system",
-    "property": "width",
-    "value": "880px",
-    "kind": "size",
-    "reason": "Approved 880px source width for full-composition miniatures."
-  },
-  {
-    "file": "src/styles/design-system.css",
-    "selector": ".ds-tile-mini--statistic",
-    "context": "@layer system",
-    "property": "width",
-    "value": "240px",
-    "kind": "size",
-    "reason": "Approved 240px statistics miniature source width."
-  },
-  {
-    "file": "src/styles/design-system.css",
-    "selector": ".ds-project-tile",
-    "context": "@layer system",
-    "property": "width",
-    "value": "480px",
-    "kind": "size",
-    "reason": "Approved 480px project thumbnail source width."
-  },
-  {
-    "file": "src/styles/design-system.css",
     "selector": ".ds-foundation-row",
     "context": "@layer system > @media (max-width:1099px)",
     "property": "grid-template-columns",

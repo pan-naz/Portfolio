@@ -1,3 +1,4 @@
+import {validateOverviewCovers} from './validate-overview-covers.mjs';
 import {validateNativeTooltipSources} from './validate-native-tooltips.mjs';
 import {validateStatistic} from './validate-statistic.mjs';
 import {validateHeroFrame} from './validate-hero-frame.mjs';
@@ -187,7 +188,7 @@ export function validateHiddenDocumentation(records, text) {
   }
   return failures;
 }
-const errors = [...validateNativeTooltipSources(root),...validateStatistic(root),...validateProjectCard(root),...validateNavigationCatalog(root),...validateChip(root),...validateSystemCleanup(root),...validateButtonCatalog(root),...validateIcons(root),...validateMotionContract(root),...validate(registry),...validateColors(),...validateSpaceShape(root),...validateRadiusContract(),...validateFoundationCodeContract(root)];
+const errors = [...validateOverviewCovers(root),...validateNativeTooltipSources(root),...validateStatistic(root),...validateProjectCard(root),...validateNavigationCatalog(root),...validateChip(root),...validateSystemCleanup(root),...validateButtonCatalog(root),...validateIcons(root),...validateMotionContract(root),...validate(registry),...validateColors(),...validateSpaceShape(root),...validateRadiusContract(),...validateFoundationCodeContract(root)];
 if(filesUnder('src').some(file=>/\.(?:css|astro|[cm]?[jt]s)$/.test(file)&&/::(?:-moz-)?selection\b|(?:-webkit-)?text-fill-color\s*:|(?:webkit)?TextFillColor\b/i.test(read(file))))errors.push('Use browser-default selection; selection and text-fill overrides are forbidden.');
 errors.push(...validateLogoWave(read('src/styles/global.css'), read('src/components/Logo.astro'), read('src/styles/tokens.css'), filesUnder('src/scripts').filter(file=>file.endsWith('.ts')&&file!=='src/scripts/design-system-motion.ts').map(read).join('\n')));
 if(JSON.stringify(visibleComponents.map(item=>item.name).sort())!==JSON.stringify([...expectedVisible].sort()))errors.push('Visible catalog must contain exactly the approved eight pages');
