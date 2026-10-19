@@ -1,4 +1,5 @@
 ---
+import AlignedChapterCopy from './AlignedChapterCopy.astro';
 import SectionHeading from './SectionHeading.astro';
 import type { Project } from '../data/portfolio';
 import { gutsulHero, gutsulRole, gutsulBranding, gutsulMain, gutsulCatalog, gutsulProduct, gutsulOther, gutsulResponsive, gutsulGuide } from '../data/gutsul-made-case-study';
@@ -19,9 +20,9 @@ const ornament = '/projects/gutsul-made-case-study/ornament-strip.svg';
 
     <section class="gutsul-band gutsul-charcoal case-study-chapter--inverse" data-color-zone="dark" data-zone-keep="surface section shadows" aria-labelledby="gm-branding">
       <div class="case-study-chapter__inner">
-        <div class="case-study-columns gutsul-heading">
+        <div class="case-study-columns gutsul-heading title-pair">
           <div><SectionHeading id="gm-branding" label="Branding" layout="stacked" reveal={false}>{gutsulBranding.title}</SectionHeading></div>
-          <p class="gutsul-muted">{gutsulBranding.description}</p>
+          <AlignedChapterCopy><p class="gutsul-muted">{gutsulBranding.description}</p></AlignedChapterCopy>
         </div>
         <div class="gutsul-story gutsul-block">{gutsulBranding.steps.map(step => <figure class="gutsul-story-step">
           <div class:list={['gutsul-brand-tile', step.paper && 'gutsul-brand-tile--paper']}>
@@ -46,9 +47,9 @@ const ornament = '/projects/gutsul-made-case-study/ornament-strip.svg';
     <section class="gutsul-band gutsul-red case-study-chapter--inverse" data-color-zone="dark" data-zone-keep="surface section shadows" aria-labelledby="gm-product">
       <div class="gutsul-ornament" aria-hidden="true"><SvgAsset src={ornament} /></div>
       <div class="case-study-chapter__inner gutsul-band-inner">
-        <div class="case-study-columns gutsul-heading">
+        <div class="case-study-columns gutsul-heading title-pair">
           <div><SectionHeading id="gm-product" label="Product" layout="stacked" reveal={false}>{gutsulProduct.title}</SectionHeading></div>
-          <p>{gutsulProduct.description}</p>
+          <AlignedChapterCopy><p>{gutsulProduct.description}</p></AlignedChapterCopy>
         </div>
         <div class="gutsul-cutouts">{gutsulProduct.cutouts.map(media => <div style={`--gutsul-cutout-width:${media.width}px`}><CaseStudyMedia {...media} presentation="bare" /></div>)}</div>
         <div class="case-study-columns">
@@ -69,9 +70,9 @@ const ornament = '/projects/gutsul-made-case-study/ornament-strip.svg';
     <section class="gutsul-band gutsul-charcoal case-study-chapter--inverse" data-color-zone="dark" data-zone-keep="surface section shadows" aria-labelledby="gm-responsive">
       <div class="gutsul-ornament" aria-hidden="true"><SvgAsset src={ornament} /></div>
       <div class="case-study-chapter__inner gutsul-band-inner">
-        <div class="case-study-columns gutsul-heading">
+        <div class="case-study-columns gutsul-heading title-pair">
           <div><SectionHeading id="gm-responsive" label="Responsive" layout="stacked" reveal={false}>{gutsulResponsive.title}</SectionHeading></div>
-          <p>{gutsulResponsive.description}</p>
+          <AlignedChapterCopy><p>{gutsulResponsive.description}</p></AlignedChapterCopy>
         </div>
         <div class="gutsul-phones">{gutsulResponsive.media.map(phone => <CaseStudyMedia {...phone} />)}</div>
       </div>
@@ -79,7 +80,7 @@ const ornament = '/projects/gutsul-made-case-study/ornament-strip.svg';
     </section>
 
     <section aria-labelledby="gm-style">
-      <div class="case-study-columns gutsul-heading"><div><SectionHeading id="gm-style" label="Style guide" layout="stacked" reveal={false}>{gutsulGuide.title}</SectionHeading></div><p class="gutsul-muted">{gutsulGuide.description}</p></div>
+      <div class="case-study-columns gutsul-heading title-pair"><div><SectionHeading id="gm-style" label="Style guide" layout="stacked" reveal={false}>{gutsulGuide.title}</SectionHeading></div><AlignedChapterCopy><p class="gutsul-muted">{gutsulGuide.description}</p></AlignedChapterCopy></div>
       <div class="gutsul-guide gutsul-block">
         <CaseStudyDecisionCard title={gutsulGuide.icons.title} layout="figure"><div slot="media" class="gutsul-plate gutsul-icons"><CaseStudyMedia {...gutsulGuide.icons.media} presentation="bare" /></div><p>{gutsulGuide.icons.description}</p></CaseStudyDecisionCard>
         <CaseStudyDecisionCard title={gutsulGuide.type.title} layout="figure"><div slot="media" class="gutsul-plate"><p class="gutsul-type" data-typography-exclusion="project-font-specimen">Open Sans<br /><span>Regular &amp; <b>Bold</b></span></p></div><p>{gutsulGuide.type.description}</p></CaseStudyDecisionCard>

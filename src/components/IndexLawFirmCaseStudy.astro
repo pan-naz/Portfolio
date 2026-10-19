@@ -1,4 +1,5 @@
 ---
+import AlignedChapterCopy from './AlignedChapterCopy.astro';
 import SectionHeading from './SectionHeading.astro';
 import type { Project } from '../data/portfolio';
 import { indexLawFirmMedia as media, indexLawFirmHomeSections, indexLawFirmServices, indexLawFirmTileOrder, indexLawFirmPalette } from '../data/index-law-firm-case-study';
@@ -46,9 +47,9 @@ const { project } = Astro.props;
 
       <section class="case-study-chapter--inverse" data-color-zone="dark" data-zone-keep="surface section shadows" aria-labelledby="index-services">
         <div class="case-study-chapter__inner index-section">
-          <div class="case-study-columns index-chapter-heading">
+          <div class="case-study-columns index-chapter-heading title-pair">
             <div><SectionHeading id="index-services" label="Interaction" layout="stacked" reveal={false}>Service tiles</SectionHeading></div>
-            <p class="text-body-m index-muted">Each tile shows a service and a short line about it. On hover the line under the title turns orange and a plus appears. A popover shows what the firm does in that area. Hover a tile below to see its details.</p>
+            <AlignedChapterCopy><p class="text-body-m index-muted">Each tile shows a service and a short line about it. On hover the line under the title turns orange and a plus appears. A popover shows what the firm does in that area. Hover a tile below to see its details.</p></AlignedChapterCopy>
           </div>
           <CaseStudyServiceTiles id="index-service-demo" services={indexLawFirmServices} order={indexLawFirmTileOrder} class="index-service-demo">
             <div slot="clients" data-service-decoration="clients" class="case-study-service-tile case-study-service-stat" style="--tile-row:1;--tile-column:2"><small>Trusted by</small><strong>2600</strong><small>clients</small></div>
@@ -65,9 +66,9 @@ const { project } = Astro.props;
 
       <CaseStudyMarker label="Responsive" />
       <section class="index-section" aria-labelledby="index-responsive">
-        <div class="case-study-columns index-chapter-heading">
+        <div class="case-study-columns index-chapter-heading title-pair">
           <div><h2 class="case-study-heading" id="index-responsive">Laptop and phone</h2><p class="index-breakpoint text-body-s">320px +</p></div>
-          <p class="index-muted">The layout works from 320px wide. On phones the tiles stack in one column, the header turns dark and the menu folds into a button next to the logo.</p>
+          <AlignedChapterCopy><p class="index-muted">The layout works from 320px wide. On phones the tiles stack in one column, the header turns dark and the menu folds into a button next to the logo.</p></AlignedChapterCopy>
         </div>
         <div class="index-devices"><CaseStudyMedia {...media.laptop} /><CaseStudyMedia {...media.phones} /></div>
         <CaseStudyMedia {...media.phoneClose} />

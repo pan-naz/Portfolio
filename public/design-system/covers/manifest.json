@@ -11,7 +11,6 @@
     "height": 72,
     "fullHeight": [
       "motion",
-      "timeline-row",
       "tooltip"
     ]
   },
@@ -94,7 +93,7 @@
       "width": 416,
       "height": 208,
       "bytes": 2592,
-      "sha256": "3389684bd0b97ae525630189153fe150703e958c431757b426cc7778f7943395"
+      "sha256": "4201672b2c43a292cf4c9382fc4bb2abba47efc81e0169a6e4857c7df9f9bb9c"
     },
     {
       "id": "statistic",
@@ -109,8 +108,8 @@
       "theme": "light",
       "width": 416,
       "height": 208,
-      "bytes": 4800,
-      "sha256": "069ceb77a35ee3178ef501812fb4abbc66268dd69095105334040920d8405228"
+      "bytes": 1804,
+      "sha256": "6e2c9292240045c6c0a0073b4a7e5d658179b250d681f7232ca4a60ac4981498"
     },
     {
       "id": "tooltip",
@@ -197,8 +196,8 @@
       "theme": "dark",
       "width": 416,
       "height": 208,
-      "bytes": 2608,
-      "sha256": "b008595807e0e0c71d136936dbed65e0638385db5071b931b29957152dc1f394"
+      "bytes": 2612,
+      "sha256": "fe7f2e85a20724bc06810abc1e932290172bb7098e898a036b36ebe5e938def4"
     },
     {
       "id": "statistic",
@@ -213,8 +212,8 @@
       "theme": "dark",
       "width": 416,
       "height": 208,
-      "bytes": 4934,
-      "sha256": "10b7959b4b930d8c0ccff9271329c687bf13ae943e71a8a3840aa8d62bda01da"
+      "bytes": 1804,
+      "sha256": "6e2c9292240045c6c0a0073b4a7e5d658179b250d681f7232ca4a60ac4981498"
     },
     {
       "id": "tooltip",

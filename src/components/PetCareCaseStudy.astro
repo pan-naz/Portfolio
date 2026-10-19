@@ -1,4 +1,5 @@
 ---
+import AlignedChapterCopy from './AlignedChapterCopy.astro';
 import SectionHeading from './SectionHeading.astro';
 import type { Project } from '../data/portfolio';
 import { petCareHero, petCareAnimation, petCareRole, petCareCompetition, petCareResearch, petCarePrototype, petCareMain, petCarePhysical, petCareEmotional, petCareNeeds, petCareGuide } from '../data/pet-care-case-study';
@@ -22,7 +23,7 @@ const { project } = Astro.props;
 
     <section class="case-study-chapter--inverse pc-pink" data-color-zone="dark" data-zone-keep="surface section shadows" aria-labelledby="pc-competition">
       <div class="case-study-chapter__inner pc-band-inner">
-        <div class="case-study-columns pc-heading"><div><SectionHeading id="pc-competition" label={petCareCompetition.eyebrow} layout="stacked" reveal={false}>{petCareCompetition.title}</SectionHeading></div><p class="pc-muted">{petCareCompetition.description}</p></div>
+        <div class="case-study-columns pc-heading title-pair"><div><SectionHeading id="pc-competition" label={petCareCompetition.eyebrow} layout="stacked" reveal={false}>{petCareCompetition.title}</SectionHeading></div><AlignedChapterCopy><p class="pc-muted">{petCareCompetition.description}</p></AlignedChapterCopy></div>
         <div class="pc-competition-cards">
           <ul class="pc-stats" aria-label="Competition in numbers">{petCareCompetition.stats.map(stat => <li>
             <CaseStudyDecisionCard title={stat.label} layout="figure">
@@ -44,12 +45,12 @@ const { project } = Astro.props;
     </section>
 
     <section aria-labelledby="pc-research">
-      <div class="case-study-columns pc-heading"><div><SectionHeading id="pc-research" label={petCareResearch.eyebrow} layout="stacked" reveal={false}>{petCareResearch.title}</SectionHeading></div><p class="pc-muted">{petCareResearch.description}</p></div>
+      <div class="case-study-columns pc-heading title-pair"><div><SectionHeading id="pc-research" label={petCareResearch.eyebrow} layout="stacked" reveal={false}>{petCareResearch.title}</SectionHeading></div><AlignedChapterCopy><p class="pc-muted">{petCareResearch.description}</p></AlignedChapterCopy></div>
       <div class="pc-research-cards">{petCareResearch.cards.map(card => <CaseStudyDecisionCard title={card.title} layout="figure"><ul class="pc-muted">{card.items.map(item => <li>{item}</li>)}</ul>{card.note && <p>{card.note}</p>}</CaseStudyDecisionCard>)}</div>
     </section>
 
     <section aria-labelledby="pc-prototype">
-      <div class="case-study-columns pc-heading"><div><SectionHeading id="pc-prototype" label={petCarePrototype.eyebrow} layout="stacked" reveal={false}>{petCarePrototype.title}</SectionHeading></div><p class="pc-muted">{petCarePrototype.description}</p></div>
+      <div class="case-study-columns pc-heading title-pair"><div><SectionHeading id="pc-prototype" label={petCarePrototype.eyebrow} layout="stacked" reveal={false}>{petCarePrototype.title}</SectionHeading></div><AlignedChapterCopy><p class="pc-muted">{petCarePrototype.description}</p></AlignedChapterCopy></div>
       <div class="pc-wireframes"><CaseStudyMedia {...petCarePrototype.media} /></div>
     </section>
 
@@ -75,7 +76,7 @@ const { project } = Astro.props;
     </section>
 
     <section aria-labelledby="pc-guide">
-      <div class="case-study-columns pc-heading"><div><SectionHeading id="pc-guide" label={petCareGuide.eyebrow} layout="stacked" reveal={false}>{petCareGuide.title}</SectionHeading></div><p class="pc-muted">{petCareGuide.description}</p></div>
+      <div class="case-study-columns pc-heading title-pair"><div><SectionHeading id="pc-guide" label={petCareGuide.eyebrow} layout="stacked" reveal={false}>{petCareGuide.title}</SectionHeading></div><AlignedChapterCopy><p class="pc-muted">{petCareGuide.description}</p></AlignedChapterCopy></div>
       <div class="pc-guide">
         <div><h3>Colours</h3><ul class="pc-palette" aria-label="Colour palette">{petCareGuide.colours.map(colour => <li><CaseStudyDecisionCard title={colour.label} layout="figure"><div slot="media" class="pc-swatch" style={`background:${colour.value}`} aria-hidden="true" /><p class="text-body-s"><code>{colour.value}</code></p><p class="pc-muted">{colour.description}</p></CaseStudyDecisionCard></li>)}</ul></div>
         <div class="case-study-media-grid pc-type-cards">

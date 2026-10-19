@@ -1,4 +1,5 @@
 ---
+import AlignedChapterCopy from './AlignedChapterCopy.astro';
 import SectionHeading from './SectionHeading.astro';
 import type { Project } from '../data/portfolio';
 import { squareHero, squareRole, squareChallenge, squareLookbook, squareLibido } from '../data/square-case-study';
@@ -27,18 +28,18 @@ const { project } = Astro.props;
     </section>
 
     <section aria-labelledby="sq-lookbook">
-      <div class="case-study-columns square-section-heading">
+      <div class="case-study-columns square-section-heading title-pair">
         <div><p class="case-study-eyebrow">{squareLookbook.eyebrow}</p><h2 class="square-entry-title text-heading-xl" id="sq-lookbook">{squareLookbook.title}</h2></div>
-        <p class="square-muted">{squareLookbook.description}</p>
+        <AlignedChapterCopy><p class="square-muted">{squareLookbook.description}</p></AlignedChapterCopy>
       </div>
       <div class="square-looks">{squareLookbook.media.map(media => <CaseStudyMedia {...media} presentation="shadow" />)}</div>
     </section>
 
     <section class="square-libido case-study-chapter--inverse" data-color-zone="dark" data-zone-keep="surface section shadows" aria-labelledby="sq-libido">
       <div class="case-study-chapter__inner">
-        <div class="case-study-columns square-section-heading">
+        <div class="case-study-columns square-section-heading title-pair">
           <div><p class="case-study-eyebrow">{squareLibido.eyebrow}</p><h2 class="square-entry-title text-heading-xl" id="sq-libido">{squareLibido.title}</h2></div>
-          <p class="square-muted">{squareLibido.description}</p>
+          <AlignedChapterCopy><p class="square-muted">{squareLibido.description}</p></AlignedChapterCopy>
         </div>
         <CaseStudyMedia {...squareLibido.media} presentation="shadow" radius="large" />
       </div>

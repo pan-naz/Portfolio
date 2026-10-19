@@ -10,7 +10,8 @@
 .tg-head > .section-heading, .tg-head > .section-heading > div { display: contents; }
 .tg-head .case-study-eyebrow { grid-column: 1; grid-row: 1; margin-inline-end: var(--grid-gap); }
 .tg-head .case-study-heading { grid-column: 1; grid-row: 2; margin: 0 var(--grid-gap) 0 0; }
-.tg-head > .tg-copy { grid-column: 2; grid-row: 2; align-self: center; margin: 0; }
+.tg-head > .title-align-line { grid-column: 2; grid-row: 2; padding-block-start: 0; }
+.tg-head .tg-copy { margin: 0; }
 .tg-copy { display: grid; gap: var(--space-3); }
 .tg-copy > p { margin: 0; }
 .tg-muted { color: var(--color-text-secondary); }
@@ -28,7 +29,7 @@
 }
 @media (max-width: 767px) {
   .tg-head :is(.case-study-heading, .case-study-eyebrow) { margin-inline-end: 0; }
-  .tg-head > .tg-copy { grid-column: 1; grid-row: 3; }
+  .tg-head > .title-align-line { grid-column: 1; grid-row: 3; }
   .tg-stats, #tg-video > .case-study-media { margin-top: var(--case-content-gap); }
   .tg-result .case-study-chapter__inner { gap: var(--case-content-gap); }
 }

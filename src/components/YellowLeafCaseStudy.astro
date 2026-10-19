@@ -1,4 +1,5 @@
 ---
+import AlignedChapterCopy from './AlignedChapterCopy.astro';
 import SectionHeading from './SectionHeading.astro';
 import type { Project } from '../data/portfolio';
 import { yellowLeafMedia as media, yellowLeafLinkedIn, yellowLeafHomeSections, yellowLeafEstimateSteps, yellowLeafPalette } from '../data/yellow-leaf-case-study';
@@ -48,9 +49,9 @@ const vector = (name: string) => '/projects/yellow-leaf-case-study/' + name + '.
 
     <section class="case-study-chapter--inverse" data-color-zone="dark" data-zone-keep="surface section shadows" aria-labelledby="yl-estimate">
       <div class="case-study-chapter__inner">
-        <div class="case-study-columns yellow-chapter-heading">
+        <div class="case-study-columns yellow-chapter-heading title-pair">
           <div><SectionHeading id="yl-estimate" label="Feature" layout="stacked" reveal={false}>Project estimate</SectionHeading></div>
-          <p class="text-body-m">The team decided to add an estimate form. A client picks the kind of project and its scope, leaves their contacts and gets an approximate budget. The form opens from the Estimate project button in the header and the footer.</p>
+          <AlignedChapterCopy><p class="text-body-m">The team decided to add an estimate form. A client picks the kind of project and its scope, leaves their contacts and gets an approximate budget. The form opens from the Estimate project button in the header and the footer.</p></AlignedChapterCopy>
         </div>
         <div class="yellow-block"><CaseStudyMedia {...media.estimate} /></div>
         <div class="case-study-columns case-study-columns--thirds yellow-block">
@@ -61,17 +62,17 @@ const vector = (name: string) => '/projects/yellow-leaf-case-study/' + name + '.
     </section>
 
     <section aria-labelledby="yl-navigation">
-      <div class="case-study-columns yellow-chapter-heading">
+      <div class="case-study-columns yellow-chapter-heading title-pair">
         <div><SectionHeading id="yl-navigation" label="Interaction" layout="stacked" reveal={false}>Navigation</SectionHeading></div>
-        <p class="text-body-m">The menu opens over the page. The five sections are in the middle, social links on the left, and the language switch, address and contacts on the right. On hover, a yellow line crosses out the item.</p>
+        <AlignedChapterCopy><p class="text-body-m">The menu opens over the page. The five sections are in the middle, social links on the left, and the language switch, address and contacts on the right. On hover, a yellow line crosses out the item.</p></AlignedChapterCopy>
       </div>
       <div class="yellow-block"><CaseStudyMedia {...media.navigation} /></div>
     </section>
 
     <section aria-labelledby="yl-responsive">
-      <div class="case-study-columns yellow-chapter-heading">
+      <div class="case-study-columns yellow-chapter-heading title-pair">
         <div><SectionHeading id="yl-responsive" label="Responsive" layout="stacked" reveal={false}>Tablet and phone</SectionHeading></div>
-        <p class="text-body-m">Every page was also designed for small screens. On a phone the hero keeps its background video, and the menu becomes a single column with the language switch under it.</p>
+        <AlignedChapterCopy><p class="text-body-m">Every page was also designed for small screens. On a phone the hero keeps its background video, and the menu becomes a single column with the language switch under it.</p></AlignedChapterCopy>
       </div>
       <div class="case-study-media-grid yellow-phone-grid yellow-block"><CaseStudyMedia {...media.phoneHero} /><CaseStudyMedia {...media.phoneHome} /><CaseStudyMedia {...media.phoneWorks} /></div>
       <div class="case-study-media-pair yellow-block">
@@ -90,9 +91,9 @@ const vector = (name: string) => '/projects/yellow-leaf-case-study/' + name + '.
     </section>
 
     <section aria-labelledby="yl-branding">
-      <div class="case-study-columns yellow-chapter-heading">
+      <div class="case-study-columns yellow-chapter-heading title-pair">
         <div><SectionHeading id="yl-branding" label="Branding" layout="stacked" reveal={false}>A leaf with a y in it</SectionHeading></div>
-        <p class="text-body-m">The brand was made together with the agency's first website. The logo is a leaf for Leaf, cut by the letter y for Yellow. It was made in colour first, and the site's colours came from it.</p>
+        <AlignedChapterCopy><p class="text-body-m">The brand was made together with the agency's first website. The logo is a leaf for Leaf, cut by the letter y for Yellow. It was made in colour first, and the site's colours came from it.</p></AlignedChapterCopy>
       </div>
       <div class="yellow-duo yellow-brand-figures yellow-block">
         <figure class="yellow-brand-card">

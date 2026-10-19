@@ -13,11 +13,10 @@ const needed = ['hex', 'readable', 'refreshValues'].map(name => {
   assert.ok(declaration, `Live catalog reader ${name} exists`);
   return `const ${declaration.getText(ast)};`;
 });
-const rows = componentPresentation.TimelineRow.columns.flatMap(column => column.rows).filter(row => row.selector);
+const rows = componentPresentation.Tooltip.columns.flatMap(column => column.rows).filter(row => row.selector);
 const nodes = rows.map(row => ({ dataset: { dsMeasure: row.selector, properties: row.properties }, textContent: '' }));
-const large = { values: { 'font-size': '15.666px', 'font-weight': '500' } };
-const small = { values: { 'font-size': '14px' } };
-const samples = new Map([['.ds-specimens .experience-row [data-ds-heading]', large], ['.ds-specimens .experience-summary', small], ['.ds-specimens .experience-period', small]]);
+const large = { values: { 'padding': '15.666px', 'font-size': '14px', 'line-height': '20px' } };
+const samples = new Map([['.ds-specimens .tooltip', large]]);
 const queries = [];
 const view = {
   hidden: false,
@@ -32,11 +31,11 @@ const context = vm.createContext({
 });
 vm.runInContext(ts.transpileModule(needed.join('\n') + '\nglobalThis.refresh = refreshValues;', { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText, context);
 context.refresh();
-assert.deepEqual(nodes.map(node => node.textContent), ['15.67px · Medium', '14px', '14px']);
-assert.deepEqual(queries, [...samples.keys()], 'Spec sizes are read within the active component view');
-large.values['font-size'] = '18px'; small.values['font-size'] = '13.333px';
+assert.deepEqual(nodes.map(node => node.textContent), ['15.67px', '14px · 20px']);
+assert.deepEqual(queries, ['.ds-specimens .tooltip','.ds-specimens .tooltip'], 'Spec sizes are read within the active component view');
+large.values.padding = '18px'; large.values['font-size'] = '13.333px';
 context.refresh();
-assert.deepEqual(nodes.map(node => node.textContent), ['18px · Medium', '13.33px', '13.33px'], 'Responsive/theme refresh reads current values, not a frozen table');
+assert.deepEqual(nodes.map(node => node.textContent), ['18px', '13.33px · 20px'], 'Responsive/theme refresh reads current values, not a frozen table');
 const catalog = readFileSync('dist/design-system/index.html', 'utf8');
 for (const row of rows) assert.ok(catalog.includes(`data-ds-measure="${row.selector}" data-properties="${row.properties}"`), 'The compiled catalog connects its specs to the live reader');
 console.log('Live catalog specs read scoped computed sizes, named weights and responsive updates from their actual specimens.');

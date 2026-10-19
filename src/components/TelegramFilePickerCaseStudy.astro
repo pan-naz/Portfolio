@@ -16,11 +16,11 @@ const { project } = Astro.props;
     <CaseStudyOverview project={project} titleId="tg-title" presentation="compact" />
 
     <section id="tg-competition" aria-labelledby="tg-competition-title">
-      <div class="tg-head case-study-columns">
+      <div class="tg-head case-study-columns title-pair">
         <SectionHeading id="tg-competition-title" label={telegramCompetition.eyebrow} layout="stacked" reveal={false}>{telegramCompetition.title}</SectionHeading>
-        <div class="tg-copy">
+        <div class="title-align-line"><div class="title-align-text"><div class="tg-copy">
           {telegramCompetition.description.map((text, i) => <p class:list={[i > 0 && 'tg-muted']}>{text}</p>)}
-        </div>
+        </div></div></div>
       </div>
       <ul class="tg-stats" aria-label={telegramCompetition.statsLabel}>
         {telegramCompetition.stats.map(stat => <li>
@@ -33,18 +33,18 @@ const { project } = Astro.props;
     </section>
 
     <section id="tg-video" aria-labelledby="tg-video-title">
-      <div class="tg-head case-study-columns">
+      <div class="tg-head case-study-columns title-pair">
         <SectionHeading id="tg-video-title" label={telegramEntry.eyebrow} layout="stacked" reveal={false}>{telegramEntry.title}</SectionHeading>
-        <p class="tg-copy tg-muted">{telegramEntry.description}</p>
+        <div class="title-align-line"><div class="title-align-text"><p class="tg-copy tg-muted">{telegramEntry.description}</p></div></div>
       </div>
       <CaseStudyMedia {...telegramEntry.media} />
     </section>
 
     <section class="case-study-chapter--inverse tg-result" data-color-zone="dark" data-zone-keep="surface section shadows" id="tg-result" aria-labelledby="tg-result-title">
       <div class="case-study-chapter__inner">
-        <div class="tg-head case-study-columns">
+        <div class="tg-head case-study-columns title-pair">
           <SectionHeading id="tg-result-title" label={telegramResult.eyebrow} layout="stacked" reveal={false}>{telegramResult.title}</SectionHeading>
-          <p class="tg-copy">{telegramResult.description}</p>
+          <div class="title-align-line"><div class="title-align-text"><p class="tg-copy">{telegramResult.description}</p></div></div>
         </div>
         <div class="tg-window" data-fixed-shadow="light"><CaseStudyMedia {...telegramResult.media} presentation="bare" /></div>
       </div>

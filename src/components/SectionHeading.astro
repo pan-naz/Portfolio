@@ -3,7 +3,12 @@ import type { HTMLAttributes } from 'astro/types';
 interface Props extends HTMLAttributes<'div'> { id: string; label: string; reveal?: boolean; layout?: 'columns' | 'stacked'; }
 const { id, label, reveal = true, layout = 'columns', ...attributes } = Astro.props;
 ---
-<div {...attributes} class:list={['section-heading', layout === 'stacked' && 'section-heading--stacked']} data-section-reveal={reveal ? '' : undefined}><div class="section-index"><slot name="index"><p class:list={['eyebrow', layout === 'stacked' && 'case-study-eyebrow']}>{label}</p></slot></div><div><h2 class:list={['text-heading-l', layout === 'stacked' && 'case-study-heading']} id={id}><slot /></h2><slot name="description" /></div></div>
+<div {...attributes} class:list={['section-heading', layout === 'stacked' && 'section-heading--stacked']} data-section-reveal={reveal ? '' : undefined}>
+  <div class:list={['section-index', layout === 'columns' && 'title-align-line']}>
+    {layout === 'columns' ? <div class={Astro.slots.has('index') ? 'title-align-control' : 'title-align-text'}><slot name="index"><p class="eyebrow">{label}</p></slot></div> : <slot name="index"><p class="eyebrow case-study-eyebrow">{label}</p></slot>}
+  </div>
+  <div><h2 class:list={['text-heading-l', layout === 'stacked' && 'case-study-heading']} id={id}><slot /></h2><slot name="description" /></div>
+</div>
 
 <style>
 @layer system, project;

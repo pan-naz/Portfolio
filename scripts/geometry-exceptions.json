@@ -420,15 +420,6 @@
   },
   {
     "file": "src/styles/design-system.css",
-    "selector": "#timeline-row .ds-canvas",
-    "context": "@layer system",
-    "property": "height",
-    "value": "400px",
-    "kind": "size",
-    "reason": "Approved 400px full-component specimen viewport."
-  },
-  {
-    "file": "src/styles/design-system.css",
     "selector": ".ds-comparison-switch",
     "context": "@layer system",
     "property": "height",
@@ -747,7 +738,7 @@
     "selector": ".experience-row",
     "context": "@layer system",
     "property": "grid-template-columns",
-    "value": "160px 392px minmax(0,1fr) 80px",
+    "value": "160px 392px minmax(0,1fr) var(--experience-duration-width)",
     "kind": "size",
     "reason": "Original date, role, description and tenure column widths preserve the responsive timeline grid."
   },
@@ -864,7 +855,7 @@
     "selector": ".experience-row",
     "context": "@layer system > @media (min-width: 768px) and (max-width: 1327px)",
     "property": "grid-template-columns",
-    "value": "120px minmax(0,1fr) minmax(0,1.3fr) var(--space-16)",
+    "value": "120px minmax(0,1fr) minmax(0,1.3fr) var(--experience-duration-width)",
     "kind": "size",
     "reason": "Original date, role, description and tenure column widths preserve the responsive timeline grid."
   },
@@ -1308,16 +1299,6 @@
     "file": "src/styles/promshyna-case-study.css",
     "selector": ".promshyna-badge",
     "context": "@layer project",
-    "property": "z-index",
-    "value": "1",
-    "kind": "layer",
-    "project": true,
-    "reason": "Project-only promshyna artwork geometry; preserve its supplied composition, not a system token."
-  },
-  {
-    "file": "src/styles/promshyna-case-study.css",
-    "selector": ".promshyna-badge",
-    "context": "@layer project",
     "property": "width",
     "value": "42px",
     "kind": "size",
@@ -1646,5 +1627,14 @@
     "value": "12.2096354167em",
     "kind": "spacing",
     "reason": "Original DataGPT Regular-label glyph advance, measured before the Label/S migration; with the unchanged padding this preserves persona heading wraps and testimonial coordinates. Not a typography override."
+  },
+  {
+    "file": "src/styles/global.css",
+    "selector": ".experience-row",
+    "context": "@layer system",
+    "property": "--experience-duration-width",
+    "value": "80px",
+    "kind": "size",
+    "reason": "One shared desktop/tablet duration track, wide enough for the real duration; phone uses its native auto track."
   }
 ]

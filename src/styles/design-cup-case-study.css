@@ -7,7 +7,7 @@
 .design-cup-case > .case-study-overview { padding-top: var(--case-section-space); }
 .dc-muted { color: var(--color-text-secondary); }
 .dc-heading { align-items: center; margin-bottom: var(--case-content-gap); }
-.dc-heading > p { margin-top: 0; }
+.dc-heading > .title-align-line p { margin-top: 0; }
 .dc-row { align-items: center; }
 .dc-copy { display: grid; align-content: start; gap: var(--space-6); }
 .dc-copy > p { margin-top: 0; }
