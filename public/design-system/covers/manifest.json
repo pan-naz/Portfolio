@@ -11,7 +11,6 @@
     "height": 72,
     "fullHeight": [
       "motion",
-      "timeline-row",
       "tooltip"
     ]
   },
@@ -109,8 +108,8 @@
       "theme": "light",
       "width": 416,
       "height": 208,
-      "bytes": 4800,
-      "sha256": "069ceb77a35ee3178ef501812fb4abbc66268dd69095105334040920d8405228"
+      "bytes": 1804,
+      "sha256": "6e2c9292240045c6c0a0073b4a7e5d658179b250d681f7232ca4a60ac4981498"
     },
     {
       "id": "tooltip",
@@ -213,8 +212,8 @@
       "theme": "dark",
       "width": 416,
       "height": 208,
-      "bytes": 4934,
-      "sha256": "10b7959b4b930d8c0ccff9271329c687bf13ae943e71a8a3840aa8d62bda01da"
+      "bytes": 1804,
+      "sha256": "6e2c9292240045c6c0a0073b4a7e5d658179b250d681f7232ca4a60ac4981498"
     },
     {
       "id": "tooltip",

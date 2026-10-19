@@ -3,7 +3,7 @@ export const overviewCoverIds=['color','typography','spacing-layout','motion','i
 /** Browser-free build contract; the local fresh-render gate separately checks genuine pixels. */
 export function validateOverviewManifest(manifest,read){
  const errors=[],expected=overviewCoverIds.flatMap(id=>['light','dark'].map(theme=>`${id}-${theme}`));
- if(manifest.scale!==2||manifest.canvas?.width!==208||manifest.canvas?.height!==104||manifest.content?.width!==176||manifest.content?.height!==72||JSON.stringify(manifest.content?.fullHeight)!==JSON.stringify(['motion','timeline-row','tooltip']))errors.push('Covers reserve the 1440 composition at 2x, with only three approved taller covers.');
+ if(manifest.scale!==2||manifest.canvas?.width!==208||manifest.canvas?.height!==104||manifest.content?.width!==176||manifest.content?.height!==72||JSON.stringify(manifest.content?.fullHeight)!==JSON.stringify(['motion','tooltip']))errors.push('Covers reserve the 1440 composition at 2x, with only Motion and Tooltip retaining taller artwork.');
  const names=manifest.covers?.map(c=>`${c.id}-${c.theme}`)||[];
  if(names.length!==26||new Set(names).size!==26||expected.some(n=>!names.includes(n)))errors.push('Overview requires exactly thirteen Light/Dark cover pairs.');
  for(const item of manifest.covers||[]){const name=`${item.id}-${item.theme}`;if(!expected.includes(name))continue;let bytes;try{bytes=read(name+'.webp');}catch{errors.push('Missing cover: '+name);continue;}

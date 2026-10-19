@@ -1,0 +1,32 @@
+---
+import '../styles/design-system-button.css';import '../styles/design-system-timeline.css';
+import type {SourceComponent} from '../data/system-inventory';
+import {timelineDescription,timelineCards,timelineUsage,timelineProps,timelineTokenGroups,timelineAccessibility} from '../data/system-timeline';
+import TimelineRow from './TimelineRow.astro';import ExperienceList from './ExperienceList.astro';import {experience} from '../data/portfolio';import DSTabs from './DSTabs.astro';
+interface Props {components:SourceComponent[];}
+const {components}=Astro.props,groups=timelineTokenGroups(),tokenCode=groups.map(group=>`/* ${group.title} */\n`+group.names.join('\n')).join('\n\n');
+---
+<section id="timeline-row" class="ds-view ds-timeline-view" data-ds-view data-ds-component="TimelineRow" data-title="Timeline row" data-group="Components" data-description={timelineDescription} hidden>
+ <div class="ds-stage" data-ds-card>
+  <div class="ds-stage-bar"><DSTabs id="timeline-row-canvas" labels={['Preview','Code']}/></div>
+  <div id="timeline-row-canvas-panel-0" role="tabpanel" aria-labelledby="timeline-row-canvas-tab-0" class="ds-button-preview">
+   <section class="ds-button-group"><p class="text-label-m">Timeline row</p><p class="text-body-s ds-button-secondary">Each role in About uses one.</p>
+    <div class="ds-button-grid ds-timeline-grid">{timelineCards.map(card=><article class="ds-button-card" data-timeline-card={card.id}>
+     <div class="ds-button-stage ds-timeline-stage" data-color-zone="dark" inert aria-hidden="true"><div class="ds-timeline-art ds-specimens" data-ds-example={card.id==='row'?'timeline-row':'timeline'} data-ds-target={card.id==='row'?'.experience-row':'.experience-list'}>{card.id==='row'?<ol class="experience-list"><TimelineRow item={experience[0]}/></ol>:<ExperienceList items={experience.slice(0,3)}/>}</div></div>
+     <div><p class="text-body-m-strong">{card.name}</p><p class="text-body-s ds-button-secondary">{card.description}</p></div>
+     <dl class="ds-button-values text-body-s">{[['Used in',card.used],['Style',card.style]].map(([label,value])=><div><dt>{label}</dt><dd>{value.split(/( · |, )/).map((item,index)=>index%2?item:<span class="ds-value-item">{item}</span>)}</dd></div>)}</dl>
+    </article>)}</div>
+   </section>
+  </div>
+  <div id="timeline-row-canvas-panel-1" role="tabpanel" aria-labelledby="timeline-row-canvas-tab-1" class="ds-code ds-button-code" hidden>
+   {components.map(component=><section data-ds-component-code={component.name}><p class="text-label-m">{component.name==='TimelineRow'?'Timeline row':'Timeline'}</p>
+    <pre><code data-ds-usage={component.name}>{'/* Usage · '+component.file+' */\n'+timelineUsage(component.name)}</code></pre>
+    <div class="ds-button-props"><p class="ds-code-comment">/* Props */</p><div class="ds-props-table"><table><thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>What it does</th></tr></thead><tbody>{timelineProps(component).map(prop=><tr data-ds-prop={prop.name}><th scope="row"><code>{prop.name}</code></th><td><code>{prop.type}</code></td><td><code>{prop.default}</code></td><td>{prop.description}</td></tr>)}</tbody></table></div></div>
+   </section>)}
+   <section><p class="text-label-m">Shared</p>{groups.flatMap(group=>group.names).map(name=><span data-ds-token={name.slice(2)}/>)}<div class="ds-button-code-grid"><pre><code>{tokenCode}</code></pre><div class="ds-button-code-panel"><p class="ds-code-comment">/* Accessibility */</p><ul>{timelineAccessibility.map(point=><li>{point}</li>)}</ul></div></div>
+    <div class="ds-button-code-panel"><p class="ds-code-comment">/* Source */</p>{components.map(component=><><p>{component.file}</p><ul>{[...new Set(component.usages.map(usage=>usage.file))].sort().map(file=><li>{file}</li>)}</ul></>)}</div>
+   </section>
+  </div>
+ </div>
+</section>
+

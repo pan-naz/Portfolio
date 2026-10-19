@@ -1,0 +1,12 @@
+@layer system, project;
+@layer system {
+.ds-timeline-view .ds-stage-bar > .ds-tabs { margin-inline-start:0; }
+.ds-timeline-grid { grid-template-columns:minmax(0,1fr); }
+.ds-timeline-stage { background:var(--color-bg-section); }
+.ds-timeline-art { min-width:0; width:min(100%,calc(100vw - var(--gutter-left) - var(--gutter-right))); }
+.ds-timeline-art [data-section-item] { opacity:1; transform:none; }
+.ds-timeline-view .ds-props-table :is(th,td) { overflow-wrap:normal; }
+@media(max-width:1279px) {
+ .ds-timeline-grid { grid-template-columns:minmax(0,1fr); }
+}
+}

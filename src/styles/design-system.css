@@ -47,7 +47,6 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
 .ds-canvas { height:300px; max-height:400px; overflow:auto; display:grid; align-items:center; padding:var(--space-6); border-radius:0 0 var(--radius-large) var(--radius-large); }
 /* One dot pattern shared by the live canvas and inert Overview previews. */
 .ds-canvas,.ds-tile-visual::before { background-image:radial-gradient(var(--color-border-default) .75px,transparent .75px); background-size:var(--space-4) var(--space-4); }
-#timeline-row .ds-canvas { height:400px; align-items:start; }
 /* Reset documentation inheritance, never the component’s own type roles. */
 .ds-specimens { min-width:0; width:100%; color:var(--color-text-primary); }
 .ds-specimen-composition { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:var(--space-6); }

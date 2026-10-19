@@ -2,6 +2,7 @@
 export type ComponentKind = 'reusable-ui' | 'page-section' | 'case-study' | 'internal-helper';
 export interface ComponentClassification { file: string; kind: ComponentKind; group?: string; title?: string; reason: string; documentedHidden?: string; catalogPage?: string; }
 export const componentManifest: ComponentClassification[] = [
+ {file:'src/components/DSTimeline.astro',kind:'internal-helper',reason:'Source-derived Timeline row catalog page using genuine website components.'},
  {file:'src/components/AlignedChapterCopy.astro',kind:'internal-helper',reason:'Intrinsic layout reservation for adjacent chapter copy; typography remains in the shared roles.'},
  {file:'src/components/DSStatistics.astro',kind:'internal-helper',reason:'Source-derived Statistic catalog page.'},
  {file:'src/components/DSStatisticSpecimen.astro',kind:'internal-helper',reason:'Genuine inert Stat and MetricValue specimens.'},
