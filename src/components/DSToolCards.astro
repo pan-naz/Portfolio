@@ -1,7 +1,8 @@
 ---
+import DSWidthProbe from './DSWidthProbe.astro';
 import '../styles/design-system-button.css';import '../styles/design-system-tool-card.css';
 import type {SourceComponent} from '../data/system-inventory';
-import {toolCardDescription,toolCardGroups,toolCardUsage,toolCardProps,toolCardTokenGroups,toolCardAccessibility,toolDetailLayout} from '../data/system-tool-card';
+import {toolCardDescription,toolCardGroups,toolCardUsage,toolCardProps,toolCardTokenGroups,toolCardAccessibility} from '../data/system-tool-card';
 import {componentVariants} from '../data/system-variants';
 import ToolCard from './ToolCard.astro';import Icon from './Icon.astro';import DSTabs from './DSTabs.astro';
 import {tools} from '../data/portfolio';import {hookoTools} from '../data/hooko-case-study';
@@ -11,8 +12,7 @@ const {components}=Astro.props,groups=toolCardTokenGroups(),tokenCode=groups.map
 const logo=tools.find(tool=>tool.name==='Claude Code')!,{label,description,iconColor,...detail}=hookoTools.find(tool=>tool.name==='Claude Code')!;
 const cursor=waterfallIconNodes[waterfallIconManifest.findIndex(icon=>icon.name==='mouse-pointer')];
 ---
-<style is:global set:html={toolDetailLayout()}/>
-<div class="ds-tools-width-probe" inert aria-hidden="true"><div class="container"><ul class="tools-grid">{Array.from({length:5},()=> <li/>)}</ul><div class="ds-tools-detail-grid">{Array.from({length:3},()=> <div/>)}</div></div></div>
+<DSWidthProbe layout="tool-card"/>
 <section id="tooltip" class="ds-view ds-tools-view" data-ds-view data-ds-component="Tooltip" data-title="Tool card & Tooltip" data-group="Components" data-description={toolCardDescription} hidden>
  <div class="ds-stage" data-ds-card>
   <div class="ds-stage-bar"><DSTabs id="tooltip-canvas" labels={['Preview','Code']}/></div>

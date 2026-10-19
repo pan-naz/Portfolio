@@ -11,11 +11,10 @@ export function validateTimelineWidth(css){
 export function validateTimelineRow(root=process.cwd()){
  const read=file=>fs.readFileSync(path.join(root,file),'utf8'),errors=[],page=read('src/components/DSTimeline.astro'),css=read('src/styles/design-system-timeline.css'),global=read('src/styles/global.css'),row=read('src/components/TimelineRow.astro'),list=read('src/components/ExperienceList.astro');
  if(timelineDescription!=='One role in the experience timeline.'||timelineCards.map(c=>c.id).join()!=='row,timeline')errors.push('Timeline row has the approved description and two cards.');
- if(/DSTokenNames|data-ds-names|ds-hint|ds-specs-card|data-ds-markup|ds-canvas|States/.test(page)||!page.includes('<DSTabs id="timeline-row-canvas"'))errors.push('Timeline uses the common Preview/Code frame only.');
+ if(/DSTokenNames|data-ds-names|data-ds-markup|States/.test(page)||!page.includes('<DSTabs id="timeline-row-canvas"'))errors.push('Timeline uses the common Preview/Code frame only.');
  if(!page.includes('<TimelineRow item={experience[0]}/>')||!page.includes('<ExperienceList items={experience.slice(0,3)}/>')||!page.includes('data-color-zone="dark" inert aria-hidden="true"')||/transform:\s*scale|zoom:/.test(css))errors.push('Timeline specimens are genuine full-size, inert settled website content in the About dark zone.');
  errors.push(...validateTimelineWidth(css));
  if(!css.includes('grid-template-columns:minmax(0,1fr)')||!css.includes('var(--gutter-left) - var(--gutter-right)')||!css.includes('background:var(--color-bg-section)'))errors.push('Timeline cards stack and specimens use shared About layout and surface tokens.');
- if(read('src/styles/design-system.css').includes('#timeline-row .ds-canvas'))errors.push('Retired Timeline composition/specs must be removed.');
  if((global.match(/--experience-duration-width: 80px/g)||[]).length!==1||(global.match(/var\(--experience-duration-width\)/g)||[]).length!==2)errors.push('One shared duration width supplies desktop and tablet.');
  const tablet=global.match(/@media \(min-width: 768px\) and \(max-width: 1327px\)\s*\{([\s\S]*?)\n\}/)?.[1];
  if(!tablet?.includes('grid-template-columns: 120px minmax(0,1fr) minmax(0,1.3fr) var(--experience-duration-width)')||!tablet.includes('.experience-duration { white-space: nowrap; }'))errors.push('Tablet duration uses the desktop 80px column and stays on one line.');

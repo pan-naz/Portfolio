@@ -10,7 +10,7 @@ export const componentPurposes: Record<string, string> = {
   'src/components/CaseStudyDecisionCard.astro': 'Pairs a design decision with its explanation or image.',
   'src/components/CaseStudyGuides.astro': 'Adds alignment guides around case-study artwork.',
   'src/components/CaseStudyMarker.astro': 'Marks a point or step in an illustration.',
-  'src/components/CaseStudyMedia.astro': 'Shows an image or a video with the shared media treatment.',
+  'src/components/CaseStudyMedia.astro': 'An image or video in a case study, with its frame and play controls.',
   'src/components/CaseStudyOverview.astro': 'Introduces a project, its summary, role and team.',
   'src/components/CaseStudyPalette.astro': 'Lists a project palette without defining system colors.',
   'src/components/CaseStudyServiceTiles.astro': 'Shows services with details that open on request.',

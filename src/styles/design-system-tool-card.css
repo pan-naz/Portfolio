@@ -15,7 +15,6 @@
 .ds-tools-art [data-tooltip-target],.ds-tools-art .tooltip,.ds-tools-art .svg-asset { transition:none; }
 .ds-tools-cursor { position:absolute; z-index:var(--layer-tooltip); left:var(--ds-pointer-x); top:var(--tooltip-y); width:var(--icon-size-compact); height:var(--icon-size-compact); color:var(--color-paper); fill:var(--color-ink); pointer-events:none; }
 .ds-tools-view .ds-props-table :is(th,td) { overflow-wrap:normal; }
-.ds-tools-width-probe { position:fixed; inset:0 auto auto 0; width:100vw; height:0; visibility:hidden; overflow:hidden; contain:strict; pointer-events:none; }
 @media(max-width:1279px) {
  .ds-tools-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
  .ds-tools-grid--tooltip { grid-template-columns:minmax(0,1fr); }

@@ -1,6 +1,5 @@
 /** Explicit, reviewed typography exceptions; never exclude a whole case study. */
 export const typographyExclusions={
- "developer-code":{"classes":["ds-code-label"],"reason":"Developer code comments and source-file labels, never prose."},
  "svg-artwork":{"tag":"svg","reason":"Text drawn inside the supplied Hooko architecture artwork."},
   "project-font-specimen": {
     "classes": [
@@ -165,11 +164,6 @@ export const typographyCssExclusions=[
   {
     "file": "src/styles/design-system.css",
     "selector": ".ds-main code,.ds-main pre,.ds-code-columns",
-    "reason": "Existing developer/project colour code treatment; no prose is excluded."
-  },
-  {
-    "file": "src/styles/design-system.css",
-    "selector": ".ds-code-label",
     "reason": "Existing developer/project colour code treatment; no prose is excluded."
   },
   {

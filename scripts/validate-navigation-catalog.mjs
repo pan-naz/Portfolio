@@ -9,7 +9,7 @@ import {missingUsageNames} from './validate-button.mjs';
 export function validateNavigationCatalog(root=process.cwd()){
  const read=file=>fs.readFileSync(root+'/'+file,'utf8'),errors=[],catalog=read('src/components/DSNavigationExamples.astro'),specimen=read('src/components/DSNavigationSpecimen.astro'),controller=read('src/scripts/design-system-navigation.ts'),css=read('src/styles/design-system-navigation.css'),global=read('src/styles/global.css');
  if(navigationGroups.flatMap(g=>g.cards.map(c=>c.id)).join(',')!=='top,floating,side,pill'||navigationStates.join(',')!=='Default,Hover,Focus,Selected')errors.push('Navigation has four components and one four-state row.');
- if(/DSTokenNames|data-ds-names|data-ds-markup|ds-hint|ds-specs-card/.test(catalog)||!catalog.includes('<DSTabs id="navigation-canvas"'))errors.push('Navigation uses left Preview/Code without obsolete catalog panels.');
+ if(/DSTokenNames|data-ds-names|data-ds-markup/.test(catalog)||!catalog.includes('<DSTabs id="navigation-canvas"'))errors.push('Navigation uses left Preview/Code without obsolete catalog panels.');
  for(const tag of ['SiteHeader','SectionNavigation','Button'])if(!specimen.includes('<'+tag))errors.push('Navigation must compose '+tag);
  if(!controller.includes('pillGeometry(')||!controller.includes('freeze(sheet.cssRules)'))errors.push('Static placement and frozen states must read shared model/rules.');
  if(!css.includes('grid-template-columns:minmax(0,2fr) minmax(0,3fr)')||!css.includes('grid-template-rows:subgrid')||!read('src/styles/design-system-button.css').includes('white-space:nowrap'))errors.push('Navigation aligns its 2:3 cards and value labels.');

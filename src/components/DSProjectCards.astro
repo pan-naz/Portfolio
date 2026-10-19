@@ -1,4 +1,5 @@
 ---
+import DSWidthProbe from './DSWidthProbe.astro';
 import '../styles/design-system-button.css';import '../styles/design-system-project-card.css';
 import type {SourceComponent} from '../data/system-inventory';import {componentVariants} from '../data/system-variants';
 import {projectCardDescription,projectCardCards,projectCardStates,projectCardUsage,projectCardProps,projectCardTokenGroups,projectCardAccessibility} from '../data/system-project-card';
@@ -9,7 +10,7 @@ const tokenGroups=projectCardTokenGroups();
 const tokenCode=tokenGroups.map(group=>`/* ${group.title} */\n`+group.names.join('\n')).join('\n\n');
 ---
 <section id="project-card" class="ds-view ds-project-view" data-ds-view data-ds-component="ProjectCard" data-title="Project card" data-group="Components" data-description={projectCardDescription} hidden>
- <div class="ds-project-width-probe" inert aria-hidden="true"><div class="container work-content"><div class="project-collection project-collection--bento"/></div></div>
+ <DSWidthProbe layout="project-card"/>
  <div class="ds-stage" data-ds-card>
   <div class="ds-stage-bar"><DSTabs id="project-card-canvas" labels={['Preview','Code']}/></div>
   <div id="project-card-canvas-panel-0" role="tabpanel" aria-labelledby="project-card-canvas-tab-0" class="ds-button-preview">

@@ -2,6 +2,7 @@
 export type ComponentKind = 'reusable-ui' | 'page-section' | 'case-study' | 'internal-helper';
 export interface ComponentClassification { file: string; kind: ComponentKind; group?: string; title?: string; reason: string; documentedHidden?: string; catalogPage?: string; id?: string; }
 export const componentManifest: ComponentClassification[] = [
+ {file:'src/components/DSWidthProbe.astro',kind:'internal-helper',reason:'Shared hidden catalog probe for genuine website layout widths.'},
  {file:'src/components/DSDecisionCards.astro',kind:'internal-helper',reason:'Source-derived Decision card catalog page.'},
  {file:'src/components/DSToolCards.astro',kind:'internal-helper',reason:'Source-derived Tool card and Tooltip catalog page using genuine components.'},
  {file:'src/components/DSTimeline.astro',kind:'internal-helper',reason:'Source-derived Timeline row catalog page using genuine website components.'},

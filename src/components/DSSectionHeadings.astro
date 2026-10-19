@@ -1,4 +1,5 @@
 ---
+import DSWidthProbe from './DSWidthProbe.astro';
 import '../styles/design-system-button.css';import '../styles/design-system-section-heading.css';
 import type {SourceComponent} from '../data/system-inventory';import {componentVariants} from '../data/system-variants';
 import {sectionHeadingDescription,sectionHeadingCards,sectionHeadingUsage,sectionHeadingProps,sectionHeadingTokenGroups,sectionHeadingSlots,sectionHeadingAccessibility} from '../data/system-section-heading';
@@ -6,7 +7,7 @@ import DSSectionHeadingSpecimen from './DSSectionHeadingSpecimen.astro';import D
 interface Props {component:SourceComponent;}
 const {component}=Astro.props,groups=sectionHeadingTokenGroups(),tokenCode=groups.map(group=>`/* ${group.title} */\n`+group.names.join('\n')).join('\n\n');
 ---
-<div class="ds-heading-width-probe" inert aria-hidden="true"><div class="container"/></div>
+<DSWidthProbe layout="section-heading"/>
 <section id="section-heading" class="ds-view ds-heading-view" data-ds-view data-ds-component="SectionHeading" data-title="Section heading" data-group="Components" data-description={sectionHeadingDescription} hidden>
  <div class="ds-stage" data-ds-card>
   <div class="ds-stage-bar"><DSTabs id="section-heading-canvas" labels={['Preview','Code']}/></div>

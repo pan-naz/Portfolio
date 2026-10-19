@@ -10,7 +10,6 @@
 .ds-decision-art[data-decision-art='stack'] { --ds-decision-width:var(--ds-decision-stack-width); }
 .ds-decision-art[data-decision-art='media'] { --ds-decision-width:var(--ds-decision-media-width); }
 .ds-decision-art .hk-decisions { display:block; }
-.ds-decision-width-probe { position:fixed; inset:0 auto auto 0; width:100vw; height:0; visibility:hidden; overflow:hidden; contain:strict; pointer-events:none; }
 .ds-decision-view .ds-props-table :is(th,td) { overflow-wrap:normal; }
 @media(min-width:1024px) {
  .ds-decision-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
