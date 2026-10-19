@@ -3,8 +3,8 @@ import { overviewHiddenComponents, visibleComponents } from '../src/data/ds-comp
 import { componentPurposes } from '../src/data/system-documentation.ts';
 import { validateOverviewHiddenEntries } from '../scripts/validate-design-system.mjs';
 const names=overviewHiddenComponents.map(item=>item.title), keys=overviewHiddenComponents.map(item=>item.documentedHidden);
-assert.deepEqual(names,['Before and after','Decision card','Media','Steps','Tool card']);
-assert.equal(visibleComponents.length,8);
+assert.deepEqual(names,['Before and after','Media','Steps']);
+assert.equal(visibleComponents.length,9);
 for(const item of overviewHiddenComponents)assert.equal(item.description,componentPurposes[item.file]);
 assert.deepEqual(validateOverviewHiddenEntries(keys),[]);
 assert.ok(validateOverviewHiddenEntries(keys.slice(1)).length,'Missing hidden entry fails');
@@ -12,4 +12,4 @@ assert.ok(validateOverviewHiddenEntries([...keys,keys[0]]).length,'Duplicated hi
 assert.ok(validateOverviewHiddenEntries([...keys,'icon']).length,'Icon foundation is not repeated as hidden');
 // Promotion to a visible page removes its informational note automatically.
 assert.deepEqual(validateOverviewHiddenEntries(keys.slice(1),keys.slice(1)),[]);
-console.log('PASS: Overview follows manifest and purposes, retains eight pages, and rejects missing/duplicate/extra hidden notes.');
+console.log('PASS: Overview follows manifest and purposes, retains nine pages, and rejects missing/duplicate/extra hidden notes.');

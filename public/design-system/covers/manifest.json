@@ -10,8 +10,7 @@
     "width": 176,
     "height": 72,
     "fullHeight": [
-      "motion",
-      "tooltip"
+      "motion"
     ]
   },
   "covers": [
@@ -72,6 +71,14 @@
       "sha256": "21ee0ffce8cdc214c68b5c0c0f1fece24e58574047b553e417a4f6171c88e3dc"
     },
     {
+      "id": "decision-card",
+      "theme": "light",
+      "width": 416,
+      "height": 208,
+      "bytes": 26044,
+      "sha256": "66830b027ce2f8f9cd18b7ef563793b9102dba982c24cd201f73705b4ab390e2"
+    },
+    {
       "id": "navigation",
       "theme": "light",
       "width": 416,
@@ -116,8 +123,8 @@
       "theme": "light",
       "width": 416,
       "height": 208,
-      "bytes": 2970,
-      "sha256": "dd11a2ed411365af75f37d5b52b893304484f22468bf3f479183bb9fc281292e"
+      "bytes": 5732,
+      "sha256": "456276b6cfb2e767a64409edb93532d48bec40206fa6532290cff34f4f6bc7b5"
     },
     {
       "id": "color",
@@ -176,6 +183,14 @@
       "sha256": "559e1fb552135d1d9e5da8cce1c1178cb77abd8227de9f494f5aa7d3f08e028c"
     },
     {
+      "id": "decision-card",
+      "theme": "dark",
+      "width": 416,
+      "height": 208,
+      "bytes": 26044,
+      "sha256": "66830b027ce2f8f9cd18b7ef563793b9102dba982c24cd201f73705b4ab390e2"
+    },
+    {
       "id": "navigation",
       "theme": "dark",
       "width": 416,
@@ -220,8 +235,8 @@
       "theme": "dark",
       "width": 416,
       "height": 208,
-      "bytes": 2718,
-      "sha256": "b1722fbb1949af4ad4431050b5f93e37a6d9efe0fba2c869505a7dd4bdf04c8f"
+      "bytes": 7434,
+      "sha256": "d7ccb77aa73f7b39a35d0ac68f7bff2b4793bea1dacff159f47f6d06bf740f5e"
     }
   ]
 }

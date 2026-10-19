@@ -51,7 +51,7 @@ const { project } = Astro.props;
           <div><SectionHeading id="bs-configurator" label="04 / 05" layout="stacked" reveal={false}><p slot="index" class="case-study-eyebrow"><span class="blaustrom-number">04</span> / 05</p>Configurator</SectionHeading><p class="blaustrom-lede text-body-m">The configurator plans a system in four steps. Each step is its own screen, and the bar at the top shows which steps are done. The first screen asks for the address and whether the customer already has a solar system.</p></div>
           <CaseStudyMedia {...media.configurator} />
         </div>
-        <div class="blaustrom-config-grid blaustrom-block">{blaustromConfiguratorSteps.map(step => <CaseStudyDecisionCard title={step.title} label={step.label} layout="figure"><CaseStudyMedia slot="media" {...step.media} /><p>{step.description}</p></CaseStudyDecisionCard>)}</div>
+        <case-study-masonry class="blaustrom-config-grid blaustrom-block">{blaustromConfiguratorSteps.map(step => <CaseStudyDecisionCard title={step.title} label={step.label} layout="figure"><CaseStudyMedia slot="media" {...step.media} /><p>{step.description}</p></CaseStudyDecisionCard>)}</case-study-masonry>
       </CaseStudyBand>
 
     <section aria-labelledby="bs-contact">
@@ -90,5 +90,6 @@ const { project } = Astro.props;
 <script>
   import { initializeCaseStudyVideos } from '../scripts/case-study/case-study-videos';
   import '../scripts/case-study/case-study-sticky';
+  import '../scripts/case-study/case-study-masonry';
   initializeCaseStudyVideos();
 </script>

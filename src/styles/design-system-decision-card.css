@@ -1,0 +1,19 @@
+@layer system, project;
+@layer system {
+.ds-decision-view .ds-stage-bar > .ds-tabs { margin-inline-start:0; }
+.ds-decision-grid { grid-template-columns:minmax(0,1fr); }
+.ds-decision-grid .ds-button-card { display:grid; grid-row:span 4; grid-template-rows:subgrid; grid-template-columns:minmax(0,1fr); }
+.ds-decision-view .ds-button-values { margin:0; grid-row:span 2; grid-template-rows:subgrid; }
+.ds-decision-stage { background:var(--color-bg-canvas); }
+.ds-decision-stage > .ds-decision-art { flex:none; width:min(100%,var(--ds-decision-width)); min-width:0; overflow-wrap:normal; }
+.ds-decision-art[data-decision-art='figure'] { --ds-decision-width:var(--ds-decision-figure-width); }
+.ds-decision-art[data-decision-art='stack'] { --ds-decision-width:var(--ds-decision-stack-width); }
+.ds-decision-art[data-decision-art='media'] { --ds-decision-width:var(--ds-decision-media-width); }
+.ds-decision-art .hk-decisions { display:block; }
+.ds-decision-width-probe { position:fixed; inset:0 auto auto 0; width:100vw; height:0; visibility:hidden; overflow:hidden; contain:strict; pointer-events:none; }
+.ds-decision-view .ds-props-table :is(th,td) { overflow-wrap:normal; }
+@media(min-width:1024px) {
+ .ds-decision-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .ds-decision-grid [data-decision-card='media'] { grid-column:1 / -1; }
+}
+}

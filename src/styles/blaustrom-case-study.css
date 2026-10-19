@@ -11,6 +11,8 @@
 .blaustrom-band { width: 100vw; margin-left: calc(50% - 50vw + (var(--safe-right) - var(--safe-left)) / 2); }
 .blaustrom-configurator { --color-text-primary: var(--color-paper); --color-text-secondary: var(--color-paper); --color-interactive-accent: var(--color-paper); background: linear-gradient(135deg, var(--blaustrom-blue), var(--blaustrom-teal)); color: var(--color-text-primary); }
 .blaustrom-config-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: var(--grid-gap); }
+.blaustrom-config-grid[data-masonry-ready] { position: relative; }
+.blaustrom-config-grid[data-masonry-ready] > .case-study-decision-card { position: absolute; }
 .blaustrom-responsive { background: var(--color-bg-canvas); }
 .blaustrom-breakpoint { margin-top: var(--space-6); color: var(--color-text-secondary); }
 .blaustrom-style { background: var(--blaustrom-dark); }

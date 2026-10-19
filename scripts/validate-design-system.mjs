@@ -1,3 +1,6 @@
+import {validateDecisionCard} from './validate-decision-card.mjs';
+import {validateToolCardTooltip} from './validate-tool-card-tooltip.mjs';
+import {hookoTools} from '../src/data/hooko-case-study.ts';
 import {validateTitleAlignment} from './validate-title-alignment.mjs';
 import {validateOverviewCovers} from './validate-overview-covers.mjs';
 import {validateNativeTooltipSources} from './validate-native-tooltips.mjs';
@@ -62,10 +65,10 @@ function componentsReachableFrom(entry, seen = new Set()) {
   return seen;
 }
 const hiddenSections = {
- 'Logo':'Wordmark','CaseStudyComparison':'Before and after','CaseStudyDecisionCard':'Decision card','CaseStudySteps':'Steps','CaseStudyMedia':'Media','ToolCard':'Tool card','ProjectIdentity':'Project identity','ProjectTags':'Project tags','SectionNavigation':'Project filter','ThemeToggle':'Theme switch','Icon':'Icon',
+ 'Logo':'Wordmark','CaseStudyComparison':'Before and after','CaseStudySteps':'Steps','CaseStudyMedia':'Media','ProjectIdentity':'Project identity','ProjectTags':'Project tags','SectionNavigation':'Project filter','ThemeToggle':'Theme switch','Icon':'Icon',
 };
 const hiddenKeys = Object.fromEntries(Object.entries(hiddenSections).map(([file,title])=>['src/components/'+file+'.astro',title.toLowerCase().replaceAll(' ','-')]));
-const expectedVisible = ['Button','Chip','NavigationItem','ProjectCard','SectionHeading','Stat','TimelineRow','Tooltip'];
+const expectedVisible = ['Button','Chip','CaseStudyDecisionCard','NavigationItem','ProjectCard','SectionHeading','Stat','TimelineRow','Tooltip'];
 export function validateComponentClassification(files, used, manifest, shown) {
   const failures = [];
   const kinds = ['reusable-ui', 'page-section', 'case-study', 'internal-helper'];
@@ -125,7 +128,7 @@ export function validateCatalogNavigation(layouts, navigation, controller, css) 
 }
 function validate(entries) {
   const errors = [];
-  const menuFiles = ['src/components/SiteHeader.astro', 'src/components/NavLinks.astro', 'src/components/NavigationItem.astro', 'src/components/DSPreview.astro', 'src/components/DSDashboard.astro', 'src/scripts/interactions.ts', 'src/scripts/motion.ts', 'src/scripts/scroll-engine.ts', 'src/styles/global.css', 'src/styles/tokens.css'];
+  const menuFiles = ['src/components/SiteHeader.astro', 'src/components/NavLinks.astro', 'src/components/NavigationItem.astro', 'src/components/DSDashboard.astro', 'src/scripts/interactions.ts', 'src/scripts/motion.ts', 'src/scripts/scroll-engine.ts', 'src/styles/global.css', 'src/styles/tokens.css'];
   errors.push(...validateNoMobileMenu(Object.fromEntries(menuFiles.map(file => [file, read(file)])), icons));
   const names = new Set();
   for (const item of entries) {
@@ -151,9 +154,9 @@ function validate(entries) {
   const footer = read('src/components/SiteFooter.astro');
   if (/Tooltip|data-tooltip-target|aria-labelledby/.test(footer)) errors.push('Footer icon link must have only its accessible label, without a tooltip.');
   if (!/label="Design system"/.test(footer)) errors.push('Footer icon link must retain its accessible name.');
-  const preview = read('src/components/DSPreview.astro');
+  const preview = read('src/components/DSToolCards.astro');
   errors.push(...validateNavigationExamples(read('src/components/DSNavigationSpecimen.astro'), read('src/scripts/design-system-navigation.ts')));
-  if (/tooltip-link|<Tooltip/.test(preview) || !/data-ds-example="tooltip-tool"[\s\S]*?<ToolCard/.test(preview)) errors.push('Tooltip catalog must use the real tool-card specimen only.');
+  if (/tooltip-link|<Tooltip/.test(preview) || !preview.includes('<ToolCard tool={logo}')) errors.push('Tooltip catalog must use the real tool-card specimen only.');
   if (/tooltipAnchor|data-tooltip-anchor/.test(read('src/scripts/tooltip.ts') + read('src/components/Tooltip.astro'))) errors.push('Tooltip must not retain footer-only anchor positioning.');
   const css = read('src/styles/design-system.css');
   const capabilities=read('src/scripts/layout-capabilities.js');
@@ -190,10 +193,10 @@ export function validateHiddenDocumentation(records, text) {
   }
   return failures;
 }
-const errors = [...validateOverviewCovers(root),...validateNativeTooltipSources(root),...validateStatistic(root),...validateTimelineRow(root),...validateProjectCard(root),...validateNavigationCatalog(root),...validateChip(root),...validateSystemCleanup(root),...validateButtonCatalog(root),...validateIcons(root),...validateMotionContract(root),...validate(registry),...validateColors(),...validateSpaceShape(root),...validateRadiusContract(),...validateFoundationCodeContract(root)];
+const errors = [...validateDecisionCard(root),...validateToolCardTooltip(root),...validateOverviewCovers(root),...validateNativeTooltipSources(root),...validateStatistic(root),...validateTimelineRow(root),...validateProjectCard(root),...validateNavigationCatalog(root),...validateChip(root),...validateSystemCleanup(root),...validateButtonCatalog(root),...validateIcons(root),...validateMotionContract(root),...validate(registry),...validateColors(),...validateSpaceShape(root),...validateRadiusContract(),...validateFoundationCodeContract(root)];
 if(filesUnder('src').some(file=>/\.(?:css|astro|[cm]?[jt]s)$/.test(file)&&/::(?:-moz-)?selection\b|(?:-webkit-)?text-fill-color\s*:|(?:webkit)?TextFillColor\b/i.test(read(file))))errors.push('Use browser-default selection; selection and text-fill overrides are forbidden.');
 errors.push(...validateLogoWave(read('src/styles/global.css'), read('src/components/Logo.astro'), read('src/styles/tokens.css'), filesUnder('src/scripts').filter(file=>file.endsWith('.ts')&&file!=='src/scripts/design-system-motion.ts').map(read).join('\n')));
-if(JSON.stringify(visibleComponents.map(item=>item.name).sort())!==JSON.stringify([...expectedVisible].sort()))errors.push('Visible catalog must contain exactly the approved eight pages');
+if(JSON.stringify(visibleComponents.map(item=>item.name).sort())!==JSON.stringify([...expectedVisible].sort()))errors.push('Visible catalog must contain exactly the approved nine pages');
 for(const [file,key] of Object.entries(hiddenKeys))if(componentManifest.find(item=>item.file===file)?.documentedHidden!==key)errors.push('Missing documented-hidden classification: '+file);
 errors.push(...validateHoverSource(root));
 const externalDocs=resolve(root,'../docs/design-system.md');
@@ -221,7 +224,10 @@ export function validateInventoryCoverage(model, documentedComponents, documente
   const literalValues = (text) => [...text.matchAll(/#[\da-f]{3,8}\b|rgba?\([^)]*\)/gi)].map(([value]) => value.toLowerCase().replace(/^#([\da-f])([\da-f])([\da-f])$/, '#$1$1$2$2$3$3'));
   // Genuine project-logo artwork in inert card templates is not a system colour role.
   // Tokens, catalog styles, text and SVGs outside those source-backed templates remain checked.
-  const roleSource=catalogSource.replace(/<template\b[^>]*data-project-template="(?:full|compact|default|hover|focus)"[^>]*>[\s\S]*?<\/template>/g,template=>template.replace(/<svg\b(?=[^>]*data-svg-src="[^"]+")[^>]*>[\s\S]*?<\/svg>/g,''));
+  let roleSource=catalogSource.replace(/<template\b[^>]*data-project-template="(?:full|compact|default|hover|focus)"[^>]*>[\s\S]*?<\/template>/g,template=>template.replace(/<svg\b(?=[^>]*data-svg-src="[^"]+")[^>]*>[\s\S]*?<\/svg>/g,''));
+  // The genuine Hooko ToolCard specimen keeps its original icon artwork colour; it is not a role.
+  const tool=hookoTools.find(tool=>tool.name==='Claude Code');
+  roleSource=roleSource.replaceAll('--tool-icon-color:'+tool.iconColor,'').replace(/<svg\b(?=[^>]*data-svg-src="\/projects\/hooko-case-study\/icons\/claude-code\.svg")[^>]*>[\s\S]*?<\/svg>/g,'');
   const literals = literalValues(tokenSource + roleSource);
   for (const value of model.projectValues || []) if (literals.includes(value)) failures.push(`Project-only literal entered the system: ${value}`);
   for (const value of model.projectBackgroundImages || []) if (tokenSource.includes(value) || catalogSource.includes(value)) failures.push(`Project-only image entered the system: ${value}`);

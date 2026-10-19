@@ -1,5 +1,5 @@
 import { workCategories } from '../../data/work-categories.ts';
-import { arrangeProjectCards } from './work-filter-model.ts';
+import { layoutMasonry } from '../masonry.ts';
 import { readMotionToken } from '../native-motion.ts';
 
 export type WorkFilter = 'selected' | 'websites' | 'misc';
@@ -52,19 +52,7 @@ export function initializeWorkFilter(onChange?: () => void, onReposition?: (top:
   const layout = (collection: HTMLElement) => {
     if (!collection.classList.contains('project-collection--bento')) return;
     const cards = cardsIn(collection);
-    const columns = small.matches ? 1 : 2;
-    const gap = parseFloat(getComputedStyle(collection).gap);
-    const width = collection.clientWidth;
-    const cardWidth = (width - gap * (columns - 1)) / columns;
-    cards.forEach(card => { card.style.width = `${cardWidth}px`; });
-    const arranged = arrangeProjectCards(cards.map(card => card.offsetHeight), columns, gap);
-    collection.dataset.masonryReady = 'true';
-    cards.forEach((card, index) => {
-      const position = arranged.positions[index];
-      card.style.left = `${position.column * (cardWidth + gap)}px`;
-      card.style.top = `${position.top}px`;
-    });
-    collection.style.height = `${arranged.height}px`;
+    layoutMasonry(collection, cards, small.matches ? 1 : 2);
   };
 
   const alignRail = () => {

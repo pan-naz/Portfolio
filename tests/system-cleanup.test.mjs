@@ -6,7 +6,7 @@ assert.deepEqual(validateSystemCleanup(),[]);
 assert(validateAccentMixes('.tag{background:color-mix(in srgb,var(--color-interactive-accent) 12%,var(--color-bg-surface))}').length);
 assert.deepEqual(validateAccentMixes('.tag{background:var(--color-bg-accent-subtle)}'),[]);
 assert.deepEqual(validateAccentMixes('.brand{background:color-mix(in srgb,var(--pc-pink) 8%,transparent)}'),[],'Private artwork keeps its own colors');
-const sources=Object.fromEntries(['LogoLink','SiteHeader','DSNavigation','DSPreview'].map(name=>['src/components/'+name+'.astro',fs.readFileSync('src/components/'+name+'.astro','utf8')]));
+const sources=Object.fromEntries(['LogoLink','SiteHeader','DSNavigation'].map(name=>['src/components/'+name+'.astro',fs.readFileSync('src/components/'+name+'.astro','utf8')]));
 assert.deepEqual(validateLogoLinks(sources),[]);
 assert(validateLogoLinks({...sources,'src/components/Rogue.astro':'<a aria-label="naz.wtf — home"><Logo /></a>'}).length);
 assert(validateLogoLinks({...sources,'src/components/SiteHeader.astro':sources['src/components/SiteHeader.astro'].replace('<LogoLink','<a')}).length);

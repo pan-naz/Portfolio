@@ -15,7 +15,7 @@ export function validateTimelineRow(root=process.cwd()){
  if(!page.includes('<TimelineRow item={experience[0]}/>')||!page.includes('<ExperienceList items={experience.slice(0,3)}/>')||!page.includes('data-color-zone="dark" inert aria-hidden="true"')||/transform:\s*scale|zoom:/.test(css))errors.push('Timeline specimens are genuine full-size, inert settled website content in the About dark zone.');
  errors.push(...validateTimelineWidth(css));
  if(!css.includes('grid-template-columns:minmax(0,1fr)')||!css.includes('var(--gutter-left) - var(--gutter-right)')||!css.includes('background:var(--color-bg-section)'))errors.push('Timeline cards stack and specimens use shared About layout and surface tokens.');
- if(read('src/components/DSPreview.astro').includes('TimelineRow')||read('src/data/system-presentation.ts').includes('TimelineRow:')||read('src/styles/design-system.css').includes('#timeline-row .ds-canvas'))errors.push('Retired Timeline composition/specs must be removed.');
+ if(read('src/styles/design-system.css').includes('#timeline-row .ds-canvas'))errors.push('Retired Timeline composition/specs must be removed.');
  if((global.match(/--experience-duration-width: 80px/g)||[]).length!==1||(global.match(/var\(--experience-duration-width\)/g)||[]).length!==2)errors.push('One shared duration width supplies desktop and tablet.');
  const tablet=global.match(/@media \(min-width: 768px\) and \(max-width: 1327px\)\s*\{([\s\S]*?)\n\}/)?.[1];
  if(!tablet?.includes('grid-template-columns: 120px minmax(0,1fr) minmax(0,1.3fr) var(--experience-duration-width)')||!tablet.includes('.experience-duration { white-space: nowrap; }'))errors.push('Tablet duration uses the desktop 80px column and stays on one line.');

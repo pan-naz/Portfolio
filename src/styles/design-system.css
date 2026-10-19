@@ -4,9 +4,6 @@
 [data-scroll-surface='vertical'] { overscroll-behavior:contain; }
 /* Horizontal touch areas retain native vertical page travel. */
 [data-scroll-surface='horizontal'] { overscroll-behavior-x:contain; }
-.ds-tooltip-tool { width: 180px; }
-.ds-tooltip-composition { padding-block: var(--space-12); }
-.ds-tooltip-composition > .ds-inline-controls { flex-wrap: wrap; justify-content: center; }
 /* Catalog chrome only. Genuine specimens retain the website’s shared styles. */
 /* The shared prepaint capability flag also owns the home floating filter. */
 .ds-sidebar { display:contents; }

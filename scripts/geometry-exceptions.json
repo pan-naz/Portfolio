@@ -366,15 +366,6 @@
   },
   {
     "file": "src/styles/design-system.css",
-    "selector": ".ds-tooltip-tool",
-    "context": "@layer system",
-    "property": "width",
-    "value": "180px",
-    "kind": "size",
-    "reason": "Original 180px tool-card specimen slot."
-  },
-  {
-    "file": "src/styles/design-system.css",
     "selector": ".ds-nav-divider",
     "context": "@layer system",
     "property": "width",

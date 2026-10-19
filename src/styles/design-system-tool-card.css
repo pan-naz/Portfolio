@@ -1,0 +1,32 @@
+@layer system, project;
+@layer system {
+.ds-tools-view .ds-stage-bar > .ds-tabs { margin-inline-start:0; }
+.ds-tools-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.ds-tools-grid--tooltip { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.ds-tools-grid .ds-button-card { display:grid; grid-row:span 3; grid-template-rows:subgrid; }
+.ds-tools-view .ds-button-values { margin:0; grid-template-rows:min-content 1fr; align-content:start; }
+.ds-tools-stage { background:var(--color-bg-canvas); }
+.ds-tools-stage--about { background:var(--color-bg-section); }
+.ds-tools-stage--tooltip { padding-block:var(--space-16); }
+.ds-tools-stage > .ds-tools-art { flex:none; width:min(100%,var(--ds-tool-logo-width)); min-width:0; }
+.ds-tools-stage > [data-tool-art='detail'] { width:min(100%,var(--ds-tool-detail-width)); }
+.ds-tools-art.about-details { padding:0; }
+.ds-tools-art.about-details::before { display:none; }
+.ds-tools-art [data-tooltip-target],.ds-tools-art .tooltip,.ds-tools-art .svg-asset { transition:none; }
+.ds-tools-cursor { position:absolute; z-index:var(--layer-tooltip); left:var(--ds-pointer-x); top:var(--tooltip-y); width:var(--icon-size-compact); height:var(--icon-size-compact); color:var(--color-paper); fill:var(--color-ink); pointer-events:none; }
+.ds-tools-view .ds-props-table :is(th,td) { overflow-wrap:normal; }
+.ds-tools-width-probe { position:fixed; inset:0 auto auto 0; width:100vw; height:0; visibility:hidden; overflow:hidden; contain:strict; pointer-events:none; }
+@media(max-width:1279px) {
+ .ds-tools-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .ds-tools-grid--tooltip { grid-template-columns:minmax(0,1fr); }
+}
+@media(min-width:1024px) { .ds-tools-grid--tooltip { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media(max-width:767px) {
+ .ds-tools-grid { grid-template-columns:minmax(0,1fr); }
+}
+/* Below 355px the genuine Detail text needs the shared compact card inset at both catalog levels. */
+@media(width < 355px) {
+ .ds-tools-view :is(.ds-stage-bar,.ds-button-preview,.ds-code,.ds-button-card,.ds-button-props,.ds-button-code-panel,.ds-code pre) { padding-inline:var(--space-3); }
+}
+
+}
