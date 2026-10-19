@@ -8,8 +8,8 @@ const filesUnder = directory => readdirSync(directory, { withFileTypes: true }).
 const decode = value => value.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
 const attrs = tag => Object.fromEntries([...tag.matchAll(/([\w:-]+)="([^"]*)"/g)].map(([, key, value]) => [key, decode(value)]));
 const names = /Nazarii|Nazariy|Pankiv/i;
-const sharingDescription = 'Product designer in SaaS, UX research and design systems. Lead Product Designer at DataGPT, previously at Voximplant.';
-const searchDescription = 'Nazarii Pankiv, product designer in SaaS, UX research and design systems. Lead Product Designer at DataGPT, previously at Voximplant.';
+const sharingDescription = 'Launched B2B products from 0 → 1, improved their adoption and helped grow ARR. Love solving complex problems.';
+const searchDescription = sharingDescription;
 const expectedLinks = ['https://www.linkedin.com/in/nazariypankiv/', 'https://www.behance.net/NazariyPankiv', 'https://dribbble.com/NazariyPankiv'];
 assert.equal(siteTitle, 'naz');
 assert.equal(indexingEnabled, true);

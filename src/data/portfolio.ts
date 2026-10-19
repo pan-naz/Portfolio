@@ -24,6 +24,11 @@ const profileLinks = [
   'https://www.behance.net/NazariyPankiv',
   'https://dribbble.com/NazariyPankiv',
 ];
+export const heroSubtitle = {
+  start: 'Launched B2B products from ',
+  accent: '0 → 1',
+  end: ', improved their adoption and helped grow ARR. Love solving complex problems.',
+};
 export const profile = {
   name: 'Nazarii Pankiv',
   alternateNames: ['Nazariy Pankiv', 'Nazar Pankiv'],
@@ -34,7 +39,7 @@ export const profile = {
   linkedin: profileLinks[0],
   approach: 'Understand how people work. Map the problem, test the idea and refine the interaction. Then build the systems that help a product grow—from the first useful experience to the details people use every day.',
   biography: 'I’ve led design at DataGPT and Voximplant, working across web, mobile and enterprise SaaS. My practice brings together UX research, interaction design and design systems—from early discovery to delivery. Alongside hands-on design, I’ve hired designers, shaped teams and helped bring B2B products from idea to launch.',
-  description: 'Product designer in SaaS, UX research and design systems. Lead Product Designer at DataGPT, previously at Voximplant.',
+  description: `${heroSubtitle.start}${heroSubtitle.accent}${heroSubtitle.end}`,
 };
 
 export interface Project {
