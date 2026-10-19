@@ -1,14 +1,31 @@
 ---
-import TextLink from './TextLink.astro';
+import Button from './Button.astro';
+import HeroWaterfall from './HeroWaterfall.astro';
+import SiteHeader from './SiteHeader.astro';
 ---
-<main id="main" tabindex="-1" class="container not-found">
-  <h1 class="text-heading-l">Page not found</h1>
-  <TextLink href="/" compact>Back to portfolio</TextLink>
-</main>
+<div class="hero not-found">
+  <HeroWaterfall />
+  <SiteHeader navigation={false} />
+  <main id="main" tabindex="-1" class="container not-found-content">
+    <div class="not-found-title">
+      <p class="text-heading-xl not-found-code">404</p>
+      <h1 class="text-heading-l">Page not found</h1>
+    </div>
+    <Button href="/" arrow="up">Back to portfolio</Button>
+  </main>
+</div>
 <style>
 @layer system, project;
 @layer system {
-  .not-found { min-height: 100svh; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: var(--space-6); padding-block: var(--space-16); }
-
+  .not-found.hero { height: 100svh; min-height: 0; padding: 0; overflow: hidden; }
+  .not-found-content { z-index: var(--layer-content); height: 100%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; width: calc(100% - var(--hero-gutter) * 2 - var(--safe-left) - var(--safe-right)); margin-inline: calc(var(--hero-gutter) + var(--safe-left)) calc(var(--hero-gutter) + var(--safe-right)); }
+  .not-found-title { display: grid; gap: var(--space-2); }
+  .not-found-code { color: var(--color-interactive-accent); }
+  .not-found-content :global(.button) { margin-top: calc(var(--space-8) + var(--space-2)); }
 }
 </style>
+<script>
+  import { initializeWaterfall } from '../scripts/waterfall/waterfall';
+  const waterfall = initializeWaterfall();
+  window.addEventListener('pagehide', event => { if (!event.persisted) waterfall?.destroy(); });
+</script>
