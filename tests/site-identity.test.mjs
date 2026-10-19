@@ -12,7 +12,7 @@ const sharingDescription = 'Product designer in SaaS, UX research and design sys
 const searchDescription = 'Nazarii Pankiv, product designer in SaaS, UX research and design systems. Lead Product Designer at DataGPT, previously at Voximplant.';
 const expectedLinks = ['https://www.linkedin.com/in/nazariypankiv/', 'https://www.behance.net/NazariyPankiv', 'https://dribbble.com/NazariyPankiv'];
 assert.equal(siteTitle, 'naz');
-assert.equal(indexingEnabled, false);
+assert.equal(indexingEnabled, true);
 assert.deepEqual(profile.sameAs, expectedLinks);
 assert.equal(profile.linkedin, profile.sameAs[0]);
 const pageTitles = new Map([['index.html', siteTitle], ['design-system/index.html', 'Design system'], ['404.html', 'Page not found'], ...[...projects, ...collectionProjects].map(project => [`case-studies/${project.id}/index.html`, project.title])]);
@@ -29,7 +29,7 @@ for (const page of pages) {
   const meta = key => metadata.find(item => (item.name || item.property) === key);
   assert.equal(meta('og:title')?.content, title);
   if (meta('og:image')) assert.equal(meta('og:image:alt')?.content, title);
-  assert.equal(meta('robots')?.content, 'noindex, nofollow');
+  assert.equal(meta('robots')?.content, 'index, follow');
   for (const item of metadata.filter(item => /^(og:|twitter:)/.test(item.name || item.property || ''))) {
     assert.ok(!names.test(item.content || ''), `${route}: personal names cannot leak into ${item.name || item.property}`);
   }
@@ -65,4 +65,4 @@ for (const file of filesUnder('dist/_astro').filter(file => /\.(?:js|css)$/.test
   assert.ok(!names.test(text), `${relative(resolve('dist'), file)}: names must not leak into client assets`);
   assert.ok(!/Head of Design|Design Lead/i.test(text));
 }
-console.log('PASS: 23 built pages keep project titles, naz home metadata, the exact home-only JSON-LD graph, permitted name locations and noindex.');
+console.log('PASS: 23 built pages keep project titles, naz home metadata, the exact home-only JSON-LD graph, permitted name locations and index, follow.');
