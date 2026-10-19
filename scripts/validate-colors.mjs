@@ -59,7 +59,7 @@ export function validateCatalogInnerPanels(css){
 }
 export function validateCatalogBoxStyles(css){
  const tree=postcss.parse(css),errors=[];
- const declarations=selector=>{const values={};tree.walkRules(rule=>{if(rule.selector.split(',').map(value=>value.trim()).includes(selector))for(const decl of rule.nodes.filter(node=>node.type==='decl'))values[decl.prop]=decl.value;});return values;};
+ const declarations=selector=>{const values={};tree.walkRules(rule=>{if(postcss.list.comma(rule.selector).map(value=>value.trim()).includes(selector))for(const decl of rule.nodes.filter(node=>node.type==='decl'))values[decl.prop]=decl.value;});return values;};
  const requireValue=(selector,property,value)=>{if(declarations(selector)[property]!==value)errors.push(`Catalog box contract: ${selector} ${property} must be ${value}`);};
  for(const selector of ['.ds-stage','.ds-specs-card','.ds-exclusions-box'])for(const [property,value] of Object.entries({'border':'0','border-radius':'var(--radius-large)','box-shadow':'var(--shadow-small)','overflow':'hidden','background':'var(--color-bg-surface)'}))requireValue(selector,property,value);
  for(const selector of ['.ds-color-card','.ds-stroke-card'])requireValue(selector,'border-radius','var(--radius-medium)');

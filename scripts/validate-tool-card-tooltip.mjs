@@ -12,7 +12,7 @@ export function validateToolCardTooltip(root=process.cwd()){
  if(!page.includes('hookoTools.find')||!page.includes('toolDetailLayout()')||!page.includes('class="tools-grid"')||!controller.includes('getBoundingClientRect().width'))errors.push('Specimen widths and content must come from the real About grid and Hooko stack.');
  if(!controller.includes('rule.style.cssText')||!controller.includes('data-tooltip-visible')||!controller.includes("tooltip.dataset.placement=state==='below'?'below':'above'"))errors.push('Frozen states must read genuine website CSS and Tooltip attributes.');
  const layout=toolDetailLayout();for(const part of ['repeat(3, minmax(0, 1fr))','max-width: 1023px','repeat(2, minmax(0, 1fr))','max-width: 560px','grid-template-columns: 1fr'])if(!layout.includes(part))errors.push('Hooko width probe omitted a real layout rule: '+part);
- if(!css.includes('@media(width < 355px)')||!css.includes('padding-inline:var(--space-3)'))errors.push('The approved uniform compact card inset is limited to widths below 355px.');
+ if(/355px|padding-inline:var\(--space-3\)/.test(css))errors.push('Tool card & Tooltip uses the shared phone inset, without a page-specific compact exception.');
  const model=buildSystemInventory(root);for(const name of ['ToolCard','Tooltip']){
   const component=model.components.find(component=>component.name===name),props=toolCardProps(component),usage=toolCardUsage(name);
   if(missingUsageNames(usage).length||usage.split('\n').some(line=>line.length>80))errors.push(name+' Usage must define every name and fit 80 columns.');

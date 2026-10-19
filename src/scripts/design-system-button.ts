@@ -58,10 +58,10 @@ if(states){
   });
   const layout=stacked?'stacked':'grid';
   if(visible.length&&section.dataset.layout!==layout){section.dataset.layout=layout;schedule();return;}
-  const labelsAbove=stacked&&visible.some(group=>{
+  const labelsAbove=stacked&&(matchMedia('(max-width:359px)').matches||visible.some(group=>{
    const available=Math.min(...[...group.querySelectorAll<HTMLElement>('.ds-button-state-cell')].map(cell=>cell.clientWidth-cell.querySelector<HTMLElement>(':scope > span')!.offsetWidth-parseFloat(getComputedStyle(cell).columnGap)));
    return available/paintWidth(group)<.8;
-  });
+  }));
   const labels=labelsAbove?'above':'beside';
   if(visible.length&&section.dataset.labels!==labels){section.dataset.labels=labels;schedule();return;}
   for(const group of visible){

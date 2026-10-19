@@ -322,3 +322,15 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
 @media(max-width:1099px) { .ds-icons-groups { grid-template-columns:repeat(2,minmax(0,1fr)); } .ds-icons-library { grid-template-columns:repeat(10,minmax(0,1fr)); } }
 @media(max-width:767px) { .ds-icons-groups,.ds-icons-sizes,.ds-icons-weights,.ds-icons-colors { grid-template-columns:minmax(0,1fr); } .ds-icons-card { padding:var(--space-4); } .ds-icons-size-art { flex-direction:column; width:max-content; } .ds-icons-sample { padding:var(--space-4); } .ds-icons-library { grid-template-columns:repeat(6,minmax(0,1fr)); gap:var(--space-3); padding:var(--space-4); } }
 }
+
+@layer system {
+/* Phone catalog insets · genuine website specimens keep their own spacing. */
+@media(max-width:767px) {
+ .ds-main,.ds-logo-row { padding-inline:calc(var(--space-4) + var(--safe-left)) calc(var(--space-4) + var(--safe-right)); }
+ .ds-nav-scroll { padding-inline:calc(var(--space-4) - var(--space-3)); scroll-padding-inline:var(--space-4); }
+ .ds-main :is(.ds-stage-bar,.ds-specs-card,.ds-exclusions-box,.ds-button-card,.ds-button-props,.ds-button-code-panel,.ds-type-device,.ds-type-device-header,.ds-space-card,.ds-layout-card,.ds-radius-card,.ds-shadow-card,.ds-icons-card,.ds-motion-card,.ds-motion-curve-card,.ds-motion-reduced,.ds-nav-state,.ds-code pre) { padding:var(--space-4); }
+ .ds-main :is(.ds-code,.ds-foundation-rows,.ds-button-preview) { padding-inline:var(--space-4); padding-bottom:var(--space-4); }
+ .ds-main :is(.ds-layout-stage,.ds-radius-demo,.ds-motion-art,.ds-shadow-demo > div) { padding:var(--space-4); }
+ .ds-type-device::before { inset-inline:var(--space-4); }
+}
+}

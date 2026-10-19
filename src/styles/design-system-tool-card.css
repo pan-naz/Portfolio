@@ -24,9 +24,4 @@
 @media(max-width:767px) {
  .ds-tools-grid { grid-template-columns:minmax(0,1fr); }
 }
-/* Below 355px the genuine Detail text needs the shared compact card inset at both catalog levels. */
-@media(width < 355px) {
- .ds-tools-view :is(.ds-stage-bar,.ds-button-preview,.ds-code,.ds-button-card,.ds-button-props,.ds-button-code-panel,.ds-code pre) { padding-inline:var(--space-3); }
-}
-
 }

@@ -62,6 +62,7 @@
   .pc-row--reverse > .pc-copy, .pc-row--reverse > .pc-phone { order: initial; margin-inline: 0; }
   .pc-type-plate { min-height: 0; }
 }
-@media (max-width: 359px) { .pc-stats, .pc-palette { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 479px) { .pc-stats { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 359px) { .pc-palette { grid-template-columns: minmax(0, 1fr); } }
 
 }

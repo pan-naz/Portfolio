@@ -1,6 +1,6 @@
 ---
 import {foundations} from '../data/design-system';import {visibleComponents,overviewHiddenComponents} from '../data/ds-components';
-const summaries:Record<string,string>={'decision-card':'A design decision with its explanation, in case studies.',color:'Color roles and themes.',typography:'The shared text styles.','spacing-layout':'Gaps, radius and grids.',motion:'Durations and easing.',icons:'Interface icons and the decorative library.',button:'Buttons, icon buttons and text links.',chip:'Short labels for skills, project tags and design decisions.','icon-button':'Named icon actions.',navigation:'The header, the Work filter and their links.','project-card':'Each project in Work, opening its case study.','section-heading':'The label and title that open each section.',statistic:'A result with its label and an optional note.','text-link':'Text links to pages and profiles.','timeline-row':'One role in the experience timeline.',tooltip:'Two components: the tool card, and the tooltip that shows its name.'};
+const summaries:Record<string,string>={'decision-card':'A design decision with its explanation, in case studies.',color:'Color roles and themes.',typography:'The shared text styles.','spacing-layout':'Gaps, radius and grids.',motion:'Durations and easing.',icons:'Interface icons and the decorative library.',button:'Buttons, icon buttons and text links.',chip:'Short labels for skills, project tags and design decisions.','icon-button':'Named icon actions.',navigation:'The header, the Work filter and their links.','project-card':'Each project in Work, opening its case study.','section-heading':'The label and title that open each section.',statistic:'A result with its label and an optional note.','text-link':'Text links to pages and profiles.','timeline-row':'One role in the experience timeline.',tooltip:'The tool card and its tooltip.'};
 import covers from '../../public/design-system/covers/manifest.json';
 const dimensions=covers.canvas;
 const coverFor=(id:string,theme:string)=>covers.covers.find(cover=>cover.id===id&&cover.theme===theme)!;
@@ -12,8 +12,8 @@ const coverFor=(id:string,theme:string)=>covers.covers.find(cover=>cover.id===id
  </div><a tabindex="0" class="ds-tile-link" href={`#${item.id}`} data-ds-nav><strong>{item.title}</strong><span>{summaries[item.id]}</span></a></div></article>)}
  </div></div>)}
  <div class="ds-dashboard-group"><h2 class="ds-dashboard-title">What is not included</h2><div class="ds-exclusions-box">
-  <div><p class="ds-column-title">No page of their own yet</p><ul class="ds-spec-list">{overviewHiddenComponents.map(item=><li data-ds-hidden-component={item.documentedHidden}><strong>{item.title}</strong><span>{item.description}</span></li>)}</ul></div>
-  <div><p class="ds-column-title">Outside on purpose</p><ul class="ds-spec-list">
+  <div><ul class="ds-spec-list">{overviewHiddenComponents.map(item=><li data-ds-hidden-component={item.documentedHidden}><strong>{item.title}</strong><span>{item.description}</span></li>)}</ul></div>
+  <div><ul class="ds-spec-list">
    <li><strong>Project colors, fonts and artwork</strong><span>Each case study keeps its own brand.</span></li>
    <li><strong>Page sections</strong><span>Hero, About, Contact and footer, built from the parts above.</span></li>
    <li><strong>Case-study layouts</strong><span>Each case study has its own structure.</span></li>
