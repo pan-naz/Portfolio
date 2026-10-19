@@ -81,6 +81,10 @@ export function validateGeometry(root=process.cwd(),allowlist){
  const errors=[],allowed=allowlist??JSON.parse(fs.readFileSync(path.join(root,'scripts/geometry-exceptions.json'),'utf8'));
  const key=r=>JSON.stringify([r.file,r.selector,r.context,r.property,r.value]);
  const keys=new Map(allowed.map(r=>[key(r),r]));
+ // Match all declarations, including em-valued aliases outside the numeric audit.
+ const declarations=new Set();
+ for(const source of styleSources(root))postcss.parse(source.css).walkDecls(decl=>declarations.add(key({file:source.file,selector:decl.parent.selector,context:context(decl),property:decl.prop,value:decl.value})));
+ for(const entry of allowed)if(!declarations.has(key(entry)))errors.push(`Stale geometry exception: ${entry.file} ${entry.context} ${entry.selector} ${entry.property}: ${entry.value}`);
  const normalize=value=>value.toLowerCase().replace(/\s+/g,'').replace(/0px/g,'0').replace(/(?<=[/,(])0\./g,'.').replace(/\d*\.\d+/g,number=>String(Number(number)));
  const tokenCss=postcss.parse(fs.readFileSync(path.join(root,'src/styles/tokens.css'),'utf8')),shadows=[];
  tokenCss.walkDecls(/^--shadow-/,decl=>shadows.push(normalize(decl.value)));

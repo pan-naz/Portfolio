@@ -1482,15 +1482,6 @@
   },
   {
     "file": "src/styles/global.css",
-    "selector": ".button--arrow-fill.button--small",
-    "context": "@layer system",
-    "property": "--button-orb",
-    "value": "26px",
-    "kind": "size",
-    "reason": "Existing 26px orb fits the 36px small button with its 4px inset."
-  },
-  {
-    "file": "src/styles/global.css",
     "selector": ".work-rail",
     "context": "@layer system",
     "property": "--work-filter-half-height",
@@ -1546,24 +1537,6 @@
     "kind": "size",
     "project": true,
     "reason": "Project-only Pet Care prize artwork retains its original 32px size independently of interface icon tokens."
-  },
-  {
-    "file": "src/styles/datagpt-case-study.css",
-    "selector": ".dg-case",
-    "context": "@layer project",
-    "property": "--dg-question-label-advance",
-    "value": "10.96484375em",
-    "kind": "spacing",
-    "reason": "Original DataGPT Regular-label glyph advance, measured before the Label/S migration; with the unchanged padding this preserves persona heading wraps and testimonial coordinates. Not a typography override."
-  },
-  {
-    "file": "src/styles/datagpt-case-study.css",
-    "selector": ".dg-case",
-    "context": "@layer project",
-    "property": "--dg-answer-label-advance",
-    "value": "12.2096354167em",
-    "kind": "spacing",
-    "reason": "Original DataGPT Regular-label glyph advance, measured before the Label/S migration; with the unchanged padding this preserves persona heading wraps and testimonial coordinates. Not a typography override."
   },
   {
     "file": "src/styles/global.css",

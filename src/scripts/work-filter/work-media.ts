@@ -7,7 +7,7 @@ type BackgroundScheduler = { postTask(task: () => void, options: { priority: 'ba
 function scheduleBackground(task: () => void, signal: AbortSignal) {
   const scheduler = (window as Window & { scheduler?: BackgroundScheduler }).scheduler;
   if (scheduler) {
-    void scheduler.postTask(task, { priority: 'background', signal }).catch(() => {});
+    void scheduler.postTask(task, { priority: 'background', signal }).catch(() => { /* Aborted optional background tasks need no recovery. */ });
   } else if (typeof window.requestIdleCallback === 'function') {
     const handle = window.requestIdleCallback(() => { if (!signal.aborted) task(); }, { timeout: 1000 });
     signal.addEventListener('abort', () => window.cancelIdleCallback(handle), { once: true });
@@ -52,7 +52,7 @@ export function initializeWorkMedia(started: Promise<void>) {
     const ticket = ++generation;
     if (!eligible()) return;
     queued = new AbortController();
-    scheduleBackground(() => { void prepare(ticket).catch(() => {}); }, queued.signal);
+    scheduleBackground(() => { void prepare(ticket).catch(() => { /* Optional warming failures leave normal viewport-driven loading in charge. */ }); }, queued.signal);
   };
   const destroy = () => { destroyed = true; generation++; queued?.abort(); lifecycle.abort(); };
   work.addEventListener('workfilterchange', queue, { signal: lifecycle.signal });
@@ -60,6 +60,6 @@ export function initializeWorkMedia(started: Promise<void>) {
   mediaConnection()?.addEventListener?.('change', queue, { signal: lifecycle.signal });
   window.addEventListener('pagehide', event => { if (!event.persisted) destroy(); }, { signal: lifecycle.signal });
   // Reduced-motion/readable fallbacks also keep the first-screen fonts first.
-  void started.then(() => document.fonts.ready).then(() => { introStarted = true; queue(); }).catch(() => {});
+  void started.then(() => document.fonts.ready).then(() => { introStarted = true; queue(); }).catch(() => { /* A rejected intro/font wait skips optional warming without blocking the page. */ });
   return { destroy };
 }

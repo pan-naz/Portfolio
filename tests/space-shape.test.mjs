@@ -31,6 +31,14 @@ try {
  const {auditGeometry}=await import('../scripts/validate-space-shape.mjs');
  const reviewed=auditGeometry(fixture).map(r=>({...r,reason:'Project-only supplied diamond geometry.'}));
  assert.deepEqual(validateGeometry(fixture,reviewed),[]);
+ const live={file:'src/styles/test.css',selector:'.brand',context:'@layer project',property:'--advance',value:'10.5em',kind:'spacing',reason:'Project text geometry.'};
+ fs.writeFileSync(path.join(fixture,'src/styles/test.css'),'@layer project {.brand {--advance:10.5em}}');
+ assert.deepEqual(validateGeometry(fixture,[live]),[],'Live declarations match even when their units are outside the numeric audit');
+ for(const changed of [{file:'src/styles/missing.css'},{selector:'.other'},{context:'@layer system'},{property:'--removed'},{value:'11em'}]){
+  const entry={...live,...changed};
+  assert.deepEqual(validateGeometry(fixture,[entry]),[`Stale geometry exception: ${entry.file} ${entry.context} ${entry.selector} ${entry.property}: ${entry.value}`],'Stale entries name the exact unmatched declaration');
+ }
+ fs.writeFileSync(path.join(fixture,'src/styles/test.css'),artwork);
  assert(validateGeometry(fixture,reviewed.map(r=>({...r,project:false}))).some(e=>e.includes('Exact token equivalent')),'Only actual project-layer artwork gets the exception');
  assert.deepEqual(test('@layer system {.x {width:var(--control-icon);z-index:var(--layer-raised);opacity:var(--opacity-disabled)}}'),[]);
  assert.deepEqual(test('@layer system {.x {padding:var(--space-6)}}'),[]);
