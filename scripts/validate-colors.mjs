@@ -1,3 +1,4 @@
+import {documentationSections} from './documentation-contract.mjs';
 import fs from 'node:fs';import path from 'node:path';import {createRequire} from 'node:module';
 const require=createRequire(import.meta.url),astro=path.dirname(require.resolve('astro/package.json')),vite=path.dirname(require.resolve('vite/package.json',{paths:[astro]})),postcss=require(require.resolve('postcss',{paths:[vite]}));
 import {readSystemTokens} from '../src/data/system-inventory.ts';
@@ -104,8 +105,8 @@ export function validateSharedColorLiterals(directory=root){
 }
 export function validateColorDocumentation(text){
  if(text===undefined)return [];
- const start=text.indexOf('## Color\n'),next=text.indexOf('\n## ',start+4),body=start<0?'':text.slice(start,next<0?undefined:next).trim();
- return body.length>100?[]:['Missing Color documentation'];
+ const sections=documentationSections(text).filter(section=>section.title==='Color');
+ return sections.length===1&&sections[0].body.length>100?[]:['Missing Color documentation'];
 }
 export function validateColors(){const css=fs.readFileSync(path.join(root,'src/styles/tokens.css'),'utf8'),catalogCss=fs.readFileSync(path.join(root,'src/styles/design-system.css'),'utf8');return [...validateColorPalette(css),...validateColorUses(css),...validateCatalogInnerPanels(catalogCss),...validateCatalogBoxStyles(catalogCss),...validateSharedColorLiterals(),...validateColorDocumentation(fs.existsSync(path.join(root,'../docs/design-system.md'))?fs.readFileSync(path.join(root,'../docs/design-system.md'),'utf8'):undefined)];}
 if(process.argv[1]&&path.resolve(process.argv[1])===import.meta.filename){const errors=validateColors();if(errors.length){console.error(errors.join('\n'));process.exit(1);}console.log('Color contract verified: 12 palette colors, six alpha shades, one role family, exact use coverage and no shared literals.');}

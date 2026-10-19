@@ -1,3 +1,4 @@
+import {documentationSections, validateWorkspaceDocumentation} from './documentation-contract.mjs';
 import {validateDecisionCard} from './validate-decision-card.mjs';
 import {validateToolCardTooltip} from './validate-tool-card-tooltip.mjs';
 import {hookoTools} from '../src/data/hooko-case-study.ts';
@@ -185,15 +186,13 @@ export function validateHiddenDocumentation(records, text) {
     const entries=records.filter(record=>record.section===section);
     if(entries.length!==1){ failures.push(`Missing hidden documentation: ${section}`); continue; }
     if(text!==undefined){
-      // Use the next section boundary rather than the end-of-line multiline dollar.
-      const start=text.indexOf('## '+section+'\n'), next=text.indexOf('\n## ',start+4);
-      const value=start<0?'':text.slice(start,next<0?undefined:next).trim();
-      if(!value || !/Documented, hidden\./.test(value))failures.push(`Missing hidden documentation: ${section}`);
+      const matches=documentationSections(text).filter(item=>item.title===section);
+      if(matches.length!==1 || !/Documented, hidden\./.test(matches[0].body))failures.push(`Missing hidden documentation: ${section}`);
     }
   }
   return failures;
 }
-const errors = [...validateDecisionCard(root),...validateToolCardTooltip(root),...validateOverviewCovers(root),...validateNativeTooltipSources(root),...validateStatistic(root),...validateTimelineRow(root),...validateProjectCard(root),...validateNavigationCatalog(root),...validateChip(root),...validateSystemCleanup(root),...validateButtonCatalog(root),...validateIcons(root),...validateMotionContract(root),...validate(registry),...validateColors(),...validateSpaceShape(root),...validateRadiusContract(),...validateFoundationCodeContract(root)];
+const errors = [...validateWorkspaceDocumentation(root),...validateDecisionCard(root),...validateToolCardTooltip(root),...validateOverviewCovers(root),...validateNativeTooltipSources(root),...validateStatistic(root),...validateTimelineRow(root),...validateProjectCard(root),...validateNavigationCatalog(root),...validateChip(root),...validateSystemCleanup(root),...validateButtonCatalog(root),...validateIcons(root),...validateMotionContract(root),...validate(registry),...validateColors(),...validateSpaceShape(root),...validateRadiusContract(),...validateFoundationCodeContract(root)];
 if(filesUnder('src').some(file=>/\.(?:css|astro|[cm]?[jt]s)$/.test(file)&&/::(?:-moz-)?selection\b|(?:-webkit-)?text-fill-color\s*:|(?:webkit)?TextFillColor\b/i.test(read(file))))errors.push('Use browser-default selection; selection and text-fill overrides are forbidden.');
 errors.push(...validateLogoWave(read('src/styles/global.css'), read('src/components/Logo.astro'), read('src/styles/tokens.css'), filesUnder('src/scripts').filter(file=>file.endsWith('.ts')&&file!=='src/scripts/design-system-motion.ts').map(read).join('\n')));
 if(JSON.stringify(visibleComponents.map(item=>item.name).sort())!==JSON.stringify([...expectedVisible].sort()))errors.push('Visible catalog must contain exactly the approved nine pages');
