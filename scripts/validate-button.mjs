@@ -61,8 +61,8 @@ export function validateCatalogControls(control,css){
 
 export function validateButtonCatalog(root=process.cwd()){
  const read=file=>fs.readFileSync(root+'/'+file,'utf8'),errors=[];
- const expected=['Button','Chip','Navigation','Project card','Section heading','Statistic','Timeline row','Tool card & Tooltip'];
- if(JSON.stringify(visibleComponents.map(item=>item.title))!==JSON.stringify(expected))errors.push('Button navigation must have exactly eight action/content pages.');
+ const expected=['Button','Chip','Decision card','Navigation','Project card','Section heading','Statistic','Timeline row','Tool card & Tooltip'];
+ if(JSON.stringify(visibleComponents.map(item=>item.title))!==JSON.stringify(expected))errors.push('Button navigation must have exactly nine action/content pages.');
  for(const name of ['IconButton','TextLink'])if(!catalogComponents.some(item=>item.name===name&&item.section==='button'))errors.push(name+' must be documented in Button, not removed.');
  const model=buildSystemInventory(root);
  for(const name of ['Button','IconButton','TextLink']){

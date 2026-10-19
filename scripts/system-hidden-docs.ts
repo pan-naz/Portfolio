@@ -13,9 +13,6 @@ export const hiddenDocumentation = [
     "section": "Before and after"
   },
   {
-    "section": "Decision card"
-  },
-  {
     "section": "Steps"
   },
   {

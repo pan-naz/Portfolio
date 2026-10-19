@@ -2,6 +2,7 @@
 export type ComponentKind = 'reusable-ui' | 'page-section' | 'case-study' | 'internal-helper';
 export interface ComponentClassification { file: string; kind: ComponentKind; group?: string; title?: string; reason: string; documentedHidden?: string; catalogPage?: string; id?: string; }
 export const componentManifest: ComponentClassification[] = [
+ {file:'src/components/DSDecisionCards.astro',kind:'internal-helper',reason:'Source-derived Decision card catalog page.'},
  {file:'src/components/DSToolCards.astro',kind:'internal-helper',reason:'Source-derived Tool card and Tooltip catalog page using genuine components.'},
  {file:'src/components/DSTimeline.astro',kind:'internal-helper',reason:'Source-derived Timeline row catalog page using genuine website components.'},
  {file:'src/components/AlignedChapterCopy.astro',kind:'internal-helper',reason:'Intrinsic layout reservation for adjacent chapter copy; typography remains in the shared roles.'},
@@ -33,7 +34,7 @@ export const componentManifest: ComponentClassification[] = [
   { file: 'src/components/CaseStudyBand.astro', kind: 'page-section', reason: 'Composes a page or a narrative chapter; not a catalog building block.' },
   { file: 'src/components/CaseStudyComparison.astro', documentedHidden: 'before-and-after', kind: 'reusable-ui', group: 'Media & storytelling', title: 'Before and after', reason: 'Website-used building block with shared UI styling.' },
   { file: 'src/components/CaseStudyContent.astro', kind: 'page-section', reason: 'Composes a page or a narrative chapter; not a catalog building block.' },
-  { file: 'src/components/CaseStudyDecisionCard.astro', documentedHidden: 'decision-card', kind: 'reusable-ui', group: 'Media & storytelling', title: 'Decision card', reason: 'Website-used building block with shared UI styling.' },
+  { file: 'src/components/CaseStudyDecisionCard.astro', id: 'decision-card', kind: 'reusable-ui', group: 'Media & storytelling', title: 'Decision card', reason: 'Website-used building block with shared UI styling.' },
   { file: 'src/components/CaseStudyGuides.astro', kind: 'case-study', reason: 'Project composition or artwork scaffolding; outside the design system.' },
   { file: 'src/components/CaseStudyLayer.astro', kind: 'page-section', reason: 'Composes a page or a narrative chapter; not a catalog building block.' },
   { file: 'src/components/CaseStudyMarker.astro', kind: 'case-study', reason: 'Project composition or artwork scaffolding; outside the design system.' },

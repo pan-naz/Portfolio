@@ -1,3 +1,4 @@
+import {validateDecisionCard} from './validate-decision-card.mjs';
 import {validateToolCardTooltip} from './validate-tool-card-tooltip.mjs';
 import {hookoTools} from '../src/data/hooko-case-study.ts';
 import {validateTitleAlignment} from './validate-title-alignment.mjs';
@@ -64,10 +65,10 @@ function componentsReachableFrom(entry, seen = new Set()) {
   return seen;
 }
 const hiddenSections = {
- 'Logo':'Wordmark','CaseStudyComparison':'Before and after','CaseStudyDecisionCard':'Decision card','CaseStudySteps':'Steps','CaseStudyMedia':'Media','ProjectIdentity':'Project identity','ProjectTags':'Project tags','SectionNavigation':'Project filter','ThemeToggle':'Theme switch','Icon':'Icon',
+ 'Logo':'Wordmark','CaseStudyComparison':'Before and after','CaseStudySteps':'Steps','CaseStudyMedia':'Media','ProjectIdentity':'Project identity','ProjectTags':'Project tags','SectionNavigation':'Project filter','ThemeToggle':'Theme switch','Icon':'Icon',
 };
 const hiddenKeys = Object.fromEntries(Object.entries(hiddenSections).map(([file,title])=>['src/components/'+file+'.astro',title.toLowerCase().replaceAll(' ','-')]));
-const expectedVisible = ['Button','Chip','NavigationItem','ProjectCard','SectionHeading','Stat','TimelineRow','Tooltip'];
+const expectedVisible = ['Button','Chip','CaseStudyDecisionCard','NavigationItem','ProjectCard','SectionHeading','Stat','TimelineRow','Tooltip'];
 export function validateComponentClassification(files, used, manifest, shown) {
   const failures = [];
   const kinds = ['reusable-ui', 'page-section', 'case-study', 'internal-helper'];
@@ -192,10 +193,10 @@ export function validateHiddenDocumentation(records, text) {
   }
   return failures;
 }
-const errors = [...validateToolCardTooltip(root),...validateOverviewCovers(root),...validateNativeTooltipSources(root),...validateStatistic(root),...validateTimelineRow(root),...validateProjectCard(root),...validateNavigationCatalog(root),...validateChip(root),...validateSystemCleanup(root),...validateButtonCatalog(root),...validateIcons(root),...validateMotionContract(root),...validate(registry),...validateColors(),...validateSpaceShape(root),...validateRadiusContract(),...validateFoundationCodeContract(root)];
+const errors = [...validateDecisionCard(root),...validateToolCardTooltip(root),...validateOverviewCovers(root),...validateNativeTooltipSources(root),...validateStatistic(root),...validateTimelineRow(root),...validateProjectCard(root),...validateNavigationCatalog(root),...validateChip(root),...validateSystemCleanup(root),...validateButtonCatalog(root),...validateIcons(root),...validateMotionContract(root),...validate(registry),...validateColors(),...validateSpaceShape(root),...validateRadiusContract(),...validateFoundationCodeContract(root)];
 if(filesUnder('src').some(file=>/\.(?:css|astro|[cm]?[jt]s)$/.test(file)&&/::(?:-moz-)?selection\b|(?:-webkit-)?text-fill-color\s*:|(?:webkit)?TextFillColor\b/i.test(read(file))))errors.push('Use browser-default selection; selection and text-fill overrides are forbidden.');
 errors.push(...validateLogoWave(read('src/styles/global.css'), read('src/components/Logo.astro'), read('src/styles/tokens.css'), filesUnder('src/scripts').filter(file=>file.endsWith('.ts')&&file!=='src/scripts/design-system-motion.ts').map(read).join('\n')));
-if(JSON.stringify(visibleComponents.map(item=>item.name).sort())!==JSON.stringify([...expectedVisible].sort()))errors.push('Visible catalog must contain exactly the approved eight pages');
+if(JSON.stringify(visibleComponents.map(item=>item.name).sort())!==JSON.stringify([...expectedVisible].sort()))errors.push('Visible catalog must contain exactly the approved nine pages');
 for(const [file,key] of Object.entries(hiddenKeys))if(componentManifest.find(item=>item.file===file)?.documentedHidden!==key)errors.push('Missing documented-hidden classification: '+file);
 errors.push(...validateHoverSource(root));
 const externalDocs=resolve(root,'../docs/design-system.md');

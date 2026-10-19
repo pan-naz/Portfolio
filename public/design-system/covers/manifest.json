@@ -71,6 +71,14 @@
       "sha256": "21ee0ffce8cdc214c68b5c0c0f1fece24e58574047b553e417a4f6171c88e3dc"
     },
     {
+      "id": "decision-card",
+      "theme": "light",
+      "width": 416,
+      "height": 208,
+      "bytes": 26044,
+      "sha256": "66830b027ce2f8f9cd18b7ef563793b9102dba982c24cd201f73705b4ab390e2"
+    },
+    {
       "id": "navigation",
       "theme": "light",
       "width": 416,
@@ -173,6 +181,14 @@
       "height": 208,
       "bytes": 6094,
       "sha256": "559e1fb552135d1d9e5da8cce1c1178cb77abd8227de9f494f5aa7d3f08e028c"
+    },
+    {
+      "id": "decision-card",
+      "theme": "dark",
+      "width": 416,
+      "height": 208,
+      "bytes": 26044,
+      "sha256": "66830b027ce2f8f9cd18b7ef563793b9102dba982c24cd201f73705b4ab390e2"
     },
     {
       "id": "navigation",

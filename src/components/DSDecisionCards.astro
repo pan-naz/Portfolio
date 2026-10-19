@@ -1,0 +1,47 @@
+---
+import '../styles/design-system-button.css';import '../styles/design-system-decision-card.css';
+import type {SourceComponent} from '../data/system-inventory';
+import {decisionCardDescription,decisionCardExamples,decisionCardProps,decisionCardTokens,decisionLayout,decisionAccessibility,decisionUsage,voxText,voxImpact,hookoText,hookoImage} from '../data/system-decision-card';
+import {componentVariants} from '../data/system-variants';
+import {blaustromConfiguratorSteps} from '../data/blaustrom-case-study';
+import CaseStudyDecisionCard from './CaseStudyDecisionCard.astro';import CaseStudyMedia from './CaseStudyMedia.astro';import ResponsiveImage from './ResponsiveImage.astro';import DSTabs from './DSTabs.astro';
+interface Props {component:SourceComponent;}
+const {component}=Astro.props,figure=blaustromConfiguratorSteps[0],groups=decisionCardTokens(),tokenCode=groups.map(group=>`/* ${group.title} */\n`+group.names.join('\n')).join('\n\n');
+---
+<style is:global set:html={decisionLayout()}/>
+<div class="ds-decision-width-probe" inert aria-hidden="true">
+ <div class="case-study-chapter__inner"><div data-decision-probe="figure">{Array.from({length:2},()=> <div/>)}</div></div>
+ <div class="case-study-content"><div data-decision-probe="stack">{Array.from({length:3},()=> <div/>)}</div></div>
+ <div class="case-study-chapter__inner"><div data-decision-probe="media">{Array.from({length:2},()=> <div/>)}</div></div>
+</div>
+<section id="decision-card" class="ds-view ds-decision-view" data-ds-view data-ds-component="CaseStudyDecisionCard" data-title="Decision card" data-group="Components" data-description={decisionCardDescription} hidden>
+ <div class="ds-stage" data-ds-card>
+  <div class="ds-stage-bar"><DSTabs id="decision-card-canvas" labels={['Preview','Code']}/></div>
+  <div id="decision-card-canvas-panel-0" role="tabpanel" aria-labelledby="decision-card-canvas-tab-0" class="ds-button-preview">
+   <section class="ds-button-group"><p class="text-label-m">Decision card</p><p class="text-body-s ds-button-secondary">Three layouts for a design decision and its explanation.</p>
+    <div class="ds-button-grid ds-decision-grid">{decisionCardExamples.map(card=><article class="ds-button-card" data-decision-card={card.id}>
+     <div class="ds-button-stage ds-decision-stage" inert aria-hidden="true">
+      <div class:list={['ds-decision-art','ds-specimens','case-study-narrative',card.id==='media'&&'case-study-content--hooko']} data-decision-art={card.id} data-ds-example={`decision-${card.id}`} data-ds-target=".case-study-decision-card">
+       {card.id==='figure'&&<CaseStudyDecisionCard title={figure.title} label={figure.label} layout="figure"><CaseStudyMedia slot="media" {...figure.media} priority/><p>{figure.description}</p></CaseStudyDecisionCard>}
+       {card.id==='stack'&&<CaseStudyDecisionCard title="A canvas, not a form builder."><Fragment set:html={voxText}/><Fragment slot="impact" set:html={voxImpact}/></CaseStudyDecisionCard>}
+       {card.id==='media'&&<div class="hk-decisions floating-control-theme" data-color-zone="light" data-zone-keep="shadows"><CaseStudyDecisionCard title="Niche benchmark" label="Context" labelVariant="accent" layout="media"><Fragment set:html={hookoText}/><ResponsiveImage slot="media" src={hookoImage.src} alt={hookoImage.alt} width={Number(hookoImage.width)} height={Number(hookoImage.height)} style={hookoImage.style} loading="eager"/></CaseStudyDecisionCard></div>}
+      </div>
+     </div>
+     <div><p class="text-body-m-strong">{card.name}</p><p class="text-body-s ds-button-secondary">{card.description}</p></div>
+     <dl class="ds-button-values text-body-s">{[['Used in',card.used],['Style',card.style]].map(([key,value])=><div><dt>{key}</dt><dd>{value.split(/( · |, )/).map((item,i)=>i%2?item:<span class="ds-value-item">{item}</span>)}</dd></div>)}</dl>
+    </article>)}</div>
+   </section>
+  </div>
+  <div id="decision-card-canvas-panel-1" role="tabpanel" aria-labelledby="decision-card-canvas-tab-1" class="ds-code ds-button-code" hidden>
+   <section data-ds-component-code={component.name} data-ds-component={component.name}><p class="text-label-m">Decision card</p>
+    <pre><code data-ds-usage={component.name}>{'/* Usage · '+component.file+' */\n'+decisionUsage()}</code></pre>
+    <div class="ds-button-props"><p class="ds-code-comment">/* Props */</p><div class="ds-props-table"><table><thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>What it does</th></tr></thead><tbody>{decisionCardProps(component).map(prop=><tr data-ds-prop={prop.name}><th scope="row"><code>{prop.name}</code></th><td><code>{prop.type}</code></td><td><code>{prop.default}</code></td><td>{prop.description}</td></tr>)}</tbody></table></div><p class="ds-code-comment">/* Slots */</p><dl class="ds-spec-list">{[['default','The text.'],['media','The image or video.'],['icon','A decorative icon.'],['impact','The Impact box text.']].map(([name,description])=><div><dt><code>{name}</code></dt><dd>{description}</dd></div>)}</dl></div>
+    {componentVariants(component).map(value=><span data-ds-variant={`${component.name}:${value}`}/>)}
+   </section>
+   <section><p class="text-label-m">Shared</p>{groups.flatMap(group=>group.names).map(name=><span data-ds-token={name.slice(2)}/>)}<div class="ds-button-code-grid"><pre><code>{tokenCode}</code></pre><div class="ds-button-code-panel"><p class="ds-code-comment">/* Accessibility */</p><ul>{decisionAccessibility.map(point=><li>{point}</li>)}</ul></div></div>
+    <div class="ds-button-code-panel"><p class="ds-code-comment">/* Source */</p><p>{component.file}</p><ul>{[...new Set(component.usages.map(usage=>usage.file))].sort().map(file=><li>{file}</li>)}</ul></div>
+   </section>
+  </div>
+ </div>
+</section>
+<script>import '../scripts/design-system-decision-card';</script>
