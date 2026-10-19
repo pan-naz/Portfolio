@@ -1,0 +1,32 @@
+---
+import type {CatalogLayout} from '../scripts/design-system-width';
+import {toolDetailLayout} from '../data/system-tool-card';
+import {decisionLayout} from '../data/system-decision-card';
+interface Props {layout:CatalogLayout;}
+const {layout}=Astro.props;
+---
+<style is:global>
+@layer system {
+.ds-width-probe { position:fixed; inset:0 auto auto 0; width:100vw; height:0; visibility:hidden; overflow:hidden; contain:strict; pointer-events:none; }
+.ds-stat-width--case,.ds-stat-width--bare { display:grid; margin:0; }
+.ds-stat-width--bare { grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--grid-gap); }
+@media(max-width:767px) { .ds-stat-width--bare { grid-template-columns:minmax(0,1fr); } }
+}
+</style>
+{layout==='tool-card'&&<style is:global set:html={toolDetailLayout()}/>}
+{layout==='decision-card'&&<style is:global set:html={decisionLayout()}/>}
+<div class="ds-width-probe" data-ds-layout={layout} inert aria-hidden="true">
+ {layout==='statistic'&&<div class="container">
+  <div class="impact-group"><div/><dl class="impact-metrics"><div data-stat-width="default"/></dl></div>
+  <dl class="ds-stat-width--case metric-grid metric-grid--four"><div data-stat-width="case"/></dl>
+  <dl class="ds-stat-width--bare"><div data-stat-width="bare"/></dl>
+ </div>}
+ {layout==='section-heading'&&<div class="container"/>}
+ {layout==='project-card'&&<div class="container work-content"><div class="project-collection project-collection--bento"/></div>}
+ {layout==='tool-card'&&<div class="container"><ul class="tools-grid">{Array.from({length:5},()=> <li/>)}</ul><div class="ds-tools-detail-grid">{Array.from({length:3},()=> <div/>)}</div></div>}
+ {layout==='decision-card'&&<Fragment>
+  <div class="case-study-chapter__inner"><div data-decision-probe="figure">{Array.from({length:2},()=> <div/>)}</div></div>
+  <div class="case-study-content"><div data-decision-probe="stack">{Array.from({length:3},()=> <div/>)}</div></div>
+  <div class="case-study-chapter__inner"><div data-decision-probe="media">{Array.from({length:2},()=> <div/>)}</div></div>
+ </Fragment>}
+</div>

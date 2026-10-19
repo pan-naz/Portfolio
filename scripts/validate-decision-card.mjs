@@ -5,7 +5,8 @@ import {compareTokenNames} from '../src/data/system-component-tokens.ts';
 import {missingUsageNames} from './validate-button.mjs';
 export function validateDecisionCard(root=process.cwd()){
  const read=file=>fs.readFileSync(path.join(root,file),'utf8'),errors=[],page=read('src/components/DSDecisionCards.astro'),css=read('src/styles/design-system-decision-card.css');
- for(const text of ['<CaseStudyDecisionCard','<CaseStudyMedia slot="media" {...figure.media} priority','voxText','voxImpact','hookoText','hookoImage','inert aria-hidden="true"','decisionLayout()','data-ds-component-code={component.name}'])if(!page.includes(text))errors.push('Missing genuine decision source: '+text);
+ for(const text of ['<CaseStudyDecisionCard','<CaseStudyMedia slot="media" {...figure.media} priority','voxText','voxImpact','hookoText','hookoImage','inert aria-hidden="true"','data-ds-component-code={component.name}'])if(!page.includes(text))errors.push('Missing genuine decision source: '+text);
+ if(!read('src/components/DSWidthProbe.astro').includes('decisionLayout()')||!page.includes('<DSWidthProbe layout="decision-card"'))errors.push('Decision uses the shared genuine-layout width helper.');
  if(/DSTokenNames|ds-button-state|transform:\s*scale|zoom:/.test(page+css))errors.push('Decision specimens have no states, token switch or scaling.');
  if(decisionCardExamples.map(card=>card.id).join()!=='figure,stack,media')errors.push('Decision variants must be Figure, Card and With media.');
  const component=buildSystemInventory(root).components.find(c=>c.name==='CaseStudyDecisionCard');

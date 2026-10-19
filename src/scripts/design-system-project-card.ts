@@ -1,3 +1,4 @@
+import {observeCatalogLayout} from './design-system-width';
 import {prepareSpecimenHeadings} from './design-system';
 /** Clone genuine inert components; keep native links, names and media geometry. */
 for(const template of document.querySelectorAll<HTMLTemplateElement>('[data-project-template]')){
@@ -27,12 +28,10 @@ const freeze=(rules:CSSRuleList):string=>[...rules].map(rule=>{
  if('cssRules'in rule){if(rule instanceof CSSMediaRule&&/prefers-reduced-motion:\s*reduce/.test(rule.conditionText))return '';return freeze((rule as CSSGroupingRule).cssRules);}return '';
 }).join('\n');
 const frozen=document.createElement('style');frozen.dataset.dsProjectStates='';frozen.textContent='@layer system {'+[...document.styleSheets].map(sheet=>{try{return freeze(sheet.cssRules)}catch{return ''}}).join('\n')+'}';document.head.append(frozen);
-const view=document.querySelector<HTMLElement>('#project-card')!,probe=view.querySelector<HTMLElement>('.ds-project-width-probe .work-content')!;
+const view=document.querySelector<HTMLElement>('#project-card')!;
 const write=(element:HTMLElement,name:string,value:string)=>{if(element.style.getPropertyValue(name)!==value)element.style.setProperty(name,value);};
-const fit=()=>{
- if(probe.getClientRects().length){
-  // The real container/bento CSS owns viewport widths and the desktop rail inset.
-  const full=parseFloat(getComputedStyle(probe).width),compact=parseFloat(getComputedStyle(probe.firstElementChild!).gridTemplateColumns);
+const schedule=observeCatalogLayout('project-card',({full,compact})=>{
+ {
   if(full<=0||compact<=0)return;
   for(const art of view.querySelectorAll<HTMLElement>('[data-project-art]'))write(art,'--ds-project-width',(art.dataset.projectArt==='full'?full:compact)+'px');
   const fullDetails=view.querySelector<HTMLElement>('[data-project-art="full"] .project-details')!;
@@ -76,7 +75,5 @@ const fit=()=>{
  }
 
  view.dataset.projectReady='true';
-};
-let pending=false;const schedule=()=>{if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;fit();});};
-const observer=new ResizeObserver(schedule);view.querySelectorAll('.ds-project-grid,.ds-project-states,.ds-project-art').forEach(el=>observer.observe(el));
-window.addEventListener('resize',schedule);document.fonts.ready.then(schedule);view.querySelectorAll('img').forEach(img=>img.addEventListener('load',schedule));
+},[...view.querySelectorAll('.ds-project-grid,.ds-project-states,.ds-project-art')]);
+view.querySelectorAll('img').forEach(img=>img.addEventListener('load',schedule));

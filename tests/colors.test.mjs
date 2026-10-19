@@ -17,7 +17,7 @@ for(const token of ['color-paper','color-ink','color-charcoal']){const wrongOrde
 assert.equal(paletteColors.length, 12);
 const catalogCss=read('src/styles/design-system.css');
 assert.deepEqual(validateCatalogBoxStyles(catalogCss),[]);
-for(const rule of ['.ds-stage{border:1px solid var(--color-border-default);}', '.ds-specs-card{border-radius:var(--radius-medium);}', '.ds-stage{box-shadow:none;}', '.ds-color-card{border-radius:var(--radius-small);}', '.ds-type-device::before{inset:0;}', '.ds-type-device{border-top:1px solid var(--color-border-default);}'])assert.ok(validateCatalogBoxStyles(catalogCss+rule).length,'Catalog box regression rejected: '+rule);
+for(const rule of ['.ds-stage{border:1px solid var(--color-border-default);}', '.ds-stage{box-shadow:none;}', '.ds-color-card{border-radius:var(--radius-small);}', '.ds-type-device::before{inset:0;}', '.ds-type-device{border-top:1px solid var(--color-border-default);}'])assert.ok(validateCatalogBoxStyles(catalogCss+rule).length,'Catalog box regression rejected: '+rule);
 assert.deepEqual(validateCatalogInnerPanels(catalogCss),[]);
 assert.ok(validateCatalogInnerPanels(catalogCss+"\n:root[data-theme='dark'] :is(.ds-color-card,.ds-stroke-card,.ds-code pre,.ds-type-device-header,.ds-type-device) { background:var(--color-bg-surface); }").length,'Dark inner-panel Surface override cannot return');
 assert.ok(validateCatalogInnerPanels(catalogCss.replace(/(\.ds-code pre \{[^}]*background:)var\(--color-bg-canvas\)/,'$1var(--color-bg-surface)')).length,'Inner Canvas binding cannot be replaced');

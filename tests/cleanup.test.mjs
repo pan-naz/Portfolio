@@ -9,7 +9,12 @@ assert.equal(sectionHeadingExamples.columns,impactHeading);assert.equal(sectionH
 const read=file=>fs.readFileSync(file,'utf8');
 assert(!('gsap' in JSON.parse(read('package.json')).dependencies));
 assert(read('src/components/VoximplantCaseStudy.astro').includes('metric-grid metric-grid--four'));
-assert(read('src/components/DSStatistics.astro').includes('metric-grid metric-grid--four'));
+const probe=read('src/components/DSWidthProbe.astro');
+assert(probe.includes('metric-grid metric-grid--four'));
+for(const [page,layout] of [['DSStatistics','statistic'],['DSSectionHeadings','section-heading'],['DSProjectCards','project-card'],['DSToolCards','tool-card'],['DSDecisionCards','decision-card']])assert(read('src/components/'+page+'.astro').includes('<DSWidthProbe layout="'+layout+'"/>'));
+const widthHelper=read('src/scripts/design-system-width.ts');
+assert.equal((widthHelper.match(/new ResizeObserver/g)||[]).length,1);
+assert.equal((widthHelper.match(/window.addEventListener\('resize'/g)||[]).length,1);
 assert(!read('src/components/DSStatistics.astro').includes('statisticProbeCss'));
 for(const file of ['geometry-exceptions.json','radius-language-exceptions.json','system-guidelines.ts','system-hidden-docs.ts','typography-exclusions.ts']){assert(fs.existsSync('scripts/'+file));assert(!fs.existsSync('src/data/'+file));}
 assert(fs.existsSync('scripts/static-preview.css'));assert(fs.existsSync('src/scripts/layout-capabilities.js'));

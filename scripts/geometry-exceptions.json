@@ -393,24 +393,6 @@
   },
   {
     "file": "src/styles/design-system.css",
-    "selector": ".ds-canvas",
-    "context": "@layer system",
-    "property": "height",
-    "value": "300px",
-    "kind": "size",
-    "reason": "Approved 300/400px specimen viewport, not a spacing step."
-  },
-  {
-    "file": "src/styles/design-system.css",
-    "selector": ".ds-canvas",
-    "context": "@layer system",
-    "property": "max-height",
-    "value": "400px",
-    "kind": "size",
-    "reason": "Approved 300/400px specimen viewport, not a spacing step."
-  },
-  {
-    "file": "src/styles/design-system.css",
     "selector": ".ds-comparison-switch",
     "context": "@layer system",
     "property": "height",
@@ -456,48 +438,12 @@
   },
   {
     "file": "src/styles/design-system.css",
-    "selector": ".ds-foundation-row",
-    "context": "@layer system",
-    "property": "grid-template-columns",
-    "value": "minmax(0,1fr) 300px",
-    "kind": "size",
-    "reason": "Approved 300/240px foundation explanation lane."
-  },
-  {
-    "file": "src/styles/design-system.css",
-    "selector": ".ds-icon-grid",
-    "context": "@layer system",
-    "property": "grid-template-columns",
-    "value": "repeat(auto-fit,minmax(72px,1fr))",
-    "kind": "size",
-    "reason": "Approved 72px named-icon specimen cell."
-  },
-  {
-    "file": "src/styles/design-system.css",
     "selector": ".ds-tile-visual",
     "context": "@layer system",
     "property": "height",
     "value": "104px",
     "kind": "size",
     "reason": "Approved 104px Overview thumbnail viewport."
-  },
-  {
-    "file": "src/styles/design-system.css",
-    "selector": ".ds-foundation-row",
-    "context": "@layer system > @media (max-width:1099px)",
-    "property": "grid-template-columns",
-    "value": "minmax(0,1fr) 240px",
-    "kind": "size",
-    "reason": "Approved 300/240px foundation explanation lane."
-  },
-  {
-    "file": "src/styles/design-system.css",
-    "selector": ".ds-canvas",
-    "context": "@layer system > @media (max-width:767px)",
-    "property": "height",
-    "value": "400px",
-    "kind": "size",
-    "reason": "Approved 300/400px specimen viewport, not a spacing step."
   },
   {
     "file": "src/styles/global.css",

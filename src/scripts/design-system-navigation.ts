@@ -31,7 +31,7 @@ const fit=()=>{
   }
   const examples:Record<string,string>=kind==='top'?{'nav-top-logo':'.header-full-logo','nav-top':'.desktop-nav','nav-top-theme':'.theme-toggle'}:kind==='floating'?{'nav-wordmark':'.header-compact-logo','nav-floating':'.desktop-nav','nav-floating-theme':'.theme-toggle','nav-action':'.button'}:kind==='side'?{'nav-filter':'.section-navigation'}:{'nav-work-pill':'.section-navigation'};
   for(const[name,selector]of Object.entries(examples)){const el=specimen.querySelector<HTMLElement>(selector)!;el.dataset.dsExample=name;el.dataset.dsTarget=selector.includes('logo')?'.wordmark':selector;}
-  const stage=specimen.closest<HTMLElement>('.ds-nav-stage');if(stage?.clientWidth){const style=getComputedStyle(stage),room=parseFloat(style.width)-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight)-parseFloat(style.getPropertyValue('--space-1'));specimen.style.setProperty('--ds-specimen-fit',String(Math.min(1,room/parseFloat(getComputedStyle(specimen).width))));}
+  const stage=specimen.closest<HTMLElement>('.ds-nav-stage');if(stage?.clientWidth){const style=getComputedStyle(stage),room=parseFloat(style.width)-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight)-parseFloat(style.getPropertyValue('--space-1'));const shadowRoom=innerWidth<768&&kind==='side'?parseFloat(style.paddingLeft)+parseFloat(style.paddingRight):0;specimen.style.setProperty('--ds-specimen-fit',String(Math.min(1,room/(parseFloat(getComputedStyle(specimen).width)+shadowRoom))));}
  }
 };
 // Freeze only the actual shared pseudo-class declarations, including fine-pointer hover.

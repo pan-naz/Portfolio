@@ -1,3 +1,4 @@
+import {documentationSections} from './documentation-contract.mjs';
 import fs from 'node:fs';import path from 'node:path';import {createRequire} from 'node:module';
 const require=createRequire(import.meta.url),astro=path.dirname(require.resolve('astro/package.json')),vite=path.dirname(require.resolve('vite/package.json',{paths:[astro]})),postcss=require(require.resolve('postcss',{paths:[vite]}));
 import {readSystemTokens} from '../src/data/system-inventory.ts';
@@ -59,11 +60,10 @@ export function validateCatalogInnerPanels(css){
 }
 export function validateCatalogBoxStyles(css){
  const tree=postcss.parse(css),errors=[];
- const declarations=selector=>{const values={};tree.walkRules(rule=>{if(rule.selector.split(',').map(value=>value.trim()).includes(selector))for(const decl of rule.nodes.filter(node=>node.type==='decl'))values[decl.prop]=decl.value;});return values;};
+ const declarations=selector=>{const values={};tree.walkRules(rule=>{if(postcss.list.comma(rule.selector).map(value=>value.trim()).includes(selector))for(const decl of rule.nodes.filter(node=>node.type==='decl'))values[decl.prop]=decl.value;});return values;};
  const requireValue=(selector,property,value)=>{if(declarations(selector)[property]!==value)errors.push(`Catalog box contract: ${selector} ${property} must be ${value}`);};
- for(const selector of ['.ds-stage','.ds-specs-card','.ds-exclusions-box'])for(const [property,value] of Object.entries({'border':'0','border-radius':'var(--radius-large)','box-shadow':'var(--shadow-small)','overflow':'hidden','background':'var(--color-bg-surface)'}))requireValue(selector,property,value);
+ for(const selector of ['.ds-stage','.ds-exclusions-box'])for(const [property,value] of Object.entries({'border':'0','border-radius':'var(--radius-large)','box-shadow':'var(--shadow-small)','overflow':'hidden','background':'var(--color-bg-surface)'}))requireValue(selector,property,value);
  for(const selector of ['.ds-color-card','.ds-stroke-card'])requireValue(selector,'border-radius','var(--radius-medium)');
- requireValue('.ds-canvas','border-radius','0 0 var(--radius-large) var(--radius-large)');
  for(const [property,value] of Object.entries({'position':'absolute','inset':'0 var(--space-6) auto','border-top':'1px solid var(--color-border-default)','pointer-events':'none'}))requireValue('.ds-type-device::before',property,value);
  if(declarations('.ds-type-device')['border-top'])errors.push('Typography device separators must not be full-width borders');
  requireValue('.ds-type-device','padding','var(--space-3) var(--space-6)');
@@ -105,8 +105,8 @@ export function validateSharedColorLiterals(directory=root){
 }
 export function validateColorDocumentation(text){
  if(text===undefined)return [];
- const start=text.indexOf('## Color\n'),next=text.indexOf('\n## ',start+4),body=start<0?'':text.slice(start,next<0?undefined:next).trim();
- return body.length>100?[]:['Missing Color documentation'];
+ const sections=documentationSections(text).filter(section=>section.title==='Color');
+ return sections.length===1&&sections[0].body.length>100?[]:['Missing Color documentation'];
 }
 export function validateColors(){const css=fs.readFileSync(path.join(root,'src/styles/tokens.css'),'utf8'),catalogCss=fs.readFileSync(path.join(root,'src/styles/design-system.css'),'utf8');return [...validateColorPalette(css),...validateColorUses(css),...validateCatalogInnerPanels(catalogCss),...validateCatalogBoxStyles(catalogCss),...validateSharedColorLiterals(),...validateColorDocumentation(fs.existsSync(path.join(root,'../docs/design-system.md'))?fs.readFileSync(path.join(root,'../docs/design-system.md'),'utf8'):undefined)];}
 if(process.argv[1]&&path.resolve(process.argv[1])===import.meta.filename){const errors=validateColors();if(errors.length){console.error(errors.join('\n'));process.exit(1);}console.log('Color contract verified: 12 palette colors, six alpha shades, one role family, exact use coverage and no shared literals.');}

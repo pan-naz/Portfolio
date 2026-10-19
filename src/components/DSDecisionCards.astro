@@ -1,19 +1,15 @@
 ---
+import DSWidthProbe from './DSWidthProbe.astro';
 import '../styles/design-system-button.css';import '../styles/design-system-decision-card.css';
 import type {SourceComponent} from '../data/system-inventory';
-import {decisionCardDescription,decisionCardExamples,decisionCardProps,decisionCardTokens,decisionLayout,decisionAccessibility,decisionUsage,voxText,voxImpact,hookoText,hookoImage} from '../data/system-decision-card';
+import {decisionCardDescription,decisionCardExamples,decisionCardProps,decisionCardTokens,decisionAccessibility,decisionUsage,voxText,voxImpact,hookoText,hookoImage} from '../data/system-decision-card';
 import {componentVariants} from '../data/system-variants';
 import {blaustromConfiguratorSteps} from '../data/blaustrom-case-study';
 import CaseStudyDecisionCard from './CaseStudyDecisionCard.astro';import CaseStudyMedia from './CaseStudyMedia.astro';import ResponsiveImage from './ResponsiveImage.astro';import DSTabs from './DSTabs.astro';
 interface Props {component:SourceComponent;}
 const {component}=Astro.props,figure=blaustromConfiguratorSteps[0],groups=decisionCardTokens(),tokenCode=groups.map(group=>`/* ${group.title} */\n`+group.names.join('\n')).join('\n\n');
 ---
-<style is:global set:html={decisionLayout()}/>
-<div class="ds-decision-width-probe" inert aria-hidden="true">
- <div class="case-study-chapter__inner"><div data-decision-probe="figure">{Array.from({length:2},()=> <div/>)}</div></div>
- <div class="case-study-content"><div data-decision-probe="stack">{Array.from({length:3},()=> <div/>)}</div></div>
- <div class="case-study-chapter__inner"><div data-decision-probe="media">{Array.from({length:2},()=> <div/>)}</div></div>
-</div>
+<DSWidthProbe layout="decision-card"/>
 <section id="decision-card" class="ds-view ds-decision-view" data-ds-view data-ds-component="CaseStudyDecisionCard" data-title="Decision card" data-group="Components" data-description={decisionCardDescription} hidden>
  <div class="ds-stage" data-ds-card>
   <div class="ds-stage-bar"><DSTabs id="decision-card-canvas" labels={['Preview','Code']}/></div>
