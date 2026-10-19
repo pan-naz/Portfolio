@@ -6,7 +6,7 @@ export function validateAccentMixes(source,file='fixture.css'){
 export function validateLogoLinks(sources){
  const errors=[];for(const[file,source]of Object.entries(sources))if(file!=='src/components/LogoLink.astro'&&/<a\b[^>]*aria-label="naz\.wtf — home"/.test(source))errors.push('Home link must compose LogoLink: '+file);
  const link=sources['src/components/LogoLink.astro']||'';if(!link.includes('aria-label="naz.wtf — home"')||!link.includes('<Logo compact={compact}')||!link.includes('header-full-logo')||!link.includes('header-compact-logo')||/<script|<style/.test(link))errors.push('LogoLink must compose original full/compact/header geometry and shared styles without private motion.');
- for(const[file,count]of[['SiteHeader',1],['DSNavigation',1],['DSPreview',0]])if((sources['src/components/'+file+'.astro']?.match(/<LogoLink\b/g)||[]).length!==count)errors.push('Every existing home-link variant must use LogoLink: '+file);
+ for(const[file,count]of[['SiteHeader',1],['DSNavigation',1]])if((sources['src/components/'+file+'.astro']?.match(/<LogoLink\b/g)||[]).length!==count)errors.push('Every existing home-link variant must use LogoLink: '+file);
  return errors;
 }
 /** Catalog emphasis uses a solid edge, never a second tint. */

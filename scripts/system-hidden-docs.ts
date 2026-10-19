@@ -22,9 +22,6 @@ export const hiddenDocumentation = [
     "section": "Media"
   },
   {
-    "section": "Tool card"
-  },
-  {
     "section": "Project identity"
   },
   {

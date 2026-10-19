@@ -1,0 +1,45 @@
+---
+import '../styles/design-system-button.css';import '../styles/design-system-tool-card.css';
+import type {SourceComponent} from '../data/system-inventory';
+import {toolCardDescription,toolCardGroups,toolCardUsage,toolCardProps,toolCardTokenGroups,toolCardAccessibility,toolDetailLayout} from '../data/system-tool-card';
+import {componentVariants} from '../data/system-variants';
+import ToolCard from './ToolCard.astro';import Icon from './Icon.astro';import DSTabs from './DSTabs.astro';
+import {tools} from '../data/portfolio';import {hookoTools} from '../data/hooko-case-study';
+import {waterfallIconNodes,waterfallIconManifest} from '../scripts/waterfall/waterfall-icon-data';
+interface Props {components:SourceComponent[];}
+const {components}=Astro.props,groups=toolCardTokenGroups(),tokenCode=groups.map(group=>`/* ${group.title} */\n`+group.names.join('\n')).join('\n\n');
+const logo=tools.find(tool=>tool.name==='Claude Code')!,{label,description,iconColor,...detail}=hookoTools.find(tool=>tool.name==='Claude Code')!;
+const cursor=waterfallIconNodes[waterfallIconManifest.findIndex(icon=>icon.name==='mouse-pointer')];
+---
+<style is:global set:html={toolDetailLayout()}/>
+<div class="ds-tools-width-probe" inert aria-hidden="true"><div class="container"><ul class="tools-grid">{Array.from({length:5},()=> <li/>)}</ul><div class="ds-tools-detail-grid">{Array.from({length:3},()=> <div/>)}</div></div></div>
+<section id="tooltip" class="ds-view ds-tools-view" data-ds-view data-ds-component="Tooltip" data-title="Tool card & Tooltip" data-group="Components" data-description={toolCardDescription} hidden>
+ <div class="ds-stage" data-ds-card>
+  <div class="ds-stage-bar"><DSTabs id="tooltip-canvas" labels={['Preview','Code']}/></div>
+  <div id="tooltip-canvas-panel-0" role="tabpanel" aria-labelledby="tooltip-canvas-tab-0" class="ds-button-preview">
+   {toolCardGroups.map((group,index)=><section class="ds-button-group"><p class="text-label-m">{group.title}</p><p class="text-body-s ds-button-secondary">{group.description}</p>
+    <div class:list={['ds-button-grid','ds-tools-grid',index===1&&'ds-tools-grid--tooltip']}>{group.cards.map(card=><article class="ds-button-card" data-tool-card={card.id}>
+     <div class:list={['ds-button-stage','ds-tools-stage',card.id!=='detail'&&'ds-tools-stage--about',index===1&&'ds-tools-stage--tooltip']} data-color-zone={card.id==='detail'?undefined:'dark'} data-zone-keep={card.id==='detail'?undefined:'section large-shadow'} inert aria-hidden="true">
+      <div class:list={['ds-tools-art','ds-specimens',card.id!=='detail'&&'about-details']} data-tool-art={card.id} data-color-zone={card.id==='detail'?undefined:'dark'} data-zone-keep={card.id==='detail'?undefined:'section large-shadow'} data-ds-example={card.id==='logo'?'tooltip-tool':card.id==='detail'?'tool-detail':undefined} data-ds-target={card.id==='detail'?'.tool-detail-card':'.tool-card'}>
+       {card.id==='detail'?<ToolCard tool={detail} variant="detail" label={label} description={description} iconColor={iconColor}/>:<ToolCard tool={logo} tooltipId={`catalog-tool-${card.id}-tooltip`}/>}
+       {['above','below'].includes(card.id)&&<Icon nodes={cursor} class="ds-tools-cursor"/>}
+      </div>
+     </div>
+     <div><p class="text-body-m-strong">{card.name}</p><p class="text-body-s ds-button-secondary">{card.description}</p></div>
+     <dl class="ds-button-values text-body-s">{[['Used in',card.used],['Style',card.style]].map(([key,value])=><div><dt>{key}</dt><dd>{value.split(/( · |, )/).map((item,i)=>i%2?item:<span class="ds-value-item">{item}</span>)}</dd></div>)}</dl>
+    </article>)}</div>
+   </section>)}
+  </div>
+  <div id="tooltip-canvas-panel-1" role="tabpanel" aria-labelledby="tooltip-canvas-tab-1" class="ds-code ds-button-code" hidden>
+   {components.map(component=><section data-ds-component-code={component.name} data-ds-component={component.name}><p class="text-label-m">{component.name==='ToolCard'?'Tool card':'Tooltip'}</p>
+    <pre><code data-ds-usage={component.name}>{'/* Usage · '+component.file+' */\n'+toolCardUsage(component.name)}</code></pre>
+    <div class="ds-button-props"><p class="ds-code-comment">/* Props */</p><div class="ds-props-table"><table><thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>What it does</th></tr></thead><tbody>{toolCardProps(component).map(prop=><tr data-ds-prop={prop.name}><th scope="row"><code>{prop.name}</code></th><td><code>{prop.type}</code></td><td><code>{prop.default}</code></td><td>{prop.description}</td></tr>)}</tbody></table></div></div>
+    {componentVariants(component).map(value=><span data-ds-variant={`${component.name}:${value}`}/>)}
+   </section>)}
+   <section><p class="text-label-m">Shared</p>{groups.flatMap(group=>group.names).map(name=><span data-ds-token={name.slice(2)}/>)}<div class="ds-button-code-grid"><pre><code>{tokenCode}</code></pre><div class="ds-button-code-panel"><p class="ds-code-comment">/* Accessibility */</p><ul>{toolCardAccessibility.map(point=><li>{point}</li>)}</ul></div></div>
+    <div class="ds-button-code-panel"><p class="ds-code-comment">/* Source */</p>{components.map(component=><><p>{component.file}</p><ul>{[...new Set(component.usages.map(usage=>usage.file))].sort().map(file=><li>{file}</li>)}</ul></>)}</div>
+   </section>
+  </div>
+ </div>
+</section>
+<script>import '../scripts/design-system-tool-card';</script>

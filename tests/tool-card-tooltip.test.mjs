@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {validateToolCardTooltip} from '../scripts/validate-tool-card-tooltip.mjs';
+import {toolCardProps,toolCardTokenGroups,toolDetailLayout} from '../src/data/system-tool-card.ts';
+import {buildSystemInventory} from '../src/data/system-inventory.ts';
+assert.deepEqual(validateToolCardTooltip(),[]);
+const model=buildSystemInventory(),props=toolCardProps(model.components.find(c=>c.name==='ToolCard'));
+assert.equal(props.at(-1).default,'from the name');
+assert.equal(props[1].type,"'logo' | 'detail'");
+assert.equal(props[1].default,"'logo'");
+assert(toolDetailLayout().startsWith('@layer system {'));
+assert(toolCardTokenGroups().flatMap(g=>g.names).includes('--color-focus-ring'));
+console.log('Tool card / Tooltip source contract, real layout breakpoints and accessible API verified.');

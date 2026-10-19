@@ -3,7 +3,7 @@ export const overviewCoverIds=['color','typography','spacing-layout','motion','i
 /** Browser-free build contract; the local fresh-render gate separately checks genuine pixels. */
 export function validateOverviewManifest(manifest,read){
  const errors=[],expected=overviewCoverIds.flatMap(id=>['light','dark'].map(theme=>`${id}-${theme}`));
- if(manifest.scale!==2||manifest.canvas?.width!==208||manifest.canvas?.height!==104||manifest.content?.width!==176||manifest.content?.height!==72||JSON.stringify(manifest.content?.fullHeight)!==JSON.stringify(['motion','tooltip']))errors.push('Covers reserve the 1440 composition at 2x, with only Motion and Tooltip retaining taller artwork.');
+ if(manifest.scale!==2||manifest.canvas?.width!==208||manifest.canvas?.height!==104||manifest.content?.width!==176||manifest.content?.height!==72||JSON.stringify(manifest.content?.fullHeight)!==JSON.stringify(['motion']))errors.push('Covers reserve the 1440 composition at 2x, with only Motion retaining taller artwork.');
  const names=manifest.covers?.map(c=>`${c.id}-${c.theme}`)||[];
  if(names.length!==26||new Set(names).size!==26||expected.some(n=>!names.includes(n)))errors.push('Overview requires exactly thirteen Light/Dark cover pairs.');
  for(const item of manifest.covers||[]){const name=`${item.id}-${item.theme}`;if(!expected.includes(name))continue;let bytes;try{bytes=read(name+'.webp');}catch{errors.push('Missing cover: '+name);continue;}
@@ -23,6 +23,6 @@ export function validateOverviewCovers(root=process.cwd()){
  if(!css.includes('object-fit:contain')||!css.includes('width:min(var(--ds-cover-width),calc((100% - var(--space-8)) * var(--ds-cover-scale)))')||!dashboard.includes('--ds-cover-scale:${dimensions.width/covers.content.width}')||!css.includes("[data-theme='dark'] .ds-cover-image--dark { visibility:visible; }"))errors.push('CSS alone selects the theme, caps 1440 content scale and preserves transparent shadow bleed.');
  const scripts=fs.readdirSync(path.join(root,'src/scripts')).filter(n=>n.startsWith('design-system')&&n.endsWith('.ts'));
  for(const file of scripts)if(/--ds-cover-fit|ds-(?:button|chip|navigation|stat|heading)-cover|ds-project-tile/.test(read('src/scripts/'+file)))errors.push('No cover measurement in runtime: '+file);
- for(const name of ['DSPreview','DSButtonSpecimen','DSStatisticSpecimen','DSSectionHeadingSpecimen','DSMotionCurve'])if(/cover\?:|miniature\?:/.test(read('src/components/'+name+'.astro')))errors.push('Retired cover mode: '+name);
+ for(const name of ['DSButtonSpecimen','DSStatisticSpecimen','DSSectionHeadingSpecimen','DSMotionCurve'])if(/cover\?:|miniature\?:/.test(read('src/components/'+name+'.astro')))errors.push('Retired cover mode: '+name);
  return errors;
 }

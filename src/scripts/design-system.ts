@@ -48,11 +48,6 @@ for(const heading of root.querySelectorAll<HTMLElement>('h1,h2,h3,h4,h5,h6')){
 }
 };
 document.querySelectorAll('.ds-specimens').forEach(prepareSpecimenHeadings);
-const refreshMarkup=(view:HTMLElement)=>{
- const specimen=view.querySelector('.ds-specimens'),code=view.querySelector('[data-ds-markup]');if(!specimen||!code)return;
- const clone=specimen.cloneNode(true) as HTMLElement;clone.querySelectorAll('script,style').forEach(node=>node.remove());
- code.textContent=clone.innerHTML.trim().replace(/></g,'>\n<');
-};
 const selectView=(resetScroll=true)=>{
  dashboardTilt.reset();dashboardTilt.deferHoverUntilPointerMove();
  let requested=location.hash.slice(1)||'dashboard';
@@ -65,7 +60,7 @@ const selectView=(resetScroll=true)=>{
  document.querySelector('[data-ds-group]')!.textContent=selected.dataset.group!;
  document.querySelector<HTMLElement>('[data-ds-breadcrumb]')!.hidden=selected.id==='dashboard';
  document.querySelector('[data-ds-description]')!.textContent=selected.dataset.description!;
- refreshMarkup(selected);refreshValues();
+ refreshValues();
  revealNavigationLink(navigation.querySelector<HTMLAnchorElement>('[aria-current=page]'));
  if(resetScroll){scrollImmediately(0);requestAnimationFrame(()=>requestAnimationFrame(()=>scrollImmediately(0)));}
 };
@@ -77,7 +72,7 @@ links.filter(link=>!link.hasAttribute('data-ds-dashboard-link')).forEach(link=>l
 for(const tabset of document.querySelectorAll<HTMLElement>('[data-ds-tabset]')){
  const tabs=[...tabset.querySelectorAll<HTMLButtonElement>('[role=tab]')];
  const select=(index:number,focus=false)=>{tabs.forEach((tab,i)=>{tab.setAttribute('aria-selected',String(i===index));tab.tabIndex=i===index?0:-1;document.getElementById(tab.getAttribute('aria-controls')!)!.hidden=i!==index;});if(focus)tabs[index].focus();};
- tabs.forEach((tab,index)=>{tab.addEventListener('click',()=>{select(index);const view=tab.closest<HTMLElement>('[data-ds-view]');if(view)refreshMarkup(view);});tab.addEventListener('keydown',event=>{const next=event.key==='ArrowRight'?(index+1)%tabs.length:event.key==='ArrowLeft'?(index+tabs.length-1)%tabs.length:event.key==='Home'?0:event.key==='End'?tabs.length-1:undefined;if(next!==undefined){event.preventDefault();select(next,true);}});});
+ tabs.forEach((tab,index)=>{tab.addEventListener('click',()=>{select(index);});tab.addEventListener('keydown',event=>{const next=event.key==='ArrowRight'?(index+1)%tabs.length:event.key==='ArrowLeft'?(index+tabs.length-1)%tabs.length:event.key==='Home'?0:event.key==='End'?tabs.length-1:undefined;if(next!==undefined){event.preventDefault();select(next,true);}});});
 }
 document.querySelectorAll('[data-ds-dashboard-link]').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();history.pushState(null,'',location.pathname);selectView();}));
 for(const toggle of document.querySelectorAll<HTMLButtonElement>('[data-ds-names]'))toggle.addEventListener('click',()=>{const on=toggle.getAttribute('aria-checked')!=='true';toggle.setAttribute('aria-checked',String(on));const view=toggle.closest<HTMLElement>('[data-ds-view]')!;view.dataset.showNames=String(on);view.querySelectorAll('.ds-token-human').forEach(node=>node.setAttribute('aria-hidden',String(on)));view.querySelectorAll('.ds-token-swap .ds-token-name').forEach(node=>node.setAttribute('aria-hidden',String(!on)));});
@@ -95,7 +90,6 @@ for(const preview of document.querySelectorAll<HTMLElement>('.ds-specimens')){
 }
 // Human values are resolved by the same browser CSS engine as the specimens.
 const hex=(value:string)=>{const srgb=value.match(/^color\(srgb ([\d.]+) ([\d.]+) ([\d.]+)(?: \/ ([\d.]+))?\)$/);if(srgb)return '#'+srgb.slice(1,4).map(number=>Math.round(Number(number)*255).toString(16).padStart(2,'0')).join('').toUpperCase()+(srgb[4]&&Number(srgb[4])<1?Math.round(Number(srgb[4])*255).toString(16).padStart(2,'0').toUpperCase():'');const match=value.match(/^rgba?\(([^)]+)\)$/);if(!match)return value;const parts=match[1].split(',').map(Number);return '#'+parts.slice(0,3).map(number=>number.toString(16).padStart(2,'0')).join('').toUpperCase()+(parts.length>3&&parts[3]<1?Math.round(parts[3]*255).toString(16).padStart(2,'0').toUpperCase():'');};
-const readable=(value:string)=>value.replace(/-?[\d.]+px/g,number=>`${+parseFloat(number).toFixed(2)}px`);
 const refreshValues=()=>{
  const view=views.find(view=>!view.hidden);if(!view)return;
  const probe=document.createElement('span');probe.style.cssText='position:absolute;visibility:hidden;';view.append(probe);
@@ -110,27 +104,9 @@ const refreshValues=()=>{
  for(const node of view.querySelectorAll<HTMLElement>('[data-ds-token-swatch]')){const name=node.dataset.dsTokenSwatch!;if(name.startsWith('color-')){node.style.backgroundColor=getComputedStyle(tokenSource(node)).getPropertyValue('--'+name).trim();node.dataset.color='';}}
  probe.remove();
  for(const grid of view.querySelectorAll<HTMLElement>('[data-ds-grid]')){const computed=getComputedStyle(grid),count=computed.gridTemplateColumns.split(' ').length;view.querySelector('[data-ds-grid-spec="'+grid.dataset.dsGrid+'"]')!.textContent=`${count} columns here · ${computed.gap} gap`;}
- const namedWeights:Record<string,string>={'400':'Regular','500':'Medium','600':'Semibold'};
- for(const node of view.querySelectorAll<HTMLElement>('[data-ds-measure]')){
-  const sample=view.querySelector<HTMLElement>('.ds-specimens '+node.dataset.dsMeasure);if(!sample)continue;
-  const computed=getComputedStyle(sample);node.textContent=node.dataset.properties!.split(',').map(property=>{const value=computed.getPropertyValue(property).trim();return property==='font-weight'?namedWeights[value]||value:readable(value);}).join(' · ');
- }
+
 };
 window.addEventListener('resize',refreshValues);window.addEventListener('themechange',refreshValues);selectView();document.documentElement.dataset.docNavigationReady='true';
-
-// Exercise the shared bubble itself; phone catalog previews show its focus anchor.
-const tooltipExample=document.querySelector<HTMLElement>('#tooltip [data-ds-example=tooltip-tool] .tooltip');
-const showTooltipExample=(state:string)=>{
- if(!tooltipExample)return;
- tooltipExample.toggleAttribute('data-tooltip-visible',state!=='hidden');
- tooltipExample.dataset.placement=state==='below'?'below':'above';
- const target=tooltipExample.parentElement!;
- target.style.setProperty('--tooltip-x','50%');
- target.style.setProperty('--tooltip-y','50%');
- for(const button of document.querySelectorAll('[data-ds-tooltip-state]'))button.setAttribute('aria-pressed',String(button.getAttribute('data-ds-tooltip-state')===state));
-};
-for(const button of document.querySelectorAll<HTMLElement>('[data-ds-tooltip-state]'))button.addEventListener('click',()=>showTooltipExample(button.dataset.dsTooltipState!));
-if(matchMedia('(hover: none), (pointer: coarse)').matches)showTooltipExample('focus');
 
 /** Keep the existing column count unless a real, unwrapped specimen needs more room. */
 export const fitCatalogColumns=(grid:HTMLElement,maximum:number,required:number)=>{

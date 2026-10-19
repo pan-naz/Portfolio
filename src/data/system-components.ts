@@ -1,7 +1,8 @@
 /** Every Astro component has an explicit ownership and catalog decision. */
 export type ComponentKind = 'reusable-ui' | 'page-section' | 'case-study' | 'internal-helper';
-export interface ComponentClassification { file: string; kind: ComponentKind; group?: string; title?: string; reason: string; documentedHidden?: string; catalogPage?: string; }
+export interface ComponentClassification { file: string; kind: ComponentKind; group?: string; title?: string; reason: string; documentedHidden?: string; catalogPage?: string; id?: string; }
 export const componentManifest: ComponentClassification[] = [
+ {file:'src/components/DSToolCards.astro',kind:'internal-helper',reason:'Source-derived Tool card and Tooltip catalog page using genuine components.'},
  {file:'src/components/DSTimeline.astro',kind:'internal-helper',reason:'Source-derived Timeline row catalog page using genuine website components.'},
  {file:'src/components/AlignedChapterCopy.astro',kind:'internal-helper',reason:'Intrinsic layout reservation for adjacent chapter copy; typography remains in the shared roles.'},
  {file:'src/components/DSStatistics.astro',kind:'internal-helper',reason:'Source-derived Statistic catalog page.'},
@@ -25,7 +26,6 @@ export const componentManifest: ComponentClassification[] = [
   {file:'src/components/DSDashboard.astro',kind:'internal-helper',reason:'Catalog dashboard with generated static cover images.'},
   {file:'src/components/DSTokenNames.astro',kind:'internal-helper',reason:'Fixed-size human/source label slots and their switch using the catalog control helper.'},
   { file: 'src/components/DSTabs.astro', kind: 'internal-helper', reason: 'Catalog tab wiring composed from the catalog control helper.' },
-  { file: 'src/components/DSPreview.astro', kind: 'internal-helper', reason: 'Documentation-only live specimens of existing components.' },
   { file: 'src/components/AboutSection.astro', kind: 'page-section', reason: 'Composes a page or a narrative chapter; not a catalog building block.' },
   { file: 'src/components/Arrow.astro', kind: 'internal-helper', reason: 'Implementation or documentation helper; described by its consumer.' },
   { file: 'src/components/BlaustromCaseStudy.astro', kind: 'case-study', reason: 'Project composition or artwork scaffolding; outside the design system.' },
@@ -48,7 +48,6 @@ export const componentManifest: ComponentClassification[] = [
   { file: 'src/components/ContactSection.astro', kind: 'page-section', reason: 'Composes a page or a narrative chapter; not a catalog building block.' },
   { file: 'src/components/CravusCaseStudy.astro', kind: 'case-study', reason: 'Project composition or artwork scaffolding; outside the design system.' },
   { file: 'src/components/DSCatalog.astro', kind: 'internal-helper', reason: 'Implementation or documentation helper; described by its consumer.' },
-  { file: 'src/components/DSComponent.astro', kind: 'internal-helper', reason: 'Implementation or documentation helper; described by its consumer.' },
   { file: 'src/components/DSFoundations.astro', kind: 'internal-helper', reason: 'Implementation or documentation helper; described by its consumer.' },
   { file: 'src/components/DSNavigation.astro', kind: 'internal-helper', reason: 'Implementation or documentation helper; described by its consumer.' },
   { file: 'src/components/DataGPTCaseStudy.astro', kind: 'case-study', reason: 'Project composition or artwork scaffolding; outside the design system.' },
@@ -95,8 +94,8 @@ export const componentManifest: ComponentClassification[] = [
   { file: 'src/components/TextLink.astro', kind: 'reusable-ui', group: 'Actions', title: 'Text link', catalogPage: 'button', reason: 'Website-used building block with shared UI styling.' },
   { file: 'src/components/ThemeToggle.astro', documentedHidden: 'theme-switch', kind: 'reusable-ui', group: 'Actions', title: 'Theme switch', reason: 'Website-used building block with shared UI styling.' },
   { file: 'src/components/TimelineRow.astro', kind: 'reusable-ui', group: 'Content', title: 'Timeline row', reason: 'Website-used building block with shared UI styling.' },
-  { file: 'src/components/Tooltip.astro', kind: 'reusable-ui', group: 'Content', title: 'Tooltip', reason: 'Shared tool-card accessible names with pointer tracking.' },
-  { file: 'src/components/ToolCard.astro', documentedHidden: 'tool-card', kind: 'reusable-ui', group: 'Content', title: 'Tool card', reason: 'Website-used building block with shared UI styling.' },
+  { file: 'src/components/Tooltip.astro', kind: 'reusable-ui', group: 'Content', id: 'tooltip', title: 'Tool card & Tooltip', reason: 'Shared tool-card accessible names with pointer tracking.' },
+  { file: 'src/components/ToolCard.astro', catalogPage: 'tooltip', kind: 'reusable-ui', group: 'Content', title: 'Tool card', reason: 'Website-used building block with shared UI styling.' },
   { file: 'src/components/ToolsSection.astro', kind: 'page-section', reason: 'Composes a page or a narrative chapter; not a catalog building block.' },
   { file: 'src/components/TypewriterHeading.astro', kind: 'internal-helper', reason: 'Implementation or documentation helper; described by its consumer.' },
   { file: 'src/components/VoximplantCaseStudy.astro', kind: 'case-study', reason: 'Project composition or artwork scaffolding; outside the design system.' },
