@@ -3,8 +3,8 @@
 @layer project {
 .case-study-content--gutsul-made { --gutsul-color-2a2a2a: #2A2A2A; --gutsul-color-f3efe6: #F3EFE6; --gutsul-color-faf8f7: #FAF8F7; --gutsul-font-gutsul-open-sans-sans-serif: 'Gutsul Open Sans', sans-serif; }
 /* Original store identity and embroidery specimens stay scoped to this project. */
-@font-face { font-family: 'Gutsul Open Sans'; src: url('/projects/blaustrom-case-study/open-sans-400.ttf') format('truetype'); font-weight: 400; font-display: swap; }
-@font-face { font-family: 'Gutsul Open Sans'; src: url('/projects/blaustrom-case-study/open-sans-700.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Gutsul Open Sans'; src: url('/projects/blaustrom-case-study/open-sans-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Gutsul Open Sans'; src: url('/projects/blaustrom-case-study/open-sans-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
 .case-study-content--gutsul-made { --gutsul-red: #EB3148; --gutsul-dark: #333333; --gutsul-grey: #A6A6A6; }
 /* The final chapter already owns the shared responsive bottom inset. */
 .case-study-content.case-study-content--gutsul-made { padding-bottom: 0; }

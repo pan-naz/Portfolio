@@ -32,9 +32,9 @@
 .blaustrom-control-row p { color: var(--color-text-secondary); }
 .blaustrom-control-row .svg-asset { width: 100%; height: auto; }
 /* Open Sans belongs only to the original brand specimens. */
-@font-face { font-family: 'Blaustrom Open Sans'; font-style: normal; font-weight: 300; font-display: swap; src: url('/projects/blaustrom-case-study/open-sans-300.ttf') format('truetype'); }
-@font-face { font-family: 'Blaustrom Open Sans'; font-style: normal; font-weight: 400; font-display: swap; src: url('/projects/blaustrom-case-study/open-sans-400.ttf') format('truetype'); }
-@font-face { font-family: 'Blaustrom Open Sans'; font-style: normal; font-weight: 700; font-display: swap; src: url('/projects/blaustrom-case-study/open-sans-700.ttf') format('truetype'); }
+@font-face { font-family: 'Blaustrom Open Sans'; font-style: normal; font-weight: 300; font-display: swap; src: url('/projects/blaustrom-case-study/open-sans-300.woff2') format('woff2'); }
+@font-face { font-family: 'Blaustrom Open Sans'; font-style: normal; font-weight: 400; font-display: swap; src: url('/projects/blaustrom-case-study/open-sans-400.woff2') format('woff2'); }
+@font-face { font-family: 'Blaustrom Open Sans'; font-style: normal; font-weight: 700; font-display: swap; src: url('/projects/blaustrom-case-study/open-sans-700.woff2') format('woff2'); }
 .blaustrom-open-sans { font-family:var(--blaustrom-font-blaustrom-open-sans-sans-serif); font-weight: 400; }
 .blaustrom-open-sans.blaustrom-light, .blaustrom-open-sans .blaustrom-light { font-weight: 300; }
 .blaustrom-open-sans.blaustrom-bold, .blaustrom-open-sans .blaustrom-bold { font-weight: 700; }
