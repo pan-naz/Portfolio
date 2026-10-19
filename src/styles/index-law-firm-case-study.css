@@ -13,7 +13,7 @@
 .index-breakpoint { margin-top: var(--space-3); color: var(--color-text-secondary); }
 .index-devices { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--grid-gap); align-items: start; }
 /* Original Index typography and palette stay inside its product and brand specimens. */
-@font-face { font-family: 'Index Lato'; font-style: normal; font-weight: 400; font-display: swap; src: url('/projects/peak-hotel-case-study/lato-regular.ttf') format('truetype'); }
+@font-face { font-family: 'Index Lato'; font-style: normal; font-weight: 400; font-display: swap; src: url('/projects/peak-hotel-case-study/lato-regular.woff2') format('woff2'); }
 .index-lato { font-family:var(--index-font-index-lato-lato-arial-sans-serif); }
 .index-case .index-service-demo { --service-font: var(--index-font-index-lato-lato-arial-sans-serif); --service-ink: var(--index-color-222222); --service-subtle: var(--index-color-f5f5f5); --service-accent: var(--index-color-ff9600); --service-muted: var(--index-color-6b6b6b); --service-popover-radius: 0; }
 .index-palette { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); margin: 0; padding: 0; list-style: none; }

@@ -26,10 +26,10 @@
 .peak-type-example > :first-child { color: var(--color-text-secondary); }
 .peak-case .peak-type-sample { margin-top: var(--space-2); font-size: var(--peak-specimen-copy-size); line-height: 1.5; }
 /* These are original brand specimens; portfolio UI keeps the shared heading and body tokens. */
-@font-face { font-family: 'Peak Playfair'; font-style: italic; font-weight: 400; font-display: swap; src: url('/projects/peak-hotel-case-study/playfair-italic.ttf') format('truetype'); }
-@font-face { font-family: 'Peak Playfair'; font-style: normal; font-weight: 700; font-display: swap; src: url('/projects/peak-hotel-case-study/playfair-bold.ttf') format('truetype'); }
-@font-face { font-family: 'Peak Lato'; font-style: normal; font-weight: 400; font-display: swap; src: url('/projects/peak-hotel-case-study/lato-regular.ttf') format('truetype'); }
-@font-face { font-family: 'Peak Lato'; font-style: normal; font-weight: 900; font-display: swap; src: url('/projects/peak-hotel-case-study/lato-black.ttf') format('truetype'); }
+@font-face { font-family: 'Peak Playfair'; font-style: italic; font-weight: 400; font-display: swap; src: url('/projects/peak-hotel-case-study/playfair-italic.woff2') format('woff2'); }
+@font-face { font-family: 'Peak Playfair'; font-style: normal; font-weight: 700; font-display: swap; src: url('/projects/peak-hotel-case-study/playfair-bold.woff2') format('woff2'); }
+@font-face { font-family: 'Peak Lato'; font-style: normal; font-weight: 400; font-display: swap; src: url('/projects/peak-hotel-case-study/lato-regular.woff2') format('woff2'); }
+@font-face { font-family: 'Peak Lato'; font-style: normal; font-weight: 900; font-display: swap; src: url('/projects/peak-hotel-case-study/lato-black.woff2') format('woff2'); }
 .peak-playfair-italic { font-family:var(--peak-font-peak-playfair-serif); font-style: italic; font-weight: 400; }
 .peak-playfair-bold { font-family:var(--peak-font-peak-playfair-serif); font-style: normal; font-weight: 700; }
 .peak-lato-regular { font-family:var(--peak-font-peak-lato-sans-serif); font-weight: 400; }

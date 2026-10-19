@@ -13,11 +13,11 @@ const dimensions = imagePath ? await imageMetadata(readFileSync(`public${imagePa
 const homeUrl = new URL('/', Astro.site).href;
 const structuredData = pathname === '/' ? {
   '@context': 'https://schema.org',
-  '@graph': [
-    { '@type': 'WebSite', name: siteTitle, alternateName: profile.brand, url: homeUrl },
-    { '@type': 'Person', name: profile.name, alternateName: profile.alternateNames,
-      jobTitle: profile.title, url: homeUrl, sameAs: profile.sameAs },
-  ],
+  '@type': 'ProfilePage',
+  url: homeUrl,
+  isPartOf: { '@type': 'WebSite', name: siteTitle, alternateName: profile.brand, url: homeUrl },
+  mainEntity: { '@type': 'Person', name: profile.name, alternateName: profile.alternateNames,
+    description: sharingDescription, jobTitle: profile.title, url: homeUrl, sameAs: profile.sameAs },
 } : undefined;
 ---
 <meta name="description" content={description} />

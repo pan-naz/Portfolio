@@ -34,7 +34,7 @@ CSS declares `@layer system, project;`: shared tokens and component rules use `s
 
 ## Design-system maintenance
 
-The catalog follows Overview → Foundations → Components → Patterns → Guidelines. Every component uses Purpose → Anatomy → Variants → States → Usage → Accessibility → Tokens → Code, with implementation paths collapsed. One shared ThemeToggle controls all specimens.
+The catalog has Overview; Foundations pages for Color, Typography, Spacing & layout, Motion and Icons; and Component pages for Button, Chip, Decision card, Navigation, Project card, Section heading, Statistic, Timeline row and Tool card & Tooltip. Each component page has Preview and Code tabs. One shared ThemeToggle controls all specimens.
 
 `src/data/system-inventory.ts` reads the actual website import graph, tokens, component inputs and usages. Text styles, responsive values, contrast ratios and frozen CSS states are read from their source modules. Add purpose and usage guidance in `system-documentation.ts` when a real website consumer introduces a component; do not add catalog-only items.
 

@@ -37,9 +37,9 @@
 .cravus-grid-card dt { color: var(--color-text-secondary); text-transform: uppercase; }
 .cravus-grid-card dd { margin: 0; font-variant-numeric: tabular-nums; }
 /* Only the supplied brand specimens use Titillium Web and its original sample sizes. */
-@font-face { font-family: 'Cravus Titillium Web'; font-style: normal; font-weight: 300; font-display: swap; src: url('/projects/cravus-case-study/titillium-web-300.ttf') format('truetype'); }
-@font-face { font-family: 'Cravus Titillium Web'; font-style: normal; font-weight: 400; font-display: swap; src: url('/projects/cravus-case-study/titillium-web-400.ttf') format('truetype'); }
-@font-face { font-family: 'Cravus Titillium Web'; font-style: normal; font-weight: 700; font-display: swap; src: url('/projects/cravus-case-study/titillium-web-700.ttf') format('truetype'); }
+@font-face { font-family: 'Cravus Titillium Web'; font-style: normal; font-weight: 300; font-display: swap; src: url('/projects/cravus-case-study/titillium-web-300.woff2') format('woff2'); }
+@font-face { font-family: 'Cravus Titillium Web'; font-style: normal; font-weight: 400; font-display: swap; src: url('/projects/cravus-case-study/titillium-web-400.woff2') format('woff2'); }
+@font-face { font-family: 'Cravus Titillium Web'; font-style: normal; font-weight: 700; font-display: swap; src: url('/projects/cravus-case-study/titillium-web-700.woff2') format('woff2'); }
 .cravus-titillium { font-family:var(--cravus-font-cravus-titillium-web-sans-serif); font-weight: 400; }
 .cravus-s40 { font-size: 40px; line-height: 46px; font-weight: 700; }
 .cravus-s40 span { color: var(--cravus-color-d97e06); }

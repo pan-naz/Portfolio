@@ -43,10 +43,10 @@ for (const page of pages) {
     assert.equal(siteUrl, 'https://naz.wtf/');
     assert.deepEqual(JSON.parse(scripts[0][1]), {
       '@context': 'https://schema.org',
-      '@graph': [
-        { '@type': 'WebSite', name: siteTitle, alternateName: profile.brand, url: siteUrl },
-        { '@type': 'Person', name: profile.name, alternateName: ['Nazariy Pankiv', 'Nazar Pankiv'], jobTitle: profile.title, url: siteUrl, sameAs: profile.sameAs },
-      ],
+      '@type': 'ProfilePage',
+      url: siteUrl,
+      isPartOf: { '@type': 'WebSite', name: siteTitle, alternateName: profile.brand, url: siteUrl },
+      mainEntity: { '@type': 'Person', name: profile.name, alternateName: ['Nazariy Pankiv', 'Nazar Pankiv'], description: sharingDescription, jobTitle: profile.title, url: siteUrl, sameAs: profile.sameAs },
     });
     remainder = remainder.replace(scripts[0][0], '').replace(meta('description').tag, '');
     const footer = remainder.match(/<footer\b[^>]*>([\s\S]*?)<\/footer>/)?.[1];
