@@ -9,9 +9,6 @@ import { profile } from '../data/portfolio';
 import { siteTitle } from '../data/site-config';
 interface Props { title?: string; homeIntro?: boolean; description?: string; image?: string; }
 const { title = siteTitle, homeIntro = false, description = profile.description, image } = Astro.props;
-const searchDescription = Astro.url.pathname === '/'
-  ? `${profile.name}, ${description[0].toLowerCase()}${description.slice(1)}`
-  : description;
 ---
 <!doctype html>
 <html lang="en">
@@ -20,7 +17,7 @@ const searchDescription = Astro.url.pathname === '/'
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <link rel="preload" href={urbanistFont} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={funnelDisplayFont} as="font" type="font/woff2" crossorigin />
-    <SiteMetadata title={title} description={searchDescription} sharingDescription={description} image={image} />
+    <SiteMetadata title={title} description={description} sharingDescription={description} image={image} />
     <meta name="theme-color" content="#FAF8F7" />
     <title>{title}</title>
     <script is:inline>
