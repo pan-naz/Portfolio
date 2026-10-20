@@ -28,7 +28,7 @@ export const componentPurposes: Record<string, string> = {
   'src/components/MetricValue.astro': 'Shows a result using the shared heading style.',
   'src/components/NavLinks.astro': 'Groups the website’s main destinations.',
   'src/components/NavigationItem.astro': 'Provides a navigation link or work-filter choice.',
-  'src/components/NotFoundPage.astro': 'Explains a missing page and offers a way back.',
+  'src/components/NotFoundPage.astro': 'Shows a full-screen 404 with shared hero rain and a primary way back.',
   'src/components/ProjectCard.astro': 'Introduces a project and opens its case study.',
   'src/components/ProjectIdentity.astro': 'Pairs a project name with an optional mark.',
   'src/components/ProjectTags.astro': 'Groups a project’s discipline chips.',

@@ -2,12 +2,14 @@
 import LogoLink from './LogoLink.astro';
 import ThemeToggle from './ThemeToggle.astro';
 import NavLinks from './NavLinks.astro';
+interface Props { navigation?: boolean; }
+const { navigation = true } = Astro.props;
 ---
 <header class="site-header">
   <div class="header-pill-surface floating-control-surface floating-navigation-surface" aria-hidden="true"></div>
   <LogoLink morph tabindex="0" class="identity hit-area" data-home-top />
   <div class="header-controls">
-    <NavLinks showDS={false} />
+    {navigation && <NavLinks showDS={false} />}
     <ThemeToggle />
   </div>
 </header>

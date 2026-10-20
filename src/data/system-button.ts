@@ -6,7 +6,7 @@ import type {SourceComponent} from './system-inventory.ts';
 export const buttonDescription='Buttons, icon buttons and text links: everything you press on the site.';
 export const buttonGroups=[
  {name:'Buttons',description:'The main action or destination on a view.',cards:[
-  {id:'primary',name:'Primary · arrow',description:'The main call to action. On hover, focus and press, the fill grows out of the arrow circle.',used:'Hero, Contact, header',value:'Large · 48px'},
+  {id:'primary',name:'Primary · arrow',description:'The main call to action. On hover, focus and press, the fill grows out of the arrow circle.',used:'Hero, Contact, header, 404',value:'Large · 48px'},
   {id:'secondary',name:'Secondary',description:'A supporting action next to the primary one.',used:'Contact',value:'Large · 48px'},
   {id:'small',name:'Secondary · small',description:'A quiet action inside a section heading.',used:'About',value:'Small · 36px'},
   {id:'outside',name:'Secondary · arrow',description:'An outside destination. The arrow moves on hover.',used:'Square case study',value:'Large · 48px'},
@@ -21,7 +21,7 @@ export const buttonGroups=[
  {name:'Text links',description:'A link next to or inside text.',cards:[
   {id:'link-default',name:'Default',description:'A destination after text.',used:'Contact',value:'Body/M Strong'},
   {id:'link-accent',name:'Accent',description:'A highlighted destination.',used:'Contact',value:'Body/M Strong'},
-  {id:'link-compact',name:'Compact',description:'A short link in a case-study header.',used:'Case studies, 404',value:'Body/M Strong'},
+  {id:'link-compact',name:'Compact',description:'A short link in a case-study header.',used:'Case studies',value:'Body/M Strong'},
   {id:'link-inline',name:'Inline',description:'Underlined, inside a sentence.',used:'Case-study copy',value:'Inherits the text'},
  ]},
 ] as const;
