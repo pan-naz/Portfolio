@@ -4,11 +4,11 @@ interface Props { item: Experience; }
 const { item } = Astro.props;
 ---
 <li class="experience-row" data-section-item>
-  <p class="experience-period text-body-s">{item.period}</p>
+  <p class="experience-period text-body-s title-align-line"><span class="title-align-text"><span class="text-body-s">{item.period}</span></span></p>
   <div>
     <h3 class="text-body-m-strong">{item.role}</h3>
     <p class="experience-company text-body-s">{item.company} · {item.location}</p>
   </div>
   <p class="experience-summary text-body-m">{item.summary}</p>
-  <p class="experience-duration text-body-s">{item.duration}</p>
+  <p class="experience-duration text-body-s title-align-line"><span class="title-align-text"><span class="text-body-s">{item.duration}</span></span></p>
 </li>

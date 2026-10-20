@@ -791,10 +791,10 @@
     "file": "src/styles/global.css",
     "selector": ".experience-row",
     "context": "@layer system > @media (min-width: 768px) and (max-width: 1327px)",
-    "property": "grid-template-columns",
-    "value": "120px minmax(0,1fr) minmax(0,1.3fr) var(--experience-duration-width)",
+    "property": "--experience-period-width",
+    "value": "120px",
     "kind": "size",
-    "reason": "Original date, role, description and tenure column widths preserve the responsive timeline grid."
+    "reason": "Existing tablet period width; the role track derives the section-heading midpoint from it and the shared row gap."
   },
   {
     "file": "src/styles/global.css",

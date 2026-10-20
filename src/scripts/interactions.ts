@@ -85,6 +85,7 @@ document.querySelectorAll<HTMLAnchorElement>('a[href]').forEach(link => {
       cancelScrollCompletion = scrollToSection(target, () => {
         if (revision === clickScrollRevision) {
           finishClickScroll();
+          updateHeader();
           // The final queued scroll event still belongs to the click.
           clickScrollEndY = window.scrollY;
         }
@@ -117,6 +118,18 @@ const workFilter = initializeWorkFilter(() => { requestAnimationFrame(siteMotion
 initializeHeaderMorph();
 initializeWorkFilterPill();
 updateHeader(false);
+
+// Category hashes share Work's native anchor landing after the filter and fonts settle.
+const initialFilterHash = location.hash;
+if (['#websites', '#misc'].includes(initialFilterHash) && !document.documentElement.dataset.caseReturn) {
+  const landAtWork = () => void document.fonts.ready.then(() => requestAnimationFrame(() => {
+    if (location.pathname === '/' && location.hash === initialFilterHash && !caseStudyOpen) {
+      document.getElementById('work')?.scrollIntoView({behavior:'instant', block:'start'});
+    }
+  }));
+  if (document.readyState === 'complete') landAtWork();
+  else window.addEventListener('load', landAtWork, {once:true});
+}
 
 initializeCaseStudies(projectCursor, open => {
   if (!open) projectTilt?.deferHoverUntilPointerMove();
