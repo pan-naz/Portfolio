@@ -1,6 +1,7 @@
 import { workCategories } from '../../data/work-categories.ts';
 import { layoutMasonry } from '../masonry.ts';
 import { readMotionToken } from '../native-motion.ts';
+import { scrollToSection } from '../smooth-scroll';
 
 export type WorkFilter = 'selected' | 'websites' | 'misc';
 export const matchesWorkFilter = (filter: WorkFilter, category: string) => filter === category;
@@ -38,6 +39,12 @@ export function initializeWorkFilter(onChange?: () => void, onReposition?: (top:
   let motions: Animation[] = [];
   let resizeFrame = 0;
   let destroyed = false;
+  let scrollAnchor: string | undefined;
+  const restoreScrollAnchor = () => {
+    if (scrollAnchor === undefined) return;
+    document.documentElement.style.overflowAnchor = scrollAnchor;
+    scrollAnchor = undefined;
+  };
 
   const saveFilter = (updateHash = true) => {
     // Forward can reveal a hidden collection while the URL belongs to a case.
@@ -85,6 +92,7 @@ export function initializeWorkFilter(onChange?: () => void, onReposition?: (top:
     list.removeAttribute('aria-busy');
     alignRail();
     onChange?.();
+    restoreScrollAnchor();
   };
 
   const select = (filter: WorkFilter, animate = true, updateHash = true, resolveEntrance = true, reposition = true) => {
@@ -199,22 +207,20 @@ export function initializeWorkFilter(onChange?: () => void, onReposition?: (top:
     if (!button || !section.contains(button)) return;
     const nav = button.closest<HTMLElement>('.section-navigation');
     const fromPill = nav?.classList.contains('section-navigation--pill');
-    const clearance = fromPill && nav ? parseFloat(getComputedStyle(nav.closest<HTMLElement>('.work-filter-pill')!).top)
-      + nav.offsetHeight + parseFloat(getComputedStyle(nav).getPropertyValue('--space-4')) : 0;
-    const belowListTop = list.getBoundingClientRect().top < clearance;
+    const previous = active;
+    if (fromPill && button.dataset.workFilter !== active && scrollAnchor === undefined) {
+      // The next section must not anchor the viewport while this list shrinks.
+      scrollAnchor = document.documentElement.style.overflowAnchor;
+      document.documentElement.style.overflowAnchor = 'none';
+    }
     select(button.dataset.workFilter as WorkFilter, true, true, true, !fromPill);
-    if (fromPill && belowListTop && nav && onReposition) {
-      const align = () => {
-        const top = Math.ceil(window.scrollY + list.getBoundingClientRect().top - clearance);
-        onReposition(Math.max(0, top));
-        return Math.max(0, top);
-      };
-      const expected = align(), ticket = generation;
-      // Reconcile the heading's completed layout without pulling back a reader
-      // who deliberately scrolled during the filter transition.
-      void Promise.all(motions.map(motion => motion.finished.catch(() => {}))).then(() => {
-        if (!destroyed && ticket === generation && Math.abs(window.scrollY - expected) < 1) align();
-      });
+    if (fromPill && active !== previous) {
+      const target = collections.find(collection => collection.dataset.projectCollection === active)!;
+      // Keep the viewport unless the replacement ends entirely above it.
+      if (target.getBoundingClientRect().bottom <= 0) {
+        const last = cardsIn(target).at(-1);
+        if (last) scrollToSection(last);
+      }
     }
   };
   section.addEventListener('click', click);
@@ -260,6 +266,7 @@ export function initializeWorkFilter(onChange?: () => void, onReposition?: (top:
   alignRail();
   const destroy = () => {
     destroyed = true;
+    restoreScrollAnchor();
     ++generation;
     cancelMotions();
     heading?.style.removeProperty('height');
