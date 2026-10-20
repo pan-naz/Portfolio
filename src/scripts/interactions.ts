@@ -4,7 +4,7 @@ import { initializeWaterfall } from './waterfall/waterfall';
 import { initializeFooterPile } from './footer-pile/footer-pile';
 import { initializeHeroIntro } from './hero-intro';
 import { initializeHeaderMorph } from './header-morph/header-morph';
-import { initializeWorkFilter } from './work-filter/work-filter';
+import { initializeWorkFilter, workFilterHash, type WorkFilter } from './work-filter/work-filter';
 import { initializeWorkFilterPill } from './work-filter/work-filter-pill';
 import { initializeWorkStage } from './work-stage/work-stage';
 import { initializeSectionReveals } from './section-reveals';
@@ -49,6 +49,19 @@ new IntersectionObserver(entries => {
   updateHeroMotion();
 }).observe(hero);
 document.addEventListener('visibilitychange', updateHeroMotion);
+let clickScrolling = false;
+let clickScrollEndY: number | undefined;
+let cancelScrollCompletion: (() => void) | undefined;
+let clickScrollRevision = 0;
+const finishClickScroll = () => {
+  clickScrollRevision++;
+  clickScrolling = false;
+  clickScrollEndY = undefined;
+  cancelScrollCompletion?.();
+  cancelScrollCompletion = undefined;
+};
+// A visitor can interrupt a link scroll; subsequent scrolling then owns the URL again.
+for (const type of ['wheel', 'touchstart', 'keydown', 'popstate', 'pagehide']) window.addEventListener(type, finishClickScroll, {passive:true});
 document.querySelectorAll<HTMLAnchorElement>('a[href]').forEach(link => {
   if (link.pathname !== location.pathname || !link.hash) return;
   link.addEventListener('click', event => {
@@ -64,19 +77,33 @@ document.querySelectorAll<HTMLAnchorElement>('a[href]').forEach(link => {
         location.reload();
         return;
       }
-      // Scrolling up preserves the selected category and URL.
+      // Clicks own their history entry until their existing scroll motion finishes.
       if (location.hash !== link.hash && !link.hasAttribute('data-home-top')) history.pushState(null, '', link.hash);
-      scrollToSection(target);
+      finishClickScroll();
+      clickScrolling = true;
+      const revision = clickScrollRevision;
+      cancelScrollCompletion = scrollToSection(target, () => {
+        if (revision === clickScrollRevision) {
+          finishClickScroll();
+          // The final queued scroll event still belongs to the click.
+          clickScrollEndY = window.scrollY;
+        }
+      });
     };
     navigate();
   });
 });
-const updateHeader = () => {
-  const active = [...document.querySelectorAll<HTMLElement>('#work, #about')].reverse().find(section => section.getBoundingClientRect().top < window.innerHeight * .45);
+const activeSection = () => [...document.querySelectorAll<HTMLElement>('#work, #about')].reverse().find(section => section.getBoundingClientRect().top < window.innerHeight * .45);
+const updateHeader = (syncUrl = true) => {
+  const active = activeSection();
   header.querySelectorAll<HTMLAnchorElement>('nav a').forEach(link => {
     if (active && link.hash === `#${active.id}`) link.setAttribute('aria-current', 'location');
     else link.removeAttribute('aria-current');
   });
+  if (!syncUrl || location.pathname !== '/' || caseStudyOpen || clickScrolling || clickScrollEndY === window.scrollY) return;
+  const filter = document.querySelector<HTMLElement>('#project-list')?.dataset.activeFilter as WorkFilter | undefined;
+  const hash = active?.id === 'work' ? workFilterHash(filter ?? 'selected') || '#work' : active ? '#about' : '';
+  if (location.hash !== hash) history.replaceState(history.state, '', `${location.pathname}${location.search}${hash}`);
 };
 let scrollTick = false;
 window.addEventListener('scroll', () => {
@@ -86,10 +113,10 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 const siteMotion = initializeMotion();
 sectionReveals = initializeSectionReveals();
-const workFilter = initializeWorkFilter(() => { requestAnimationFrame(siteMotion.refresh); refreshViewportPointer(); }, repositionWork);
+const workFilter = initializeWorkFilter(() => { requestAnimationFrame(siteMotion.refresh); refreshViewportPointer(); }, repositionWork, activeSection);
 initializeHeaderMorph();
 initializeWorkFilterPill();
-updateHeader();
+updateHeader(false);
 
 initializeCaseStudies(projectCursor, open => {
   if (!open) projectTilt?.deferHoverUntilPointerMove();
