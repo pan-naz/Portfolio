@@ -506,7 +506,7 @@ html[data-work-stage-layout='true'] .work-content { width: calc(100% - max(220px
 @media (max-width: 380px) {
 }
 @media (min-width: 768px) and (max-width: 1327px) {
-  .experience-row { grid-template-columns: 120px minmax(0,1fr) minmax(0,1.3fr) var(--experience-duration-width); gap: var(--space-4); }
+  .experience-row { --experience-period-width: 120px; --experience-row-gap: var(--space-4); grid-template-columns: var(--experience-period-width) minmax(0,calc(50% - var(--experience-period-width) - var(--experience-row-gap) * 2)) minmax(0,1fr) var(--experience-duration-width); gap: var(--experience-row-gap); }
   .experience-duration { white-space: nowrap; }
   .impact-group { grid-template-columns: 200px minmax(0,1fr); }
   .impact-metrics { gap: var(--space-6); }

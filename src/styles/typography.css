@@ -220,6 +220,15 @@ body,
   .title-align-line > .title-align-control { line-height: 0; grid-template-rows: max-content; }
   .title-align-line > .title-align-control::before, .title-align-line > .title-align-control > * { align-self: center; }
   .title-align-line > .title-align-control > * { justify-self: start; }
+  /* Timeline metadata · align its caps to the unchanged Body/M Strong role title. */
+  .experience-row .title-align-line,
+  .experience-row .title-align-text::before {
+    font-family: var(--font-body-m-strong);
+    font-size: var(--text-body-m-strong);
+    font-weight: var(--font-weight-body-m-strong);
+    line-height: var(--line-height-body-m-strong);
+    letter-spacing: var(--letter-spacing-body-m-strong);
+  }
 }
 
 @media (min-width: 768px) {
