@@ -11,7 +11,7 @@ export function initialWorkFilter(hash: string): WorkFilter {
 }
 export const workFilterHash = (filter: WorkFilter) => filter === 'selected' ? '' : `#${filter}`;
 
-export function initializeWorkFilter(onChange?: () => void, onReposition?: (top: number) => void) {
+export function initializeWorkFilter(onChange?: () => void, onReposition?: (top: number) => void, activeSection?: () => HTMLElement | undefined) {
   const section = document.querySelector<HTMLElement>('#work');
   const list = section?.querySelector<HTMLElement>('#project-list');
   if (!section || !list) return;
@@ -51,7 +51,7 @@ export function initializeWorkFilter(onChange?: () => void, onReposition?: (top:
     if (location.pathname !== '/') return;
     try {
       const url = new URL(location.href);
-      if (updateHash) url.hash = workFilterHash(active);
+      if (updateHash) url.hash = active === 'selected' && activeSection?.()?.id === 'work' ? '#work' : workFilterHash(active);
       history.replaceState({ ...history.state, workFilter: active }, '', `${url.pathname}${url.search}${url.hash}`);
     } catch {}
   };
