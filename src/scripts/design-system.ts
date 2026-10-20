@@ -8,6 +8,8 @@ const dashboard=document.querySelector<HTMLElement>('#dashboard')!;
 const dashboardTilt=initializeCardTilt(dashboard,{cardSelector:'.ds-tile-frame',surfaceSelector:'.ds-tile'});
 const phone=matchMedia('(max-width:767px)');
 const navigation=document.querySelector<HTMLElement>('[data-ds-nav-scroll]')!;
+const navigationBar=navigation.closest<HTMLElement>('.ds-navigation')!;
+const logoRow=document.querySelector<HTMLElement>('.ds-logo-row')!;
 const horizontal=()=>document.documentElement.dataset.workStageLayout!=='true';
 const updateNavigationEdges=()=>{
  navigation.toggleAttribute('data-scroll-start',horizontal()&&navigation.scrollLeft>0);
@@ -48,7 +50,9 @@ for(const heading of root.querySelectorAll<HTMLElement>('h1,h2,h3,h4,h5,h6')){
 }
 };
 document.querySelectorAll('.ds-specimens').forEach(prepareSpecimenHeadings);
-const selectView=(resetScroll=true)=>{
+const selectView=(resetScroll=true,fromNavigation=false)=>{
+ // A sticky bar's own rect follows the viewport; the logo row keeps its flow origin.
+ const scrollTarget=fromNavigation&&horizontal()?Math.min(window.scrollY,window.scrollY+logoRow.getBoundingClientRect().bottom-(parseFloat(getComputedStyle(navigationBar).top)||0)):0;
  dashboardTilt.reset();dashboardTilt.deferHoverUntilPointerMove();
  let requested=location.hash.slice(1)||'dashboard';
  if(['icon-button','text-link'].includes(requested)){requested='button';history.replaceState(history.state,'','#button');}
@@ -62,13 +66,13 @@ const selectView=(resetScroll=true)=>{
  document.querySelector('[data-ds-description]')!.textContent=selected.dataset.description!;
  refreshValues();
  revealNavigationLink(navigation.querySelector<HTMLAnchorElement>('[aria-current=page]'));
- if(resetScroll){scrollImmediately(0);requestAnimationFrame(()=>requestAnimationFrame(()=>scrollImmediately(0)));}
+ if(resetScroll){scrollImmediately(scrollTarget);requestAnimationFrame(()=>requestAnimationFrame(()=>scrollImmediately(scrollTarget)));}
 };
 window.addEventListener('hashchange',()=>selectView());window.addEventListener('popstate',()=>selectView());
 const syncNavigation=()=>{const previous=views.find(view=>!view.hidden)?.id;selectView(false);if(previous!==views.find(view=>!view.hidden)?.id)scrollImmediately(0);};
 window.addEventListener('workstagelayoutchange',syncNavigation);phone.addEventListener('change',syncNavigation);
 window.addEventListener('resize',()=>{revealNavigationLink(navigation.querySelector<HTMLAnchorElement>('[aria-current=page]'));updateNavigationEdges();});
-links.filter(link=>!link.hasAttribute('data-ds-dashboard-link')).forEach(link=>link.addEventListener('click',event=>{event.preventDefault();if(link.hash!==location.hash)history.pushState(null,'',link.hash);selectView();}));
+links.filter(link=>!link.hasAttribute('data-ds-dashboard-link')).forEach(link=>link.addEventListener('click',event=>{event.preventDefault();if(link.hash!==location.hash)history.pushState(null,'',link.hash);selectView(true,Boolean(link.closest('.ds-navigation')));}));
 for(const tabset of document.querySelectorAll<HTMLElement>('[data-ds-tabset]')){
  const tabs=[...tabset.querySelectorAll<HTMLButtonElement>('[role=tab]')];
  const select=(index:number,focus=false)=>{tabs.forEach((tab,i)=>{tab.setAttribute('aria-selected',String(i===index));tab.tabIndex=i===index?0:-1;document.getElementById(tab.getAttribute('aria-controls')!)!.hidden=i!==index;});if(focus)tabs[index].focus();};
