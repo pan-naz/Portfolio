@@ -1,9 +1,12 @@
 @layer system, project;
 @layer system {
-.wt { --wt-edge: 2px; --wt-w: 152px; --wt-h: 228px; --wt-k: .3684; --wt-badge-k: 1.583; pointer-events: none; position: fixed; right: calc(var(--space-6) + var(--wt-edge) + var(--safe-right)); bottom: calc(var(--space-6) + var(--wt-edge) + var(--safe-bottom)); z-index: var(--layer-controls); display: flex; flex-direction: column; align-items: center; gap: var(--space-3); color: var(--color-text-primary); }
+.wt { --wt-edge: 2px; --wt-w: 152px; --wt-h: 228px; --wt-k: .3684; --wt-badge-k: 1.583; pointer-events: none; position: fixed; right: calc(var(--space-6) + var(--wt-edge) + var(--safe-right)); bottom: calc(var(--space-6) + var(--wt-edge) + var(--safe-bottom)); z-index: var(--layer-controls); display: flex; flex-direction: column; align-items: center; color: var(--color-text-primary); }
 .wt { transform-origin:100% 100%; }
-.wt .icon-button > span:not([hidden]) { display:grid; place-items:center; width:var(--icon-size-compact); height:var(--icon-size-compact); }
+.wt .icon-button:not(.wt-speed) > span:not([hidden]) { display:grid; place-items:center; width:var(--icon-size-compact); height:var(--icon-size-compact); }
 .wt .icon-button > span > .icon { width:var(--icon-size-compact); height:var(--icon-size-compact); }
+.wt .wt-speed { width:max-content; padding-inline:var(--space-3); color:var(--color-text-primary); font-variant-numeric:tabular-nums; }
+.wt-speed > span { grid-area:1 / 1; white-space:nowrap; }
+.wt-speed-width { visibility:hidden; }
 .wt p { margin: 0; }
 @media (hover: hover) and (pointer: fine) {
 .wt:hover { pointer-events: auto; }
@@ -50,7 +53,6 @@
 .wt-overlay-text { transform: scale(.1); transition: transform var(--duration-button-fill) var(--ease-button-fill); }
 .wt:not([data-state="rest"]) .wt-overlay { opacity: 1; visibility: visible; transition-delay: calc(var(--duration-button-fill) * 0); }
 .wt:not([data-state="rest"]) .wt-overlay-text { transform: scale(1); }
-.wt:not([data-state="rest"]) .wt-sound { opacity: 0; pointer-events: none; transform: translate(-50%, 50%) scale(.1); }
 .wt-invite-b, .wt-pill { position: absolute; z-index: var(--layer-base); opacity: 0; visibility: hidden; pointer-events: none; transform-origin: 50% 50%;
   transition: opacity var(--duration-button-fill) var(--ease-button-fill), transform var(--duration-button-fill) var(--ease-button-fill), visibility calc(var(--duration-button-fill) * 0) var(--ease-button-fill) var(--duration-button-fill); }
 .wt-invite-b { right: calc(100% + var(--space-4)); top: 0; bottom: 0; height: fit-content; margin-block: auto;

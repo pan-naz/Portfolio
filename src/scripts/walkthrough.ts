@@ -53,6 +53,14 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
   const face = root.querySelector<HTMLButtonElement>('[data-walkthrough-face]')!;
   const playButton = root.querySelector<HTMLButtonElement>('[data-walkthrough-play]')!;
   const sounds = [...root.querySelectorAll<HTMLButtonElement>('[data-walkthrough-sound]')];
+  const speedButton=root.querySelector<HTMLButtonElement>('[data-walkthrough-speed]')!;
+  const speedLabel=speedButton.querySelector('[data-walkthrough-rate]')!;
+  const rates=[1,1.25,1.5,2];
+  const setRate=(rate:number)=>{
+    video.playbackRate=rate;video.preservesPitch=true;
+    speedLabel.textContent=`${rate}×`;
+    speedButton.setAttribute('aria-label',`Playback speed, ${rate}×`);
+  };
   const invite = root.querySelector<HTMLElement>('.wt-invite-b')!;
   const circle = root.querySelector<HTMLElement>('.wt-circle')!;
   const chapter = root.querySelector<HTMLElement>('[data-walkthrough-chapter]')!;
@@ -135,8 +143,8 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
   const stopClock = () => { cancelAnimationFrame(frame); frame = 0; };
   const tick = () => {
     if (state !== 'on') { frame = 0; return; }
-    // Lead the sentence by one second; the site's shared section-scroll owns travel.
-    while (nextCue < timeline.length && video.currentTime >= Math.max(0,timeline[nextCue].start - walkthroughCueLeadSeconds)) {
+    // Lead the sentence by one real second; the site's shared section-scroll owns travel.
+    while (nextCue < timeline.length && video.currentTime >= Math.max(0,timeline[nextCue].start - walkthroughCueLeadSeconds * video.playbackRate)) {
       scroll(timeline[nextCue++].anchor);
     }
     render();
@@ -153,7 +161,7 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
     if (state === 'on') pause('playback');
   });
   const start = () => {
-    stopClock(); nextCue = 0; video.loop = false; video.currentTime = 0;
+    stopClock(); setRate(1); nextCue = 0; video.loop = false; video.currentTime = 0;
     delete root.dataset.pausedBy;
     sound(true); setState('on'); play(); tick();
   };
@@ -161,17 +169,22 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
     if (state === 'ended') { start(); return; }
     if (state !== 'paused') return;
     delete root.dataset.pausedBy;
-    scroll(currentWalkthroughCue(timeline,video.currentTime + walkthroughCueLeadSeconds)!.anchor);
+    scroll(currentWalkthroughCue(timeline,video.currentTime + walkthroughCueLeadSeconds * video.playbackRate)!.anchor);
     setState('on'); play(); tick();
   };
   const exit = () => {
-    sound(false); stopClock(); cancelScroll?.();
+    setRate(1); sound(false); stopClock(); cancelScroll?.();
     if (root.matches(':hover')) root.dataset.quiet = '';
     delete root.dataset.pausedBy;
     video.loop = true; nextCue = 0; setState('rest'); play();
     if (root.contains(document.activeElement)) (document.activeElement as HTMLElement).blur();
   };
   listen(root.querySelector('[data-walkthrough-start]')!,'click',start);
+  listen(speedButton,'click',event=>{
+    event.stopPropagation();
+    setRate(rates[(rates.indexOf(video.playbackRate)+1)%rates.length]);
+    if((event as MouseEvent).detail>0)speedButton.blur();
+  });
   listen(playButton,'click',() => state === 'on' ? pause('button') : resume());
   listen(root.querySelector('[data-walkthrough-close]')!,'click',exit);
   sounds.forEach(button => listen(button,'click',event => {
@@ -201,12 +214,12 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
   listen(video,'loadedmetadata',measure);
   const source = video.querySelector<HTMLSourceElement>('source[data-src]')!;
   source.src = source.dataset.src!;
-  video.preload = 'auto'; video.muted = true; video.load(); play(); measure();
+  setRate(1);video.preload = 'auto'; video.muted = true; video.load(); play(); measure();
   root.dataset.ready = 'true';
   return () => {
     stopClock(); cancelScroll?.(); magnet.destroy(); lifecycle.abort(); entrance.cancel();
     if(scroller instanceof HTMLElement)scroller.style.scrollPaddingTop=previousPadding;
-    video.muted=true;video.pause(); source.removeAttribute('src'); video.removeAttribute('src'); video.load(); root.remove();
+    setRate(1);video.muted=true;video.pause(); source.removeAttribute('src'); video.removeAttribute('src'); video.load(); root.remove();
   };
 }
 

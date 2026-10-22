@@ -1612,15 +1612,6 @@
   },
   {
     "file": "src/styles/walkthrough.css",
-    "selector": ".wt:not([data-state=\"rest\"]) .wt-sound",
-    "context": "@layer system",
-    "property": "opacity",
-    "value": "0",
-    "kind": "opacity",
-    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
-  },
-  {
-    "file": "src/styles/walkthrough.css",
     "selector": ".wt-invite-b, .wt-pill",
     "context": "@layer system",
     "property": "opacity",
