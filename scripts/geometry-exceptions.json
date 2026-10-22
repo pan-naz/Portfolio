@@ -1482,6 +1482,15 @@
   },
   {
     "file": "src/styles/global.css",
+    "selector": ".button--arrow-fill.button--small",
+    "context": "@layer system",
+    "property": "--button-orb-inset",
+    "value": "calc(var(--space-1) - 1px)",
+    "kind": "spacing",
+    "reason": "Small primary orb uses Space 1 clearance including the existing 1px button border, matching the Walkthrough prototype."
+  },
+  {
+    "file": "src/styles/global.css",
     "selector": ".work-rail",
     "context": "@layer system",
     "property": "--work-filter-half-height",
