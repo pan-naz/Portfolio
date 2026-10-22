@@ -7,7 +7,6 @@ export function initializeControlMagnet(control: HTMLElement, options: {
   bounds?: () => Pick<DOMRect, 'left' | 'right' | 'top' | 'bottom'>;
   enabled?: () => boolean;
   inside?: () => boolean;
-  stableHover?: boolean;
 } = {}) {
   const capability = matchMedia('(min-width: 1024px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
   const controller = new AbortController();
@@ -21,11 +20,6 @@ export function initializeControlMagnet(control: HTMLElement, options: {
   const x: Spring = { value: 0, velocity: 0, target: 0 };
   const y: Spring = { value: 0, velocity: 0, target: 0 };
   let frame = 0, lastTime = 0, pointerInside = false;
-  let cachedBounds: Pick<DOMRect,'left'|'right'|'top'|'bottom'> | undefined;
-  const remeasure = () => {
-    const box = options.bounds?.() ?? control.getBoundingClientRect();
-    cachedBounds = {left:box.left-x.value,right:box.right-x.value,top:box.top-y.value,bottom:box.bottom-y.value};
-  };
   const write = () => { control.style.translate = `${x.value}px ${y.value}px`; };
   const tick = (time: number) => {
     const dt = Math.min(lastTime ? (time - lastTime) / 1000 : 1 / 60, .064);
@@ -56,21 +50,9 @@ export function initializeControlMagnet(control: HTMLElement, options: {
       returnHome(keyboard || !capability.matches);
       return;
     }
-    if (options.stableHover && pointer.viewportChanged && cachedBounds) return;
-    if (options.stableHover && !cachedBounds) remeasure();
-    const rendered = options.stableHover ? cachedBounds! : options.bounds?.() ?? control.getBoundingClientRect();
-    const bounds = options.stableHover ? cachedBounds! : { left: rendered.left - x.value, right: rendered.right - x.value, top: rendered.top - y.value, bottom: rendered.bottom - y.value };
-    const inside = options.stableHover
-      ? pointer.clientX >= bounds.left+x.value && pointer.clientX <= bounds.right+x.value && pointer.clientY >= bounds.top+y.value && pointer.clientY <= bounds.bottom+y.value
-      : options.inside?.() ?? (pointer.clientX >= rendered.left && pointer.clientX <= rendered.right && pointer.clientY >= rendered.top && pointer.clientY <= rendered.bottom);
-    if (options.stableHover && inside) {
-      // Capture the current resting target on entry. The slow inside spring has
-      // no leftover pull or transform feedback to chase while the box grows.
-      if (!pointerInside) { x.target=x.value; y.target=y.value; x.velocity=y.velocity=0; }
-      pointerInside=true;
-      return;
-    }
-    pointerInside=inside;
+    const rendered = options.bounds?.() ?? control.getBoundingClientRect();
+    pointerInside = options.inside?.() ?? (pointer.clientX >= rendered.left && pointer.clientX <= rendered.right && pointer.clientY >= rendered.top && pointer.clientY <= rendered.bottom);
+    const bounds = { left: rendered.left - x.value, right: rendered.right - x.value, top: rendered.top - y.value, bottom: rendered.bottom - y.value };
     const target = calculateMagnet(pointer.clientX, pointer.clientY, bounds);
     const distance = Math.hypot(pointer.clientX - (bounds.left + bounds.right) / 2, pointer.clientY - (bounds.top + bounds.bottom) / 2);
     // A small target lands under the pointer rather than moving past it.
@@ -89,5 +71,5 @@ export function initializeControlMagnet(control: HTMLElement, options: {
   };
   window.addEventListener('pagehide', event => { if (!event.persisted) destroy(); }, { signal });
   refreshViewportPointer();
-  return { destroy, remeasure };
+  return { destroy };
 }

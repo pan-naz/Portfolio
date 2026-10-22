@@ -59,28 +59,36 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
   const time = root.querySelector<HTMLElement>('[data-walkthrough-time]')!;
   let state: State = 'rest', duration = config.lengthSeconds, nextCue = 0, frame = 0;
   let cancelScroll: (() => void) | undefined;
-  let entered=false;
+  const tokens=getComputedStyle(root),inviteStyle=getComputedStyle(invite);
   const magnet = initializeControlMagnet(root, {
-    enabled: () => entered && state === 'rest', stableHover:true,
+    enabled: () => state === 'rest',
+    inside: () => root.matches(':hover'),
     bounds: () => {
-      // Offset sizes describe the final hover footprint, independent of its
-      // animated scale/translation: capsule, bridge and the full invite card.
+      // The fixed root anchors the resting capsule. Read layout sizes, never
+      // the capsule/invite rectangles interpolating through their transitions.
       const box=root.getBoundingClientRect();
-      const gap=readMotionToken(getComputedStyle(root),'--space-4');
-      return {left:box.left-invite.offsetWidth-gap,right:box.right,top:box.top,bottom:box.bottom};
+      const width=circle.offsetWidth,height=circle.offsetHeight;
+      const scale=Number.parseFloat(tokens.getPropertyValue('--wt-k'));
+      const rest={left:box.right-width*scale,right:box.right,top:box.bottom-height*scale,bottom:box.bottom};
+      if(!root.matches(':hover'))return rest;
+      const cardWidth=Number.parseFloat(inviteStyle.width),cardHeight=Number.parseFloat(inviteStyle.height);
+      const top=rest.bottom-height,cardTop=top+(height-cardHeight)/2;
+      return {
+        left:rest.right-width-readMotionToken(tokens,'--space-4')-cardWidth,
+        right:rest.right,top:Math.min(top,cardTop),bottom:Math.max(rest.bottom,cardTop+cardHeight),
+      };
     },
   });
   const previousPadding=scroller instanceof HTMLElement?scroller.style.scrollPaddingTop:'';
   if(scroller instanceof HTMLElement)scroller.style.scrollPaddingTop='calc(var(--scroll-clearance) + var(--safe-top))';
   root.inert=true;
-  const tokens=getComputedStyle(root);
   const entrance=root.animate([{transform:'scale(0)'},{transform:'scale(1)'}],{
     duration:matchMedia('(prefers-reduced-motion: reduce)').matches?0:readMotionToken(tokens,'--duration-button-fill'),
     easing:tokens.getPropertyValue('--ease-button-fill').trim(),fill:'both',
   });
   root.dispatchEvent(new CustomEvent('walkthroughentrance',{bubbles:true,detail:{at:performance.now()}}));
   void entrance.finished.then(()=>{
-    entered=true;root.inert=false;entrance.cancel();magnet.remeasure();refreshViewportPointer();
+    root.inert=false;entrance.cancel();refreshViewportPointer();
   }).catch(()=>{ /* Teardown cancels an unfinished entrance. */ });
   const show = (element: Element | null, on: boolean) => element?.toggleAttribute('hidden',!on);
   const labelFace = () => {
@@ -175,9 +183,7 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
     if ((event as MouseEvent).detail > 0) face.blur();
   });
   listen(root,'pointerleave',() => { delete root.dataset.quiet; });
-  listen(root,'pointerenter',()=>magnet.remeasure());
-  listen(circle,'transitionend',event=>{if((event as TransitionEvent).propertyName==='transform'){magnet.remeasure();refreshViewportPointer();}});
-  listen(window,'resize',()=>magnet.remeasure(),true);
+  listen(circle,'transitionend',refreshViewportPointer);
   listen(scroller,'wheel',() => pause('scroll'),true);
   listen(scroller,'touchmove',() => pause('scroll'),true);
   listen(window,'keydown',event => {
