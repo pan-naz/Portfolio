@@ -3,6 +3,8 @@ import type { Project } from '../data/portfolio';
 import CaseStudyContent from './CaseStudyContent.astro';
 import StandaloneCaseStyles from './StandaloneCaseStyles.astro';
 import IconButton from './IconButton.astro';
+import Walkthrough from './Walkthrough.astro';
+import { walkthroughs } from '../data/walkthroughs';
 
 import { workFilterHash } from '../scripts/work-filter/work-filter';
 interface Props { project: Project; }
@@ -14,6 +16,7 @@ const returnUrl = project.category === 'selected' ? '/#work' : `/${workFilterHas
   <div class="case-study-direct-close"><IconButton href={returnUrl} icon="close" variant="raised" label="Close case study" data-case-home /></div>
   <CaseStudyContent project={project} />
 </main>
+{walkthroughs[project.id] && <Walkthrough {...walkthroughs[project.id]} />}
 
 <script>
   import { initializeMotion } from '../scripts/motion';

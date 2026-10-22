@@ -16,7 +16,7 @@ export const buttonGroups=[
  {name:'Icon buttons',description:'A compact action with an icon only.',cards:[
   {id:'raised',name:'Raised',description:'Floats over content on a white surface.',used:'Cursor, case close',value:'44px'},
   {id:'raised-small',name:'Raised · small',description:'A small raised control on top of content.',used:'Walkthrough',value:'36px'},
-  {id:'plain',name:'Plain',description:'Sits in the header with no surface.',used:'Theme switch',value:'44px'},
+  {id:'plain',name:'Plain',description:'Sits in the header with no surface.',used:'Theme switch, Walkthrough',value:'44px · 36px'},
   {id:'layers',name:'Secondary · small',description:'Outlined, for a small destination.',used:'Footer',value:'36px · 44px tap'},
   {id:'media',name:'Media',description:'Video controls on top of the video.',used:'Case-study videos',value:'44px'},
  ]},

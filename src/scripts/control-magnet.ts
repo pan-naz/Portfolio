@@ -3,7 +3,11 @@ import { calculateWorkFilterMagnet as calculateMagnet, resolveWorkFilterSpringSp
 import { refreshViewportPointer, watchViewportPointer } from './viewport-pointer.ts';
 
 /** A single control uses the menu's proximity and spring without its rail mechanics. */
-export function initializeControlMagnet(control: HTMLElement) {
+export function initializeControlMagnet(control: HTMLElement, options: {
+  bounds?: () => Pick<DOMRect, 'left' | 'right' | 'top' | 'bottom'>;
+  enabled?: () => boolean;
+  inside?: () => boolean;
+} = {}) {
   const capability = matchMedia('(min-width: 1024px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
   const controller = new AbortController();
   const { signal } = controller;
@@ -40,13 +44,14 @@ export function initializeControlMagnet(control: HTMLElement) {
   // same ownership marker as the ring, while genuine keyboard focus stays still.
   const keyboardFocused = () => control.matches(':focus-visible') && !control.hasAttribute('data-case-pointer-focus');
   const unwatch = watchViewportPointer(pointer => {
+    if (options.enabled && !options.enabled()) { returnHome(); return; }
     const keyboard = keyboardFocused();
     if (!pointer.active || !capability.matches || keyboard || !control.isConnected || control.closest('[hidden], [inert]')) {
       returnHome(keyboard || !capability.matches);
       return;
     }
-    const rendered = control.getBoundingClientRect();
-    pointerInside = pointer.clientX >= rendered.left && pointer.clientX <= rendered.right && pointer.clientY >= rendered.top && pointer.clientY <= rendered.bottom;
+    const rendered = options.bounds?.() ?? control.getBoundingClientRect();
+    pointerInside = options.inside?.() ?? (pointer.clientX >= rendered.left && pointer.clientX <= rendered.right && pointer.clientY >= rendered.top && pointer.clientY <= rendered.bottom);
     const bounds = { left: rendered.left - x.value, right: rendered.right - x.value, top: rendered.top - y.value, bottom: rendered.bottom - y.value };
     const target = calculateMagnet(pointer.clientX, pointer.clientY, bounds);
     const distance = Math.hypot(pointer.clientX - (bounds.left + bounds.right) / 2, pointer.clientY - (bounds.top + bounds.bottom) / 2);

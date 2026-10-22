@@ -1555,5 +1555,131 @@
     "value": "80px",
     "kind": "size",
     "reason": "One shared desktop/tablet duration track, wide enough for the real duration; phone uses its native auto track."
+  },
+  {
+    "file": "src/components/Walkthrough.astro",
+    "selector": ".wt-pause-mark",
+    "context": "@layer system",
+    "property": "opacity",
+    "value": "0",
+    "kind": "opacity",
+    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+  },
+  {
+    "file": "src/components/Walkthrough.astro",
+    "selector": ".wt-pause-mark > span",
+    "context": "@layer system",
+    "property": "width",
+    "value": "72px",
+    "kind": "size",
+    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+  },
+  {
+    "file": "src/components/Walkthrough.astro",
+    "selector": ".wt-pause-mark > span",
+    "context": "@layer system",
+    "property": "height",
+    "value": "72px",
+    "kind": "size",
+    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+  },
+  {
+    "file": "src/components/Walkthrough.astro",
+    "selector": ".wt[data-state=\"paused\"] .wt-pause-mark",
+    "context": "@layer system",
+    "property": "opacity",
+    "value": "1",
+    "kind": "opacity",
+    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+  },
+  {
+    "file": "src/components/Walkthrough.astro",
+    "selector": ".wt .wt-overlay",
+    "context": "@layer system",
+    "property": "opacity",
+    "value": "0",
+    "kind": "opacity",
+    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+  },
+  {
+    "file": "src/components/Walkthrough.astro",
+    "selector": ".wt:not([data-state=\"rest\"]) .wt-overlay",
+    "context": "@layer system",
+    "property": "opacity",
+    "value": "1",
+    "kind": "opacity",
+    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+  },
+  {
+    "file": "src/components/Walkthrough.astro",
+    "selector": ".wt:not([data-state=\"rest\"]) .wt-sound",
+    "context": "@layer system",
+    "property": "opacity",
+    "value": "0",
+    "kind": "opacity",
+    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+  },
+  {
+    "file": "src/components/Walkthrough.astro",
+    "selector": ".wt-invite-b, .wt-pill",
+    "context": "@layer system",
+    "property": "opacity",
+    "value": "0",
+    "kind": "opacity",
+    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+  },
+  {
+    "file": "src/components/Walkthrough.astro",
+    "selector": ".wt[data-state=\"rest\"]:not([data-quiet]):hover .wt-invite-b",
+    "context": "@layer system > @media (hover: hover) and (pointer: fine)",
+    "property": "opacity",
+    "value": "1",
+    "kind": "opacity",
+    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+  },
+  {
+    "file": "src/components/Walkthrough.astro",
+    "selector": ".wt[data-state=\"rest\"]:has(:focus-visible) .wt-invite-b",
+    "context": "@layer system",
+    "property": "opacity",
+    "value": "1",
+    "kind": "opacity",
+    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+  },
+  {
+    "file": "src/components/Walkthrough.astro",
+    "selector": ".wt:not([data-state=\"rest\"]) .wt-pill",
+    "context": "@layer system",
+    "property": "opacity",
+    "value": "1",
+    "kind": "opacity",
+    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+  },
+  {
+    "file": "src/components/Walkthrough.astro",
+    "selector": ".wt",
+    "context": "@layer system",
+    "property": "--wt-edge",
+    "value": "2px",
+    "kind": "spacing",
+    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+  },
+  {
+    "file": "src/components/Walkthrough.astro",
+    "selector": ".wt",
+    "context": "@layer system",
+    "property": "--wt-w",
+    "value": "152px",
+    "kind": "size",
+    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+  },
+  {
+    "file": "src/components/Walkthrough.astro",
+    "selector": ".wt",
+    "context": "@layer system",
+    "property": "--wt-h",
+    "value": "228px",
+    "kind": "spacing",
+    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
   }
 ]

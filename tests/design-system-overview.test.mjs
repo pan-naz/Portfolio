@@ -3,7 +3,7 @@ import { overviewHiddenComponents, visibleComponents } from '../src/data/ds-comp
 import { componentPurposes } from '../src/data/system-documentation.ts';
 import { validateOverviewHiddenEntries } from '../scripts/validate-design-system.mjs';
 const names=overviewHiddenComponents.map(item=>item.title), keys=overviewHiddenComponents.map(item=>item.documentedHidden);
-assert.deepEqual(names,['Before and after','Media','Steps']);
+assert.deepEqual(names,['Before and after','Media','Steps','Walkthrough']);
 assert.equal(visibleComponents.length,9);
 for(const item of overviewHiddenComponents)assert.equal(item.description,componentPurposes[item.file]);
 assert.deepEqual(validateOverviewHiddenEntries(keys),[]);

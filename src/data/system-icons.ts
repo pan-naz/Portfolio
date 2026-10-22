@@ -6,7 +6,7 @@ export const iconGroups: {title:string;description:string;icons:IconName[]}[] = 
  {title:'Links',description:'Point to another page or file.',icons:['arrow']},
  {title:'Actions',description:'Open and close.',icons:['plus','close']},
  {title:'Theme',description:'Light and dark switch.',icons:['sun','moon']},
- {title:'Media',description:'Video player controls.',icons:['play','pause','volume','volume-muted']},
+ {title:'Media',description:'Video player controls and Walkthrough.',icons:['play','pause','volume','volume-muted']},
  {title:'Marks',description:'Small symbols with a meaning.',icons:['layers','shield-check','equals']},
  {title:'Design system only',description:'Used on these pages, not on the site.',icons:['monitor','tablet','phone']},
 ];

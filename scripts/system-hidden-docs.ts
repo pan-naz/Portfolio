@@ -1,5 +1,6 @@
 /** Required external documentation sections; wording can evolve independently. */
 export const hiddenDocumentation = [
+  {"section":"Walkthrough"},
   {
     "section": "Accessibility"
   },

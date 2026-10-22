@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {walkthroughTimeline,currentWalkthroughCue,walkthroughCueLeadSeconds} from '../src/scripts/walkthrough.ts';
+import {walkthroughs} from '../src/data/walkthroughs.ts';
+const cues=[{name:'First',anchor:'#first',start:0},{name:'Second',anchor:'#second',start:20,stops:[{anchor:'#inner-b',start:28},{anchor:'#inner-a',start:24}]}];
+const timeline=walkthroughTimeline(cues);
+assert.deepEqual(timeline.map(cue=>cue.start),[0,20,24,28]);
+assert.equal(currentWalkthroughCue(timeline,19.99).anchor,'#first');
+assert.equal(currentWalkthroughCue(timeline,20).anchor,'#second');
+assert.equal(currentWalkthroughCue(timeline,26).anchor,'#inner-a');
+assert.equal(currentWalkthroughCue(cues,26).name,'Second','An inner stop retains its containing chapter');
+assert.equal(currentWalkthroughCue([],0),undefined);
+assert.deepEqual(Object.keys(walkthroughs),['datagpt']);
+assert.deepEqual(walkthroughTimeline(walkthroughs.datagpt.cues).map(cue=>cue.start),[0,18.1,56.5,106.6,164.8,193.9,226.5,232.6,255.5,293.9,326.8,341.7,345.5]);
+assert.equal(currentWalkthroughCue(timeline,19.5 + walkthroughCueLeadSeconds).anchor,'#second','Resume during cue lead retains the prepared next section');
+console.log('PASS: cue boundaries, inner-stop ordering, chapter identity and DataGPT-only configuration.');

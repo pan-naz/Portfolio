@@ -1288,5 +1288,28 @@
       "retainedOriginal": false,
       "audio": false
     }
+  },
+  "/projects/datagpt-case-study/walkthrough.mp4": {
+    "originalWidth": 480,
+    "originalHeight": 854,
+    "sampleAspectRatio": "1:1",
+    "originalBytes": 12668611,
+    "originalSha256": "771438b45b7749001d183bae592e83324acef4cb9efe97527d84abf51dcfaac4",
+    "card": false,
+    "minimumViewportWidth": 1024,
+    "desktop": {
+      "src": "/projects/datagpt-case-study/walkthrough.mp4",
+      "sha256": "cc6b7651665527241a7c00bf072bf07aaba1aa307c28275aa8fad8083239198f",
+      "bytes": 9574436,
+      "width": 480,
+      "height": 854,
+      "frameRate": "60/1",
+      "frames": 21731,
+      "ssim": 0.999801,
+      "bitrate": 101848,
+      "faststart": true,
+      "retainedOriginal": false,
+      "audio": true
+    }
   }
 }
