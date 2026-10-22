@@ -1,5 +1,7 @@
 ---
 import { projects, collectionProjects } from '../data/portfolio';
+import { walkthroughs } from '../data/walkthroughs';
+import '../styles/walkthrough.css';
 import CaseStudyContent from './CaseStudyContent.astro';
 import '../styles/blaustrom-case-study.css';
 import '../styles/voximplant-ivr-case-study.css';
@@ -24,4 +26,4 @@ import '../styles/hooko-artwork.css';
 <dialog class="case-study-dialog" data-case-dialog aria-label="Project case study" data-lenis-prevent>
   <div class="case-study-panel" data-case-panel><div class="case-study-scroll" data-case-scroll tabindex="-1" role="region" aria-label="Case study content"></div></div>
 </dialog>
-{[...projects, ...collectionProjects].map(project => <template data-case-template={project.id}><CaseStudyContent project={project} /></template>)}
+{[...projects, ...collectionProjects].map(project => <template data-case-template={project.id} data-case-walkthrough={Boolean(walkthroughs[project.id]) || undefined}><CaseStudyContent project={project} /></template>)}

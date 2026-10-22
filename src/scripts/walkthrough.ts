@@ -1,5 +1,6 @@
 import { scrollToSection } from './smooth-scroll.ts';
 import { initializeControlMagnet } from './control-magnet.ts';
+import { readMotionToken } from './native-motion.ts';
 import { refreshViewportPointer } from './viewport-pointer.ts';
 
 export interface WalkthroughCue {
@@ -18,25 +19,31 @@ export function currentWalkthroughCue<T extends {start:number}>(cues: T[], time:
 export const walkthroughCueLeadSeconds = 1;
 const formatTime = (time: number) => `${Math.floor(time / 60)}:${String(Math.floor(time) % 60).padStart(2,'0')}`;
 
-/** An inert template reserves no page space and requests no media below desktop. */
-export function initializeWalkthrough(template: HTMLTemplateElement) {
+interface WalkthroughContext { parent?:HTMLElement; content?:Document|HTMLElement; scroller?:Window|HTMLElement; }
+/** The direct-page blueprint reserves no space or media requests below desktop. */
+export function initializeWalkthrough(template: HTMLTemplateElement, context: WalkthroughContext = {}) {
+  const lifetime=new AbortController();
+  let ready=Boolean(context.parent);
   const desktop = matchMedia('(min-width: 1024px)');
   let dispose: (() => void) | undefined;
   const sync = () => {
+    if (!ready) return;
     if (!desktop.matches) { dispose?.(); dispose = undefined; return; }
     if (dispose) return;
     const root = template.content.firstElementChild!.cloneNode(true) as HTMLElement;
-    document.body.append(root);
-    dispose = mount(root);
+    (context.parent ?? document.body).append(root);
+    dispose = mount(root,context.content ?? document,context.scroller ?? window);
   };
   desktop.addEventListener('change', sync);
-  const destroy = () => { dispose?.(); dispose = undefined; desktop.removeEventListener('change',sync); };
-  window.addEventListener('pagehide', event => { if (!event.persisted) destroy(); });
-  sync();
+  const destroy = () => { lifetime.abort(); dispose?.(); dispose = undefined; desktop.removeEventListener('change',sync); };
+  window.addEventListener('pagehide', event => { if (!event.persisted) destroy(); },{signal:lifetime.signal});
+  const begin=()=>{void document.fonts.ready.then(()=>{if(lifetime.signal.aborted)return;ready=true;sync();});};
+  if(context.parent || document.readyState==='complete')begin();
+  else window.addEventListener('load',begin,{once:true,signal:lifetime.signal});
   return {destroy};
 }
 
-function mount(root: HTMLElement) {
+function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Window|HTMLElement) {
   const lifecycle = new AbortController(), {signal} = lifecycle;
   const listen = (target: EventTarget, name: string, callback: EventListener, passive = false) =>
     target.addEventListener(name,callback,{signal,passive});
@@ -52,16 +59,29 @@ function mount(root: HTMLElement) {
   const time = root.querySelector<HTMLElement>('[data-walkthrough-time]')!;
   let state: State = 'rest', duration = config.lengthSeconds, nextCue = 0, frame = 0;
   let cancelScroll: (() => void) | undefined;
+  let entered=false;
   const magnet = initializeControlMagnet(root, {
-    enabled: () => state === 'rest',
-    inside: () => root.matches(':hover'),
+    enabled: () => entered && state === 'rest', stableHover:true,
     bounds: () => {
-      const box = circle.getBoundingClientRect();
-      if (getComputedStyle(invite).visibility !== 'visible') return box;
-      const card = invite.getBoundingClientRect();
-      return {left:Math.min(box.left,card.left),right:box.right,top:Math.min(box.top,card.top),bottom:Math.max(box.bottom,card.bottom)};
+      // Offset sizes describe the final hover footprint, independent of its
+      // animated scale/translation: capsule, bridge and the full invite card.
+      const box=root.getBoundingClientRect();
+      const gap=readMotionToken(getComputedStyle(root),'--space-4');
+      return {left:box.left-invite.offsetWidth-gap,right:box.right,top:box.top,bottom:box.bottom};
     },
   });
+  const previousPadding=scroller instanceof HTMLElement?scroller.style.scrollPaddingTop:'';
+  if(scroller instanceof HTMLElement)scroller.style.scrollPaddingTop='calc(var(--scroll-clearance) + var(--safe-top))';
+  root.inert=true;
+  const tokens=getComputedStyle(root);
+  const entrance=root.animate([{transform:'scale(0)'},{transform:'scale(1)'}],{
+    duration:matchMedia('(prefers-reduced-motion: reduce)').matches?0:readMotionToken(tokens,'--duration-button-fill'),
+    easing:tokens.getPropertyValue('--ease-button-fill').trim(),fill:'both',
+  });
+  root.dispatchEvent(new CustomEvent('walkthroughentrance',{bubbles:true,detail:{at:performance.now()}}));
+  void entrance.finished.then(()=>{
+    entered=true;root.inert=false;entrance.cancel();magnet.remeasure();refreshViewportPointer();
+  }).catch(()=>{ /* Teardown cancels an unfinished entrance. */ });
   const show = (element: Element | null, on: boolean) => element?.toggleAttribute('hidden',!on);
   const labelFace = () => {
     face.setAttribute('aria-label',state === 'paused' ? 'Walkthrough paused. Continue' : video.muted ? 'Sound off. Turn sound on' : 'Sound on. Turn sound off');
@@ -81,7 +101,7 @@ function mount(root: HTMLElement) {
   const render = () => {
     const position = state === 'rest' ? 0 : video.currentTime;
     const current = currentWalkthroughCue(cues,position);
-    const anchor = current?.anchor && current.anchor !== 'top' ? document.querySelector(current.anchor) : null;
+    const anchor = current?.anchor && current.anchor !== 'top' ? content.querySelector(current.anchor) : null;
     const eyebrow = anchor?.closest('.section-heading')?.querySelector('.eyebrow')
       ?? anchor?.closest('section')?.querySelector('.case-study-eyebrow');
     chapter.textContent = eyebrow?.textContent?.trim() || current?.name || '';
@@ -98,10 +118,10 @@ function mount(root: HTMLElement) {
     render();
   };
   const scroll = (anchor: string) => {
-    const target = anchor === 'top' ? document.documentElement : document.querySelector<HTMLElement>(anchor);
+    const target = anchor === 'top' ? (scroller === window ? document.documentElement : scroller as HTMLElement) : content.querySelector<HTMLElement>(anchor);
     if (!target) return;
     cancelScroll?.();
-    cancelScroll = scrollToSection(target, () => root.dispatchEvent(new CustomEvent('walkthroughcuelanded',{detail:{anchor,time:video.currentTime,scrollY:window.scrollY,anchorTop:target.getBoundingClientRect().top},bubbles:true})));
+    cancelScroll = scrollToSection(target, () => root.dispatchEvent(new CustomEvent('walkthroughcuelanded',{detail:{anchor,time:video.currentTime,scrollY:scroller===window?window.scrollY:(scroller as HTMLElement).scrollTop,anchorTop:target.getBoundingClientRect().top},bubbles:true})),scroller);
     root.dispatchEvent(new CustomEvent('walkthroughcue',{detail:{anchor,time:video.currentTime},bubbles:true}));
   };
   const stopClock = () => { cancelAnimationFrame(frame); frame = 0; };
@@ -155,9 +175,11 @@ function mount(root: HTMLElement) {
     if ((event as MouseEvent).detail > 0) face.blur();
   });
   listen(root,'pointerleave',() => { delete root.dataset.quiet; });
-  listen(circle,'transitionend',refreshViewportPointer);
-  listen(window,'wheel',() => pause('scroll'),true);
-  listen(window,'touchmove',() => pause('scroll'),true);
+  listen(root,'pointerenter',()=>magnet.remeasure());
+  listen(circle,'transitionend',event=>{if((event as TransitionEvent).propertyName==='transform'){magnet.remeasure();refreshViewportPointer();}});
+  listen(window,'resize',()=>magnet.remeasure(),true);
+  listen(scroller,'wheel',() => pause('scroll'),true);
+  listen(scroller,'touchmove',() => pause('scroll'),true);
   listen(window,'keydown',event => {
     const key = event as KeyboardEvent;
     if (key.key === 'Escape') { pause('escape'); return; }
@@ -176,7 +198,36 @@ function mount(root: HTMLElement) {
   video.preload = 'auto'; video.muted = true; video.load(); play(); measure();
   root.dataset.ready = 'true';
   return () => {
-    stopClock(); cancelScroll?.(); magnet.destroy(); lifecycle.abort();
-    video.pause(); source.removeAttribute('src'); video.removeAttribute('src'); video.load(); root.remove();
+    stopClock(); cancelScroll?.(); magnet.destroy(); lifecycle.abort(); entrance.cancel();
+    if(scroller instanceof HTMLElement)scroller.style.scrollPaddingTop=previousPadding;
+    video.muted=true;video.pause(); source.removeAttribute('src'); video.removeAttribute('src'); video.load(); root.remove();
   };
+}
+
+/** Fetch the genuine direct-page component; never put it in a case template. */
+export async function preparePopupWalkthrough(url:string, signal:AbortSignal) {
+  const response=await fetch(url,{signal});
+  if(!response.ok)throw Error('Walkthrough page unavailable');
+  const page=new DOMParser().parseFromString(await response.text(),'text/html');
+  return page.querySelector<HTMLTemplateElement>('[data-walkthrough-template]');
+}
+
+/** Created only at the completed popup-open endpoint; owns lazy width changes. */
+export function initializePopupWalkthrough(url:string, context:WalkthroughContext) {
+  const lifetime=new AbortController(),desktop=matchMedia('(min-width: 1024px)');
+  let widget:ReturnType<typeof initializeWalkthrough>|undefined,pending=false;
+  const sync=()=>{
+    if(!desktop.matches || pending || widget || lifetime.signal.aborted)return;
+    pending=true;
+    void preparePopupWalkthrough(url,lifetime.signal).then(template=>{
+      if(!template || lifetime.signal.aborted)return;
+      widget=initializeWalkthrough(template,context);
+      desktop.removeEventListener('change',sync);
+    }).catch(()=>{ /* A missing optional guide must leave the case study usable. */ }).finally(()=>{pending=false;});
+  };
+  desktop.addEventListener('change',sync);
+  const destroy=()=>{lifetime.abort();desktop.removeEventListener('change',sync);widget?.destroy();};
+  window.addEventListener('pagehide',event=>{if(!event.persisted)destroy();},{signal:lifetime.signal});
+  sync();
+  return {destroy};
 }

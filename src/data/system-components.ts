@@ -2,7 +2,7 @@
 export type ComponentKind = 'reusable-ui' | 'page-section' | 'case-study' | 'internal-helper';
 export interface ComponentClassification { file: string; kind: ComponentKind; group?: string; title?: string; reason: string; documentedHidden?: string; catalogPage?: string; id?: string; }
 export const componentManifest: ComponentClassification[] = [
- {file:'src/components/Walkthrough.astro',kind:'reusable-ui',documentedHidden:'walkthrough',group:'Media & storytelling',title:'Walkthrough',reason:'Reusable guided video configured only for direct case-study pages.'},
+ {file:'src/components/Walkthrough.astro',kind:'reusable-ui',documentedHidden:'walkthrough',group:'Media & storytelling',title:'Walkthrough',reason:'Reusable guided video configured for case-study pages and open popups.'},
  {file:'src/components/DSWidthProbe.astro',kind:'internal-helper',reason:'Shared hidden catalog probe for genuine website layout widths.'},
  {file:'src/components/DSDecisionCards.astro',kind:'internal-helper',reason:'Source-derived Decision card catalog page.'},
  {file:'src/components/DSToolCards.astro',kind:'internal-helper',reason:'Source-derived Tool card and Tooltip catalog page using genuine components.'},
