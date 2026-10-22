@@ -349,6 +349,9 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     document.title = oldTitle;
     cursor.release();
     control = null;
+    // A 0ms return can finish inside popstate. Keep manual restoration until
+    // that task ends so the browser's hash step cannot replace our focus/scroll.
+    if (reduced.matches) await new Promise<void>(resolve => setTimeout(resolve, 0));
     focus.focus(active);
     active = null;
     phase = 'closed';

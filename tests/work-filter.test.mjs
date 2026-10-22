@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { initialWorkFilter, matchesWorkFilter, workFilterHash } from '../src/scripts/work-filter/work-filter.ts';
+import { initialWorkFilter, matchesWorkFilter, workFilterHash } from './helpers/work-filter-module.mjs';
 
 const read = path => readFileSync(new URL(path, import.meta.url), 'utf8');
 assert.equal(matchesWorkFilter('selected', 'selected'), true);
