@@ -72,12 +72,12 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
     enabled: () => state === 'rest',
     inside: () => root.matches(':hover'),
     bounds: () => {
-      // The fixed root anchors the resting capsule. Read layout sizes, never
-      // the capsule/invite rectangles interpolating through their transitions.
+      // The fixed root anchors the resting square. Read the final layout sizes,
+      // never the rectangle/invite bounds interpolating through their transitions.
       const box=root.getBoundingClientRect();
-      const width=circle.offsetWidth,height=circle.offsetHeight;
-      const scale=Number.parseFloat(tokens.getPropertyValue('--wt-k'));
-      const rest={left:box.right-width*scale,right:box.right,top:box.bottom-height*scale,bottom:box.bottom};
+      const width=readMotionToken(tokens,'--wt-w'),height=readMotionToken(tokens,'--wt-h');
+      const size=readMotionToken(tokens,'--wt-rest');
+      const rest={left:box.right-size,right:box.right,top:box.bottom-size,bottom:box.bottom};
       if(!root.matches(':hover'))return rest;
       const cardWidth=Number.parseFloat(inviteStyle.width),cardHeight=Number.parseFloat(inviteStyle.height);
       const top=rest.bottom-height,cardTop=top+(height-cardHeight)/2;

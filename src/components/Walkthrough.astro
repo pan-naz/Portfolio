@@ -20,7 +20,8 @@ const { src, poster, cues, lengthSeconds = 0 } = Astro.props;
         <IconButton variant="raised" size="small" class="wt-sound" label="Sound off. Turn sound on" data-walkthrough-sound aria-pressed="false">
           <span data-muted-icon><Icon name="volume-muted" /></span><span data-sound-icon hidden><Icon name="volume" /></span>
         </IconButton>
-        <div class="wt-overlay" aria-hidden="true"><div class="wt-overlay-text"><p class="text-body-m-strong" data-walkthrough-chapter>{cues[0]?.name}</p><p class="wt-time text-label-s" data-walkthrough-time>0:00</p></div></div>
+        <p class="wt-chapter wt-video-text text-body-m-strong" data-walkthrough-chapter aria-hidden="true">{cues[0]?.name}</p>
+        <p class="wt-time wt-video-text text-label-s" data-walkthrough-time aria-hidden="true">0:00</p>
       </div>
       <div class="wt-surface wt-invite-b">
         <div><p class="text-body-s">Let me walk you through this case study.</p><p class="wt-card-label text-label-s">Walkthrough · <span data-walkthrough-length>{lengthSeconds ? `${Math.round(lengthSeconds / 60)} min` : ''}</span></p></div>

@@ -91,6 +91,8 @@ export function validateSharedColorLiterals(directory=root){
    let project=false;for(let parent=decl.parent;parent;parent=parent.parent)if(parent.type==='atrule'&&parent.name==='layer'&&parent.params==='project')project=true;
    if(project)return;
    if(/#[0-9a-f]{3,8}\b|\brgba?\(\s*\d/i.test(decl.value)){
+    // Walkthrough's supplied text shadow is local artwork, fixed to the Ink base in both themes.
+    if(file===path.join(directory,'src/styles/walkthrough.css')&&decl.parent.selector==='.wt'&&decl.prop==='--wt-text-shadow'&&decl.value==='0 1px 2px rgb(22 23 21 / .6), 0 0 12px rgb(22 23 21 / .35)')return;
     if(/mask/.test(decl.prop)&&!/(?!#000\b)#[0-9a-f]{3,8}\b/i.test(decl.value)&&text.includes('opacity mask'))return;
     errors.push('Shared color literal: '+path.relative(directory,file)+': '+decl.prop);
    }

@@ -1594,7 +1594,7 @@
   },
   {
     "file": "src/styles/walkthrough.css",
-    "selector": ".wt .wt-overlay",
+    "selector": ".wt-video-text",
     "context": "@layer system",
     "property": "opacity",
     "value": "0",
@@ -1603,7 +1603,7 @@
   },
   {
     "file": "src/styles/walkthrough.css",
-    "selector": ".wt:not([data-state=\"rest\"]) .wt-overlay",
+    "selector": ".wt:not([data-state=\"rest\"]) .wt-video-text",
     "context": "@layer system",
     "property": "opacity",
     "value": "1",
@@ -1660,7 +1660,7 @@
     "selector": ".wt",
     "context": "@layer system",
     "property": "--wt-w",
-    "value": "152px",
+    "value": "228px",
     "kind": "size",
     "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
   },
@@ -1669,7 +1669,7 @@
     "selector": ".wt",
     "context": "@layer system",
     "property": "--wt-h",
-    "value": "228px",
+    "value": "152px",
     "kind": "spacing",
     "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
   }
