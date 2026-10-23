@@ -11,7 +11,7 @@ export interface WalkthroughCue {
   glide?: boolean;
   stops?: Pick<WalkthroughCue, 'anchor' | 'start' | 'glide'>[];
 }
-type State = 'rest' | 'on' | 'paused' | 'ended';
+type State = 'rest' | 'on' | 'paused';
 export const walkthroughTimeline = (cues: WalkthroughCue[]) => {
   const entries = cues.flatMap(cue => [
     {start:cue.start,anchor:cue.anchor,glide:cue.glide}, ...(cue.stops ?? []),
@@ -139,9 +139,9 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
       ?? anchor?.closest('section')?.querySelector('.case-study-eyebrow');
     chapter.textContent = eyebrow?.textContent?.trim() || current?.name || '';
     time.textContent = state === 'paused' ? 'Paused' : `${formatTime(position)} / ${formatTime(duration)}`;
-    show(playButton.querySelector('[data-play-icon]'),state === 'paused' || state === 'ended');
-    show(playButton.querySelector('[data-pause-icon]'),state !== 'paused' && state !== 'ended');
-    playButton.setAttribute('aria-label',state === 'ended' ? 'Watch again' : state === 'paused' ? 'Play' : 'Pause');
+    show(playButton.querySelector('[data-play-icon]'),state === 'paused');
+    show(playButton.querySelector('[data-pause-icon]'),state !== 'paused');
+    playButton.setAttribute('aria-label',state === 'paused' ? 'Play' : 'Pause');
     labelFace();
   };
   const setState = (next: State) => { state = next; root.dataset.state = next; render(); refreshViewportPointer(); };
@@ -210,7 +210,6 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
     sound(true); setState('on'); play(); tick();
   };
   const resume = () => {
-    if (state === 'ended') { start(); return; }
     if (state !== 'paused') return;
     delete root.dataset.pausedBy;
     const entry = currentWalkthroughCue(timeline,video.currentTime + walkthroughCueLeadSeconds * video.playbackRate)!;
@@ -222,7 +221,7 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
     setRate(1); sound(false); stopClock(); cancelScroll?.(); scrollRevision++; glide = glideReturn = undefined;
     if (root.matches(':hover')) root.dataset.quiet = '';
     delete root.dataset.pausedBy;
-    video.loop = true; nextCue = 0; setState('rest'); play();
+    video.currentTime = 0; video.loop = true; nextCue = 0; setState('rest'); play();
     if (root.contains(document.activeElement)) (document.activeElement as HTMLElement).blur();
   };
   listen(root.querySelector('[data-walkthrough-start]')!,'click',start);
@@ -256,7 +255,7 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
   listen(document,'visibilitychange',() => { if (document.hidden) pause('away'); });
   listen(window,'blur',() => pause('away'));
   listen(window,'pagehide',() => pause('away'));
-  listen(video,'ended',() => { if (state === 'rest') return; stopClock(); setState('ended'); });
+  listen(video,'ended',() => { if (state === 'on') exit(); });
   listen(video,'loadedmetadata',measure);
   const source = video.querySelector<HTMLSourceElement>('source[data-src]')!;
   source.src = source.dataset.src!;
