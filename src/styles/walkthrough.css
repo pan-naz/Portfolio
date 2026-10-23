@@ -41,9 +41,9 @@
 .wt[data-state="paused"] .wt-pause-mark { opacity: 1; }
 .wt[data-state="paused"] .wt-pause-mark > span { transform: scale(1); }
 .wt-invite-b { display: flex; width: max-content; flex-direction: column; }
-.wt-invite-b { gap: var(--space-4); padding: var(--space-4); }
+.wt-invite-b { gap: var(--space-3); padding: var(--space-4); }
 .wt-invite-b > div { width: 0; min-width: 100%; }
-.wt-card-label { color: var(--color-text-secondary); }
+.wt .wt-card-label { color: var(--color-text-secondary); margin-top: var(--space-1); }
 .wt-invite-b .button { align-self: flex-start; }
 /* Separate text lines sit directly on the recording, without a painted band. */
 .wt-video-text { position: absolute; z-index: var(--layer-content); left: 0; right: 0; padding-inline: var(--space-4); color: var(--color-white); text-align: center; text-shadow: var(--wt-text-shadow); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; opacity: 0; visibility: hidden; transform: scale(.1); transition: opacity var(--duration-button-fill) var(--ease-button-fill), transform var(--duration-button-fill) var(--ease-button-fill), visibility calc(var(--duration-button-fill) * 0) var(--ease-button-fill) var(--duration-button-fill); }
