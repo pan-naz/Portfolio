@@ -12,7 +12,7 @@ const { src, poster, cues, lengthSeconds = 0 } = Astro.props;
   <aside class="wt" data-walkthrough data-state="rest" aria-label="Case study walkthrough">
     <script is:inline type="application/json" data-walkthrough-config set:html={JSON.stringify({cues,lengthSeconds}).replaceAll('<','\\u003c')} />
     <div class="wt-stage">
-      <div class="wt-circle">
+      <div class="wt-frame">
         <button class="wt-face" type="button" tabindex="0" aria-pressed="false" aria-label="Sound off. Turn sound on" data-walkthrough-face>
           <DeferredVideo src={src} poster={poster} priority aria-hidden="true" />
           <span class="wt-pause-mark" aria-hidden="true"><span><Icon name="pause" /></span></span>
@@ -23,7 +23,7 @@ const { src, poster, cues, lengthSeconds = 0 } = Astro.props;
         <p class="wt-chapter wt-video-text text-body-m-strong" data-walkthrough-chapter aria-hidden="true">{cues[0]?.name}</p>
         <p class="wt-time wt-video-text text-label-s" data-walkthrough-time aria-hidden="true">0:00</p>
       </div>
-      <div class="wt-surface wt-invite-b">
+      <div class="wt-surface wt-invite">
         <div><p class="text-body-s">Let me walk you through this case study.</p><p class="wt-card-label text-label-s">Walkthrough · <span data-walkthrough-length>{lengthSeconds ? `${Math.round(lengthSeconds / 60)} min` : ''}</span></p></div>
         <Button size="small" arrow="play" data-walkthrough-start>Start walkthrough</Button>
       </div>

@@ -75,8 +75,8 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
     speedLabel.textContent=`${rate}×`;
     speedButton.setAttribute('aria-label',`Playback speed, ${rate}×`);
   };
-  const invite = root.querySelector<HTMLElement>('.wt-invite-b')!;
-  const circle = root.querySelector<HTMLElement>('.wt-circle')!;
+  const invite = root.querySelector<HTMLElement>('.wt-invite')!;
+  const frameElement = root.querySelector<HTMLElement>('.wt-frame')!;
   const pill = root.querySelector<HTMLElement>('.wt-pill')!;
   let pillTimer: ReturnType<typeof setTimeout> | undefined;
   let pillStartUntil = 0;
@@ -266,7 +266,7 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
   for (const event of ['focusin','focusout']) listen(pill,event,() => {
     queueMicrotask(() => { if (!signal.aborted) schedulePill(); });
   });
-  listen(circle,'transitionend',refreshViewportPointer);
+  listen(frameElement,'transitionend',refreshViewportPointer);
   listen(scroller,'wheel',() => pause('scroll'),true);
   listen(scroller,'touchmove',() => pause('scroll'),true);
   listen(window,'keydown',event => {

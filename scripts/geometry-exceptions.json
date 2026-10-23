@@ -1563,25 +1563,7 @@
     "property": "opacity",
     "value": "0",
     "kind": "opacity",
-    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
-  },
-  {
-    "file": "src/styles/walkthrough.css",
-    "selector": ".wt-pause-mark > span",
-    "context": "@layer system",
-    "property": "width",
-    "value": "72px",
-    "kind": "size",
-    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
-  },
-  {
-    "file": "src/styles/walkthrough.css",
-    "selector": ".wt-pause-mark > span",
-    "context": "@layer system",
-    "property": "height",
-    "value": "72px",
-    "kind": "size",
-    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
   },
   {
     "file": "src/styles/walkthrough.css",
@@ -1590,7 +1572,7 @@
     "property": "opacity",
     "value": "1",
     "kind": "opacity",
-    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
   },
   {
     "file": "src/styles/walkthrough.css",
@@ -1599,7 +1581,7 @@
     "property": "opacity",
     "value": "0",
     "kind": "opacity",
-    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
   },
   {
     "file": "src/styles/walkthrough.css",
@@ -1608,34 +1590,34 @@
     "property": "opacity",
     "value": "1",
     "kind": "opacity",
-    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
   },
   {
     "file": "src/styles/walkthrough.css",
-    "selector": ".wt-invite-b, .wt-pill",
+    "selector": ".wt-invite, .wt-pill",
     "context": "@layer system",
     "property": "opacity",
     "value": "0",
     "kind": "opacity",
-    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
   },
   {
     "file": "src/styles/walkthrough.css",
-    "selector": ".wt[data-state=\"rest\"]:not([data-quiet]):hover .wt-invite-b",
+    "selector": ".wt[data-state=\"rest\"]:not([data-quiet]):hover .wt-invite",
     "context": "@layer system > @media (hover: hover) and (pointer: fine)",
     "property": "opacity",
     "value": "1",
     "kind": "opacity",
-    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
   },
   {
     "file": "src/styles/walkthrough.css",
-    "selector": ".wt[data-state=\"rest\"]:has(:focus-visible) .wt-invite-b",
+    "selector": ".wt[data-state=\"rest\"]:has(:focus-visible) .wt-invite",
     "context": "@layer system",
     "property": "opacity",
     "value": "1",
     "kind": "opacity",
-    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
   },
   {
     "file": "src/styles/walkthrough.css",
@@ -1644,7 +1626,7 @@
     "property": "opacity",
     "value": "1",
     "kind": "opacity",
-    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
   },
   {
     "file": "src/styles/walkthrough.css",
@@ -1653,7 +1635,7 @@
     "property": "--wt-edge",
     "value": "2px",
     "kind": "spacing",
-    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
   },
   {
     "file": "src/styles/walkthrough.css",
@@ -1662,7 +1644,7 @@
     "property": "--wt-w",
     "value": "228px",
     "kind": "size",
-    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
   },
   {
     "file": "src/styles/walkthrough.css",
@@ -1671,6 +1653,15 @@
     "property": "--wt-h",
     "value": "152px",
     "kind": "spacing",
-    "reason": "Flow B source composition: fixed capsule/invitation geometry and outline, independent of page layout and interface-control sizes."
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
+  },
+  {
+    "file": "src/styles/walkthrough.css",
+    "selector": ".wt",
+    "context": "@layer system",
+    "property": "--wt-pause-size",
+    "value": "72px",
+    "kind": "size",
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
   }
 ]
