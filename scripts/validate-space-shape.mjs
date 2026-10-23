@@ -126,7 +126,8 @@ export function validateSpaceShape(root=process.cwd()) {
  const nav=read('src/components/DSNavigation.astro'),css=read('src/styles/design-system.css'),foundation=read('src/components/DSFoundations.astro'),cover=read('src/components/DSDashboard.astro'),model=read('src/data/system-spacing-layout.ts');
  const xsConsumers=styleSources(root).filter(source=>!source.file.endsWith('/tokens.css')).flatMap(source=>[...source.css.matchAll(/([^{}]+)\{([^{}]*var\(--radius-xs\)[^{}]*)\}/g)].map(match=>({file:source.file,selector:match[1].trim()})));
  if(xsConsumers.length!==1||xsConsumers[0].file!=='src/styles/global.css'||xsConsumers[0].selector!=='.project-identity__logo--white')errors.push('Extra small radius belongs only to the shared project-logo tile.');
- if(!/\.ds-radius-cards\s*\{[^}]*grid-template-columns:repeat\(6,minmax\(0,1fr\)\)/.test(css))errors.push('The Radius catalog needs six columns above its 1100px breakpoint.');
+ const radiusGrids=[];postcss.parse(css).walkRules(rule=>{if(rule.selector!=='.ds-radius-cards')return;const grid=rule.nodes.find(node=>node.prop==='grid-template-columns');if(grid)radiusGrids.push({media:rule.parent.type==='atrule'&&rule.parent.name==='media'?rule.parent.params:'',value:grid.value});});
+ if(!radiusGrids.some(grid=>!grid.media&&grid.value==='repeat(3,minmax(0,1fr))')||!radiusGrids.some(grid=>/min-width:\s*1440px/.test(grid.media)&&grid.value==='repeat(6,minmax(0,1fr))'))errors.push('The Radius catalog needs three columns from 1100px and six from 1440px.');
  if(!nav.includes('class="text-label-m"')||nav.includes('class="text-label-s"'))errors.push('Catalog groups must use Label/M.');
  for(const m of css.matchAll(/([^{}]+)\{([^{}]*)\}/g))if(m[1].includes('.ds-nav-group > p')&&/(?:font[^:]*|text-transform)\s*:/.test(m[2]))errors.push('Catalog group labels have local typography.');
  if(/\.ds-tile-link\s*\{[^}]*min-height/.test(css))errors.push('Overview text may not reserve a fixed minimum height.');
