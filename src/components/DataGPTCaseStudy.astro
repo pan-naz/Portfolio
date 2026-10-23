@@ -16,7 +16,7 @@ const { project } = Astro.props;
     <DeferredVideo src={media.heroVideo.src} priority={Astro.url.pathname.startsWith('/case-studies/')} fallbackAlt={media.hero.alt} data-case-video poster={media.heroVideo.poster} width={media.heroVideo.width} height={media.heroVideo.height} style={`aspect-ratio: ${media.heroVideo.width} / ${media.heroVideo.height}`} aria-label={media.hero.alt} />
   </div>
   <div class="case-study-body case-study-narrative dg-case">
-    <CaseStudyOverview project={project} titleId="dg-title">
+    <CaseStudyOverview project={project} titleId="dg-title" id="dg-overview">
       <Fragment slot="role"><p>Solo product designer</p><ul><li>Discovery and stakeholder interviews</li><li>Personas and competitor mapping</li><li>Prototypes and usability testing</li><li>UI, design system, developer hand-off</li><li>Pilot and post-release testing</li><li>Website, promo videos and marketing materials</li></ul></Fragment>
       <ul slot="secondary"><li>Product owner</li><li>Product manager</li><li>Engineering team</li></ul>
     </CaseStudyOverview>
@@ -35,9 +35,9 @@ const { project } = Astro.props;
       <SectionHeading id="dg-research" label="Discovery & Research" layout="stacked" reveal={false}>Traditional BI was too slow and too complex for everyday decisions</SectionHeading>
       <p class="dg-lede">I started with stakeholder interviews and a review of the conversational-analytics market. Executives, data analysts, marketers and product managers described the same problem. They wanted answers when the question came up.</p>
       <div class="dg-block"><CaseStudyMedia {...media.research} /></div>
-      <dl class="dg-grid dg-grid--three dg-research-stats">{researchMetrics.map(metric => <Stat {...metric} />)}</dl>
+      <dl class="dg-grid dg-grid--three dg-research-stats" id="dg-research-findings">{researchMetrics.map(metric => <Stat {...metric} />)}</dl>
       <h3 class="dg-outcome-label">Outcome</h3><div class="dg-grid dg-grid--three">{researchOutcomes.map(([title, body]) => <article class="dg-card"><h3>{title}</h3><p>{body}</p></article>)}</div>
-      <div class="dg-subsection"><h3 class="dg-copy-width">Two groups: the people who ask questions and the people who make answers possible</h3><p class="dg-copy-width">Most users only ask questions. A smaller group connects the data and defines what the metrics mean. DataGPT had to serve both.</p>
+      <div class="dg-subsection" id="dg-research-personas"><h3 class="dg-copy-width">Two groups: the people who ask questions and the people who make answers possible</h3><p class="dg-copy-width">Most users only ask questions. A smaller group connects the data and defines what the metrics mean. DataGPT had to serve both.</p>
         <div class="dg-grid dg-grid--three dg-personas">{dataGPTPersonas.map((persona, i) => <article class:list={['dg-card dg-persona', i === 3 && 'dg-persona--wide']}>
           <div class="dg-card-heading"><h3>{persona.title}</h3><span class="dg-badge text-label-s">{persona.group}</span></div><p>{persona.description}</p><blockquote class="dg-question">{persona.question}</blockquote>
           <div class="dg-grid dg-grid--two dg-needs"><div><h4>Need</h4><p>{persona.need}</p></div><div><h4>Frustration</h4><p>{persona.frustration}</p></div></div>
@@ -66,12 +66,12 @@ const { project } = Astro.props;
       <div class="dg-subsection" id="dg-pilot-problem-one"><p class="case-study-eyebrow dg-accent">1 Problem</p><h3 class="case-study-heading">Ambiguous questions got confident but wrong answers</h3>
         <div class="dg-grid dg-grid--two dg-block"><article class="dg-card"><h4>Signal</h4><p>Pilot users often phrased questions in ways that could be read more than one way.</p><p class="dg-question">What's my best-selling product?</p><p class="dg-answer">Coffee is your best-selling product.</p></article><article class="dg-card"><h4>Cause</h4><p>"Best-selling" could mean most units, most revenue or highest margin. The model picked units, while the user meant revenue. The answer was technically correct but wrong for the question, so people had to rephrase or ask follow-ups, and insights took longer.</p></article></div>
         <div class="dg-subsection"><h4 id="dg-llm-instructions">The fix was LLM instructions (skills)</h4><p class="dg-copy-width">I designed a way for admins to add business logic and definitions in the Schema Editor. For example, <strong class="dg-accent">"conversion"</strong> means the conversion-rate metric, and <strong class="dg-accent">"best-performing product"</strong> means highest revenue.</p><div class="dg-media-gap"><CaseStudyMedia {...media.instructions} /></div></div>
-        <h4 class="dg-outcome-label">Results</h4><dl class="dg-grid dg-grid--four dg-results">{queryResults.map(metric => <Stat {...metric} />)}</dl>
+        <h4 class="dg-outcome-label" id="dg-pilot-results-one">Results</h4><dl class="dg-grid dg-grid--four dg-results">{queryResults.map(metric => <Stat {...metric} />)}</dl>
       </div>
       <div class="dg-subsection" id="dg-pilot-problem-two"><p class="case-study-eyebrow dg-accent">2 Problem</p><h3 class="case-study-heading">Users couldn't see which dates and filters an answer used</h3>
         <div class="dg-grid dg-grid--two dg-block"><article class="dg-card"><h4>Cause</h4><p>The date picker and filters lived only in the Data Navigator. When it was collapsed, they disappeared. <strong class="dg-accent">"Show me revenue"</strong> might use <strong class="dg-accent">"last 30 days"</strong>, and nothing in the chat said so. The numbers were right, but the missing context made people doubt them.</p></article><article class="dg-card"><h4>Fix</h4><p>A persistent global header above both Chat and Data Navigator:</p><ul><li>Moved the date picker and filter chips into a top bar.</li><li>Kept them in sync between Chat and Navigator.</li><li>Added subtle motion when dates or filters change.</li></ul></article></div>
         <div class="dg-media-gap"><CaseStudyComparison before={media.before} after={media.after} label="Compare date and filter visibility" /></div>
-        <h4 class="dg-outcome-label">Results</h4><dl class="dg-grid dg-grid--three dg-results">{contextResults.map(metric => <Stat {...metric} />)}</dl>
+        <h4 class="dg-outcome-label" id="dg-pilot-results-two">Results</h4><dl class="dg-grid dg-grid--three dg-results">{contextResults.map(metric => <Stat {...metric} />)}</dl>
       </div>
     </section>
     <section class="dg-dark" data-theme="dark" aria-labelledby="dg-impact">
