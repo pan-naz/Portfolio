@@ -351,6 +351,7 @@
   --stagger-about-reveal: 160ms;
   --delay-service-tooltip: 160ms;
   --delay-walkthrough-pill: 1000ms;
+  --delay-walkthrough-pill-start: 2000ms;
 
   /* Easing · shared curves */
   --ease-entrance: cubic-bezier(.22, .61, .36, 1);

@@ -79,6 +79,7 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
   const circle = root.querySelector<HTMLElement>('.wt-circle')!;
   const pill = root.querySelector<HTMLElement>('.wt-pill')!;
   let pillTimer: ReturnType<typeof setTimeout> | undefined;
+  let pillStartUntil = 0;
   const clearPillTimer = () => { clearTimeout(pillTimer); pillTimer = undefined; };
   const raisePill = () => { clearPillTimer(); if (state !== 'rest') root.dataset.pill = 'raised'; };
   const schedulePill = () => {
@@ -87,7 +88,7 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
     pillTimer = setTimeout(() => {
       pillTimer = undefined;
       if (state === 'on' && !root.matches(':hover') && !pill.matches(':has(:focus-visible)')) root.dataset.pill = 'tucked';
-    }, readMotionToken(tokens,'--delay-walkthrough-pill'));
+    }, Math.max(readMotionToken(tokens,'--delay-walkthrough-pill'),pillStartUntil-performance.now()));
   };
   const chapter = root.querySelector<HTMLElement>('[data-walkthrough-chapter]')!;
   const time = root.querySelector<HTMLElement>('[data-walkthrough-time]')!;
@@ -101,7 +102,7 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
     enabled: () => state === 'rest',
     inside: () => root.matches(':hover'),
     bounds: () => {
-      // The fixed root anchors the resting square. Read the final layout sizes,
+      // The fixed root anchors the resting bounds. Read the final layout sizes,
       // never the rectangle/invite bounds interpolating through their transitions.
       const box=root.getBoundingClientRect();
       const width=readMotionToken(tokens,'--wt-w'),height=readMotionToken(tokens,'--wt-h');
@@ -157,6 +158,9 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
     labelFace();
   };
   const setState = (next: State) => {
+    // Leaving the disappearing invitation must not shorten the first hold.
+    pillStartUntil = state === 'rest' && next === 'on'
+      ? performance.now() + readMotionToken(tokens,'--delay-walkthrough-pill-start') : 0;
     state = next; root.dataset.state = next;
     schedulePill();
     if (state === 'rest') delete root.dataset.pill;
