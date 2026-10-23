@@ -85,8 +85,8 @@ export function validateButtonCatalog(root=process.cwd()){
  if(direct.some(name=>/^--(?:font-|text-|line-height-|letter-spacing-|color-(?:white|paper|ink|night|charcoal|graphite))/.test(name)))errors.push('Action Tokens must omit palette and typography internals.');
  if(JSON.stringify(groups.map(group=>group.title))!==JSON.stringify(['Color','Size','Spacing','Shape','Elevation','Motion'])||JSON.stringify(groups.flatMap(group=>group.names).sort(compareTokenNames))!==JSON.stringify(direct))errors.push('Every direct token belongs to one of the six action groups.');
  const ids=buttonGroups.flatMap(group=>group.cards.map(card=>card.id));
- if(ids.length!==15||new Set(ids).size!==15)errors.push('Exactly thirteen website variants and the two requested Walkthrough variants must be shown once.');
- if(buttonGroups[0].cards[1]?.id!=='primary-small-play'||buttonGroups[1].cards[1]?.id!=='raised-small')errors.push('Walkthrough variants follow their large primary and raised counterparts.');
+ if(ids.length!==14||new Set(ids).size!==14)errors.push('Exactly thirteen existing variants and the Walkthrough small play variant must be shown once.');
+ if(buttonGroups[0].cards[1]?.id!=='primary-small-play')errors.push('The Walkthrough small play variant follows its large primary counterpart.');
  if(!read('src/components/IconButton.astro').includes("const fixedLight = variant === 'raised';"))errors.push('Raised owns its fixed Light zone.');
  if(!read('src/components/WorkSection.astro').includes('variant="raised"')||!read('src/components/CaseStudyPage.astro').includes('variant="raised"'))errors.push('Website cursor and close must use raised.');
  const small=read('src/styles/global.css').match(/\.button--arrow-fill\.button--small\s*\{([^}]+)\}/)?.[1]||'';
@@ -113,7 +113,7 @@ export function validateButtonCatalog(root=process.cwd()){
  if(/:is\(\.project-cursor\.is-case-control, \.case-study-direct-close\)/.test(global)||!global.includes(".icon-button--raised[data-icon='close']:hover svg > g")||!global.includes('.icon-button--raised:hover'))errors.push('Raised owns white hover and the close turn.');
  if(!css.includes('grid-template-columns:var(--space-16) repeat(4,minmax(0,1fr))')||!page.includes('ds-button-state-labels'))errors.push('States require one label plus four equal columns.');
  const specimen=read('src/components/DSButtonSpecimen.astro');
- if(!specimen.includes('<Button size="small" arrow="play">Start walkthrough</Button>')||!specimen.includes('<IconButton variant="raised" size="small" icon="volume-muted" label="Sound off. Turn sound on"/>'))errors.push('Walkthrough cards render the real small play Button and small raised sound IconButton.');
+ if(!specimen.includes('<Button size="small" arrow="play">Start walkthrough</Button>'))errors.push('The Walkthrough card renders the real small play Button.');
  if(!read('src/components/Button.astro').includes("arrow?: 'up' | 'play'")||!read('src/components/Button.astro').includes("arrow === 'play' ? <Icon name=\"play\" />"))errors.push('Play must use the existing strong Icon geometry without the up-arrow class.');
  if(!specimen.includes("state?<Button")||specimen.includes('ds-media-backdrop')||!specimen.includes('{!state&&<div data-ds-example="icon-sound"')||/hidden=\{state==='active'\}/.test(specimen))errors.push('Toggle States show Before only; Media shows the native pill, with play only in all four States.');
  if(!css.includes('.ds-button-view .ds-stage-bar > .ds-tabs { margin-inline-start:0; }'))errors.push('Button tabs must use the same left inset in Preview and Code.');

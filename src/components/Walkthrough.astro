@@ -17,7 +17,7 @@ const { src, poster, cues, lengthSeconds = 0 } = Astro.props;
           <DeferredVideo src={src} poster={poster} priority aria-hidden="true" />
           <span class="wt-pause-mark" aria-hidden="true"><span><Icon name="pause" /></span></span>
         </button>
-        <IconButton variant="raised" size="small" class="wt-sound" label="Sound off. Turn sound on" data-walkthrough-sound aria-pressed="false">
+        <IconButton size="small" class="wt-sound floating-control-surface" label="Sound off. Turn sound on" data-walkthrough-sound aria-pressed="false">
           <span data-muted-icon><Icon name="volume-muted" /></span><span data-sound-icon hidden><Icon name="volume" /></span>
         </IconButton>
         <p class="wt-chapter wt-video-text text-body-m-strong" data-walkthrough-chapter aria-hidden="true">{cues[0]?.name}</p>

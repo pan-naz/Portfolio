@@ -77,6 +77,18 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
   };
   const invite = root.querySelector<HTMLElement>('.wt-invite-b')!;
   const circle = root.querySelector<HTMLElement>('.wt-circle')!;
+  const pill = root.querySelector<HTMLElement>('.wt-pill')!;
+  let pillTimer: ReturnType<typeof setTimeout> | undefined;
+  const clearPillTimer = () => { clearTimeout(pillTimer); pillTimer = undefined; };
+  const raisePill = () => { clearPillTimer(); if (state !== 'rest') root.dataset.pill = 'raised'; };
+  const schedulePill = () => {
+    raisePill();
+    if (state !== 'on' || root.matches(':hover') || pill.matches(':has(:focus-visible)')) return;
+    pillTimer = setTimeout(() => {
+      pillTimer = undefined;
+      if (state === 'on' && !root.matches(':hover') && !pill.matches(':has(:focus-visible)')) root.dataset.pill = 'tucked';
+    }, readMotionToken(tokens,'--delay-walkthrough-pill'));
+  };
   const chapter = root.querySelector<HTMLElement>('[data-walkthrough-chapter]')!;
   const time = root.querySelector<HTMLElement>('[data-walkthrough-time]')!;
   let state: State = 'rest', duration = config.lengthSeconds, nextCue = 0, frame = 0;
@@ -144,7 +156,12 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
     playButton.setAttribute('aria-label',state === 'paused' ? 'Play' : 'Pause');
     labelFace();
   };
-  const setState = (next: State) => { state = next; root.dataset.state = next; render(); refreshViewportPointer(); };
+  const setState = (next: State) => {
+    state = next; root.dataset.state = next;
+    schedulePill();
+    if (state === 'rest') delete root.dataset.pill;
+    render(); refreshViewportPointer();
+  };
   const measure = () => {
     if (Number.isFinite(video.duration) && video.duration > 0) duration = video.duration;
     root.querySelector('[data-walkthrough-length]')!.textContent = `${Math.round(duration / 60)} min`;
@@ -240,7 +257,11 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
     if (state === 'paused') resume(); else sound(video.muted);
     if ((event as MouseEvent).detail > 0) face.blur();
   });
-  listen(root,'pointerleave',() => { delete root.dataset.quiet; });
+  listen(root,'pointerenter',raisePill);
+  listen(root,'pointerleave',() => { delete root.dataset.quiet; schedulePill(); });
+  for (const event of ['focusin','focusout']) listen(pill,event,() => {
+    queueMicrotask(() => { if (!signal.aborted) schedulePill(); });
+  });
   listen(circle,'transitionend',refreshViewportPointer);
   listen(scroller,'wheel',() => pause('scroll'),true);
   listen(scroller,'touchmove',() => pause('scroll'),true);
@@ -262,7 +283,7 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
   setRate(1);video.preload = 'auto'; video.muted = true; video.load(); play(); measure();
   root.dataset.ready = 'true';
   return () => {
-    stopClock(); cancelScroll?.(); magnet.destroy(); lifecycle.abort(); entrance.cancel();
+    clearPillTimer(); stopClock(); cancelScroll?.(); magnet.destroy(); lifecycle.abort(); entrance.cancel();
     if(scroller instanceof HTMLElement)scroller.style.scrollPaddingTop=previousPadding;
     setRate(1);video.muted=true;video.pause(); source.removeAttribute('src'); video.removeAttribute('src'); video.load(); root.remove();
   };
