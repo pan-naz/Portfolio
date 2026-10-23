@@ -249,7 +249,8 @@ html[data-work-stage-layout='true'] .ds-main { margin-left:calc(240px + var(--sa
 .ds-layout-projects,.ds-layout-metrics { display:grid; }
 .ds-layout-projects > span { height:var(--space-12); background:var(--color-bg-surface); border-radius:var(--radius-small); box-shadow:var(--shadow-small); }
 .ds-layout-metrics > span { height:var(--space-4); background:var(--color-bg-accent-subtle); border-radius:var(--radius-full); }
-.ds-radius-cards { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:var(--space-3); }
+.ds-radius-cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--space-3); }
+@media(min-width:1440px) { .ds-radius-cards { grid-template-columns:repeat(6,minmax(0,1fr)); } }
 .ds-radius-card { display:grid; align-content:start; gap:var(--space-1); }
 .ds-radius-demo { display:grid; place-items:center; padding:var(--space-6); height:calc(var(--space-24) + var(--space-2)); margin-bottom:var(--space-3); background:var(--color-bg-surface); border-radius:var(--radius-small); }
 .ds-radius-demo > span { width:100%; height:var(--space-16); border-top:1px solid var(--color-interactive-accent); border-left:1px solid var(--color-interactive-accent); background:var(--color-bg-accent-subtle); }

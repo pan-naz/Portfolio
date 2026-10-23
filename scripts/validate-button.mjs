@@ -74,7 +74,8 @@ export function validateButtonCatalog(root=process.cwd()){
   const specimens=specimenVariants(component,read('src/components/DSButtonSpecimen.astro'));
   const used=componentVariants(component);
   for(const variant of used)if(!specimens.includes(variant))errors.push(name+' website variant has no real specimen: '+variant);
-  for(const variant of specimens)if(!used.includes(variant))errors.push(name+' has an unused specimen variant: '+variant);
+  // The explicitly requested Walkthrough play value is catalogued before its website consumer ships.
+  for(const variant of specimens)if(!used.includes(variant)&&!(name==='Button'&&variant==='arrow=play'))errors.push(name+' has an unused specimen variant: '+variant);
   if(usage.split('\n').some(line=>line.length>76))errors.push('Button Usage must fit desktop blocks: '+name);
   if(name==='IconButton'&&(/class[=:]|<span|import Icon from/.test(usage)||usage.match(/<IconButton(?=\s|\/>)/g)?.length!==2||!usage.includes('variant="raised"')||!usage.includes('icon="layers"')))errors.push('Icon Usage needs two explicit source examples.');
   if(!usage.includes('import '+name)||!usage.includes('<'+name))errors.push('Source Usage missing: '+name);
@@ -84,10 +85,13 @@ export function validateButtonCatalog(root=process.cwd()){
  if(direct.some(name=>/^--(?:font-|text-|line-height-|letter-spacing-|color-(?:white|paper|ink|night|charcoal|graphite))/.test(name)))errors.push('Action Tokens must omit palette and typography internals.');
  if(JSON.stringify(groups.map(group=>group.title))!==JSON.stringify(['Color','Size','Spacing','Shape','Elevation','Motion'])||JSON.stringify(groups.flatMap(group=>group.names).sort(compareTokenNames))!==JSON.stringify(direct))errors.push('Every direct token belongs to one of the six action groups.');
  const ids=buttonGroups.flatMap(group=>group.cards.map(card=>card.id));
- if(ids.length!==13||new Set(ids).size!==13)errors.push('Exactly thirteen used variants must be shown once.');
- if(!read('src/components/IconButton.astro').includes("const fixedLight = variant === 'raised';"))errors.push('Raised owns its fixed Light zone.');
+ if(ids.length!==15||new Set(ids).size!==15)errors.push('All fifteen variants, including Walkthrough small play and small raised, must be shown once.');
+ if(buttonGroups[0].cards[1]?.id!=='primary-small-play'||buttonGroups[1].cards[1]?.id!=='raised-small')errors.push('Walkthrough small variants follow their large counterparts.');
+ if(/data-color-zone|data-zone-keep|fixedLight/.test(read('src/components/IconButton.astro'))||!read('src/components/IconButton.astro').includes("data-icon={variant === 'raised' ? icon : undefined}"))errors.push('Raised follows the surrounding theme and retains its icon hook.');
  if(!read('src/components/WorkSection.astro').includes('variant="raised"')||!read('src/components/CaseStudyPage.astro').includes('variant="raised"'))errors.push('Website cursor and close must use raised.');
- if(/button--arrow-fill\.button--small/.test(read('src/styles/global.css')))errors.push('Unused small primary-arrow CSS remains.');
+ const small=read('src/styles/global.css').match(/\.button--arrow-fill\.button--small\s*\{([^}]+)\}/)?.[1]||'';
+ if(!small.includes('--button-orb: calc(var(--control-height-small) - 2 * var(--space-1));')||!small.includes('--button-orb-inset: calc(var(--space-1) - 1px);')||!small.includes('var(--button-padding-inline-small)'))errors.push('Small primary uses only the shared 36px control, 28px orb, 3px border-adjusted inset and small label padding.');
+ if(!read('src/styles/global.css').includes('.button--arrow-fill.button--small .button-arrow-icon .icon { width: var(--icon-size-compact); height: var(--icon-size-compact); }'))errors.push('Small orb glyphs use the compact shared icon size.');
  for(const file of ['DSTabs','DSTokenNames','SegmentedControl'])if(!read('src/components/'+file+'.astro').includes('DSControl'))errors.push(file+' must use the catalog control helper.');
  errors.push(...validateCatalogControls(read('src/components/DSControl.astro'),read('src/styles/design-system.css')));
  const states=read('src/scripts/design-system-button.ts');
@@ -106,9 +110,11 @@ export function validateButtonCatalog(root=process.cwd()){
  if(!page.includes('inert aria-hidden="true"'))errors.push('Button stages must be inert and hidden from assistive technology.');
  if(!read('src/scripts/design-system.ts').includes("['icon-button','text-link']"))errors.push('Retired action hashes must redirect to Button.');
  const global=read('src/styles/global.css');
- if(/:is\(\.project-cursor\.is-case-control, \.case-study-direct-close\)/.test(global)||!global.includes(".icon-button--raised[data-icon='close']:hover svg > g")||!global.includes('.icon-button--raised:hover'))errors.push('Raised owns white hover and the close turn.');
+ if(/:is\(\.project-cursor\.is-case-control, \.case-study-direct-close\)/.test(global)||!global.includes(".icon-button--raised[data-icon='close']:hover svg > g")||!global.includes('.icon-button:not(.icon-button--secondary, .icon-button--raised):hover { background: var(--color-bg-surface-subtle); }'))errors.push('Raised keeps its theme surface on hover and retains the close turn.');
  if(!css.includes('grid-template-columns:var(--space-16) repeat(4,minmax(0,1fr))')||!page.includes('ds-button-state-labels'))errors.push('States require one label plus four equal columns.');
  const specimen=read('src/components/DSButtonSpecimen.astro');
+ if(!specimen.includes('<Button size="small" arrow="play">Start walkthrough</Button>')||!specimen.includes('<IconButton variant="raised" size="small" icon="volume-muted" label="Sound off. Turn sound on"/>'))errors.push('Walkthrough cards render the real small play Button and small Raised IconButton.');
+ if(!read('src/components/Button.astro').includes("arrow?: 'up' | 'play'")||!read('src/components/Button.astro').includes("arrow === 'play' ? <Icon name=\"play\" />"))errors.push('Play must use the existing strong Icon geometry without the up-arrow class.');
  if(!specimen.includes("state?<Button")||specimen.includes('ds-media-backdrop')||!specimen.includes('{!state&&<div data-ds-example="icon-sound"')||/hidden=\{state==='active'\}/.test(specimen))errors.push('Toggle States show Before only; Media shows the native pill, with play only in all four States.');
  if(!css.includes('.ds-button-view .ds-stage-bar > .ds-tabs { margin-inline-start:0; }'))errors.push('Button tabs must use the same left inset in Preview and Code.');
  if(!states.includes("writes.push({element:group,scale:")||!states.includes("section.dataset.layout=layout")||!states.includes("column/paintWidth(group)<.8")||!css.includes('transform:scale(var(--ds-state-scale,1))'))errors.push('States require one block-wide scale, a minimum of80%, and whole-section card fallback.');

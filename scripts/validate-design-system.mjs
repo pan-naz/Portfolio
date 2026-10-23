@@ -66,7 +66,7 @@ function componentsReachableFrom(entry, seen = new Set()) {
   return seen;
 }
 const hiddenSections = {
- 'Logo':'Wordmark','CaseStudyComparison':'Before and after','CaseStudySteps':'Steps','CaseStudyMedia':'Media','ProjectIdentity':'Project identity','ProjectTags':'Project tags','SectionNavigation':'Project filter','ThemeToggle':'Theme switch','Icon':'Icon',
+ 'Walkthrough':'Walkthrough','Logo':'Wordmark','CaseStudyComparison':'Before and after','CaseStudySteps':'Steps','CaseStudyMedia':'Media','ProjectIdentity':'Project identity','ProjectTags':'Project tags','SectionNavigation':'Project filter','ThemeToggle':'Theme switch','Icon':'Icon',
 };
 const hiddenKeys = Object.fromEntries(Object.entries(hiddenSections).map(([file,title])=>['src/components/'+file+'.astro',title.toLowerCase().replaceAll(' ','-')]));
 const expectedVisible = ['Button','Chip','CaseStudyDecisionCard','NavigationItem','ProjectCard','SectionHeading','Stat','TimelineRow','Tooltip'];

@@ -61,7 +61,7 @@ export function buildSystemInventory(root = process.cwd()) {
     }
   };
   [...used].forEach(visitToken);
-  const owner = (name: string) => name === 'color-border-control' ? 'Button' : name === 'radius-project-logo' ? 'ProjectIdentity' : name === 'project-identity-tags-gap' ? 'ProjectTags' : name.startsWith('footer-pile-') ? 'SiteFooter' : name.startsWith('waterfall-') ? 'HeroWaterfall' : name.startsWith('project-card-') || name.startsWith('project-identity-') ? 'ProjectCard' : undefined;
+  const owner = (name: string) => name === 'color-border-control' ? 'Button' : name === 'project-identity-tags-gap' ? 'ProjectTags' : name.startsWith('footer-pile-') ? 'SiteFooter' : name.startsWith('waterfall-') ? 'HeroWaterfall' : name.startsWith('project-card-') || name.startsWith('project-identity-') ? 'ProjectCard' : undefined;
   const category = (name: string) => /^(color-|color-rain-icon$|color-footer-icon$|color-focus-ring$|color-border-control$|backdrop-)/.test(name) ? 'color' : /^(font-|text-|type-|letter-spacing-|line-height-)/.test(name) ? 'typography' : name.startsWith('space-') ? 'spacing' : /^(radius-|shadow-)/.test(name) ? 'shape' : /^(duration-|delay-|ease-|stagger-|distance-|rotation-|intro-stage-|scale-|project-tilt-|work-filter-)/.test(name) ? 'motion' : name.startsWith('icon-') ? 'iconography' : 'layout';
   const tokens: SourceToken[] = [...used].filter(name => definitions.has(name)).sort().map(name => ({
     name, light: palettes.light[name], dark: palettes.dark[name], resolvedLight: palettes.value(palettes.light, name), resolvedDark: palettes.value(palettes.dark, name), users: [...(consumers.get(name) || [])],

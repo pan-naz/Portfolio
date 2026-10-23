@@ -10,6 +10,7 @@ assert.ok(files.length>0);
 for(const file of files){assert.match(file,/^[a-f0-9]{16}-[0-9]+\.(avif|webp)$/,'Only content-hashed candidates get the immutable policy');assert.ok(matches.test(`/generated/images/${file}`),file);}
 for(const url of ['/generated/images/manifest.json','/projects/example.jpg','/_astro/font.woff2','/favicon.svg','/robots.txt'])assert.equal(matches.test(url),false,url);
 assert.deepEqual(config.headers.filter(rule=>rule!==generated[0]),[
+ {source:'/nazarii-pankiv-cv.pdf',headers:[{key:'X-Robots-Tag',value:'noindex'}]},
  {source:'/(.*)',headers:[
   {key:'X-Content-Type-Options',value:'nosniff'},
   {key:'Referrer-Policy',value:'strict-origin-when-cross-origin'},

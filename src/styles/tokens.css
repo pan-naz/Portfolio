@@ -251,6 +251,7 @@
 
 /* Radius · phone is the default */
 :root {
+  --radius-xs: 8px;
   --radius-small: 12px;
   --radius-medium: 24px;
   --radius-large: 24px;
@@ -349,6 +350,8 @@
   --delay-filter-enter: 140ms;
   --stagger-about-reveal: 160ms;
   --delay-service-tooltip: 160ms;
+  --delay-walkthrough-pill: 1000ms;
+  --delay-walkthrough-pill-start: 2000ms;
 
   /* Easing · shared curves */
   --ease-entrance: cubic-bezier(.22, .61, .36, 1);
@@ -484,7 +487,6 @@
   --hero-gutter: var(--space-6);
   --hero-visual-gutter: var(--space-6);
   --work-preview-height: 120px;
-  --radius-project-logo: 25%;
   --project-identity-tags-gap: var(--space-6);
   --case-hero-fit: contain;
 }

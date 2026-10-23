@@ -1,7 +1,8 @@
 ---
 import Arrow from './Arrow.astro';
+import Icon from './Icon.astro';
 import type { HTMLAttributes } from 'astro/types';
-interface Props extends Omit<HTMLAttributes<'button'>, 'disabled'>, Pick<HTMLAttributes<'a'>, 'target' | 'rel'> { href?: string; download?: boolean; size?: 'large' | 'small'; variant?: 'primary' | 'secondary'; appearance?: 'default' | 'comparison'; arrow?: 'up'; }
+interface Props extends Omit<HTMLAttributes<'button'>, 'disabled'>, Pick<HTMLAttributes<'a'>, 'target' | 'rel'> { href?: string; download?: boolean; size?: 'large' | 'small'; variant?: 'primary' | 'secondary'; appearance?: 'default' | 'comparison'; arrow?: 'up' | 'play'; }
 const { href, size = 'large', variant = 'primary', appearance = 'default', arrow, class: className, ...attributes } = Astro.props;
 const Tag = href ? 'a' : 'button';
 const hasArrowFill = variant === 'primary' && Boolean(arrow);
@@ -11,9 +12,9 @@ const hasArrowFill = variant === 'primary' && Boolean(arrow);
     <>
       <span class="button-fill-label"><slot /></span>
       <span class="button-arrow-orb" aria-hidden="true">
-        <span class="button-arrow-icon button-arrow-icon--out"><Arrow direction={arrow} /></span>
-        <span class="button-arrow-icon button-arrow-icon--in"><Arrow direction={arrow} /></span>
+        <span class="button-arrow-icon button-arrow-icon--out">{arrow === 'play' ? <Icon name="play" /> : <Arrow direction={arrow} />}</span>
+        <span class="button-arrow-icon button-arrow-icon--in">{arrow === 'play' ? <Icon name="play" /> : <Arrow direction={arrow} />}</span>
       </span>
     </>
-  ) : <><slot />{arrow && <Arrow direction={arrow} />}</>}
+  ) : <><slot />{arrow && (arrow === 'play' ? <Icon name="play" /> : <Arrow direction={arrow} />)}</>}
 </Tag>

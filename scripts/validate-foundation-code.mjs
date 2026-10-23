@@ -25,7 +25,7 @@ export function validateTokenSource(css){
  for(const name of ['--color-border-control','--color-focus-ring']){const defs=[];tree.walkDecls(name,d=>defs.push(d.value));if(defs.filter(value=>value==='var(--color-text-primary)').length!==1||defs.some(value=>value!=='var(--color-text-primary)'&&!(name==='--color-focus-ring'&&value==='inherit')))errors.push(name+' must derive once from local primary text.');}
  tree.walkDecls('--color-focus-ring',decl=>{if(decl.value==='inherit'&&decl.parent.selector!=="[data-zone-keep~='focus-ring']")errors.push('Only fixed-Light controls may keep their surrounding focus ring.');});
  const raw=new Map();tree.walkDecls(d=>{if(d.prop.startsWith('--')&&!raw.has(d.prop))raw.set(d.prop,d.value);});
- for(const [name,value]of Object.entries({'radius-small':'12px','radius-medium':'24px','radius-large':'24px','radius-xlarge':'40px','radius-full':'999px','gutter':'var(--space-6)','header-inset':'var(--space-6)','grid-gap':'var(--space-4)','section-space':'var(--space-16)'}))if(raw.get('--'+name)!==value)errors.push('Incorrect phone default: '+name);
+ for(const [name,value]of Object.entries({'radius-xs':'8px','radius-small':'12px','radius-medium':'24px','radius-large':'24px','radius-xlarge':'40px','radius-full':'999px','gutter':'var(--space-6)','header-inset':'var(--space-6)','grid-gap':'var(--space-4)','section-space':'var(--space-16)'}))if(raw.get('--'+name)!==value)errors.push('Incorrect phone default: '+name);
  return errors;
 }
 const decode=text=>text.replace(/<[^>]*>/g,'').replace(/&#(?:x([\da-f]+)|(\d+));/gi,(_,hex,number)=>String.fromCodePoint(parseInt(hex||number,hex?16:10))).replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&gt;/g,'>').replace(/&lt;/g,'<').replace(/&amp;/g,'&');
@@ -34,7 +34,7 @@ export function validateRenderedThemeZones(html){
  for(const[,attributes]of html.matchAll(/<[a-z][\w-]*\b((?:"[^"]*"|'[^']*'|[^'">])*)>/gi)){
   const classes=new Set((attributes.match(/\bclass="([^"]*)"/)?.[1]||'').split(/\s+/)),has=(name,value)=>attributes.includes(`${name}="${value}"`);
   const inverse=classes.has('case-study-chapter--inverse'),impact=classes.has('case-study-decision-card__impact'),about=classes.has('about-details');
-  const light=['icon-button--raised','tooltip','case-study-decision-card--figure','case-study-service-demo'].some(name=>classes.has(name))||(classes.has('floating-control-theme')&&!classes.has('floating-navigation-theme'));
+  const light=['tooltip','case-study-decision-card--figure','case-study-service-demo'].some(name=>classes.has(name))||(classes.has('floating-control-theme')&&!classes.has('floating-navigation-theme'));
   const zone=light?'light':inverse||impact||about?'dark':null;
   if(zone&&!has('data-color-zone',zone))errors.push('Missing rendered '+zone+' zone: '+[...classes].join(' '));
   const keep=new Set((attributes.match(/\bdata-zone-keep="([^"]*)"/)?.[1]||'').split(/\s+/));
@@ -42,7 +42,7 @@ export function validateRenderedThemeZones(html){
   if(inverse&&!keep.has('surface'))errors.push('Inverse artwork must retain its inherited surface.');
   if(zone&&!keep.has(about?'large-shadow':'shadows'))errors.push('Scoped copy must retain its original shadow mode: '+[...classes].join(' '));
   if([...keep].some(keyword=>!['surface','section','shadows','large-shadow','focus-ring',''].includes(keyword))||keep.has('shadows')&&keep.has('large-shadow'))errors.push('Unknown/redundant zone keyword.');
-  if(classes.has('icon-button--raised')&&!keep.has('focus-ring'))errors.push('Raised must keep its surrounding focus ring.');
+  if(classes.has('icon-button--raised')&&/data-color-zone=|data-zone-keep=/.test(attributes))errors.push('Raised must inherit its surrounding theme and focus role.');
   if(oldZoneAttributes.some(name=>attributes.includes(name+'=')))errors.push('Retired zone helper attribute.');
  }
  return errors;

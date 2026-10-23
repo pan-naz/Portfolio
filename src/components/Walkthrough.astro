@@ -1,0 +1,45 @@
+---
+import '../styles/walkthrough.css';
+import Button from './Button.astro';
+import IconButton from './IconButton.astro';
+import Icon from './Icon.astro';
+import DeferredVideo from './DeferredVideo.astro';
+import type { WalkthroughCue } from '../scripts/walkthrough';
+interface Props { src: string; poster: string; cues: WalkthroughCue[]; lengthSeconds?: number; }
+const { src, poster, cues, lengthSeconds = 0 } = Astro.props;
+---
+<template data-walkthrough-template>
+  <aside class="wt" data-walkthrough data-state="rest" aria-label="Case study walkthrough">
+    <script is:inline type="application/json" data-walkthrough-config set:html={JSON.stringify({cues,lengthSeconds}).replaceAll('<','\\u003c')} />
+    <div class="wt-stage">
+      <div class="wt-frame">
+        <button class="wt-face" type="button" tabindex="0" aria-pressed="false" aria-label="Sound off. Turn sound on" data-walkthrough-face>
+          <DeferredVideo src={src} poster={poster} priority aria-hidden="true" />
+          <span class="wt-pause-mark" aria-hidden="true"><span><Icon name="pause" /></span></span>
+        </button>
+        <IconButton variant="raised" size="small" class="wt-sound" label="Sound off. Turn sound on" data-walkthrough-sound aria-pressed="false">
+          <span data-muted-icon><Icon name="volume-muted" /></span><span data-sound-icon hidden><Icon name="volume" /></span>
+        </IconButton>
+        <p class="wt-chapter wt-video-text text-body-m-strong" data-walkthrough-chapter aria-hidden="true">{cues[0]?.name}</p>
+        <p class="wt-time wt-video-text text-label-s" data-walkthrough-time aria-hidden="true">0:00</p>
+      </div>
+      <div class="wt-surface wt-invite">
+        <div><p class="text-body-s">Let me walk you through this case study.</p><p class="wt-card-label text-label-s">Walkthrough · <span data-walkthrough-length>{lengthSeconds ? `${Math.round(lengthSeconds / 60)} min` : ''}</span></p></div>
+        <Button size="small" arrow="play" data-walkthrough-start>Start walkthrough</Button>
+      </div>
+      <div class="wt-pill floating-control-surface">
+        <IconButton size="small" label="Pause" data-walkthrough-play>
+          <span data-play-icon hidden><Icon name="play" /></span><span data-pause-icon><Icon name="pause" /></span>
+        </IconButton>
+        <IconButton size="small" class="wt-speed text-label-m" label="Playback speed, 1×" data-walkthrough-speed>
+          <span class="wt-speed-width" aria-hidden="true">1.25×</span><span data-walkthrough-rate aria-hidden="true">1×</span>
+        </IconButton>
+        <IconButton size="small" icon="close" label="Exit walkthrough" data-icon-hover="close" data-walkthrough-close />
+      </div>
+    </div>
+  </aside>
+</template>
+<script>
+  import { initializeWalkthrough } from '../scripts/walkthrough';
+  document.querySelectorAll<HTMLTemplateElement>('[data-walkthrough-template]').forEach(template => initializeWalkthrough(template));
+</script>

@@ -17,18 +17,19 @@ export const scrollImmediately = (position: number, wrapper: Window | HTMLElemen
   else if (wrapper !== window && scrollAxis(wrapper as HTMLElement) === 'horizontal') wrapper.scrollTo({left:Math.max(0, position),behavior:'instant'});
   else wrapper.scrollTo({top:Math.max(0, position),behavior:'instant'});
 };
-export function scrollToSection(target: HTMLElement, onComplete?: () => void) {
+export function scrollToSection(target: HTMLElement, onComplete?: () => void, wrapper?: Window | HTMLElement) {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const owner = document.documentElement.hasAttribute('data-catalog') ? scrollOwner(target) : window;
+  const owner = wrapper ?? (document.documentElement.hasAttribute('data-catalog') ? scrollOwner(target) : window);
+  const atStart = target === owner || target === document.documentElement || target.id === 'top';
   const active = scrollRoots.get(owner)?.lenis;
   const completed = () => onComplete?.();
   // Native smooth scrolling reports completion itself; Lenis owns its completion callback.
-  if (onComplete && !active && !reduced) document.addEventListener('scrollend', completed, {once:true});
-  if (!reduced && active) active.scrollTo(target.id === 'top' ? 0 : target, { duration: readMotionToken(getComputedStyle(target), '--duration-section-scroll') / 1000, easing: easeSectionScroll, lerp: 0, onComplete });
-  else if (target.id === 'top') window.scrollTo({ top: 0, behavior: reduced ? 'instant' : 'smooth' });
+  if (onComplete && !active && !reduced) owner.addEventListener('scrollend', completed, {once:true});
+  if (!reduced && active) active.scrollTo(atStart ? 0 : target, { duration: readMotionToken(getComputedStyle(target), '--duration-section-scroll') / 1000, easing: easeSectionScroll, lerp: 0, onComplete });
+  else if (atStart) owner.scrollTo({ top: 0, behavior: reduced ? 'instant' : 'smooth' });
   else target.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth', block: 'start' });
   if (onComplete && reduced) queueMicrotask(completed);
-  return () => document.removeEventListener('scrollend', completed);
+  return () => owner.removeEventListener('scrollend', completed);
 }
 
 /** Load the unchanged wheel engine only where it is used. */

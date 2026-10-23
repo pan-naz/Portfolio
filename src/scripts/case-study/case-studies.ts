@@ -10,6 +10,7 @@ import { readCaseStudyMotion } from './case-study-motion';
 import { suspendCaseStudyScrollRestoration } from './case-study-navigation';
 import { rescopeSvgAssets } from '../svg-asset';
 import { initializeControlMagnet } from '../control-magnet';
+import { initializePopupWalkthrough } from '../walkthrough';
 import { initializeCaseStudyFocus } from './case-study-focus';
 
 type Cursor = NonNullable<ReturnType<typeof initializeProjectCursor>>;
@@ -36,6 +37,8 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
   let caseVideos: ReturnType<typeof initializeCaseStudyVideos> | undefined;
   let caseImages: ReturnType<typeof initializeCaseStudyImages> | undefined;
   let closeMagnet: ReturnType<typeof initializeControlMagnet> | undefined;
+  let walkthrough:ReturnType<typeof initializePopupWalkthrough>|undefined;
+  const removeWalkthrough=()=>{walkthrough?.destroy();walkthrough=undefined;};
   let revision = 0;
   let closeRequested = false;
   let oldTitle = document.title;
@@ -248,11 +251,15 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     panel.style.cssText = 'inset:0;width:100%;height:100%;border-radius:0';
     cancelAnimations();
     closeMagnet = initializeControlMagnet(control.querySelector<HTMLButtonElement>('button')!);
+    dialog.dispatchEvent(new CustomEvent('casestudyopened',{bubbles:true,detail:{id,at:performance.now()}}));
+    if(template.hasAttribute('data-case-walkthrough') && !closeRequested && phase==='open')walkthrough=initializePopupWalkthrough(link.href,{parent:dialog,content:scroll,scroller:scroll});
   };
 
   const close = async () => {
     if (phase === 'closed' || phase === 'closing' || !active || !control) return;
+    removeWalkthrough();
     phase = 'closing';
+    dialog.dispatchEvent(new CustomEvent('casestudyclosing',{bubbles:true,detail:{at:performance.now()}}));
     closeMagnet?.destroy(); closeMagnet = undefined;
     // Freeze any remaining glide before measuring the return animation.
     destroySmoothScroll(scroll);
@@ -349,6 +356,9 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     document.title = oldTitle;
     cursor.release();
     control = null;
+    // A 0ms return can finish inside popstate. Keep manual restoration until
+    // that task ends so the browser's hash step cannot replace our focus/scroll.
+    if (reduced.matches) await new Promise<void>(resolve => setTimeout(resolve, 0));
     focus.focus(active);
     active = null;
     phase = 'closed';
@@ -366,6 +376,7 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
   function requestClose() {
     if (phase === 'closed' || phase === 'closing' || closeRequested) return;
     closeMagnet?.destroy(); closeMagnet = undefined;
+    removeWalkthrough();
     closeRequested = true;
     if (control) control.hidden = true;
     if (history.state?.caseStudy) history.back();

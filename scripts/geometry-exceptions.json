@@ -1,7 +1,7 @@
 [
   {
     "file": "src/components/HookoCaseStudy.astro",
-    "selector": "[inline-style-21918]",
+    "selector": "[inline-style-21925]",
     "context": "",
     "property": "max-width",
     "value": "760px",
@@ -1482,6 +1482,15 @@
   },
   {
     "file": "src/styles/global.css",
+    "selector": ".button--arrow-fill.button--small",
+    "context": "@layer system",
+    "property": "--button-orb-inset",
+    "value": "calc(var(--space-1) - 1px)",
+    "kind": "spacing",
+    "reason": "Small primary orb uses Space 1 clearance including the existing 1px button border, matching the Walkthrough prototype."
+  },
+  {
+    "file": "src/styles/global.css",
     "selector": ".work-rail",
     "context": "@layer system",
     "property": "--work-filter-half-height",
@@ -1546,5 +1555,113 @@
     "value": "80px",
     "kind": "size",
     "reason": "One shared desktop/tablet duration track, wide enough for the real duration; phone uses its native auto track."
+  },
+  {
+    "file": "src/styles/walkthrough.css",
+    "selector": ".wt-pause-mark",
+    "context": "@layer system",
+    "property": "opacity",
+    "value": "0",
+    "kind": "opacity",
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
+  },
+  {
+    "file": "src/styles/walkthrough.css",
+    "selector": ".wt[data-state=\"paused\"] .wt-pause-mark",
+    "context": "@layer system",
+    "property": "opacity",
+    "value": "1",
+    "kind": "opacity",
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
+  },
+  {
+    "file": "src/styles/walkthrough.css",
+    "selector": ".wt-video-text",
+    "context": "@layer system",
+    "property": "opacity",
+    "value": "0",
+    "kind": "opacity",
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
+  },
+  {
+    "file": "src/styles/walkthrough.css",
+    "selector": ".wt:not([data-state=\"rest\"]) .wt-video-text",
+    "context": "@layer system",
+    "property": "opacity",
+    "value": "1",
+    "kind": "opacity",
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
+  },
+  {
+    "file": "src/styles/walkthrough.css",
+    "selector": ".wt-invite, .wt-pill",
+    "context": "@layer system",
+    "property": "opacity",
+    "value": "0",
+    "kind": "opacity",
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
+  },
+  {
+    "file": "src/styles/walkthrough.css",
+    "selector": ".wt[data-state=\"rest\"]:not([data-quiet]):hover .wt-invite",
+    "context": "@layer system > @media (hover: hover) and (pointer: fine)",
+    "property": "opacity",
+    "value": "1",
+    "kind": "opacity",
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
+  },
+  {
+    "file": "src/styles/walkthrough.css",
+    "selector": ".wt[data-state=\"rest\"]:has(:focus-visible) .wt-invite",
+    "context": "@layer system",
+    "property": "opacity",
+    "value": "1",
+    "kind": "opacity",
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
+  },
+  {
+    "file": "src/styles/walkthrough.css",
+    "selector": ".wt:not([data-state=\"rest\"]) .wt-pill",
+    "context": "@layer system",
+    "property": "opacity",
+    "value": "1",
+    "kind": "opacity",
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
+  },
+  {
+    "file": "src/styles/walkthrough.css",
+    "selector": ".wt",
+    "context": "@layer system",
+    "property": "--wt-edge",
+    "value": "2px",
+    "kind": "spacing",
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
+  },
+  {
+    "file": "src/styles/walkthrough.css",
+    "selector": ".wt",
+    "context": "@layer system",
+    "property": "--wt-w",
+    "value": "228px",
+    "kind": "size",
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
+  },
+  {
+    "file": "src/styles/walkthrough.css",
+    "selector": ".wt",
+    "context": "@layer system",
+    "property": "--wt-h",
+    "value": "152px",
+    "kind": "spacing",
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
+  },
+  {
+    "file": "src/styles/walkthrough.css",
+    "selector": ".wt",
+    "context": "@layer system",
+    "property": "--wt-pause-size",
+    "value": "72px",
+    "kind": "size",
+    "reason": "Walkthrough component geometry: open size, edge and pause mark, independent of page layout."
   }
 ]

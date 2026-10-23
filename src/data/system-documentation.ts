@@ -1,6 +1,7 @@
 // Documentation is attached to real source files. Display names, props, values,
 // usages and token references are read from those files by system-inventory.ts.
 export const componentPurposes: Record<string, string> = {
+  'src/components/Walkthrough.astro': 'The guided video on a case study, built from Button, Icon button, the Media icons and the floating-control surface.',
   'src/components/Tooltip.astro': 'Shows a short name beside a visual target on hover or keyboard focus.',
   'src/components/AboutSection.astro': 'Shows career experience and a link to the CV.',
   'src/components/Arrow.astro': 'Shows direction beside a link or between steps.',

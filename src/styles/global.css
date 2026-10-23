@@ -75,6 +75,9 @@ picture:has(+ noscript > picture) > img[data-deferred-image], img[data-deferred-
 .button:active { transform: scale(var(--scale-button-press)); }
 .button--arrow-fill { --button-orb: var(--control-height-small); --button-orb-inset: 5px; --button-arrow-enter-x: calc(var(--distance-button-arrow) * -1); --button-arrow-enter-y: 0px; --button-arrow-exit-x: var(--distance-button-arrow); --button-arrow-exit-y: 0px; position: relative; isolation: isolate; overflow: hidden; gap: var(--space-3); padding: var(--button-orb-inset) var(--button-orb-inset) var(--button-orb-inset) var(--space-6); white-space: nowrap; }
 .button--arrow-fill.button--arrow-up { --button-arrow-enter-x: calc(var(--distance-button-arrow-diagonal) * -1); --button-arrow-enter-y: var(--distance-button-arrow-diagonal); --button-arrow-exit-x: var(--distance-button-arrow-diagonal); --button-arrow-exit-y: calc(var(--distance-button-arrow-diagonal) * -1); }
+/* Small primary · the same orb fill and horizontal icon motion at the small control size. */
+.button--arrow-fill.button--small { --button-orb: calc(var(--control-height-small) - 2 * var(--space-1)); --button-orb-inset: calc(var(--space-1) - 1px); padding: var(--button-orb-inset) var(--button-orb-inset) var(--button-orb-inset) var(--button-padding-inline-small); }
+.button--arrow-fill.button--small .button-arrow-icon .icon { width: var(--icon-size-compact); height: var(--icon-size-compact); }
 .button--arrow-fill::before { content: ''; position: absolute; z-index: var(--layer-base); inset: 0; background: var(--color-text-on-primary); clip-path: inset(var(--button-orb-inset) var(--button-orb-inset) var(--button-orb-inset) calc(100% - var(--button-orb) - var(--button-orb-inset)) round var(--radius-full)); transition: clip-path var(--duration-button-fill) var(--ease-button-fill); pointer-events: none; }
 .button--arrow-fill .button-fill-label { position: relative; z-index: var(--layer-content); transition: color var(--duration-button-fill) var(--ease-button-fill); }
 .button--arrow-fill .button-arrow-orb { position: relative; z-index: var(--layer-raised); display: grid; place-items: center; flex: 0 0 var(--button-orb); width: var(--button-orb); height: var(--button-orb); border-radius: var(--radius-full); overflow: hidden; color: var(--color-interactive-accent); background: var(--color-text-on-primary); }
@@ -340,7 +343,7 @@ html[data-work-stage-layout='true']:not([data-work-stage-motion='true']) .work-p
 .project-heading .arrow { margin-left: auto; margin-right: var(--space-6); }
 .project-identity { display: inline-flex; align-items: center; gap: var(--space-2); }
 .project-identity .svg-asset { width: var(--project-logo-size); height: var(--project-logo-size); flex: 0 0 var(--project-logo-size); object-fit: contain; }
-.project-identity__logo--white { border-radius: var(--radius-project-logo); box-shadow: var(--shadow-small); }
+.project-identity__logo--white { border-radius: var(--radius-xs); box-shadow: var(--shadow-small); }
 .project-tags { display: flex; flex-wrap: wrap; gap: var(--space-2); padding-right: var(--space-6); margin-top: var(--project-identity-tags-gap); }
 .project-description { margin-top: var(--space-2); color: var(--color-text-secondary); }
 .project-media { position: relative; }
@@ -581,9 +584,6 @@ html.case-study-open { overflow: hidden; scrollbar-gutter: stable; }
 
 
 /* Match the theme glyph: turn on hover and smoothly return when hover ends. */
-@media (hover: hover) and (pointer: fine) {
-.icon-button--raised:hover { background: var(--color-bg-surface); }
-}
 .icon-button--raised:focus-visible { background: var(--color-bg-surface); }
 .icon-button--raised[data-icon='close'] svg > g, [data-icon-hover='close'] svg > g { transform-box: fill-box; transform-origin: center; transform: rotate(0deg); }
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {

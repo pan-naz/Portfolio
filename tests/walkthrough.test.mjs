@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import {walkthroughTimeline,currentWalkthroughCue,walkthroughCueLeadSeconds,walkthroughGlidePosition} from '../src/scripts/walkthrough.ts';
+import {walkthroughs} from '../src/data/walkthroughs.ts';
+const cues=[{name:'First',anchor:'#first',start:0},{name:'Second',anchor:'#second',start:20,stops:[{anchor:'#inner-b',start:28},{anchor:'#inner-a',start:24}]}];
+const timeline=walkthroughTimeline(cues);
+assert.deepEqual(timeline.map(cue=>cue.start),[0,20,24,28]);
+assert.equal(currentWalkthroughCue(timeline,19.99).anchor,'#first');
+assert.equal(currentWalkthroughCue(timeline,20).anchor,'#second');
+assert.equal(currentWalkthroughCue(timeline,26).anchor,'#inner-a');
+assert.equal(currentWalkthroughCue(cues,26).name,'Second','An inner stop retains its containing chapter');
+assert.equal(currentWalkthroughCue([],0),undefined);
+assert.deepEqual(Object.keys(walkthroughs),['datagpt']);
+assert.deepEqual(walkthroughTimeline(walkthroughs.datagpt.cues).map(cue=>cue.start),[0,4.8,15.5,41.9,49.9,85.8,105.9,162.5,170.4,206.0,229.0,239.3,265.8,291.9,305.5,336.5,342.4,370.6,380.8]);
+assert.equal(currentWalkthroughCue(timeline,19.5 + walkthroughCueLeadSeconds).anchor,'#second','Resume during cue lead retains the prepared next section');
+console.log('PASS: cue boundaries, inner-stop ordering, chapter identity and DataGPT-only configuration.');
+
+const glides=walkthroughTimeline(walkthroughs.datagpt.cues).filter(entry=>entry.glideUntil!==undefined);
+assert.deepEqual(glides.map(({start,glideUntil})=>[start,glideUntil]),[[105.9,162.5],[170.4,206],[206,229]]);
+for(const[time,position]of [[5,100],[10,100],[15,200],[20,300],[25,400],[30,500],[35,500]])assert.equal(walkthroughGlidePosition(100,500,10,30,time),position);
+assert.equal(walkthroughGlidePosition(100,80,10,30,20),100,'A shorter section never glides backwards');
+assert.equal(walkthroughGlidePosition(100,500,10,10,10),500,'An exhausted window reaches the end');

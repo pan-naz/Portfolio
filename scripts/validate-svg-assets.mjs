@@ -50,7 +50,8 @@ export function validateSvgAssets() {
   const svgRenderers = new Set(['Icon.astro', 'Logo.astro', 'SvgAsset.astro']);
   for (const path of filesUnder('src').filter(path => path.endsWith('.astro'))) {
     const source = read(path);
-    if (/[☰✕✖↗]/u.test(source) || /<IconButton\b[^>]*>[\s\S]*?×[\s\S]*?<\/IconButton>/.test(source)) errors.push(`${path}: control icons must use shared SVG components instead of character glyphs.`);
+    // Numeric playback-rate labels are text; a standalone × still needs the shared close icon.
+    if (/[☰✕✖↗]/u.test(source) || /<IconButton\b[^>]*>[\s\S]*?×[\s\S]*?<\/IconButton>/.test(source.replace(/\b\d+(?:\.\d+)?×/g, ''))) errors.push(`${path}: control icons must use shared SVG components instead of character glyphs.`);
     if (/<image\b/.test(source)) errors.push(`${path}: nested logos must use SvgAsset, without SVG image wrappers.`);
     if (!svgRenderers.has(path.split('/').at(-1))) {
       for (const [svg] of source.matchAll(/<svg\b[^>]*>/g)) {

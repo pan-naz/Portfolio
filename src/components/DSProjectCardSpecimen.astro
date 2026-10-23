@@ -2,7 +2,7 @@
 import ProjectCard from './ProjectCard.astro';import ProjectIdentity from './ProjectIdentity.astro';import ProjectTags from './ProjectTags.astro';import IconButton from './IconButton.astro';
 import {projects,collectionProjects} from '../data/portfolio';
 interface Props {kind:'full'|'compact'|'identity'|'default'|'hover'|'focus';}
-const {kind}=Astro.props,project=kind==='compact'?collectionProjects.find(project=>project.id==='yellow-leaf')!:['default','hover','focus'].includes(kind)?collectionProjects.find(project=>project.id==='peak-hotel')!:projects[0];
+const {kind}=Astro.props,project=kind==='compact'?collectionProjects.find(project=>project.id==='yellow-leaf')!:['default','hover','focus'].includes(kind)?collectionProjects.find(project=>project.id==='peak-hotel')!:projects.find(project=>project.id==='voximplant')!;
 ---
 <div class="ds-project-fit" data-project-fit={kind}>
  <div class="ds-project-art ds-specimens" data-project-art={kind} data-ds-example={kind==='full'?'project-card':kind==='compact'?'project-card-compact':undefined} data-ds-target={['full','compact'].includes(kind)?'.project':undefined}>

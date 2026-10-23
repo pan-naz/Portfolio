@@ -7,12 +7,18 @@ const records = JSON.parse(readFileSync(new URL('../src/data/video-variants.json
 const filesUnder = directory => readdirSync(directory, { withFileTypes: true }).flatMap(entry => entry.isDirectory() ? filesUnder(new URL(entry.name + '/', directory)) : [new URL(entry.name, directory)]);
 const videos = filesUnder(new URL('../public/projects/', import.meta.url)).filter(file => file.pathname.endsWith('.mp4'));
 const registered = new Set();
-assert.equal(Object.keys(records).length, 44, 'All original recordings have explicit provenance and quality receipts');
+assert.equal(Object.keys(records).length, 45, 'All original recordings have explicit provenance and quality receipts');
 for (const [src, record] of Object.entries(records)) {
   assert.equal(getVideoVariant(src + '?cache=1'), getVideoVariant(src), 'Query strings preserve the same media provenance');
   assert.ok(record.originalWidth > 0 && record.originalHeight > 0 && record.originalBytes > 0);
   if (record.card) assert.ok(record.mobile, 'Every card loop has an explicit phone version');
-  if (!record.card && record.originalBytes > 5 * 1024 * 1024) assert.ok(record.mobile, 'Heavy case recordings have a phone version');
+  if (record.minimumViewportWidth) {
+    assert.equal(src, '/projects/datagpt-case-study/walkthrough.mp4');
+    assert.equal(record.minimumViewportWidth, 1024);
+    assert.match(readFileSync(new URL('../src/scripts/walkthrough.ts', import.meta.url), 'utf8'), /matchMedia\('\(min-width: 1024px\)'\)/);
+    assert.equal(record.mobile, undefined, 'Desktop-only walkthrough has no unreachable phone output');
+  }
+  if (!record.minimumViewportWidth && !record.card && record.originalBytes > 5 * 1024 * 1024) assert.ok(record.mobile, 'Heavy case recordings have a phone version');
   for (const [kind, output] of [['desktop', record.desktop], ['mobile', record.mobile]]) {
     if (!output) continue;
     const file = new URL('../public' + output.src, import.meta.url), bytes = readFileSync(file);
