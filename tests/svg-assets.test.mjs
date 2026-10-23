@@ -82,3 +82,10 @@ const pipeline = readFileSync(new URL('../dist/case-studies/hooko/index.html', i
 assert.equal([...pipeline.matchAll(/<li\b/g)].length, 6, 'Consolidating service marks preserves all six pipeline stages');
 assert.equal([...pipeline.matchAll(/data-svg-src=/g)].length, 6, 'Each service badge shares its source with the tool cards');
 console.log('PASS: genuine vector assets render through shared components; repeated logo gradients and clips resolve independently, and all six pipeline stages remain.');
+
+for (const name of ['thoughtspot','openai']) {
+  const logo = readFileSync(new URL('../public/projects/datagpt-case-study/logos/'+name+'.svg', import.meta.url), 'utf8');
+  assert.ok(!logo.includes('#161715') && /<path\b[^>]*fill="currentColor"/.test(logo), 'Monochrome competitor geometry inherits the card text: '+name);
+}
+const architecture = readFileSync(new URL('../dist/case-studies/hooko/index.html', import.meta.url), 'utf8');
+assert.match(architecture, /<g clip-path="url\(#hk-appicon-clip\)"><svg\b[^>]*viewBox="0 0 1024 1024"/, 'Diagram-space clipping surrounds the genuine nested Hooko SVG instead of clipping its 1024-unit coordinates');

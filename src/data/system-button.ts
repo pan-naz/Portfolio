@@ -14,7 +14,8 @@ export const buttonGroups=[
   {id:'toggle',name:'Toggle',description:'Two choices. The selected one is filled.',used:'Before / after images',value:'Small · 36px'},
  ]},
  {name:'Icon buttons',description:'A compact action with an icon only.',cards:[
-  {id:'raised',name:'Raised',description:'Floats over content on a white surface.',used:'Cursor, case close',value:'44px'},
+  {id:'raised',name:'Raised',description:'Floats over content and follows the theme.',used:'Cursor, case close, Walkthrough',value:'44px'},
+  {id:'raised-small',name:'Raised · small',description:'A small raised control on top of content.',used:'Walkthrough',value:'36px'},
   {id:'plain',name:'Plain',description:'Sits in the header with no surface.',used:'Theme switch, Walkthrough',value:'44px · 36px'},
   {id:'layers',name:'Secondary · small',description:'Outlined, for a small destination.',used:'Footer',value:'36px · 44px tap'},
   {id:'media',name:'Media',description:'Video controls on top of the video.',used:'Case-study videos',value:'44px'},
@@ -29,12 +30,12 @@ export const buttonGroups=[
 export type ButtonSpecimenId=typeof buttonGroups[number]['cards'][number]['id']|'close';
 export const buttonStateGroups=buttonGroups.map((group,index)=>({
  name:['Button states','Icon button states','Text link states'][index],
- cards:group.cards.filter(card=>!['small','outside','link-inline','primary-small-play'].includes(card.id)),
+ cards:group.cards.filter(card=>!['small','outside','link-inline','primary-small-play','raised-small'].includes(card.id)),
 }));
 export const buttonStates=['Default','Hover','Focus','Active'] as const;
 const componentDescriptions:Record<string,Record<string,string>>={
  Button:{href:'Link destination. Without it, renders a button.',variant:'Filled or outlined.',size:'48px or 36px tall, including primary with an arrow or play icon.',arrow:'Up adds the destination arrow; play starts a walkthrough with the shared play icon. On primary, the icon sits in the circle that fills the button.',download:'Downloads the file instead of opening it.',appearance:'Comparison makes a two-choice toggle. Pair it with aria-pressed.'},
- IconButton:{label:'Spoken name. There is no visible text.',icon:'Any icon from the Icons page.',href:'Link destination. Without it, renders a button.',variant:'Plain, outlined, or raised on a white surface over content.',size:'44px, or 36px with a 44px tap area.'},
+ IconButton:{label:'Spoken name. There is no visible text.',icon:'Any icon from the Icons page.',href:'Link destination. Without it, renders a button.',variant:'Plain, outlined, or raised over content with the current theme surface.',size:'44px, or 36px with a 44px tap area.'},
  TextLink:{href:'Destination. Outside links open in a new tab.',accent:'Orange label.',compact:'Keeps the arrow right after the text.',inline:'Underlined link inside a sentence.'},
 };
 export const buttonAccessibility=[

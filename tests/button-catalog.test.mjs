@@ -18,10 +18,9 @@ for(const name of ['Button','IconButton','TextLink']){
  assert(buttonProps(component).every(prop=>prop.description));
  assert(buttonUsage(name).includes('import '+name));
 }
-assert.deepEqual(buttonGroups.map(group=>group.cards.length),[6,4,4]);
+assert.deepEqual(buttonGroups.map(group=>group.cards.length),[6,5,4]);
 assert.equal(buttonGroups[0].cards[1].id,'primary-small-play');
-assert.equal(buttonGroups[1].cards[1].id,'plain');
-assert.ok(!buttonGroups.flatMap(group=>group.cards).some(card=>card.id==='raised-small'));
+assert.equal(buttonGroups[1].cards[1].id,'raised-small');
 assert.deepEqual(buttonStateGroups.map(group=>group.cards.length),[3,4,3]);
 assert.deepEqual(missingUsageNames(buttonUsage('TextLink')),[]);
 assert.deepEqual(missingUsageNames(buttonUsage('TextLink').replace(/const mascotName = [^;]+;/,'')),["Cannot find name 'mascotName'."]);

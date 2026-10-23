@@ -13,3 +13,6 @@ assert(validateRenderedThemeZones('<span '+['data','shadow','theme'].join('-')+'
 console.log('Foundation code equals literal source; stale values, reversed queries, class themes, missing rendered zones and tab-label regressions fail.');
 
 assert(validateTokenSource(css.replace(":root,\n[data-theme='light'],",":root, [data-theme='light'],")).length,'Token selectors have separate lines');
+
+assert.deepEqual(validateRenderedThemeZones('<button class="icon-button icon-button--raised">'),[]);
+assert(validateRenderedThemeZones('<button class="icon-button icon-button--raised" data-color-zone="light" data-zone-keep="shadows focus-ring">').length,'Raised must not force a Light zone');

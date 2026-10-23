@@ -34,7 +34,7 @@ export function validateRenderedThemeZones(html){
  for(const[,attributes]of html.matchAll(/<[a-z][\w-]*\b((?:"[^"]*"|'[^']*'|[^'">])*)>/gi)){
   const classes=new Set((attributes.match(/\bclass="([^"]*)"/)?.[1]||'').split(/\s+/)),has=(name,value)=>attributes.includes(`${name}="${value}"`);
   const inverse=classes.has('case-study-chapter--inverse'),impact=classes.has('case-study-decision-card__impact'),about=classes.has('about-details');
-  const light=['icon-button--raised','tooltip','case-study-decision-card--figure','case-study-service-demo'].some(name=>classes.has(name))||(classes.has('floating-control-theme')&&!classes.has('floating-navigation-theme'));
+  const light=['tooltip','case-study-decision-card--figure','case-study-service-demo'].some(name=>classes.has(name))||(classes.has('floating-control-theme')&&!classes.has('floating-navigation-theme'));
   const zone=light?'light':inverse||impact||about?'dark':null;
   if(zone&&!has('data-color-zone',zone))errors.push('Missing rendered '+zone+' zone: '+[...classes].join(' '));
   const keep=new Set((attributes.match(/\bdata-zone-keep="([^"]*)"/)?.[1]||'').split(/\s+/));
@@ -42,7 +42,7 @@ export function validateRenderedThemeZones(html){
   if(inverse&&!keep.has('surface'))errors.push('Inverse artwork must retain its inherited surface.');
   if(zone&&!keep.has(about?'large-shadow':'shadows'))errors.push('Scoped copy must retain its original shadow mode: '+[...classes].join(' '));
   if([...keep].some(keyword=>!['surface','section','shadows','large-shadow','focus-ring',''].includes(keyword))||keep.has('shadows')&&keep.has('large-shadow'))errors.push('Unknown/redundant zone keyword.');
-  if(classes.has('icon-button--raised')&&!keep.has('focus-ring'))errors.push('Raised must keep its surrounding focus ring.');
+  if(classes.has('icon-button--raised')&&/data-color-zone=|data-zone-keep=/.test(attributes))errors.push('Raised must inherit its surrounding theme and focus role.');
   if(oldZoneAttributes.some(name=>attributes.includes(name+'=')))errors.push('Retired zone helper attribute.');
  }
  return errors;
