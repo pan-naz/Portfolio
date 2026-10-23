@@ -21,6 +21,9 @@
 .wt-face img, .wt-face video { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; object-position: 48% 40%; display: block; pointer-events: none; }
 /* The sound centre follows the radius arc at 45°; 21/36 retains its rest size. */
 .wt-sound { position: absolute; right: calc(var(--wt-radius) * (1 - cos(45deg))); bottom: calc(var(--wt-radius) * (1 - cos(45deg))); z-index: var(--layer-content); transform-origin: 50% 50%; transform: translate(50%, 50%) scale(calc(21 / 36)); transition: right var(--duration-button-fill) var(--ease-button-fill), bottom var(--duration-button-fill) var(--ease-button-fill), transform var(--duration-button-fill) var(--ease-button-fill), opacity var(--duration-button-fill) var(--ease-button-fill); }
+@media (hover: hover) and (pointer: fine) {
+.wt .wt-sound:hover { background: var(--color-bg-surface-subtle); }
+}
 .wt-surface { position: relative; z-index: var(--layer-content); background: var(--color-bg-surface); box-shadow: var(--shadow-small); border-radius: var(--radius-medium); }
 @media (hover: hover) and (pointer: fine) {
 .wt[data-state="rest"]:not([data-quiet]):hover .wt-circle { --wt-radius: var(--radius-large); --wt-ring: var(--space-1); width: var(--wt-w); height: var(--wt-h); }

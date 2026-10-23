@@ -110,7 +110,7 @@ export function validateButtonCatalog(root=process.cwd()){
  if(!page.includes('inert aria-hidden="true"'))errors.push('Button stages must be inert and hidden from assistive technology.');
  if(!read('src/scripts/design-system.ts').includes("['icon-button','text-link']"))errors.push('Retired action hashes must redirect to Button.');
  const global=read('src/styles/global.css');
- if(/:is\(\.project-cursor\.is-case-control, \.case-study-direct-close\)/.test(global)||!global.includes(".icon-button--raised[data-icon='close']:hover svg > g")||!global.includes('.icon-button:not(.icon-button--secondary):hover { background: var(--color-bg-surface-subtle); }'))errors.push('Raised shares the Plain subtle hover and keeps the close turn.');
+ if(/:is\(\.project-cursor\.is-case-control, \.case-study-direct-close\)/.test(global)||!global.includes(".icon-button--raised[data-icon='close']:hover svg > g")||!global.includes('.icon-button:not(.icon-button--secondary, .icon-button--raised):hover { background: var(--color-bg-surface-subtle); }'))errors.push('Raised keeps its theme surface on hover and retains the close turn.');
  if(!css.includes('grid-template-columns:var(--space-16) repeat(4,minmax(0,1fr))')||!page.includes('ds-button-state-labels'))errors.push('States require one label plus four equal columns.');
  const specimen=read('src/components/DSButtonSpecimen.astro');
  if(!specimen.includes('<Button size="small" arrow="play">Start walkthrough</Button>')||!specimen.includes('<IconButton variant="raised" size="small" icon="volume-muted" label="Sound off. Turn sound on"/>'))errors.push('Walkthrough cards render the real small play Button and small Raised IconButton.');
