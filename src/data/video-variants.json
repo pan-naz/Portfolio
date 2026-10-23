@@ -1290,26 +1290,26 @@
     }
   },
   "/projects/datagpt-case-study/walkthrough.mp4": {
-    "originalWidth": 480,
-    "originalHeight": 854,
+    "originalWidth": 854,
+    "originalHeight": 480,
     "sampleAspectRatio": "1:1",
-    "originalBytes": 12668611,
-    "originalSha256": "771438b45b7749001d183bae592e83324acef4cb9efe97527d84abf51dcfaac4",
+    "originalBytes": 11827604,
+    "originalSha256": "79a532bc6a5c02bf18ca3403fbee15f0a788e86c6aa2fda5e3bd395cf09cb435",
     "card": false,
-    "minimumViewportWidth": 1024,
     "desktop": {
       "src": "/projects/datagpt-case-study/walkthrough.mp4",
-      "sha256": "cc6b7651665527241a7c00bf072bf07aaba1aa307c28275aa8fad8083239198f",
-      "bytes": 9574436,
-      "width": 480,
-      "height": 854,
-      "frameRate": "60/1",
-      "frames": 21731,
-      "ssim": 0.999801,
-      "bitrate": 101848,
+      "sha256": "5c789572fdff8be6122bd910a4e16fce15ccfda41600a76264a81c2673d69742",
+      "bytes": 9395912,
+      "width": 854,
+      "height": 480,
+      "frameRate": "30/1",
+      "frames": 11970,
+      "ssim": 0.999646,
+      "bitrate": 80380,
       "faststart": true,
       "retainedOriginal": false,
       "audio": true
-    }
+    },
+    "minimumViewportWidth": 1024
   }
 }

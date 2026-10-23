@@ -10,6 +10,6 @@ assert.equal(currentWalkthroughCue(timeline,26).anchor,'#inner-a');
 assert.equal(currentWalkthroughCue(cues,26).name,'Second','An inner stop retains its containing chapter');
 assert.equal(currentWalkthroughCue([],0),undefined);
 assert.deepEqual(Object.keys(walkthroughs),['datagpt']);
-assert.deepEqual(walkthroughTimeline(walkthroughs.datagpt.cues).map(cue=>cue.start),[0,18.1,56.5,106.6,164.8,193.9,226.5,232.6,255.5,293.9,326.8,341.7,345.5]);
+assert.deepEqual(walkthroughTimeline(walkthroughs.datagpt.cues).map(cue=>cue.start),[0,15.5,41.9,105.9,162.5,206.0,229.0,239.3,265.8,305.5,342.4,370.6,380.8]);
 assert.equal(currentWalkthroughCue(timeline,19.5 + walkthroughCueLeadSeconds).anchor,'#second','Resume during cue lead retains the prepared next section');
 console.log('PASS: cue boundaries, inner-stop ordering, chapter identity and DataGPT-only configuration.');
