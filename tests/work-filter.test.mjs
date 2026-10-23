@@ -45,6 +45,7 @@ const { arrangeProjectCards } = await import('../src/scripts/work-filter/work-fi
 const { projects, collectionProjects } = await import('../src/data/portfolio.ts');
 const allProjects = [...projects, ...collectionProjects];
 assert.equal(projects.length, 3);
+assert.deepEqual(projects.map(project=>project.id), ['datagpt','hooko','voximplant'], 'Selected work preserves the requested project order');
 assert.deepEqual(collectionProjects.filter(p => p.category === 'websites').map(p => p.id), ['gutsul-made', 'peak-hotel', 'yellow-leaf', 'index-law-firm', 'blaustrom', 'promshyna', 'cravus', 'team-sternfit'], 'Team Sternfit follows Cravus while the earlier Websites retain their order');
 assert.deepEqual(collectionProjects.filter(p => p.category === 'misc').map(p => p.id), ['pet-care', 'telegram-file-picker', 'square', 'kitchen-chatbot', 'design-cup', 'voximplant-ivr', 'offf-conference', 'professions-in-digital', 'quit-university'], 'Picker Concept stays second and Quit University follows Professions in Misc');
 assert.equal(new Set(allProjects.map(p => p.id)).size, 20, 'All three collections have distinct project identities');
