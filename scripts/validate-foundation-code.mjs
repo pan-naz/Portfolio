@@ -25,7 +25,7 @@ export function validateTokenSource(css){
  for(const name of ['--color-border-control','--color-focus-ring']){const defs=[];tree.walkDecls(name,d=>defs.push(d.value));if(defs.filter(value=>value==='var(--color-text-primary)').length!==1||defs.some(value=>value!=='var(--color-text-primary)'&&!(name==='--color-focus-ring'&&value==='inherit')))errors.push(name+' must derive once from local primary text.');}
  tree.walkDecls('--color-focus-ring',decl=>{if(decl.value==='inherit'&&decl.parent.selector!=="[data-zone-keep~='focus-ring']")errors.push('Only fixed-Light controls may keep their surrounding focus ring.');});
  const raw=new Map();tree.walkDecls(d=>{if(d.prop.startsWith('--')&&!raw.has(d.prop))raw.set(d.prop,d.value);});
- for(const [name,value]of Object.entries({'radius-small':'12px','radius-medium':'24px','radius-large':'24px','radius-xlarge':'40px','radius-full':'999px','gutter':'var(--space-6)','header-inset':'var(--space-6)','grid-gap':'var(--space-4)','section-space':'var(--space-16)'}))if(raw.get('--'+name)!==value)errors.push('Incorrect phone default: '+name);
+ for(const [name,value]of Object.entries({'radius-xs':'8px','radius-small':'12px','radius-medium':'24px','radius-large':'24px','radius-xlarge':'40px','radius-full':'999px','gutter':'var(--space-6)','header-inset':'var(--space-6)','grid-gap':'var(--space-4)','section-space':'var(--space-16)'}))if(raw.get('--'+name)!==value)errors.push('Incorrect phone default: '+name);
  return errors;
 }
 const decode=text=>text.replace(/<[^>]*>/g,'').replace(/&#(?:x([\da-f]+)|(\d+));/gi,(_,hex,number)=>String.fromCodePoint(parseInt(hex||number,hex?16:10))).replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&gt;/g,'>').replace(/&lt;/g,'<').replace(/&amp;/g,'&');

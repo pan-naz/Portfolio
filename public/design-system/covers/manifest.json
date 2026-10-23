@@ -1,6 +1,6 @@
 {
   "renderer": "tools/visual-check/render-overview-covers.mjs",
-  "browser": "155.0.8059.84",
+  "browser": "155.0.8059.85",
   "scale": 2,
   "canvas": {
     "width": 208,

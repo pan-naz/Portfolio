@@ -343,7 +343,7 @@ html[data-work-stage-layout='true']:not([data-work-stage-motion='true']) .work-p
 .project-heading .arrow { margin-left: auto; margin-right: var(--space-6); }
 .project-identity { display: inline-flex; align-items: center; gap: var(--space-2); }
 .project-identity .svg-asset { width: var(--project-logo-size); height: var(--project-logo-size); flex: 0 0 var(--project-logo-size); object-fit: contain; }
-.project-identity__logo--white { border-radius: var(--radius-project-logo); box-shadow: var(--shadow-small); }
+.project-identity__logo--white { border-radius: var(--radius-xs); box-shadow: var(--shadow-small); }
 .project-tags { display: flex; flex-wrap: wrap; gap: var(--space-2); padding-right: var(--space-6); margin-top: var(--project-identity-tags-gap); }
 .project-description { margin-top: var(--space-2); color: var(--color-text-secondary); }
 .project-media { position: relative; }

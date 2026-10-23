@@ -251,6 +251,7 @@
 
 /* Radius · phone is the default */
 :root {
+  --radius-xs: 8px;
   --radius-small: 12px;
   --radius-medium: 24px;
   --radius-large: 24px;
@@ -484,7 +485,6 @@
   --hero-gutter: var(--space-6);
   --hero-visual-gutter: var(--space-6);
   --work-preview-height: 120px;
-  --radius-project-logo: 25%;
   --project-identity-tags-gap: var(--space-6);
   --case-hero-fit: contain;
 }

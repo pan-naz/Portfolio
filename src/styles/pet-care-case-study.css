@@ -50,7 +50,7 @@
 .pc-type-plate { display: grid; place-items: center; min-height: calc(var(--space-24) * 2 + var(--space-2)); padding: var(--space-6) var(--space-4); border-radius: var(--radius-small); background: var(--color-paper); }
 .pc-type-plate .case-study-media { width: 100%; max-width: 340px; }
 .pc-brand .project-identity { width: 100%; flex-direction: column; gap: var(--space-6); }
-.pc-brand .svg-asset { width: 88px; height: 88px; flex: none; }
+.pc-brand .svg-asset { width: 88px; height: 88px; flex: none; border-radius: 25%; }
 .pc-brand .project-identity > span { align-self: stretch; text-align: center; background: linear-gradient(135deg, var(--pc-color-f27477), var(--pc-color-f15093) 45%, var(--pc-color-df42c4)); background-clip: text; color: transparent; }
 @media (max-width: 1023px) {
   .pc-stats, .pc-palette { grid-template-columns: repeat(2, minmax(0, 1fr)); }

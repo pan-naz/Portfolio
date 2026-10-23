@@ -4,7 +4,7 @@ import {createRequire} from 'node:module';
 const require=createRequire(import.meta.url),astro=path.dirname(require.resolve('astro/package.json')),vite=path.dirname(require.resolve('vite/package.json',{paths:[astro]}));
 const postcss=require(require.resolve('postcss',{paths:[vite]}));
 export const spacingScale={4:'space-1',8:'space-2',12:'space-3',16:'space-4',24:'space-6',32:'space-8',48:'space-12',64:'space-16',96:'space-24'};
-const radiusScale={12:'radius-small',24:'radius-medium',40:'radius-large',999:'radius-full'};
+const radiusScale={8:'radius-xs',12:'radius-small',24:'radius-medium',40:'radius-large',999:'radius-full'};
 const walk=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(dir,e.name)):[path.join(dir,e.name)]);
 export function styleSources(root=process.cwd()){
  return walk(path.join(root,'src')).flatMap(file=>{
@@ -124,6 +124,9 @@ export function validateSpaceShape(root=process.cwd()) {
  const removed=new RegExp('--(?:radius-(?:'+['media','chapter','pill'].join('|')+')|shadow-(?:'+['overlay','floating(?:-navigation)?'].join('|')+'))\\b');
  for(const file of ['src','scripts','tests'].flatMap(dir=>walk(path.join(root,dir))).filter(file=>/\.(?:css|astro|ts|js|mjs)$/.test(file)))if(removed.test(fs.readFileSync(file,'utf8')))errors.push('Removed geometry token in '+path.relative(root,file));
  const nav=read('src/components/DSNavigation.astro'),css=read('src/styles/design-system.css'),foundation=read('src/components/DSFoundations.astro'),cover=read('src/components/DSDashboard.astro'),model=read('src/data/system-spacing-layout.ts');
+ const xsConsumers=styleSources(root).filter(source=>!source.file.endsWith('/tokens.css')).flatMap(source=>[...source.css.matchAll(/([^{}]+)\{([^{}]*var\(--radius-xs\)[^{}]*)\}/g)].map(match=>({file:source.file,selector:match[1].trim()})));
+ if(xsConsumers.length!==1||xsConsumers[0].file!=='src/styles/global.css'||xsConsumers[0].selector!=='.project-identity__logo--white')errors.push('Extra small radius belongs only to the shared project-logo tile.');
+ if(!/\.ds-radius-cards\s*\{[^}]*grid-template-columns:repeat\(6,minmax\(0,1fr\)\)/.test(css))errors.push('The Radius catalog needs six columns above its 1100px breakpoint.');
  if(!nav.includes('class="text-label-m"')||nav.includes('class="text-label-s"'))errors.push('Catalog groups must use Label/M.');
  for(const m of css.matchAll(/([^{}]+)\{([^{}]*)\}/g))if(m[1].includes('.ds-nav-group > p')&&/(?:font[^:]*|text-transform)\s*:/.test(m[2]))errors.push('Catalog group labels have local typography.');
  if(/\.ds-tile-link\s*\{[^}]*min-height/.test(css))errors.push('Overview text may not reserve a fixed minimum height.');

@@ -9,7 +9,9 @@ assert.deepEqual(model.spaces.map(s=>s.px),[4,8,12,16,24,32,48,64,96]);
 for(const s of model.spaces)assert.equal(s.uses,counts[s.name]);
 assert.deepEqual(model.layouts.map(l=>[l.projects,l.metrics]),[[2,3],[2,3],[1,1]]);
 assert.equal(model.layouts[0].range,`${layout.desktop}px and wider`);
-assert.equal(model.radius[3].value,'Scales with the window · 59 → 100px');
+assert.deepEqual(model.radius.map(r=>r.name),['Extra small','Small','Medium','Large','Extra large','Full']);
+assert.deepEqual(model.radius.slice(0,2).map(r=>r.value),['8px','12px']);
+assert.equal(model.radius[4].value,'Scales with the window · 59 → 100px');
 const fixture=fs.mkdtempSync(path.join(os.tmpdir(),'space-shape-'));
 try {
  fs.mkdirSync(path.join(fixture,'src/styles'),{recursive:true});
