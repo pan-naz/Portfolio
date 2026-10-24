@@ -63,6 +63,8 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
   const config: {cues:WalkthroughCue[];lengthSeconds:number} = JSON.parse(root.querySelector('[data-walkthrough-config]')!.textContent!);
   const cues = config.cues, timeline = walkthroughTimeline(cues);
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const fineHover = matchMedia('(hover: hover) and (pointer: fine)');
+  let pointerWasFine = fineHover.matches;
   const video = root.querySelector<HTMLVideoElement>('video')!;
   const face = root.querySelector<HTMLButtonElement>('[data-walkthrough-face]')!;
   const playButton = root.querySelector<HTMLButtonElement>('[data-walkthrough-play]')!;
@@ -84,10 +86,10 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
   const raisePill = () => { clearPillTimer(); if (state !== 'rest') root.dataset.pill = 'raised'; };
   const schedulePill = () => {
     raisePill();
-    if (state !== 'on' || root.matches(':hover') || pill.matches(':has(:focus-visible)')) return;
+    if (!fineHover.matches || state !== 'on' || root.matches(':hover') || pill.matches(':has(:focus-visible)')) return;
     pillTimer = setTimeout(() => {
       pillTimer = undefined;
-      if (state === 'on' && !root.matches(':hover') && !pill.matches(':has(:focus-visible)')) root.dataset.pill = 'tucked';
+      if (fineHover.matches && state === 'on' && !root.matches(':hover') && !pill.matches(':has(:focus-visible)')) root.dataset.pill = 'tucked';
     }, Math.max(readMotionToken(tokens,'--delay-walkthrough-pill'),pillStartUntil-performance.now()));
   };
   const chapter = root.querySelector<HTMLElement>('[data-walkthrough-chapter]')!;
@@ -130,9 +132,18 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
   }).catch(()=>{ /* Teardown cancels an unfinished entrance. */ });
   const show = (element: Element | null, on: boolean) => element?.toggleAttribute('hidden',!on);
   const labelFace = () => {
-    face.setAttribute('aria-label',state === 'paused' ? 'Walkthrough paused. Continue' : video.muted ? 'Sound off. Turn sound on' : 'Sound on. Turn sound off');
-    if (state === 'paused') face.removeAttribute('aria-pressed');
+    const expandable = !fineHover.matches && state === 'rest';
+    const closed = expandable && !root.hasAttribute('data-open');
+    if (expandable) face.setAttribute('aria-expanded',String(!closed));
+    else face.removeAttribute('aria-expanded');
+    face.setAttribute('aria-label',closed ? 'Open walkthrough' : state === 'paused' ? 'Walkthrough paused. Continue' : video.muted ? 'Sound off. Turn sound on' : 'Sound on. Turn sound off');
+    if (closed || state === 'paused') face.removeAttribute('aria-pressed');
     else face.setAttribute('aria-pressed',String(!video.muted));
+    sounds.forEach(button => {
+      button.setAttribute('aria-label',closed ? 'Open walkthrough' : video.muted ? 'Sound off. Turn sound on' : 'Sound on. Turn sound off');
+      if (closed) button.removeAttribute('aria-pressed');
+      else button.setAttribute('aria-pressed',String(!video.muted));
+    });
   };
   const sound = (on: boolean) => {
     video.muted = !on;
@@ -159,9 +170,10 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
   };
   const setState = (next: State) => {
     // Leaving the disappearing invitation must not shorten the first hold.
-    pillStartUntil = state === 'rest' && next === 'on'
+    pillStartUntil = fineHover.matches && state === 'rest' && next === 'on'
       ? performance.now() + readMotionToken(tokens,'--delay-walkthrough-pill-start') : 0;
     state = next; root.dataset.state = next;
+    delete root.dataset.open;
     schedulePill();
     if (state === 'rest') delete root.dataset.pill;
     render(); refreshViewportPointer();
@@ -198,6 +210,8 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
   const stopClock = () => { cancelAnimationFrame(frame); frame = 0; };
   const tick = () => {
     if (state !== 'on') { frame = 0; return; }
+    // Reconcile live capability changes on the existing playback clock too.
+    if (pointerWasFine !== fineHover.matches) changePointer();
     if (glide && !reduced.matches) {
       let position = walkthroughGlidePosition(glide.landed,glide.end,glide.startTime,glide.entry.glideUntil! - walkthroughCueLeadSeconds * video.playbackRate,video.currentTime);
       if (glideReturn) {
@@ -253,12 +267,21 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
   });
   listen(playButton,'click',() => state === 'on' ? pause('button') : resume());
   listen(root.querySelector('[data-walkthrough-close]')!,'click',exit);
+  const openFromTouch = () => {
+    if (fineHover.matches || state !== 'rest' || root.hasAttribute('data-open')) return false;
+    delete root.dataset.quiet;
+    root.dataset.open = '';
+    labelFace();
+    return true;
+  };
   sounds.forEach(button => listen(button,'click',event => {
-    event.stopPropagation(); sound(video.muted);
+    event.stopPropagation(); if (!openFromTouch()) sound(video.muted);
     if ((event as MouseEvent).detail > 0) button.blur();
   }));
   listen(face,'click',event => {
-    if (state === 'paused') resume(); else sound(video.muted);
+    if (!openFromTouch()) {
+      if (state === 'paused') resume(); else sound(video.muted);
+    }
     if ((event as MouseEvent).detail > 0) face.blur();
   });
   listen(root,'pointerenter',raisePill);
@@ -267,6 +290,19 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
     queueMicrotask(() => { if (!signal.aborted) schedulePill(); });
   });
   listen(frameElement,'transitionend',refreshViewportPointer);
+  listen(document,'pointerdown',event => {
+    if (fineHover.matches || state !== 'rest' || !root.hasAttribute('data-open') || root.contains(event.target as Node)) return;
+    delete root.dataset.open;
+    if (root.contains(document.activeElement)) (document.activeElement as HTMLElement).blur();
+    labelFace();
+  });
+  const changePointer = () => {
+    pointerWasFine = fineHover.matches;
+    delete root.dataset.open;
+    delete root.dataset.quiet;
+    schedulePill(); labelFace(); refreshViewportPointer();
+  };
+  fineHover.addEventListener('change',changePointer);
   listen(scroller,'wheel',() => pause('scroll'),true);
   listen(scroller,'touchmove',() => pause('scroll'),true);
   listen(window,'keydown',event => {
@@ -287,6 +323,7 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
   setRate(1);video.preload = 'auto'; video.muted = true; video.load(); play(); measure();
   root.dataset.ready = 'true';
   return () => {
+    fineHover.removeEventListener('change',changePointer);
     clearPillTimer(); stopClock(); cancelScroll?.(); magnet.destroy(); lifecycle.abort(); entrance.cancel();
     if(scroller instanceof HTMLElement)scroller.style.scrollPaddingTop=previousPadding;
     setRate(1);video.muted=true;video.pause(); source.removeAttribute('src'); video.removeAttribute('src'); video.load(); root.remove();
