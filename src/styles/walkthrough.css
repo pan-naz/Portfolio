@@ -29,12 +29,12 @@
 .wt[data-state="rest"]:not([data-quiet]):hover .wt-frame { --wt-radius: var(--radius-large); --wt-ring: var(--space-1); width: var(--wt-w); height: var(--wt-h); }
 
 }
-.wt[data-state="rest"]:has(:focus-visible) .wt-frame, .wt:not([data-state="rest"]) .wt-frame { --wt-radius: var(--radius-large); --wt-ring: var(--space-1); width: var(--wt-w); height: var(--wt-h); }
+.wt[data-state="rest"][data-open] .wt-frame, .wt[data-state="rest"]:has(:focus-visible) .wt-frame, .wt:not([data-state="rest"]) .wt-frame { --wt-radius: var(--radius-large); --wt-ring: var(--space-1); width: var(--wt-w); height: var(--wt-h); }
 @media (hover: hover) and (pointer: fine) {
 .wt[data-state="rest"]:not([data-quiet]):hover .wt-sound { transform: translate(50%, 50%) scale(1); }
 
 }
-.wt[data-state="rest"]:has(:focus-visible) .wt-sound, .wt:not([data-state="rest"]) .wt-sound { transform: translate(50%, 50%) scale(1); }
+.wt[data-state="rest"][data-open] .wt-sound, .wt[data-state="rest"]:has(:focus-visible) .wt-sound, .wt:not([data-state="rest"]) .wt-sound { transform: translate(50%, 50%) scale(1); }
 .wt-pause-mark { position: absolute; inset: 0; z-index: var(--layer-content); display: grid; place-items: center; border-radius: inherit; background: color-mix(in srgb, var(--color-ink) var(--wt-pause-dim), transparent); color: var(--color-white); opacity: 0; pointer-events: none; transition: opacity var(--duration-tooltip-opacity) var(--ease-entrance); }
 .wt-pause-mark > span { display: grid; place-items: center; width: var(--wt-pause-size); height: var(--wt-pause-size); border-radius: var(--radius-full); background: color-mix(in srgb, var(--color-ink) var(--wt-pause-fill), transparent); transform: scale(var(--scale-tooltip-start)); transition: transform var(--duration-tooltip-scale) var(--ease-entrance); }
 .wt-pause-mark .icon { width: calc(var(--icon-size) * 1.5); height: calc(var(--icon-size) * 1.5); }
@@ -60,14 +60,14 @@
 .wt[data-state="rest"]:not([data-quiet]):hover .wt-invite { opacity: 1; visibility: visible; pointer-events: auto; transform: translate(0, 0) scale(1); transition-delay: calc(var(--duration-button-fill) * 0); }
 
 }
-.wt[data-state="rest"]:has(:focus-visible) .wt-invite { opacity: 1; visibility: visible; pointer-events: auto; transform: translate(0, 0) scale(1); transition-delay: calc(var(--duration-button-fill) * 0); }
+.wt[data-state="rest"][data-open] .wt-invite, .wt[data-state="rest"]:has(:focus-visible) .wt-invite { opacity: 1; visibility: visible; pointer-events: auto; transform: translate(0, 0) scale(1); transition-delay: calc(var(--duration-button-fill) * 0); }
 .wt .wt-pill { display: flex; bottom: calc(100% + var(--space-3)); left: 0; right: 0; width: fit-content; margin-inline: auto;
   transform: translate(0, calc(50% + var(--space-3) + var(--wt-rest) / 2)) scale(.1); }
 @media (hover: hover) and (pointer: fine) {
 .wt[data-state="rest"]:not([data-quiet]):hover .wt-pill { transform: translate(0, calc(50% + var(--space-3) + var(--wt-h) / 2)) scale(.1); }
 
 }
-.wt[data-state="rest"]:has(:focus-visible) .wt-pill { transform: translate(0, calc(50% + var(--space-3) + var(--wt-h) / 2)) scale(.1); }
+.wt[data-state="rest"][data-open] .wt-pill, .wt[data-state="rest"]:has(:focus-visible) .wt-pill { transform: translate(0, calc(50% + var(--space-3) + var(--wt-h) / 2)) scale(.1); }
 .wt:not([data-state="rest"]) .wt-pill { opacity: 1; visibility: visible; pointer-events: auto; transform: translate(0, 0) scale(1); transition-delay: calc(var(--duration-button-fill) * 0); }
 .wt-pill > .icon-button { transition: opacity var(--duration-button-fill) var(--ease-button-fill); }
 .wt[data-state="on"][data-pill="tucked"] .wt-pill { transform: translate(0, calc(100% + var(--space-3) - var(--space-4))); }

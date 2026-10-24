@@ -1612,7 +1612,7 @@
   },
   {
     "file": "src/styles/walkthrough.css",
-    "selector": ".wt[data-state=\"rest\"]:has(:focus-visible) .wt-invite",
+    "selector": ".wt[data-state=\"rest\"][data-open] .wt-invite, .wt[data-state=\"rest\"]:has(:focus-visible) .wt-invite",
     "context": "@layer system",
     "property": "opacity",
     "value": "1",
