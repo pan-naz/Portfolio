@@ -1,4 +1,4 @@
-import { scrollImmediately, scrollToSection } from './smooth-scroll.ts';
+import { scrollImmediately, scrollToSection, sectionScrollTarget } from './smooth-scroll.ts';
 import { easeSectionScroll } from './scroll-policy.ts';
 import { initializeControlMagnet } from './control-magnet.ts';
 import { readMotionToken } from './native-motion.ts';
@@ -8,16 +8,17 @@ export interface WalkthroughCue {
   name: string;
   anchor: string;
   start: number;
-  glide?: boolean;
-  stops?: Pick<WalkthroughCue, 'anchor' | 'start' | 'glide'>[];
+  glide?: boolean | string;
+  align?: 'center';
+  stops?: Pick<WalkthroughCue, 'anchor' | 'start' | 'glide' | 'align'>[];
 }
 type State = 'rest' | 'on' | 'paused';
 export const walkthroughTimeline = (cues: WalkthroughCue[]) => {
   const entries = cues.flatMap(cue => [
-    {start:cue.start,anchor:cue.anchor,glide:cue.glide}, ...(cue.stops ?? []),
+    {start:cue.start,anchor:cue.anchor,glide:cue.glide,align:cue.align}, ...(cue.stops ?? []),
   ]).sort((a,b) => a.start-b.start);
-  return entries.map(({glide,...entry}, index) => ({
-    ...entry, glideUntil: glide ? entries[index+1]?.start : undefined,
+  return entries.map(({glide,align,...entry}, index) => ({
+    ...entry, alignment: align, glideAnchor: typeof glide === 'string' ? glide : undefined, glideUntil: glide ? entries[index+1]?.start : undefined,
   }));
 };
 /** Linear in video time, clamped to the landed position and section end. */
@@ -197,14 +198,16 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
     cancelScroll = scrollToSection(target, () => {
       if (revision !== scrollRevision) return;
       landedEvent(entry,target);
-      const section = target.closest('section');
+      const section = entry.glideAnchor ? content.querySelector<HTMLElement>(entry.glideAnchor) : target.closest('section');
       if (entry.glideUntil === undefined || reduced.matches || !section) return;
       const landed = scrollPosition();
       const viewportTop = scroller === window ? 0 : (scroller as HTMLElement).getBoundingClientRect().top;
       const viewportHeight = scroller === window ? innerHeight : (scroller as HTMLElement).clientHeight;
-      const end = landed + section.getBoundingClientRect().bottom - viewportTop - viewportHeight;
+      const rect = section.getBoundingClientRect();
+      const clearance = readMotionToken(tokens,'--scroll-clearance') + readMotionToken(tokens,'--safe-top');
+      const end = entry.glideAnchor ? sectionScrollTarget(landed,rect.top,rect.height,viewportTop,viewportHeight,clearance,'center') : landed + rect.bottom - viewportTop - viewportHeight;
       glide = {entry,landed,end,startTime:video.currentTime};
-    },scroller);
+    },scroller,entry.alignment);
     root.dispatchEvent(new CustomEvent('walkthroughcue',{detail:{anchor,cue:entry.start,time:video.currentTime},bubbles:true}));
   };
   const stopClock = () => { cancelAnimationFrame(frame); frame = 0; };

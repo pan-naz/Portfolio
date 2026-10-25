@@ -17,19 +17,43 @@ export const scrollImmediately = (position: number, wrapper: Window | HTMLElemen
   else if (wrapper !== window && scrollAxis(wrapper as HTMLElement) === 'horizontal') wrapper.scrollTo({left:Math.max(0, position),behavior:'instant'});
   else wrapper.scrollTo({top:Math.max(0, position),behavior:'instant'});
 };
-export function scrollToSection(target: HTMLElement, onComplete?: () => void, wrapper?: Window | HTMLElement) {
+/** Resolve the same top clearance or centre a fitting element in its scroll viewport. */
+export function sectionScrollTarget(position: number, top: number, height: number, viewportTop: number, viewportHeight: number, clearance: number, alignment?: 'center') {
+  return position + top - viewportTop - (alignment === 'center' && height <= viewportHeight ? (viewportHeight - height) / 2 : clearance);
+}
+export function scrollToSection(target: HTMLElement, onComplete?: () => void, wrapper?: Window | HTMLElement, alignment?: 'center') {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const owner = wrapper ?? (document.documentElement.hasAttribute('data-catalog') ? scrollOwner(target) : window);
   const atStart = target === owner || target === document.documentElement || target.id === 'top';
   const active = scrollRoots.get(owner)?.lenis;
   const completed = () => onComplete?.();
+  const isDocument = owner === window;
+  const container = isDocument ? document.documentElement : owner as HTMLElement;
+  const position = isDocument ? window.scrollY : container.scrollTop;
+  const viewportTop = isDocument ? 0 : container.getBoundingClientRect().top + container.clientTop;
+  const viewportHeight = isDocument ? innerHeight : container.clientHeight;
+  const rect = target.getBoundingClientRect();
+  const clearance = (parseFloat(getComputedStyle(container).scrollPaddingTop) || 0) + (parseFloat(getComputedStyle(target).scrollMarginTop) || 0);
+  const destination = Math.max(0,Math.min(container.scrollHeight - viewportHeight,atStart ? 0 : sectionScrollTarget(position,rect.top,rect.height,viewportTop,viewportHeight,clearance,alignment)));
+  // A stationary native scroll emits no scrollend; both engines still land next frame.
+  if (Math.abs(destination - position) <= 1) {
+    const frame = requestAnimationFrame(completed);
+    return () => cancelAnimationFrame(frame);
+  }
+  const nativeCompleted = () => {
+    // An immediate glide can leave a queued scrollend from the preceding move.
+    if (Math.abs((isDocument ? window.scrollY : container.scrollTop) - destination) > 1) return;
+    owner.removeEventListener('scrollend', nativeCompleted);
+    completed();
+  };
   // Native smooth scrolling reports completion itself; Lenis owns its completion callback.
-  if (onComplete && !active && !reduced) owner.addEventListener('scrollend', completed, {once:true});
-  if (!reduced && active) active.scrollTo(atStart ? 0 : target, { duration: readMotionToken(getComputedStyle(target), '--duration-section-scroll') / 1000, easing: easeSectionScroll, lerp: 0, onComplete });
+  if (onComplete && !active && !reduced) owner.addEventListener('scrollend', nativeCompleted);
+  if (!reduced && active) active.scrollTo(alignment ? destination : atStart ? 0 : target, { duration: readMotionToken(getComputedStyle(target), '--duration-section-scroll') / 1000, easing: easeSectionScroll, lerp: 0, onComplete });
+  else if (alignment) owner.scrollTo({ top: destination, behavior: reduced ? 'instant' : 'smooth' });
   else if (atStart) owner.scrollTo({ top: 0, behavior: reduced ? 'instant' : 'smooth' });
   else target.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth', block: 'start' });
   if (onComplete && reduced) queueMicrotask(completed);
-  return () => owner.removeEventListener('scrollend', completed);
+  return () => owner.removeEventListener('scrollend', nativeCompleted);
 }
 
 /** Load the unchanged wheel engine only where it is used. */
