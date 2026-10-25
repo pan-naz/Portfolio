@@ -23,6 +23,8 @@ export const walkthroughs: Record<string, WalkthroughData> = {
         {anchor:'#dg-llm-instructions',start:265.8},
         {anchor:'#dg-pilot-results-one',start:291.9},
         {anchor:'#dg-pilot-problem-two',start:305.5},
+        {anchor:'#dg-pilot-comparison',start:309.6,align:'center',comparison:'before'},
+        {anchor:'#dg-pilot-comparison',start:325.8,align:'center',comparison:'after'},
         {anchor:'#dg-pilot-results-two',start:336.5},
       ]},
       {name:'Impact',anchor:'#dg-impact',start:342.4},

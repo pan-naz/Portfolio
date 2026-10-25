@@ -70,7 +70,7 @@ const { project } = Astro.props;
       </div>
       <div class="dg-subsection" id="dg-pilot-problem-two"><p class="case-study-eyebrow dg-accent">2 Problem</p><h3 class="case-study-heading">Users couldn't see which dates and filters an answer used</h3>
         <div class="dg-grid dg-grid--two dg-block"><article class="dg-card"><h4>Cause</h4><p>The date picker and filters lived only in the Data Navigator. When it was collapsed, they disappeared. <strong class="dg-accent">"Show me revenue"</strong> might use <strong class="dg-accent">"last 30 days"</strong>, and nothing in the chat said so. The numbers were right, but the missing context made people doubt them.</p></article><article class="dg-card"><h4>Fix</h4><p>A persistent global header above both Chat and Data Navigator:</p><ul><li>Moved the date picker and filter chips into a top bar.</li><li>Kept them in sync between Chat and Navigator.</li><li>Added subtle motion when dates or filters change.</li></ul></article></div>
-        <div class="dg-media-gap"><CaseStudyComparison before={media.before} after={media.after} label="Compare date and filter visibility" /></div>
+        <div class="dg-media-gap"><CaseStudyComparison id="dg-pilot-comparison" before={media.before} after={media.after} label="Compare date and filter visibility" /></div>
         <h4 class="dg-outcome-label" id="dg-pilot-results-two">Results</h4><dl class="dg-grid dg-grid--three dg-results">{contextResults.map(metric => <Stat {...metric} />)}</dl>
       </div>
     </section>

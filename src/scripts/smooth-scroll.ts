@@ -17,9 +17,27 @@ export const scrollImmediately = (position: number, wrapper: Window | HTMLElemen
   else if (wrapper !== window && scrollAxis(wrapper as HTMLElement) === 'horizontal') wrapper.scrollTo({left:Math.max(0, position),behavior:'instant'});
   else wrapper.scrollTo({top:Math.max(0, position),behavior:'instant'});
 };
-/** Resolve the same top clearance or centre a fitting element in its scroll viewport. */
-export function sectionScrollTarget(position: number, top: number, height: number, viewportTop: number, viewportHeight: number, clearance: number, alignment?: 'center') {
-  return position + top - viewportTop - (alignment === 'center' && height <= viewportHeight ? (viewportHeight - height) / 2 : clearance);
+/** Centre below the floating control when necessary; ordinary top landings retain their clearance. */
+export function sectionScrollTarget(position: number, top: number, height: number, viewportTop: number, viewportHeight: number, clearance: number, alignment?: 'center', minimumTop = 0) {
+  const gap = alignment === 'center' ? Math.max(minimumTop,(viewportHeight - height) / 2) : clearance;
+  const destination = position + top - viewportTop - gap;
+  // Native and Lenis round scroll positions; keep a minimum-gap landing on its safe side.
+  return alignment === 'center' && gap === minimumTop ? Math.floor(destination) : destination;
+}
+export function sectionScrollDestination(target: HTMLElement, owner: Window | HTMLElement = window, alignment?: 'center') {
+  const atStart = target === owner || target === document.documentElement || target.id === 'top';
+  const isDocument = owner === window;
+  const container = isDocument ? document.documentElement : owner as HTMLElement;
+  const position = isDocument ? window.scrollY : container.scrollTop;
+  const viewportTop = isDocument ? 0 : container.getBoundingClientRect().top + container.clientTop;
+  const viewportHeight = isDocument ? innerHeight : container.clientHeight;
+  const rect = target.getBoundingClientRect();
+  const clearance = (parseFloat(getComputedStyle(container).scrollPaddingTop) || 0) + (parseFloat(getComputedStyle(target).scrollMarginTop) || 0);
+  const close = alignment === 'center' ? isDocument
+    ? document.querySelector<HTMLElement>('.case-study-direct-close [data-case-home]')
+    : container.closest('[data-case-dialog]')?.querySelector<HTMLElement>('.project-cursor.is-case-control .icon-button') : null;
+  const minimumTop = close ? close.getBoundingClientRect().bottom - viewportTop + readMotionToken(getComputedStyle(close),'--space-2') : 0;
+  return Math.max(0,Math.min(container.scrollHeight - viewportHeight,atStart ? 0 : sectionScrollTarget(position,rect.top,rect.height,viewportTop,viewportHeight,clearance,alignment,minimumTop)));
 }
 export function scrollToSection(target: HTMLElement, onComplete?: () => void, wrapper?: Window | HTMLElement, alignment?: 'center') {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -30,11 +48,7 @@ export function scrollToSection(target: HTMLElement, onComplete?: () => void, wr
   const isDocument = owner === window;
   const container = isDocument ? document.documentElement : owner as HTMLElement;
   const position = isDocument ? window.scrollY : container.scrollTop;
-  const viewportTop = isDocument ? 0 : container.getBoundingClientRect().top + container.clientTop;
-  const viewportHeight = isDocument ? innerHeight : container.clientHeight;
-  const rect = target.getBoundingClientRect();
-  const clearance = (parseFloat(getComputedStyle(container).scrollPaddingTop) || 0) + (parseFloat(getComputedStyle(target).scrollMarginTop) || 0);
-  const destination = Math.max(0,Math.min(container.scrollHeight - viewportHeight,atStart ? 0 : sectionScrollTarget(position,rect.top,rect.height,viewportTop,viewportHeight,clearance,alignment)));
+  const destination = sectionScrollDestination(target,owner,alignment);
   // A stationary native scroll emits no scrollend; both engines still land next frame.
   if (Math.abs(destination - position) <= 1) {
     const frame = requestAnimationFrame(completed);

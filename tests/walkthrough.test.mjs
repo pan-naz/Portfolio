@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import {walkthroughTimeline,currentWalkthroughCue,walkthroughCueLeadSeconds,walkthroughGlidePosition} from '../src/scripts/walkthrough.ts';
-import {sectionScrollTarget,scrollToSection} from '../src/scripts/smooth-scroll.ts';
+import {walkthroughTimeline,currentWalkthroughCue,walkthroughCueLeadSeconds,walkthroughGlidePosition,currentWalkthroughSelection,walkthroughEntryStart} from '../src/scripts/walkthrough.ts';
+import {sectionScrollTarget,sectionScrollDestination,scrollToSection} from '../src/scripts/smooth-scroll.ts';
 import {walkthroughs} from '../src/data/walkthroughs.ts';
 const cues=[{name:'First',anchor:'#first',start:0},{name:'Second',anchor:'#second',start:20,stops:[{anchor:'#inner-b',start:28},{anchor:'#inner-a',start:24}]}];
 const timeline=walkthroughTimeline(cues);
@@ -11,7 +11,7 @@ assert.equal(currentWalkthroughCue(timeline,26).anchor,'#inner-a');
 assert.equal(currentWalkthroughCue(cues,26).name,'Second','An inner stop retains its containing chapter');
 assert.equal(currentWalkthroughCue([],0),undefined);
 assert.deepEqual(Object.keys(walkthroughs),['datagpt']);
-assert.deepEqual(walkthroughTimeline(walkthroughs.datagpt.cues).map(cue=>cue.start),[0,4.8,15.5,41.9,49.9,85.8,105.9,162.5,170.4,206.0,213.5,225.3,229.0,239.3,265.8,291.9,305.5,336.5,342.4,370.6,380.8]);
+assert.deepEqual(walkthroughTimeline(walkthroughs.datagpt.cues).map(cue=>cue.start),[0,4.8,15.5,41.9,49.9,85.8,105.9,162.5,170.4,206.0,213.5,225.3,229.0,239.3,265.8,291.9,305.5,309.6,325.8,336.5,342.4,370.6,380.8]);
 assert.equal(currentWalkthroughCue(timeline,19.5 + walkthroughCueLeadSeconds).anchor,'#second','Resume during cue lead retains the prepared next section');
 console.log('PASS: cue boundaries, inner-stop ordering, chapter identity and DataGPT-only configuration.');
 
@@ -24,12 +24,15 @@ assert.equal(walkthroughGlidePosition(100,500,10,10,10),500,'An exhausted window
 const navigator=walkthroughTimeline(walkthroughs.datagpt.cues).find(e=>e.start===206);
 assert.equal(navigator.glideAnchor,'#dg-shipped-navigator');
 assert.equal(navigator.glideUntil,213.5);
-assert.deepEqual(walkthroughTimeline(walkthroughs.datagpt.cues).filter(e=>e.alignment==='center').map(e=>e.start),[213.5,225.3]);
+assert.deepEqual(walkthroughTimeline(walkthroughs.datagpt.cues).filter(e=>e.alignment==='center').map(e=>e.start),[213.5,225.3,309.6,325.8]);
 assert.equal(sectionScrollTarget(100,500,400,0,900,112,'center'),350);
 assert.equal(sectionScrollTarget(100,550,400,50,900,112,'center'),350,'Popup viewport origin is removed');
 assert.equal(sectionScrollTarget(100,500,800,0,900,112,'center'),550,'Media that fits the full viewport stays fully visible');
 assert.equal(sectionScrollTarget(100,500,745,0,800,112,'center'),572.5,'The 1280px Navigator centres despite exceeding viewport minus clearance');
-assert.equal(sectionScrollTarget(100,500,901,0,900,112,'center'),488,'Media taller than the full viewport retains top clearance');
+assert.equal(sectionScrollTarget(100,500,901,0,900,112,'center',68),532,'A tall centred hold keeps its top below the close control and accepts bottom crop');
+assert.equal(sectionScrollTarget(100,500,745,0,800,112,'center',68),532,'The close-control minimum wins over geometric centring');
+assert.equal(sectionScrollTarget(100,500,400,0,900,112,'center',68),350,'A larger natural top gap remains centred');
+assert.equal(sectionScrollTarget(100,500.75,800,0,900,112,'center',68),532,'Scroll rounding cannot put the top above the close-control minimum');
 assert.equal(sectionScrollTarget(100,500,400,0,900,112),488,'Existing top target is unchanged');
 const frames=new Map();let frameId=0,completed=0,scrolled=0;
 globalThis.requestAnimationFrame=fn=>{frames.set(++frameId,fn);return frameId;};
@@ -53,3 +56,30 @@ const moving={id:'later',getBoundingClientRect:()=>({top:612,height:40}),scrollI
 scrollToSection(moving,()=>completed++);
 nativeEnd();assert.equal(completed,2,'A queued scrollend from the preceding glide cannot land the next cue early');
 window.scrollY=900;nativeEnd();assert.equal(completed,3);assert.equal(nativeEnd,undefined,'Native landing listener removes itself at the destination');
+
+const recorded=walkthroughTimeline(walkthroughs.datagpt.cues);
+const comparisonEntries=recorded.filter(e=>e.selection);
+assert.deepEqual(comparisonEntries.map(e=>[e.anchor,e.start,e.selection,e.chapterStart]),[['#dg-pilot-comparison',309.6,'before',229],['#dg-pilot-comparison',325.8,'after',229]]);
+assert.equal(currentWalkthroughSelection(recorded,309.5),undefined);
+assert.equal(currentWalkthroughSelection(recorded,315).selection,'before');
+assert.equal(currentWalkthroughSelection(recorded,325.79).selection,'before','Resume never borrows a future selection through cue lead');
+assert.equal(currentWalkthroughSelection(recorded,330).selection,'after');
+assert.equal(currentWalkthroughSelection(recorded,312).selection,'before','Seeking back restores the earlier selection');
+assert.equal(currentWalkthroughSelection(recorded,342.4),undefined,'A selection never leaks into the following chapter');
+assert.equal(walkthroughEntryStart(comparisonEntries[0],1,false),308.6);
+assert.equal(walkthroughEntryStart(comparisonEntries[1],1,true),325.8);
+assert.equal(walkthroughEntryStart(comparisonEntries[1],2,true),325.8,'Stationary switches have no lead at any speed');
+assert.equal(walkthroughEntryStart(comparisonEntries[0],2,false),307.6);
+const chapterChoice=walkthroughTimeline([{name:'A',anchor:'#a',start:0,comparison:'before'},{name:'B',anchor:'#b',start:10}]);
+assert.equal(currentWalkthroughSelection(chapterChoice,0).selection,'before','Start restores the current chapter selection');
+assert.equal(currentWalkthroughSelection(chapterChoice,10),undefined);
+
+window.scrollY=400;
+let closeBottom=80;
+document.querySelector=selector=>{assert.equal(selector,'.case-study-direct-close [data-case-home]');return{getBoundingClientRect:()=>({bottom:closeBottom})};};
+globalThis.getComputedStyle=()=>({scrollPaddingTop:'112px',scrollMarginTop:'0px',getPropertyValue:name=>name==='--space-2'?'8px':'0px'});
+const centred={id:'centred',getBoundingClientRect:()=>({top:500,height:780})};
+assert.equal(sectionScrollDestination(centred,window,'center'),812,'Direct landing measures the real close bottom plus Space 2');
+closeBottom=100;assert.equal(sectionScrollDestination(centred,window,'center'),792,'The minimum follows the control position without a typed inset');
+wrapper.closest=selector=>{assert.equal(selector,'[data-case-dialog]');return{querySelector:selector=>{assert.equal(selector,'.project-cursor.is-case-control .icon-button');return{getBoundingClientRect:()=>({bottom:110})};}};};
+assert.equal(sectionScrollDestination({id:'nested',getBoundingClientRect:()=>({top:450,height:760})},wrapper,'center'),832,'Popup landing uses its own close control and viewport origin');
