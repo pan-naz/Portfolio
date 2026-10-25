@@ -1,6 +1,6 @@
 @layer system, project;
 @layer system {
-.wt { --wt-edge: 2px; --wt-w: 228px; --wt-h: 152px; --wt-pause-size: 72px; --wt-pause-dim: 35%; --wt-pause-fill: 55%; --wt-rest: var(--space-16); --wt-text-shadow: 0 1px 2px rgb(22 23 21 / .6), 0 0 12px rgb(22 23 21 / .35); pointer-events: none; position: fixed; right: calc(max(var(--space-6), var(--safe-right)) + var(--wt-edge)); bottom: calc(max(var(--space-6), var(--safe-bottom)) + var(--wt-edge)); z-index: var(--layer-controls); display: flex; flex-direction: column; align-items: center; color: var(--color-text-primary); }
+.wt { --wt-edge: 2px; --wt-w: 228px; --wt-h: 152px; --wt-pill-buttons: calc(var(--duration-button-fill) * .6); --wt-pause-size: 72px; --wt-pause-dim: 35%; --wt-pause-fill: 55%; --wt-rest: var(--space-16); --wt-text-shadow: 0 1px 2px rgb(22 23 21 / .6), 0 0 12px rgb(22 23 21 / .35); pointer-events: none; position: fixed; right: calc(max(var(--space-6), var(--safe-right)) + var(--wt-edge)); bottom: calc(max(var(--space-6), var(--safe-bottom)) + var(--wt-edge)); z-index: var(--layer-controls); display: flex; flex-direction: column; align-items: center; color: var(--color-text-primary); }
 .wt { transform-origin:100% 100%; }
 .wt .icon-button:not(.wt-speed) > span:not([hidden]) { display:grid; place-items:center; width:var(--icon-size-compact); height:var(--icon-size-compact); }
 .wt .icon-button > span > .icon { width:var(--icon-size-compact); height:var(--icon-size-compact); }
@@ -72,6 +72,10 @@
 .wt-pill > .icon-button { transition: opacity var(--duration-button-fill) var(--ease-button-fill); }
 .wt[data-state="on"][data-pill="tucked"] .wt-pill { transform: translate(0, calc(100% + var(--space-3) - var(--space-4))); }
 .wt[data-state="on"][data-pill="tucked"] .wt-pill > .icon-button { opacity: 0; }
+@media (hover: hover) and (pointer: fine) {
+.wt:not([data-state="rest"]) .wt-pill > .icon-button { translate: 0 0; transition: opacity var(--wt-pill-buttons) var(--ease-button-fill) calc(var(--duration-button-fill) - var(--wt-pill-buttons)), translate var(--wt-pill-buttons) var(--ease-button-fill) calc(var(--duration-button-fill) - var(--wt-pill-buttons)); }
+.wt[data-state="on"][data-pill="tucked"] .wt-pill > .icon-button { translate: 0 var(--distance-text-reveal); transition-delay: calc(var(--duration-button-fill) * 0); }
+}
 @media (prefers-reduced-motion: reduce) { .wt-frame, .wt-face, .wt-sound, .wt-invite, .wt-pill, .wt-video-text { transition: none; } .wt * { animation: none !important; } }
 
 
