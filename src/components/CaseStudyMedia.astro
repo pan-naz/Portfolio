@@ -7,6 +7,7 @@ import { mediaCanvasStyle, mediaCrop } from '../scripts/media-canvas';
 import { getCaseVideoPreview, type CaseVideoPreview } from '../data/case-video-previews';
 import '../styles/case-video-player.css';
 interface Props {
+  id?: string;
   src: string;
   alt: string;
   width: number;
@@ -33,7 +34,7 @@ interface Props {
   segments?: readonly { src: string; alt: string; width: number; height: number; poster?: string; kind?: 'image' | 'video' }[];
 }
 
-const { src, alt, width, height, poster, kind = 'video', reducedMotionSrc, animationSrc, artwork = false, priority: requestedPriority, presentation: requestedPresentation = 'framed', strokeWidth = 4, strokePlacement = 'center', radius = 'medium', controls = false, audioControls = false, canvasColor, canvasInset, canvasFade = false, canvasSourceRatio, cropPixels = 0, showTime = true, preview: requestedPreview, segments } = Astro.props;
+const { id, src, alt, width, height, poster, kind = 'video', reducedMotionSrc, animationSrc, artwork = false, priority: requestedPriority, presentation: requestedPresentation = 'framed', strokeWidth = 4, strokePlacement = 'center', radius = 'medium', controls = false, audioControls = false, canvasColor, canvasInset, canvasFade = false, canvasSourceRatio, cropPixels = 0, showTime = true, preview: requestedPreview, segments } = Astro.props;
 const priority = requestedPriority ?? (artwork && Astro.url.pathname.startsWith('/case-studies/'));
 const player = !segments?.length && kind === 'video' && controls;
 const preview = player ? requestedPreview ?? getCaseVideoPreview(src) : undefined;
@@ -49,7 +50,7 @@ const mediaStyle = mediaCanvasStyle({ width, height, canvasColor, canvasInset, c
 const crop = mediaCrop({ width, height, cropPixels });
 const videoStyle = [mediaStyle, crop.style].filter(Boolean).join(';') || undefined;
 ---
-<MediaRoot class:list={['case-study-media', artwork && 'case-study-artwork', canvasColor && 'case-study-media--canvas', presentation === 'bare' && 'case-study-media--bare', presentation === 'shadow' && 'case-study-media--shadow', floating && 'case-study-media--floating', floating && strokeWidth === 8 && 'case-study-media--wide-stroke', floating && strokePlacement === 'outside' && 'case-study-media--outside-stroke', player && 'case-video-player']} style={`--case-media-radius:var(--radius-${mediaRadius})${canvasColor ? `;--media-ratio:${width} / ${height};--media-canvas:${canvasColor};background:${canvasColor}` : ''}`} data-preview={player && preview ? JSON.stringify(preview) : undefined} data-audio-controls={player && audioControls ? true : undefined}>
+<MediaRoot id={id} class:list={['case-study-media', artwork && 'case-study-artwork', canvasColor && 'case-study-media--canvas', presentation === 'bare' && 'case-study-media--bare', presentation === 'shadow' && 'case-study-media--shadow', floating && 'case-study-media--floating', floating && strokeWidth === 8 && 'case-study-media--wide-stroke', floating && strokePlacement === 'outside' && 'case-study-media--outside-stroke', player && 'case-video-player']} style={`--case-media-radius:var(--radius-${mediaRadius})${canvasColor ? `;--media-ratio:${width} / ${height};--media-canvas:${canvasColor};background:${canvasColor}` : ''}`} data-preview={player && preview ? JSON.stringify(preview) : undefined} data-audio-controls={player && audioControls ? true : undefined}>
   {segments?.length ? <div class="case-study-media__sequence">{segments.map(segment => <Astro.self {...segment} presentation="bare" />)}</div> : kind === 'image' ? reducedMotionSrc ? <picture><source media="(prefers-reduced-motion: reduce)" srcset={reducedMotionSrc} /><img class:list={[canvasFade && 'media-canvas-fade']} src={src} data-case-animated-image={animationSrc} alt={alt} width={width} height={height} loading={priority ? "eager" : "lazy"} fetchpriority={priority ? "high" : undefined} decoding="async" style={mediaStyle} /></picture> : <ResponsiveImage class:list={[canvasFade && 'media-canvas-fade']} src={src} data-case-animated-image={animationSrc} alt={alt} width={width} height={height} loading={priority ? "eager" : "lazy"} fetchpriority={priority ? "high" : undefined} decoding="async" style={mediaStyle} /> : <div class:list={['case-media-frame', cropPixels && 'media-crop']} style={cropPixels ? `--media-ratio:${crop.width} / ${crop.height}` : undefined}><DeferredVideo src={src} poster={poster} priority={priority} fallbackAlt={alt} class:list={[canvasFade && 'media-canvas-fade', cropPixels && 'media-crop-content']} data-case-video width={width} height={height} controls={player} aria-label={alt} style={videoStyle} /></div>}
   {player && <div class="case-video-controls" data-theme="dark" data-video-controls role="group" aria-label="Video controls" hidden>
     <IconButton label="Play video" data-video-toggle>

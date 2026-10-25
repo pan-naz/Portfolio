@@ -2,10 +2,10 @@
 import ResponsiveImage from './ResponsiveImage.astro';
 import Button from './Button.astro';
 interface ComparisonImage { src: string; alt: string; width: number; height: number; }
-interface Props { before: ComparisonImage; after: ComparisonImage; label: string; }
-const { before, after, label } = Astro.props;
+interface Props { id?: string; before: ComparisonImage; after: ComparisonImage; label: string; }
+const { id, before, after, label } = Astro.props;
 ---
-<case-study-comparison class="case-comparison">
+<case-study-comparison id={id} class="case-comparison">
   <div class="case-comparison-controls" role="group" aria-label={label}>
     <Button size="small" appearance="comparison" variant="secondary" data-comparison-choice="before" aria-pressed="false">Before</Button>
     <Button size="small" appearance="comparison" variant="primary" data-comparison-choice="after" aria-pressed="true">After</Button>
@@ -40,21 +40,24 @@ const { before, after, label } = Astro.props;
       this.addEventListener('click', event => {
         const choice = (event.target as Element).closest<HTMLButtonElement>('[data-comparison-choice]');
         if (!choice || !this.contains(choice)) return;
-        const selected = choice.dataset.comparisonChoice;
-        if (choice.getAttribute('aria-pressed') === 'true') return;
-        this.querySelectorAll<HTMLButtonElement>('[data-comparison-choice]').forEach(button => {
-          const active = button === choice;
-          button.setAttribute('aria-pressed', String(active));
-          button.classList.toggle('button--primary', active);
-          button.classList.toggle('button--secondary', !active);
-        });
-        this.querySelectorAll<HTMLImageElement>('[data-comparison-image]').forEach(image => {
-          const active = image.dataset.comparisonImage === selected;
-          image.toggleAttribute('data-active', active);
-          image.setAttribute('aria-hidden', String(!active));
-        });
-        this.querySelector('[data-comparison-status]')!.textContent = `Showing ${choice.textContent?.trim()}`;
+        this.select(choice.dataset.comparisonChoice as 'before' | 'after');
       }, { signal: this.controller.signal });
+    }
+    select(selected: 'before' | 'after') {
+      const choice = this.querySelector<HTMLButtonElement>(`[data-comparison-choice="${selected}"]`);
+      if (!choice || choice.getAttribute('aria-pressed') === 'true') return;
+      this.querySelectorAll<HTMLButtonElement>('[data-comparison-choice]').forEach(button => {
+        const active = button === choice;
+        button.setAttribute('aria-pressed', String(active));
+        button.classList.toggle('button--primary', active);
+        button.classList.toggle('button--secondary', !active);
+      });
+      this.querySelectorAll<HTMLImageElement>('[data-comparison-image]').forEach(image => {
+        const active = image.dataset.comparisonImage === selected;
+        image.toggleAttribute('data-active', active);
+        image.setAttribute('aria-hidden', String(!active));
+      });
+      this.querySelector('[data-comparison-status]')!.textContent = `Showing ${choice.textContent?.trim()}`;
     }
     disconnectedCallback() { this.controller?.abort(); }
   }

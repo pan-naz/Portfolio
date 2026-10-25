@@ -14,12 +14,17 @@ export const walkthroughs: Record<string, WalkthroughData> = {
       ]},
       {name:'Competitor mapping',anchor:'#dg-competitors',start:105.9,glide:true},
       {name:'Prototypes',anchor:'#dg-models',start:162.5,stops:[{anchor:'#dg-models',start:170.4,glide:true}]},
-      {name:'What shipped?',anchor:'#dg-shipped',start:206.0,glide:true},
+      {name:'What shipped?',anchor:'#dg-shipped',start:206.0,glide:'#dg-shipped-navigator',stops:[
+        {anchor:'#dg-shipped-navigator',start:213.5,align:'center'},
+        {anchor:'#dg-shipped-navigator',start:225.3,align:'center',glide:true},
+      ]},
       {name:'Pilot launch',anchor:'#dg-pilot',start:229.0,stops:[
         {anchor:'#dg-pilot-problem-one',start:239.3},
         {anchor:'#dg-llm-instructions',start:265.8},
         {anchor:'#dg-pilot-results-one',start:291.9},
         {anchor:'#dg-pilot-problem-two',start:305.5},
+        {anchor:'#dg-pilot-comparison',start:309.6,align:'center',comparison:'before'},
+        {anchor:'#dg-pilot-comparison',start:325.8,align:'center',comparison:'after'},
         {anchor:'#dg-pilot-results-two',start:336.5},
       ]},
       {name:'Impact',anchor:'#dg-impact',start:342.4},

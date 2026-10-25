@@ -1,4 +1,4 @@
-import { scrollImmediately, scrollToSection } from './smooth-scroll.ts';
+import { scrollImmediately, scrollToSection, sectionScrollDestination } from './smooth-scroll.ts';
 import { easeSectionScroll } from './scroll-policy.ts';
 import { initializeControlMagnet } from './control-magnet.ts';
 import { readMotionToken } from './native-motion.ts';
@@ -8,16 +8,18 @@ export interface WalkthroughCue {
   name: string;
   anchor: string;
   start: number;
-  glide?: boolean;
-  stops?: Pick<WalkthroughCue, 'anchor' | 'start' | 'glide'>[];
+  glide?: boolean | string;
+  align?: 'center';
+  comparison?: 'before' | 'after';
+  stops?: Pick<WalkthroughCue, 'anchor' | 'start' | 'glide' | 'align' | 'comparison'>[];
 }
 type State = 'rest' | 'on' | 'paused';
 export const walkthroughTimeline = (cues: WalkthroughCue[]) => {
   const entries = cues.flatMap(cue => [
-    {start:cue.start,anchor:cue.anchor,glide:cue.glide}, ...(cue.stops ?? []),
+    ...[{start:cue.start,anchor:cue.anchor,glide:cue.glide,align:cue.align,comparison:cue.comparison}, ...(cue.stops ?? [])].map(entry=>({...entry,chapterStart:cue.start})),
   ]).sort((a,b) => a.start-b.start);
-  return entries.map(({glide,...entry}, index) => ({
-    ...entry, glideUntil: glide ? entries[index+1]?.start : undefined,
+  return entries.map(({glide,align,comparison,...entry}, index) => ({
+    ...entry, selection: comparison, alignment: align, glideAnchor: typeof glide === 'string' ? glide : undefined, glideUntil: glide ? entries[index+1]?.start : undefined,
   }));
 };
 /** Linear in video time, clamped to the landed position and section end. */
@@ -28,6 +30,14 @@ export function walkthroughGlidePosition(landed:number, end:number, startTime:nu
 }
 export function currentWalkthroughCue<T extends {start:number}>(cues: T[], time: number): T | undefined {
   return cues.findLast(cue => cue.start <= time) ?? cues[0];
+}
+/** Restore only selections already spoken in the current chapter, without cue lead. */
+export function currentWalkthroughSelection(timeline: ReturnType<typeof walkthroughTimeline>, time:number) {
+  const chapter = currentWalkthroughCue(timeline,time)?.chapterStart;
+  return timeline.findLast(entry=>entry.chapterStart===chapter && entry.start<=time && entry.selection);
+}
+export function walkthroughEntryStart(entry: ReturnType<typeof walkthroughTimeline>[number], rate:number, stationary:boolean) {
+  return Math.max(0,entry.start - (entry.selection && stationary ? 0 : walkthroughCueLeadSeconds * rate));
 }
 export const walkthroughCueLeadSeconds = 1;
 const formatTime = (time: number) => `${Math.floor(time / 60)}:${String(Math.floor(time) % 60).padStart(2,'0')}`;
@@ -71,7 +81,7 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
   const sounds = [...root.querySelectorAll<HTMLButtonElement>('[data-walkthrough-sound]')];
   const speedButton=root.querySelector<HTMLButtonElement>('[data-walkthrough-speed]')!;
   const speedLabel=speedButton.querySelector('[data-walkthrough-rate]')!;
-  const rates=[1,1.25,1.5,2];
+  const rates=[1,1.5,2];
   const setRate=(rate:number)=>{
     video.playbackRate=rate;video.preservesPitch=true;
     speedLabel.textContent=`${rate}×`;
@@ -184,27 +194,40 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
     render();
   };
   const scrollPosition = () => scroller === window ? window.scrollY : (scroller as HTMLElement).scrollTop;
+  const targetFor = (entry:typeof timeline[number]) => entry.anchor === 'top' ? (scroller === window ? document.documentElement : scroller as HTMLElement) : content.querySelector<HTMLElement>(entry.anchor);
+  const stationary = (entry:typeof timeline[number]) => {
+    const target = targetFor(entry);
+    return !!target && Math.abs(sectionScrollDestination(target,scroller,entry.alignment)-scrollPosition())<=1;
+  };
+  const select = (entry:typeof timeline[number] | undefined) => {
+    if (!entry?.selection) return;
+    const target = targetFor(entry);
+    const comparison = (target?.matches('case-study-comparison') ? target : target?.querySelector('case-study-comparison')) as (HTMLElement & {select(value:NonNullable<(typeof timeline)[number]['selection']>):void}) | null;
+    comparison?.select(entry.selection);
+  };
   const landedEvent = (entry:typeof timeline[number], target:HTMLElement) => root.dispatchEvent(new CustomEvent('walkthroughcuelanded',{
     detail:{anchor:entry.anchor,cue:entry.start,time:video.currentTime,scrollY:scrollPosition(),anchorTop:target.getBoundingClientRect().top},bubbles:true,
   }));
   const scroll = (entry:typeof timeline[number]) => {
     const {anchor} = entry;
-    const target = anchor === 'top' ? (scroller === window ? document.documentElement : scroller as HTMLElement) : content.querySelector<HTMLElement>(anchor);
+    const target = targetFor(entry);
     if (!target) return;
+    select(entry);
     cancelScroll?.();
     glide = glideReturn = undefined;
     const revision = ++scrollRevision;
     cancelScroll = scrollToSection(target, () => {
       if (revision !== scrollRevision) return;
       landedEvent(entry,target);
-      const section = target.closest('section');
+      const section = entry.glideAnchor ? content.querySelector<HTMLElement>(entry.glideAnchor) : target.closest('section');
       if (entry.glideUntil === undefined || reduced.matches || !section) return;
       const landed = scrollPosition();
       const viewportTop = scroller === window ? 0 : (scroller as HTMLElement).getBoundingClientRect().top;
       const viewportHeight = scroller === window ? innerHeight : (scroller as HTMLElement).clientHeight;
-      const end = landed + section.getBoundingClientRect().bottom - viewportTop - viewportHeight;
+      const rect = section.getBoundingClientRect();
+      const end = entry.glideAnchor ? sectionScrollDestination(section,scroller,'center') : landed + rect.bottom - viewportTop - viewportHeight;
       glide = {entry,landed,end,startTime:video.currentTime};
-    },scroller);
+    },scroller,entry.alignment);
     root.dispatchEvent(new CustomEvent('walkthroughcue',{detail:{anchor,cue:entry.start,time:video.currentTime},bubbles:true}));
   };
   const stopClock = () => { cancelAnimationFrame(frame); frame = 0; };
@@ -223,7 +246,7 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
       scrollImmediately(position,scroller);
     }
     // Lead the sentence by one real second; the site's shared section-scroll owns travel.
-    while (nextCue < timeline.length && video.currentTime >= Math.max(0,timeline[nextCue].start - walkthroughCueLeadSeconds * video.playbackRate)) {
+    while (nextCue < timeline.length && video.currentTime >= walkthroughEntryStart(timeline[nextCue],video.playbackRate,!!timeline[nextCue].selection && stationary(timeline[nextCue]))) {
       scroll(timeline[nextCue++]);
     }
     render();
@@ -241,13 +264,17 @@ function mount(root: HTMLElement, content: Document|HTMLElement, scroller: Windo
   });
   const start = () => {
     stopClock(); glide = glideReturn = undefined; setRate(1); nextCue = 0; video.loop = false; video.currentTime = 0;
+    select(currentWalkthroughSelection(timeline,video.currentTime));
     delete root.dataset.pausedBy;
     sound(true); setState('on'); play(); tick();
   };
   const resume = () => {
     if (state !== 'paused') return;
     delete root.dataset.pausedBy;
-    const entry = currentWalkthroughCue(timeline,video.currentTime + walkthroughCueLeadSeconds * video.playbackRate)!;
+    select(currentWalkthroughSelection(timeline,video.currentTime));
+    let entry = currentWalkthroughCue(timeline,video.currentTime + walkthroughCueLeadSeconds * video.playbackRate)!;
+    if (entry.selection && video.currentTime < walkthroughEntryStart(entry,video.playbackRate,stationary(entry))) entry=currentWalkthroughCue(timeline,video.currentTime)!;
+    nextCue = timeline.indexOf(entry)+1;
     if (glide?.entry === entry && !reduced.matches) glideReturn = {from:scrollPosition(),started:performance.now()};
     else scroll(entry);
     setState('on'); play(); tick();

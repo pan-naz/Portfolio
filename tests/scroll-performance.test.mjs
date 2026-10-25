@@ -31,10 +31,10 @@ globalThis.window = {
   scrollTo: value => { scrolled = value; }, dispatchEvent() {},
   addEventListener: (name, fn) => listeners.set(name, fn), removeEventListener: name => listeners.delete(name),
 };
-globalThis.Element = class { matches() {return false;} };
+globalThis.Element = class { matches() {return false;} getBoundingClientRect(){return {top:0,height:100};} };
 globalThis.HTMLElement = globalThis.Element;
 globalThis.innerWidth = 1440; globalThis.innerHeight = 900;
-globalThis.document = { documentElement: { dataset: {}, hasAttribute:()=>false }, fonts: { ready: Promise.resolve() }, querySelector: () => null, addEventListener: (name, fn) => documentListeners.set(name, fn) };
+globalThis.document = { documentElement: { dataset: {}, hasAttribute:()=>false, scrollHeight:20000, getBoundingClientRect:()=>({top:0,height:100}) }, fonts: { ready: Promise.resolve() }, querySelector: () => null, addEventListener: (name, fn) => documentListeners.set(name, fn) };
 const compile = source => ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
 const url = js => `data:text/javascript;base64,${Buffer.from(js).toString('base64')}`;
 let engineSource = readFileSync('src/scripts/scroll-engine.ts', 'utf8').replace(/^import .*;\n/gm, '');
@@ -52,8 +52,9 @@ const touchMove = (x, y, scrollY = 0, target = targetElement) => { window.scroll
 assert.equal(touchMove(100, 130), true); assert.equal(touchMove(100, 70), false); assert.equal(touchMove(140, 120), false); assert.equal(touchMove(100, 130, 1), false);
 const nested = new Element(); nested.closest = () => nested; assert.equal(touchMove(100, 130, 0, nested), false);
 documentListeners.get('touchstart')({ touches: [{ clientX: 100, clientY: 100 }, { clientX: 120, clientY: 120 }] }); assert.equal(touchMove(100, 130), false);
+window.scrollY = 400;
 let focused, travelled;
-const target = { id: 'work', focus: value => { focused = value; }, scrollIntoView: value => { travelled = value; } };
+const target = { getBoundingClientRect:()=>({top:500,height:100}), id: 'work', focus: value => { focused = value; }, scrollIntoView: value => { travelled = value; } };
 scrollToSection(target); assert.equal(focused, undefined); assert.deepEqual(travelled, { behavior: 'smooth', block: 'start' });
 reduced = true; scrollToSection(target); assert.equal(travelled.behavior, 'instant'); reduced = false;
 scrollToSection({ ...target, id: 'top' }); assert.deepEqual(scrolled, { top: 0, behavior: 'smooth' });
@@ -63,7 +64,7 @@ for (const agent of ['Safari', 'Chrome', 'Firefox']) {
  navigator.userAgent = agent; const controller = initializeSmoothScroll(); await controller.ready; const lenis = created.at(-1);
  assert.equal(initializeSmoothScroll(), controller, 'Repeated registration returns the same live root'); assert.equal(frames.size, 1); advanceFrame(2000); assert.equal(lenis.time, clockNow, 'The unsmoothed clock retains integer millisecond time');
  pauseScroll(); assert.equal(lenis.stopped, true); resumeScroll(); assert.equal(lenis.stopped, false);
- scrollToSection(target); assert.equal(lenis.travel[0], target); listeners.get('keydown')({key:'Tab'}); assert.deepEqual(lenis.travel, [400, {immediate:true}]);
+ scrollToSection(target); assert.equal(lenis.travel[0], target); let stationary=0; const beforeTravel=lenis.travel; scrollToSection({...target,getBoundingClientRect:()=>({top:.5,height:100})},()=>stationary++); assert.equal(stationary,0); assert.equal(lenis.travel,beforeTravel); advanceFrame(16); assert.equal(stationary,1,'Lenis stationary landing completes on next frame'); listeners.get('keydown')({key:'Tab'}); assert.deepEqual(lenis.travel, [400, {immediate:true}]);
  controller.destroy(); assert.equal(frames.size, 0); assert.equal(lenis.destroyed, true); assert.equal(queries.at(-1).handlers.size, 0);
 }
 const homeScroll = initializeSmoothScroll(); await homeScroll.ready; const homeLenis = created.at(-1); pauseScroll();
