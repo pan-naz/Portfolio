@@ -16,9 +16,9 @@ export const walkthroughs: Record<string, WalkthroughData> = {
       {name:'Prototypes',anchor:'#dg-models',start:162.5,stops:[{anchor:'#dg-models',start:170.4,glide:true}]},
       {name:'What shipped?',anchor:'#dg-shipped',start:206.0,glide:'#dg-shipped-navigator',stops:[
         {anchor:'#dg-shipped-navigator',start:213.5,align:'center'},
-        {anchor:'#dg-shipped-navigator',start:225.3,align:'center',glide:true},
+        {anchor:'#dg-shipped-navigator',start:229.0,align:'center',glide:true},
       ]},
-      {name:'Pilot launch',anchor:'#dg-pilot',start:229.0,stops:[
+      {name:'Pilot launch',anchor:'#dg-pilot',start:231.0,stops:[
         {anchor:'#dg-pilot-problem-one',start:239.3},
         {anchor:'#dg-llm-instructions',start:265.8},
         {anchor:'#dg-pilot-results-one',start:291.9},
@@ -38,38 +38,37 @@ export const walkthroughs: Record<string, WalkthroughData> = {
     lengthSeconds: 534.207,
     chapterTitles: 'names',
     cues: [
-      {name:'Overview',anchor:'top',start:0,stops:[{anchor:'#vox-overview',start:8.2}]},
-      {name:'Problem',anchor:'#vox-problem-title',start:26.5},
-      {name:'Discovery',anchor:'#vox-discovery-title',start:55.4,stops:[{anchor:'#vox-audience-title',start:59.4}]},
-      {name:'Competitors',anchor:'#vox-competitive-title',start:80.1,stops:[
-        {anchor:'#vox-competitive-outcomes',start:94.1},
+      {name:'Overview',anchor:'top',start:0,stops:[{anchor:'#vox-overview',start:8.7}]},
+      {name:'Problem',anchor:'#vox-problem-title',start:26.6},
+      {name:'Discovery',anchor:'#vox-discovery-title',start:55.4,stops:[{anchor:'#vox-audience-title',start:59.9,glide:true}]},
+      {name:'Competitors',anchor:'#vox-competitive-title',start:80.8,stops:[
+        {anchor:'#vox-competitive-outcomes',start:94.7},
         {anchor:'#vox-kit-meant',start:116.5},
       ]},
-      {name:'Ideation',anchor:'#vox-ideation-title',start:125.3,stops:[
-        {anchor:'#vox-hypotheses',start:129.8},
+      {name:'Ideation',anchor:'#vox-ideation-title',start:126.0,stops:[
+        {anchor:'#vox-hypotheses',start:130.3},
         {anchor:'#vox-ia',start:180.5},
         {anchor:'#vox-prototyping',start:195.4},
         {anchor:'#vox-testing-stats',start:209.3},
-        {anchor:'#vox-decisions',start:216.5},
+        {anchor:'#vox-decisions',start:217.6},
       ]},
-      {name:'Solution',anchor:'#vox-onboarding',start:235.5,stops:[
-        {anchor:'#vox-editor',start:245.6},
-        {anchor:'#vox-editing-blocks',start:298.5},
-        {anchor:'#vox-scenarios',start:310.2},
-        {anchor:'#vox-campaigns',start:317.8},
-        {anchor:'#vox-numbers',start:334.9},
+      {name:'Solution',anchor:'#vox-onboarding',start:236.2,stops:[
+        {anchor:'#vox-editor',start:246.0},
+        {anchor:'#vox-scenarios',start:310.9},
+        {anchor:'#vox-campaigns',start:318.1},
+        {anchor:'#vox-numbers',start:336.0},
       ]},
-      {name:'Contact center',anchor:'#vox-contact-title',start:344.7,stops:[
-        {anchor:'#vox-live-dashboard',start:364.6,glide:'next'},
+      {name:'Contact center',anchor:'#vox-contact-title',start:344.8,stops:[
+        {anchor:'#vox-live-dashboard',start:364.9,glide:true},
         {anchor:'#vox-live-conversations',start:385.1},
-        {anchor:'#vox-workspace',start:404.0,glide:'next'},
-        {anchor:'#vox-chat-widget',start:419.3},
-        {anchor:'#vox-queues',start:435.8,glide:'next'},
-        {anchor:'#vox-messaging-history',start:456.5},
-        {anchor:'#vox-reports',start:464.1,glide:'next'},
-        {anchor:'#vox-design-system',start:485.5},
+        {anchor:'#vox-workspace',start:404.1,glide:'next'},
+        {anchor:'#vox-chat-widget',start:420.4},
+        {anchor:'#vox-queues',start:435.8,glide:true},
+        {anchor:'#vox-messaging-history',start:457.6},
+        {anchor:'#vox-reports',start:465.2,glide:true},
+        {anchor:'#vox-design-system',start:486.6},
       ]},
-      {name:'Impact',anchor:'#vox-impact-title',start:491.9},
+      {name:'Impact',anchor:'#vox-impact-title',start:498.3},
     ],
   },
 };
