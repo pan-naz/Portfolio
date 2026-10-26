@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {walkthroughTimeline,currentWalkthroughCue,walkthroughCueLeadSeconds,walkthroughGlidePosition,currentWalkthroughSelection,walkthroughEntryStart} from '../src/scripts/walkthrough.ts';
+import {walkthroughTimeline,currentWalkthroughCue,walkthroughCueLeadSeconds,walkthroughGlidePosition,currentWalkthroughSelection,walkthroughEntryStart,walkthroughChapterTitle} from '../src/scripts/walkthrough.ts';
 import {sectionScrollTarget,sectionScrollDestination,scrollToSection} from '../src/scripts/smooth-scroll.ts';
 import {walkthroughs} from '../src/data/walkthroughs.ts';
 const cues=[{name:'First',anchor:'#first',start:0},{name:'Second',anchor:'#second',start:20,stops:[{anchor:'#inner-b',start:28},{anchor:'#inner-a',start:24}]}];
@@ -10,10 +10,10 @@ assert.equal(currentWalkthroughCue(timeline,20).anchor,'#second');
 assert.equal(currentWalkthroughCue(timeline,26).anchor,'#inner-a');
 assert.equal(currentWalkthroughCue(cues,26).name,'Second','An inner stop retains its containing chapter');
 assert.equal(currentWalkthroughCue([],0),undefined);
-assert.deepEqual(Object.keys(walkthroughs),['datagpt']);
+assert.deepEqual(Object.keys(walkthroughs),['datagpt','voximplant']);
 assert.deepEqual(walkthroughTimeline(walkthroughs.datagpt.cues).map(cue=>cue.start),[0,4.8,15.5,41.9,49.9,85.8,105.9,162.5,170.4,206.0,213.5,225.3,229.0,239.3,265.8,291.9,305.5,309.6,325.8,336.5,342.4,370.6,380.8]);
 assert.equal(currentWalkthroughCue(timeline,19.5 + walkthroughCueLeadSeconds).anchor,'#second','Resume during cue lead retains the prepared next section');
-console.log('PASS: cue boundaries, inner-stop ordering, chapter identity and DataGPT-only configuration.');
+console.log('PASS: cue boundaries, inner-stop ordering, chapter identity and per-case configuration.');
 
 const glides=walkthroughTimeline(walkthroughs.datagpt.cues).filter(entry=>entry.glideUntil!==undefined);
 assert.deepEqual(glides.map(({start,glideUntil})=>[start,glideUntil]),[[105.9,162.5],[170.4,206],[206,213.5],[225.3,229]]);
@@ -83,3 +83,16 @@ assert.equal(sectionScrollDestination(centred,window,'center'),812,'Direct landi
 closeBottom=100;assert.equal(sectionScrollDestination(centred,window,'center'),792,'The minimum follows the control position without a typed inset');
 wrapper.closest=selector=>{assert.equal(selector,'[data-case-dialog]');return{querySelector:selector=>{assert.equal(selector,'.project-cursor.is-case-control .icon-button');return{getBoundingClientRect:()=>({bottom:110})};}};};
 assert.equal(sectionScrollDestination({id:'nested',getBoundingClientRect:()=>({top:450,height:760})},wrapper,'center'),832,'Popup landing uses its own close control and viewport origin');
+
+const vox=walkthroughTimeline(walkthroughs.voximplant.cues);
+// The supplied timing list contains 30 entries; preserve it exactly.
+assert.equal(vox.length,30);
+assert.deepEqual(vox.map(e=>e.start),[0,8.2,26.5,55.4,59.4,80.1,94.1,116.5,125.3,129.8,180.5,195.4,209.3,216.5,235.5,245.6,298.5,310.2,317.8,334.9,344.7,364.6,385.1,404,419.3,435.8,456.5,464.1,485.5,491.9]);
+assert.deepEqual(vox.filter(e=>e.glideUntil!==undefined).map(e=>[e.start,e.glideAnchor,e.glideAlignment,e.glideUntil]),[[364.6,'#vox-live-conversations',undefined,385.1],[404,'#vox-chat-widget',undefined,419.3],[435.8,'#vox-messaging-history',undefined,456.5],[464.1,'#vox-design-system',undefined,485.5]]);
+assert.equal(walkthroughs.voximplant.chapterTitles,'names');assert.equal(walkthroughs.datagpt.chapterTitles,undefined);
+assert.equal(walkthroughChapterTitle('Discovery','Process'),'Process');
+assert.equal(walkthroughChapterTitle('Discovery','Process','names'),'Discovery');
+assert.equal(walkthroughChapterTitle('Overview',undefined),'Overview');
+const nextCentred=walkthroughTimeline([{name:'A',anchor:'#a',start:0,glide:'next'},{name:'B',anchor:'#b',start:10,align:'center'}]);
+assert.equal(nextCentred[0].glideAnchor,'#b');assert.equal(nextCentred[0].glideAlignment,'center');
+assert.equal(nextCentred[0].glideUntil,10);assert.equal(walkthroughGlidePosition(100,500,1,9,9),500);

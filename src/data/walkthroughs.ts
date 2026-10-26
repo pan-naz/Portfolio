@@ -1,5 +1,5 @@
 import type { WalkthroughCue } from '../scripts/walkthrough';
-interface WalkthroughData { src: string; poster: string; lengthSeconds: number; cues: WalkthroughCue[]; }
+interface WalkthroughData { src: string; poster: string; lengthSeconds: number; cues: WalkthroughCue[]; chapterTitles?: 'names'; }
 export const walkthroughs: Record<string, WalkthroughData> = {
   datagpt: {
     src: '/projects/datagpt-case-study/walkthrough.mp4',
@@ -30,6 +30,46 @@ export const walkthroughs: Record<string, WalkthroughData> = {
       {name:'Impact',anchor:'#dg-impact',start:342.4},
       {name:'Website',anchor:'#dg-website',start:370.6},
       {name:'Conclusion',anchor:'#dg-conclusion',start:380.8},
+    ],
+  },
+  voximplant: {
+    src: '/projects/voximplant-case-study/walkthrough.mp4',
+    poster: '/projects/voximplant-case-study/walkthrough-poster.jpg',
+    lengthSeconds: 534.207,
+    chapterTitles: 'names',
+    cues: [
+      {name:'Overview',anchor:'top',start:0,stops:[{anchor:'#vox-overview',start:8.2}]},
+      {name:'Problem',anchor:'#vox-problem-title',start:26.5},
+      {name:'Discovery',anchor:'#vox-discovery-title',start:55.4,stops:[{anchor:'#vox-audience-title',start:59.4}]},
+      {name:'Competitors',anchor:'#vox-competitive-title',start:80.1,stops:[
+        {anchor:'#vox-competitive-outcomes',start:94.1},
+        {anchor:'#vox-kit-meant',start:116.5},
+      ]},
+      {name:'Ideation',anchor:'#vox-ideation-title',start:125.3,stops:[
+        {anchor:'#vox-hypotheses',start:129.8},
+        {anchor:'#vox-ia',start:180.5},
+        {anchor:'#vox-prototyping',start:195.4},
+        {anchor:'#vox-testing-stats',start:209.3},
+        {anchor:'#vox-decisions',start:216.5},
+      ]},
+      {name:'Solution',anchor:'#vox-onboarding',start:235.5,stops:[
+        {anchor:'#vox-editor',start:245.6},
+        {anchor:'#vox-editing-blocks',start:298.5},
+        {anchor:'#vox-scenarios',start:310.2},
+        {anchor:'#vox-campaigns',start:317.8},
+        {anchor:'#vox-numbers',start:334.9},
+      ]},
+      {name:'Contact center',anchor:'#vox-contact-title',start:344.7,stops:[
+        {anchor:'#vox-live-dashboard',start:364.6,glide:'next'},
+        {anchor:'#vox-live-conversations',start:385.1},
+        {anchor:'#vox-workspace',start:404.0,glide:'next'},
+        {anchor:'#vox-chat-widget',start:419.3},
+        {anchor:'#vox-queues',start:435.8,glide:'next'},
+        {anchor:'#vox-messaging-history',start:456.5},
+        {anchor:'#vox-reports',start:464.1,glide:'next'},
+        {anchor:'#vox-design-system',start:485.5},
+      ]},
+      {name:'Impact',anchor:'#vox-impact-title',start:491.9},
     ],
   },
 };

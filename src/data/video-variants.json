@@ -1311,5 +1311,28 @@
       "audio": true
     },
     "minimumViewportWidth": 1024
+  },
+  "/projects/voximplant-case-study/walkthrough.mp4": {
+    "originalWidth": 854,
+    "originalHeight": 480,
+    "sampleAspectRatio": "1:1",
+    "originalBytes": 17505397,
+    "originalSha256": "3e8762da53d7e06fe077b13ec9573c65d2923ce582c57fa37688c6a95c99cf24",
+    "card": false,
+    "desktop": {
+      "src": "/projects/voximplant-case-study/walkthrough.mp4",
+      "sha256": "ff7c62c38fc61364a8ab31280138218de51bdf8decbf80b621b89e7ff45a165e",
+      "bytes": 13968490,
+      "width": 854,
+      "height": 480,
+      "frameRate": "30/1",
+      "frames": 16026,
+      "ssim": 0.999524,
+      "bitrate": 107649,
+      "faststart": true,
+      "retainedOriginal": false,
+      "audio": true
+    },
+    "minimumViewportWidth": 1024
   }
 }
