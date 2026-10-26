@@ -5,12 +5,12 @@ import IconButton from './IconButton.astro';
 import Icon from './Icon.astro';
 import DeferredVideo from './DeferredVideo.astro';
 import type { WalkthroughCue } from '../scripts/walkthrough';
-interface Props { src: string; poster: string; cues: WalkthroughCue[]; lengthSeconds?: number; }
-const { src, poster, cues, lengthSeconds = 0 } = Astro.props;
+interface Props { src: string; poster: string; cues: WalkthroughCue[]; lengthSeconds?: number; chapterTitles?: 'names'; }
+const { src, poster, cues, lengthSeconds = 0, chapterTitles } = Astro.props;
 ---
 <template data-walkthrough-template>
   <aside class="wt" data-walkthrough data-state="rest" aria-label="Case study walkthrough">
-    <script is:inline type="application/json" data-walkthrough-config set:html={JSON.stringify({cues,lengthSeconds}).replaceAll('<','\\u003c')} />
+    <script is:inline type="application/json" data-walkthrough-config set:html={JSON.stringify({cues,lengthSeconds,chapterTitles}).replaceAll('<','\\u003c')} />
     <div class="wt-stage">
       <div class="wt-frame">
         <button class="wt-face" type="button" tabindex="0" aria-pressed="false" aria-label="Sound off. Turn sound on" data-walkthrough-face>
