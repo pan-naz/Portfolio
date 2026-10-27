@@ -60,7 +60,7 @@
 .dg-dark .case-study-heading + p { margin-top: var(--space-6); }
 .dg-conclusion-lead { margin-top: var(--space-4); }
 /* The title owns row one; paragraph and list share their first baseline in row two. */
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .dg-feature .case-study-columns { row-gap: 0; align-items: first baseline; }
   .dg-feature .case-study-columns > div { display: contents; }
   .dg-feature h3, .dg-feature p { grid-column: 1; margin-inline-end: var(--grid-gap); }
