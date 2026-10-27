@@ -23,6 +23,8 @@ a[href] { cursor: pointer; }
    unshaped controls still receive a rounded keyboard-focus outline. */
 :where(button, a, summary, input, select, textarea, [tabindex]:not([tabindex='-1'])) { border-radius: var(--radius-small); }
 :where(button, a, summary, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid var(--color-focus-ring); outline-offset: 4px; }
+/* Raise keyboard focus without changing positioning or outline precedence. */
+:is(button, a, summary, input, select, textarea, [tabindex]):focus-visible { z-index: var(--layer-raised); }
 /* Canvas separation keeps card focus visible over either Work background. */
 .project-surface:focus-visible { box-shadow: 0 0 0 calc(var(--space-1) + 2px) var(--color-bg-canvas); }
 /* Safari treats dialog autofocus/return as focus-visible even after a tap.
@@ -373,6 +375,8 @@ html[data-work-stage-layout='true']:not([data-work-stage-motion='true']) .work-p
 .stat { min-width: 0; }
 .stat dt { display: grid; gap: var(--space-1); }
 .stat-value { color: var(--color-interactive-accent); }
+.metric-value-parts { white-space: nowrap; }
+.metric-value-arrow { display: inline-block; width: 1cap; height: 1cap; vertical-align: baseline; stroke-width: var(--icon-stroke-strong); }
 .stat dd { margin: var(--space-1) 0 0; color: var(--color-text-secondary); }
 .about-details { --section-item-reveal-duration: var(--duration-about-reveal); --section-item-reveal-interval: var(--stagger-about-reveal); position: relative; isolation: isolate; color: var(--color-text-primary); padding-block: var(--space-24); }
 .about-details::before { content: ''; position: absolute; inset: 0; z-index: var(--layer-behind); background: var(--color-bg-section); border-radius: 0; }

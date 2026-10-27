@@ -11,12 +11,12 @@ assert.equal(currentWalkthroughCue(timeline,26).anchor,'#inner-a');
 assert.equal(currentWalkthroughCue(cues,26).name,'Second','An inner stop retains its containing chapter');
 assert.equal(currentWalkthroughCue([],0),undefined);
 assert.deepEqual(Object.keys(walkthroughs),['datagpt','voximplant']);
-assert.deepEqual(walkthroughTimeline(walkthroughs.datagpt.cues).map(cue=>cue.start),[0,4.8,15.5,41.9,49.9,85.8,105.9,162.5,170.4,206.0,213.5,229.0,231.0,239.3,265.8,291.9,305.5,309.6,325.8,336.5,342.4,370.6,380.8]);
+assert.deepEqual(walkthroughTimeline(walkthroughs.datagpt.cues).map(cue=>cue.start),[0,4.8,15.5,41.9,49.9,85.8,105.9,162.5,170.4,206.0,213.5,229.0,239.3,265.8,291.9,305.5,309.6,325.8,336.5,342.4,370.6,380.8]);
 assert.equal(currentWalkthroughCue(timeline,19.5 + walkthroughCueLeadSeconds).anchor,'#second','Resume during cue lead retains the prepared next section');
 console.log('PASS: cue boundaries, inner-stop ordering, chapter identity and per-case configuration.');
 
 const glides=walkthroughTimeline(walkthroughs.datagpt.cues).filter(entry=>entry.glideUntil!==undefined);
-assert.deepEqual(glides.map(({start,glideUntil})=>[start,glideUntil]),[[105.9,162.5],[170.4,206],[206,213.5],[229,231]]);
+assert.deepEqual(glides.map(({start,glideUntil})=>[start,glideUntil]),[[105.9,162.5],[170.4,206],[206,213.5]]);
 for(const[time,position]of [[5,100],[10,100],[15,200],[20,300],[25,400],[30,500],[35,500]])assert.equal(walkthroughGlidePosition(100,500,10,30,time),position);
 assert.equal(walkthroughGlidePosition(100,80,10,30,20),100,'A shorter section never glides backwards');
 assert.equal(walkthroughGlidePosition(100,500,10,10,10),500,'An exhausted window reaches the end');
@@ -24,7 +24,7 @@ assert.equal(walkthroughGlidePosition(100,500,10,10,10),500,'An exhausted window
 const navigator=walkthroughTimeline(walkthroughs.datagpt.cues).find(e=>e.start===206);
 assert.equal(navigator.glideAnchor,'#dg-shipped-navigator');
 assert.equal(navigator.glideUntil,213.5);
-assert.deepEqual(walkthroughTimeline(walkthroughs.datagpt.cues).filter(e=>e.alignment==='center').map(e=>e.start),[213.5,229,309.6,325.8]);
+assert.deepEqual(walkthroughTimeline(walkthroughs.datagpt.cues).filter(e=>e.alignment==='center').map(e=>e.start),[213.5,309.6,325.8]);
 assert.equal(sectionScrollTarget(100,500,400,0,900,112,'center'),350);
 assert.equal(sectionScrollTarget(100,550,400,50,900,112,'center'),350,'Popup viewport origin is removed');
 assert.equal(sectionScrollTarget(100,500,800,0,900,112,'center'),550,'Media that fits the full viewport stays fully visible');
@@ -59,7 +59,7 @@ window.scrollY=900;nativeEnd();assert.equal(completed,3);assert.equal(nativeEnd,
 
 const recorded=walkthroughTimeline(walkthroughs.datagpt.cues);
 const comparisonEntries=recorded.filter(e=>e.selection);
-assert.deepEqual(comparisonEntries.map(e=>[e.anchor,e.start,e.selection,e.chapterStart]),[['#dg-pilot-comparison',309.6,'before',231],['#dg-pilot-comparison',325.8,'after',231]]);
+assert.deepEqual(comparisonEntries.map(e=>[e.anchor,e.start,e.selection,e.chapterStart]),[['#dg-pilot-comparison',309.6,'before',229],['#dg-pilot-comparison',325.8,'after',229]]);
 assert.equal(currentWalkthroughSelection(recorded,309.5),undefined);
 assert.equal(currentWalkthroughSelection(recorded,315).selection,'before');
 assert.equal(currentWalkthroughSelection(recorded,325.79).selection,'before','Resume never borrows a future selection through cue lead');
@@ -100,3 +100,5 @@ assert.equal(walkthroughGlideBlock({closest:selector=>selector==='[data-walkthro
 assert.equal(walkthroughGlideBlock({closest:selector=>selector==='[data-walkthrough-block]'?null:section}),section,'Unmarked anchors retain the section endpoint');
 assert.equal(walkthroughEntryStart({start:0},false),0);
 assert.equal(walkthroughEntryStart({start:231},false),230,'The lead is one video second; playback rate is not an input');
+
+assert.equal(walkthroughTimeline(walkthroughs.datagpt.cues).length,22);

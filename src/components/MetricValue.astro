@@ -1,4 +1,5 @@
 ---
+import Icon from './Icon.astro';
 interface Props {
   value: string;
   as?: 'span' | 'p' | 'strong';
@@ -6,5 +7,7 @@ interface Props {
   reveal?: boolean;
 }
 const { value, as: Tag = 'span', class: className, reveal = false }: Props = Astro.props;
+const parts = value.split(' → ');
+const spokenValue = parts.join(' to ');
 ---
-<Tag class:list={['font-heading', 'text-heading-l', className]}>{reveal ? <><span class="sr-only">{value}</span><span aria-hidden="true" data-title-reveal-value>{value}</span></> : value}</Tag>
+<Tag class:list={['font-heading', 'text-heading-l', className]}>{parts.length > 1 ? <><span class="sr-only">{spokenValue}</span><span class="metric-value-parts" aria-hidden="true">{parts.map((part, index) => <>{index > 0 && <>{' '}<Icon name="arrow" class="metric-value-arrow" data-reveal-copy={reveal ? '' : undefined}/>{' '}</>}{reveal ? <span data-title-reveal-value>{part}</span> : part}</>)}</span></> : reveal ? <><span class="sr-only">{value}</span><span aria-hidden="true" data-title-reveal-value>{value}</span></> : value}</Tag>

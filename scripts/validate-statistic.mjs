@@ -18,8 +18,8 @@ export function validateStatistic(root=process.cwd()){
   const usage=statisticUsage(name);if(missingUsageNames(usage).length||usage.split('\n').some(line=>line.length>80)||/\.\.\./.test(usage))errors.push(name+' Usage must be self-contained with written-out props and ≤80-character lines.');
   if(component.usages.some(u=>u.file.includes('/DS')))errors.push(name+' Source lists website consumers only.');
  }
- const expected=['--color-border-default','--color-interactive-accent','--color-text-secondary',...['heading-l','body-m-strong','body-m','body-s'].flatMap(role=>['font','font-weight','letter-spacing','line-height','text'].map(prefix=>`--${prefix}-${role}`)),'--space-1','--space-4','--distance-title-reveal','--duration-title-reveal','--ease-entrance','--stagger-title-reveal'].sort();
- if(statisticTokenGroups().flatMap(g=>g.names).sort().join()!==expected.join())errors.push('Statistic direct Color/Type/Spacing/Motion tokens must follow the shared source.');
+ const expected=['--icon-stroke-strong','--color-border-default','--color-interactive-accent','--color-text-secondary',...['heading-l','body-m-strong','body-m','body-s'].flatMap(role=>['font','font-weight','letter-spacing','line-height','text'].map(prefix=>`--${prefix}-${role}`)),'--space-1','--space-4','--distance-title-reveal','--duration-title-reveal','--ease-entrance','--stagger-title-reveal'].sort();
+ if(statisticTokenGroups().flatMap(g=>g.names).sort().join()!==expected.join())errors.push('Statistic direct Color/Type/Size/Spacing/Motion tokens must follow the shared source.');
  const groups=statisticTokenGroups(),tokenCode=groups.map(group=>`/* ${group.title} */\n`+group.names.join('\n')).join('\n\n');
  if(!page.includes("tokenCode=groups.map(group=>`/* ${group.title} */\\n`+group.names.join('\\n')).join('\\n\\n')")||groups.some(group=>group.names.some((name,index)=>index>0&&compareTokenNames(group.names[index-1],name)>=0)))errors.push('Statistic uses the common group-comment, naturally sorted names-only token format.');
  if(tokenCode.split('\n').some(line=>line.length>60))errors.push('Statistic half-width token lines must be ≤60 characters.');

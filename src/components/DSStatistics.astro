@@ -2,7 +2,7 @@
 import DSWidthProbe from './DSWidthProbe.astro';
 import '../styles/design-system-button.css';import '../styles/design-system-statistic.css';
 import type {SourceComponent} from '../data/system-inventory';import {componentVariants} from '../data/system-variants';
-import {statisticDescription,statisticCards,statisticUsage,statisticProps,statisticTokenGroups,statisticAccessibility} from '../data/system-statistic';
+import {statisticDescription,statisticCards,statisticUsage,statisticProps,statisticTokenGroups,statisticAccessibility,statisticArrowRule} from '../data/system-statistic';
 import DSStatisticSpecimen from './DSStatisticSpecimen.astro';import DSTabs from './DSTabs.astro';
 interface Props {components:SourceComponent[];}
 const {components}=Astro.props,groups=statisticTokenGroups(),tokenCode=groups.map(group=>`/* ${group.title} */\n`+group.names.join('\n')).join('\n\n');
@@ -12,7 +12,7 @@ const {components}=Astro.props,groups=statisticTokenGroups(),tokenCode=groups.ma
  <div class="ds-stage" data-ds-card>
   <div class="ds-stage-bar"><DSTabs id="statistic-canvas" labels={['Preview','Code']}/></div>
   <div id="statistic-canvas-panel-0" role="tabpanel" aria-labelledby="statistic-canvas-tab-0" class="ds-button-preview">
-   <section class="ds-button-group"><p class="text-label-m">Statistic</p><p class="text-body-s ds-button-secondary">Results in Impact and the case studies.</p>
+   <section class="ds-button-group"><p class="text-label-m">Statistic</p><p class="text-body-s ds-button-secondary">Results in Impact and the case studies. {statisticArrowRule}</p>
     <div class="ds-button-grid ds-stat-grid">{statisticCards.map(card=><article class="ds-button-card" data-stat-card={card.id}>
      <div class="ds-button-stage ds-stat-stage" inert aria-hidden="true"><DSStatisticSpecimen kind={card.id}/></div>
      <div><p class="text-body-m-strong">{card.name}</p><p class="text-body-s ds-button-secondary">{card.description}</p></div>
