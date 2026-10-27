@@ -17,7 +17,7 @@ export const walkthroughs: Record<string, WalkthroughData> = {
       {name:'What shipped?',anchor:'#dg-shipped',start:206.0,glide:'#dg-shipped-navigator',stops:[
         {anchor:'#dg-shipped-navigator',start:213.5,align:'center'},
       ]},
-      {name:'Pilot launch',anchor:'#dg-pilot',start:229.0,stops:[
+      {name:'Pilot launch',anchor:'#dg-pilot',start:225.3,stops:[
         {anchor:'#dg-pilot-problem-one',start:239.3},
         {anchor:'#dg-llm-instructions',start:265.8},
         {anchor:'#dg-pilot-results-one',start:291.9},

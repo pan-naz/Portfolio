@@ -11,7 +11,7 @@ assert.equal(currentWalkthroughCue(timeline,26).anchor,'#inner-a');
 assert.equal(currentWalkthroughCue(cues,26).name,'Second','An inner stop retains its containing chapter');
 assert.equal(currentWalkthroughCue([],0),undefined);
 assert.deepEqual(Object.keys(walkthroughs),['datagpt','voximplant']);
-assert.deepEqual(walkthroughTimeline(walkthroughs.datagpt.cues).map(cue=>cue.start),[0,4.8,15.5,41.9,49.9,85.8,105.9,162.5,170.4,206.0,213.5,229.0,239.3,265.8,291.9,305.5,309.6,325.8,336.5,342.4,370.6,380.8]);
+assert.deepEqual(walkthroughTimeline(walkthroughs.datagpt.cues).map(cue=>cue.start),[0,4.8,15.5,41.9,49.9,85.8,105.9,162.5,170.4,206.0,213.5,225.3,239.3,265.8,291.9,305.5,309.6,325.8,336.5,342.4,370.6,380.8]);
 assert.equal(currentWalkthroughCue(timeline,19.5 + walkthroughCueLeadSeconds).anchor,'#second','Resume during cue lead retains the prepared next section');
 console.log('PASS: cue boundaries, inner-stop ordering, chapter identity and per-case configuration.');
 
@@ -59,7 +59,7 @@ window.scrollY=900;nativeEnd();assert.equal(completed,3);assert.equal(nativeEnd,
 
 const recorded=walkthroughTimeline(walkthroughs.datagpt.cues);
 const comparisonEntries=recorded.filter(e=>e.selection);
-assert.deepEqual(comparisonEntries.map(e=>[e.anchor,e.start,e.selection,e.chapterStart]),[['#dg-pilot-comparison',309.6,'before',229],['#dg-pilot-comparison',325.8,'after',229]]);
+assert.deepEqual(comparisonEntries.map(e=>[e.anchor,e.start,e.selection,e.chapterStart]),[['#dg-pilot-comparison',309.6,'before',225.3],['#dg-pilot-comparison',325.8,'after',225.3]]);
 assert.equal(currentWalkthroughSelection(recorded,309.5),undefined);
 assert.equal(currentWalkthroughSelection(recorded,315).selection,'before');
 assert.equal(currentWalkthroughSelection(recorded,325.79).selection,'before','Resume never borrows a future selection through cue lead');
