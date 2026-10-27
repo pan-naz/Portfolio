@@ -26,7 +26,7 @@ const productLinks = [
   { href: hookoAppUrl, label: 'App Store' },
 ];
 ---
-<article class="case-study-content case-study-content--hooko" data-case-content>
+<article class="case-study-content case-study-content--hooko case-study-content--editorial" data-case-content>
   <div class="case-study-artwork"><HookoHero /></div>
 <div class="case-study-body case-study-narrative hk-case">
 
@@ -45,13 +45,13 @@ const productLinks = [
     <SectionHeading id="hk-problem-h" label={hookoProblemHeading.label} layout="stacked" reveal={false}>{hookoProblemHeading.title}</SectionHeading>
     <div class="hk-col-2 case-study-columns">
         <div class="hk-cell">
-          <h3 class="text-body-m-strong">Creators</h3>
-          <p>On TikTok, Reels and Shorts, people decide in the first 3 seconds whether to keep watching. When a video gets few views, creators usually <strong>don't know why</strong>. Was it the first line, the first shot, the pacing or the caption?</p>
+          <h3 class="case-study-section-title">Creators</h3>
+          <p data-case-secondary>On TikTok, Reels and Shorts, people decide in the first 3 seconds whether to keep watching. When a video gets few views, creators usually <strong>don't know why</strong>. Was it the first line, the first shot, the pacing or the caption?</p>
         </div>
         <div class="hk-cell">
-          <h3 class="text-body-m-strong">Existing tools</h3>
-          <p>Most virality apps I looked at give you a score or a percentage, like "62% viral". That doesn't tell you what to fix, so you're still guessing before the next video.</p>
-          <p>With Hooko, I wanted every score to come with a clear tip you can use when you film again.</p>
+          <h3 class="case-study-section-title">Existing tools</h3>
+          <p data-case-secondary>Most virality apps I looked at give you a score or a percentage, like "62% viral". That doesn't tell you what to fix, so you're still guessing before the next video.</p>
+          <p data-case-secondary>With Hooko, I wanted every score to come with a clear tip you can use when you film again.</p>
         </div>
     </div>
   </section>
@@ -112,12 +112,12 @@ const productLinks = [
     <SectionHeading id="hk-build-h" label="Build" layout="stacked" reveal={false}>Tech stack</SectionHeading>
     <div class="hk-col-2 case-study-columns">
       <div class="hk-cell">
-        <h3 class="text-body-m-strong">How I worked</h3>
-        <p>I designed all the screens and decided how the app works, what it checks in a video and what the results look like. I wrote the code with Claude Code. That includes the Flutter app, the Supabase backend, the Gemini prompts and the RevenueCat and YouTube connections.</p>
+        <h3 class="case-study-section-title">How I worked</h3>
+        <p data-case-secondary>I designed all the screens and decided how the app works, what it checks in a video and what the results look like. I wrote the code with Claude Code. That includes the Flutter app, the Supabase backend, the Gemini prompts and the RevenueCat and YouTube connections.</p>
       </div>
       <div class="hk-cell">
-        <h3 class="text-body-m-strong">Why Flutter</h3>
-        <p>I started with iOS, but I want to release Hooko on Android too. Flutter lets me use the same code for both, so I don't have to build the app twice.</p>
+        <h3 class="case-study-section-title">Why Flutter</h3>
+        <p data-case-secondary>I started with iOS, but I want to release Hooko on Android too. Flutter lets me use the same code for both, so I don't have to build the app twice.</p>
       </div>
     </div>
 
@@ -225,8 +225,8 @@ const productLinks = [
 
     <div class="hk-col-2 case-study-columns">
       <div class="hk-cell">
-        <h3 class="text-body-m-strong">App Store optimization</h3>
-        <p>On the App Store, the name, subtitle and hidden keyword field are what search indexes. I treated them as one 160-character budget and never repeated a word across them, because Apple counts each word once.</p>
+        <h3 class="case-study-section-title">App Store optimization</h3>
+        <p data-case-secondary>On the App Store, the name, subtitle and hidden keyword field are what search indexes. I treated them as one 160-character budget and never repeated a word across them, because Apple counts each word once.</p>
         <ul class="case-study-list">
           <li><b>Name</b> leads with an intent phrase creators actually search, "Blow Up", with the brand after it.</li>
           <li><b>Subtitle</b> covers the second intent, "go viral" and "short video", using all 30 characters.</li>
@@ -245,8 +245,8 @@ const productLinks = [
 
     <div class="hk-block">
       <div class="hk-cell" style="max-width:760px">
-        <h3 class="text-body-m-strong">Apple Ads campaign structure</h3>
-        <p>I split my Apple Ads into four campaigns. Each one targets a different kind of search, so I could give each its own budget and see which searches actually bring installs.</p>
+        <h3 class="case-study-section-title">Apple Ads campaign structure</h3>
+        <p data-case-secondary>I split my Apple Ads into four campaigns. Each one targets a different kind of search, so I could give each its own budget and see which searches actually bring installs.</p>
       </div>
       <div class="hk-campaigns">
         <article class="hk-camp"><h4>Brand</h4><p class="hk-match">Exact match</p><p>Shows the ad when someone searches for Hooko by name. It's cheap and stops other apps from taking those searches.</p><div class="hk-kw"><Chip label="hooko" /><Chip label="hooko app" /></div></article>
@@ -254,7 +254,7 @@ const productLinks = [
         <article class="hk-camp"><h4>Competitor</h4><p class="hk-match">Exact match</p><p>Shows the ad when someone searches for a similar app by name. It has its own campaign so I could check if it was worth the cost.</p><div class="hk-kw"><Chip label="names of similar apps" /></div></article>
         <article class="hk-camp"><h4>Discovery</h4><p class="hk-match">Broad match</p><p>Finds new search terms I hadn't thought of. Keywords I already target in other campaigns are blocked here, so I don't pay for them twice.</p><div class="hk-kw"><Chip label="search terms report" /></div></article>
       </div>
-      <div class="hk-flowline" aria-label="How new keywords move between campaigns"><span>Discovery finds a new search term</span><Arrow /><span>It brings installs</span><Arrow /><span>Add it to Category</span><Arrow /><span>Block it in Discovery</span></div>
+      <div class="hk-flowline" aria-label="How new keywords move between campaigns"><Chip label="Discovery finds a new search term" variant="raised" /><Arrow /><Chip label="It brings installs" variant="raised" /><Arrow /><Chip label="Add it to Category" variant="raised" /><Arrow /><Chip label="Block it in Discovery" variant="raised" /></div>
     </div>
   </section>
 

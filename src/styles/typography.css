@@ -48,6 +48,7 @@
 
 /* body-l · canonical role and actual website consumers */
 .text-body-l,
+.case-study-content--editorial .case-study-section-title,
 :where(.ds-specimens),
 .hero-description,
 .accent-stat,
