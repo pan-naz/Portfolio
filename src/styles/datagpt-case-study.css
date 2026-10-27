@@ -33,7 +33,6 @@
 .dg-research-stats .stat-label { color: var(--color-text-secondary); }
 .dg-case .dg-outcome-label { margin: var(--space-8) 0 var(--space-3); }
 .dg-personas { margin-top: var(--space-6); }
-.dg-persona--wide { grid-column: 1 / -1; }
 .dg-question { width: fit-content; margin: var(--space-4) 0; padding: var(--space-3) var(--space-4); color: var(--color-bg-canvas); background: var(--color-text-primary); border-radius: var(--radius-medium) var(--radius-medium) var(--radius-medium) var(--dg-bubble-cut); }
 .dg-answer { width: fit-content; margin-left: auto; padding: var(--space-3) var(--space-4); background: var(--color-bg-surface); border-radius: var(--radius-medium) var(--radius-medium) var(--dg-bubble-cut) var(--radius-medium); box-shadow: var(--shadow-small); }
 .dg-competitor-heading { display: flex; align-items: center; gap: var(--space-3); }
@@ -70,8 +69,6 @@
 }
 @media (max-width: 1023px) {
   .dg-grid--four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .dg-personas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .dg-persona--wide { grid-column: auto; }
   .dg-model .dg-card-heading { flex-direction: column; }
   .dg-needs { grid-template-columns: 1fr; }
 }

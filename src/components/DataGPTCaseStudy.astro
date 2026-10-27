@@ -38,7 +38,7 @@ const { project } = Astro.props;
       <dl class="dg-grid dg-grid--three dg-research-stats" id="dg-research-findings">{researchMetrics.map(metric => <Stat {...metric} />)}</dl>
       <h3 class="dg-outcome-label case-study-section-title">Outcome</h3><div class="dg-grid dg-grid--three">{researchOutcomes.map(([title, body]) => <article class="dg-card"><h3>{title}</h3><p>{body}</p></article>)}</div>
       <div class="dg-subsection" id="dg-research-personas"><h3 class="dg-copy-width case-study-section-title">Two groups: the people who ask questions and the people who make answers possible</h3><p class="dg-copy-width" data-case-secondary>Most users only ask questions. A smaller group connects the data and defines what the metrics mean. DataGPT had to serve both.</p>
-        <div class="dg-grid dg-grid--three dg-personas">{dataGPTPersonas.map((persona, i) => <article class:list={['dg-card dg-persona', i === 3 && 'dg-persona--wide']}>
+        <div class="dg-grid dg-grid--two dg-personas">{dataGPTPersonas.map(persona => <article class="dg-card dg-persona">
           <div class="dg-card-heading"><h3>{persona.title}</h3><span class="dg-badge text-label-s">{persona.group}</span></div><p>{persona.description}</p><blockquote class="dg-question">{persona.question}</blockquote>
           <div class="dg-grid dg-grid--two dg-needs"><div><h4>Need</h4><p>{persona.need}</p></div><div><h4>Frustration</h4><p>{persona.frustration}</p></div></div>
         </article>)}</div>
