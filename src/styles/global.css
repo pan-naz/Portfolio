@@ -23,8 +23,8 @@ a[href] { cursor: pointer; }
    unshaped controls still receive a rounded keyboard-focus outline. */
 :where(button, a, summary, input, select, textarea, [tabindex]:not([tabindex='-1'])) { border-radius: var(--radius-small); }
 :where(button, a, summary, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid var(--color-focus-ring); outline-offset: 4px; }
-/* Raise keyboard focus without changing positioning or outline precedence. */
-:is(button, a, summary, input, select, textarea, [tabindex]):focus-visible { z-index: var(--layer-raised); }
+/* Raise keyboard focus while preserving controls already on a higher layer. */
+:is(button, a, summary, input, select, textarea, [tabindex]):focus-visible:not(.video-saver-control, .ds-motion-replay) { z-index: var(--layer-raised); }
 /* Canvas separation keeps card focus visible over either Work background. */
 .project-surface:focus-visible { box-shadow: 0 0 0 calc(var(--space-1) + 2px) var(--color-bg-canvas); }
 /* Safari treats dialog autofocus/return as focus-visible even after a tap.
