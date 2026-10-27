@@ -582,15 +582,6 @@
   },
   {
     "file": "src/styles/global.css",
-    "selector": ".process-tags",
-    "context": "@layer system",
-    "property": "top",
-    "value": "calc(108px + var(--safe-top))",
-    "kind": "spacing",
-    "reason": "Existing hero composition, reserved content space or tag/control padding; keep the approved geometry."
-  },
-  {
-    "file": "src/styles/global.css",
     "selector": ".skill-marquee",
     "context": "@layer system",
     "property": "top",
