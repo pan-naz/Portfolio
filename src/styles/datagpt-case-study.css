@@ -59,6 +59,15 @@
 .dg-testimonials .dg-card > p { color: var(--color-text-secondary); }
 .dg-dark .case-study-heading + p { margin-top: var(--space-6); }
 .dg-conclusion-lead { margin-top: var(--space-4); }
+/* The title owns row one; paragraph and list share their first baseline in row two. */
+@media (min-width: 1024px) {
+  .dg-feature .case-study-columns { row-gap: 0; align-items: first baseline; }
+  .dg-feature .case-study-columns > div { display: contents; }
+  .dg-feature h3, .dg-feature p { grid-column: 1; margin-inline-end: var(--grid-gap); }
+  .dg-feature h3 { grid-row: 1; }
+  .dg-feature p, .dg-feature .case-study-list { grid-row: 2; }
+  .dg-feature .case-study-list { grid-column: 2; }
+}
 @media (max-width: 1023px) {
   .dg-grid--four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .dg-personas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
