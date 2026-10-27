@@ -29,3 +29,8 @@ assert.deepEqual(validateProjectIconSizes('@layer system {.case-study-decision-c
 
 assert.deepEqual(validateUIIconStrokes('.icon {stroke-width:var(--icon-stroke-regular)} .text-link .arrow path {stroke-width:var(--icon-stroke-strong)}'),[]);
 for(const css of ['.icon {stroke-width:2}','.arrow path {stroke-width:var(--icon-stroke-other)}','.icon {stroke-width:var(--other, 1.5)}'])assert(validateUIIconStrokes(css).length,'A third/raw interface stroke cannot bypass the two-role guard');
+
+const flowArrows="@layer project {.hk-flowline > .arrow {width:var(--icon-size-compact);height:var(--icon-size-compact)}}";
+assert.deepEqual(validateProjectIconSizes(flowArrows,'src/styles/hooko-case-study.css'),[],'Hooko flow uses the shared UI Arrow');
+assert(validateProjectIconSizes(flowArrows,'src/styles/other-case-study.css').length,'The UI allowance stays scoped to Hooko flow');
+assert(validateProjectIconSizes(flowArrows.replaceAll('.hk-flowline > .arrow','.art'),'src/styles/hooko-case-study.css').length,'Hooko artwork remains independent of interface sizing');

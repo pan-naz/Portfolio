@@ -14,11 +14,10 @@ export const walkthroughs: Record<string, WalkthroughData> = {
       ]},
       {name:'Competitor mapping',anchor:'#dg-competitors',start:105.9,glide:true},
       {name:'Prototypes',anchor:'#dg-models',start:162.5,stops:[{anchor:'#dg-models',start:170.4,glide:true}]},
-      {name:'What shipped?',anchor:'#dg-shipped',start:206.0,glide:'#dg-shipped-navigator',stops:[
-        {anchor:'#dg-shipped-navigator',start:213.5,align:'center'},
-        {anchor:'#dg-shipped-navigator',start:229.0,align:'center',glide:true},
+      {name:'What shipped?',anchor:'#dg-shipped',start:206.0,glide:'next',stops:[
+        {anchor:'#dg-pilot',start:213.5},
       ]},
-      {name:'Pilot launch',anchor:'#dg-pilot',start:231.0,stops:[
+      {name:'Pilot launch',anchor:'#dg-pilot',start:229.0,stops:[
         {anchor:'#dg-pilot-problem-one',start:239.3},
         {anchor:'#dg-llm-instructions',start:265.8},
         {anchor:'#dg-pilot-results-one',start:291.9},
@@ -38,7 +37,7 @@ export const walkthroughs: Record<string, WalkthroughData> = {
     lengthSeconds: 534.207,
     chapterTitles: 'names',
     cues: [
-      {name:'Overview',anchor:'top',start:0,stops:[{anchor:'#vox-overview',start:8.7}]},
+      {name:'Overview',anchor:'top',start:0,stops:[{anchor:'#vox-overview',start:22.0}]},
       {name:'Problem',anchor:'#vox-problem-title',start:26.6},
       {name:'Discovery',anchor:'#vox-discovery-title',start:55.4,stops:[{anchor:'#vox-audience-title',start:59.9,glide:true}]},
       {name:'Competitors',anchor:'#vox-competitive-title',start:80.8,stops:[
@@ -53,12 +52,12 @@ export const walkthroughs: Record<string, WalkthroughData> = {
         {anchor:'#vox-decisions',start:217.6},
       ]},
       {name:'Solution',anchor:'#vox-onboarding',start:236.2,stops:[
-        {anchor:'#vox-editor',start:246.0},
+        {anchor:'#vox-editor',start:244.0},
         {anchor:'#vox-scenarios',start:310.9},
         {anchor:'#vox-campaigns',start:318.1},
         {anchor:'#vox-numbers',start:336.0},
       ]},
-      {name:'Contact center',anchor:'#vox-contact-title',start:344.8,stops:[
+      {name:'Contact center',anchor:'#vox-contact-title',start:344.8,glide:'next',stops:[
         {anchor:'#vox-live-dashboard',start:364.9,glide:true},
         {anchor:'#vox-live-conversations',start:385.1},
         {anchor:'#vox-workspace',start:404.1,glide:'next'},
@@ -68,7 +67,7 @@ export const walkthroughs: Record<string, WalkthroughData> = {
         {anchor:'#vox-reports',start:465.2,glide:true},
         {anchor:'#vox-design-system',start:486.6},
       ]},
-      {name:'Impact',anchor:'#vox-impact-title',start:498.3},
+      {name:'Impact',anchor:'#vox-impact-title',start:498.3,stops:[{anchor:'#vox-end',start:527.1}]},
     ],
   },
 };

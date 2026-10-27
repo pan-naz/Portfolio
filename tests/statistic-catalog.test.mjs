@@ -12,6 +12,9 @@ const calls=statisticUsage('Stat');assert(calls.includes('revealValue'));assert(
 const html=readFileSync('dist/case-studies/datagpt/index.html','utf8');
 assert(!/<dd\b[^>]*>\s*<\/dd>/.test(html),'No empty description remains on DataGPT');
 assert(html.includes('stakeholder interviews'),'The no-note result keeps its real label');
+assert(html.includes('<span class="sr-only">2m to 30s</span>'),'The metric arrow is spoken as “to”');
+assert(/class="metric-value-parts" aria-hidden="true">[\s\S]*?class="icon metric-value-arrow"/.test(html),'The visual metric uses the decorative shared Arrow icon');
+assert(/\.metric-value-arrow\s*\{[^}]*stroke-width:\s*var\(--icon-stroke-strong\)/.test(readFileSync('src/styles/global.css','utf8')),'Metric arrows use the shared Strong stroke');
 const groups=statisticTokenGroups();
 assert.deepEqual(groups.find(group=>group.title==='Type').names,[...['heading-l','body-m-strong','body-m','body-s'].flatMap(role=>['font','font-weight','letter-spacing','line-height','text'].map(prefix=>`--${prefix}-${role}`))].sort((a,b)=>a.localeCompare(b,'en',{numeric:true})));
 const catalog=readFileSync('dist/design-system/index.html','utf8'),code=groups.map(group=>`/* ${group.title} */\n`+group.names.join('\n')).join('\n\n');

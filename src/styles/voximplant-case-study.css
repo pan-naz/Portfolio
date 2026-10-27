@@ -53,7 +53,7 @@
 .vox-meant { max-width: 100%; }
 
 .vox-hypotheses { display: grid; gap: var(--space-3); padding: 0 !important; margin-top: var(--space-8) !important; list-style: none; }
-.vox-hypotheses li { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: var(--space-3); padding: var(--space-4); border: 1px solid var(--color-border-default); border-radius: var(--radius-medium); }
+.vox-hypotheses li { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: var(--space-3); padding: var(--space-4); background: var(--color-bg-surface); box-shadow: var(--shadow-small); border-radius: var(--radius-medium); }
 .vox-hypotheses li > span { color: var(--color-text-secondary); }
 .vox-hypotheses p { margin-top: var(--space-1); }
 .vox-hypotheses p strong { color: var(--color-interactive-accent); }

@@ -34,7 +34,9 @@ export function validateProjectIconSizes(css,file='fixture.css'){
  const project=node=>{for(let p=node.parent;p;p=p.parent)if(p.type==='atrule'&&p.name==='layer'&&p.params==='project')return true;return false;};
  tree.walkDecls(decl=>{if(project(decl)&&decl.prop.startsWith('--'))aliases.set(decl.prop,(aliases.get(decl.prop)||'')+' '+decl.value);});
  const depends=(value,seen=new Set())=>[...value.matchAll(/var\((--[\w-]+)/g)].some(([,name])=>/^--icon-size(?:-|$)/.test(name)||(!seen.has(name)&&depends(aliases.get(name)||'',new Set([...seen,name]))));
- tree.walkDecls(decl=>{if(project(decl)&&/^(?:(?:min-|max-)?(?:width|height)|(?:inline|block)-size|font-size|flex-basis|grid-template-(?:columns|rows))$/.test(decl.prop)&&depends(decl.value))errors.push('Project artwork derives size from interface icons: '+file+' '+decl.parent.selector+' '+decl.prop);});
+ // Hooko's flow glyphs are shared UI Arrows, not case-study artwork.
+ const flowArrow=decl=>file==='src/styles/hooko-case-study.css'&&decl.parent.selector==='.hk-flowline > .arrow'&&/^(?:width|height)$/.test(decl.prop)&&decl.value==='var(--icon-size-compact)';
+ tree.walkDecls(decl=>{if(project(decl)&&!flowArrow(decl)&&/^(?:(?:min-|max-)?(?:width|height)|(?:inline|block)-size|font-size|flex-basis|grid-template-(?:columns|rows))$/.test(decl.prop)&&depends(decl.value))errors.push('Project artwork derives size from interface icons: '+file+' '+decl.parent.selector+' '+decl.prop);});
  return errors;
 }
 export function validateIcons(root=process.cwd()){

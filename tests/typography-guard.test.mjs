@@ -30,7 +30,7 @@ for(const property of ['font-size','font-weight','font-family','line-height','le
 assert(validateStaticTypography({'src/styles/global.css':'.dg-avatar { font-weight:600; }'},typographyCssExclusions).length,'Exception must match its exact file and selector');
 assert(Object.values(typographyExclusions).every(e=>e.reason));
 const testimonial=read('src/components/DataGPTCaseStudy.astro');
-for(const name of ['Dan Calzone','Mia Chen'])assert(testimonial.includes(`<strong class="text-body-m-strong">${name}</strong>`));
+for(const name of ['Dan Calzone','Mia Chen'])assert(testimonial.includes(`<strong class="case-study-section-title">${name}</strong>`));
 assert(!/figcaption[^>]*style=|<span class="text-body-s"[^>]*(?:style=|text-secondary)/.test(testimonial),'Names/jobs keep their current colours');
 assert.equal((testimonial.match(/data-typography-exclusion="decorative-quote" aria-hidden="true"/g)||[]).length,2);
 assert(!/\.style\.(?:fontSize|fontWeight|fontFamily|lineHeight|letterSpacing)\s*=/.test(read('src/scripts/design-system.ts')),'Whole source roles, no element type overrides');

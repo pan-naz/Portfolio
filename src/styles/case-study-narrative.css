@@ -1,5 +1,14 @@
 @layer system, project;
 @layer system {
+/* Opt-in editorial copy · follow the nearest theme/zone without changing the roles. */
+.case-study-content--editorial,
+.case-study-content--editorial :is([data-theme='light'], [data-color-zone='light']) { --case-copy-color: var(--color-text-primary); }
+:root[data-theme='dark'] .case-study-content--editorial,
+.case-study-content--editorial :is([data-theme='dark'], [data-color-zone='dark']) { --case-copy-color: var(--color-text-secondary); }
+.case-study-content--editorial [data-case-secondary],
+.case-study-content--editorial .case-study-decision-card__impact > p { color: var(--case-copy-color); }
+:where(.case-study-content--editorial [data-case-secondary]) :where(strong,b) { color: var(--color-text-primary); }
+
 /* Shared editorial roles for all full case studies. Project styles own composition only. */
 .case-study-narrative {
   --section-heading-stack-space: var(--space-6);

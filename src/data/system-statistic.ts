@@ -6,6 +6,7 @@ import type {SourceComponent} from './system-inventory';
 import {componentPropSpecs} from './system-props.ts';
 import {compareTokenNames,componentTokenPatterns as patterns} from './system-component-tokens.ts';
 const read=(file:string)=>readFileSync(file,'utf8');
+export const statisticArrowRule='An arrow inside a number uses the Arrow icon at the number’s cap height with the Strong stroke.';
 export const statisticDescription='A result with its label and an optional note.';
 export const statisticExamples={default:impactGroups[0].metrics[0],case:testingMetrics.find(metric=>metric.value==='≈87%')!,bare:researchMetrics[0]};
 export const statisticNumber=solutionMetric;
@@ -30,14 +31,15 @@ export const statisticProps=(component:SourceComponent)=>componentPropSpecs(comp
 /** Only direct shared statistic styles and reveal settings, not resolved internals. */
 export function statisticTokenGroups(){
  const css=read('src/styles/global.css').replace(/\/\*[\s\S]*?\*\//g,''),type=read('src/styles/typography.css'),motion=read('src/scripts/section-reveals.ts');
- const rules=[...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].filter(([,selector])=>/^\s*\.stat(?:\s|\s*\{|[-.])/.test(selector)&&!selector.includes('.impact')).map(([, ,body])=>body).join('\n');
+ const rules=[...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].filter(([,selector])=>/^\s*\.(?:stat(?:\s|\s*\{|[-.])|metric-value-arrow)/.test(selector)&&!selector.includes('.impact')).map(([, ,body])=>body).join('\n');
  const roles=['heading-l','body-m-strong','body-m','body-s'].map(role=>type.match(new RegExp('/\\* '+role+' ·[\\s\\S]*?\\{([^}]+)\\}'))![1]).join('\n');
  const names=[...new Set([...rules.matchAll(/var\((--[\w-]+)/g)].map(([,name])=>name).concat([...roles.matchAll(/var\((--[\w-]+)/g)].map(([,name])=>name),[...motion.matchAll(/['"](--(?:duration|stagger|distance)-title-reveal|--ease-entrance)['"]/g)].map(([,name])=>name)))].sort(compareTokenNames);
- return [{title:'Color',pattern:patterns.color},{title:'Type',pattern:patterns.type},{title:'Spacing',pattern:patterns.spacing},{title:'Motion · revealValue',pattern:patterns.motion}].map(({title,pattern})=>({title,names:names.filter(name=>pattern.test(name))}));
+ return [{title:'Color',pattern:patterns.color},{title:'Type',pattern:patterns.type},{title:'Size',pattern:patterns.size},{title:'Spacing',pattern:patterns.spacing},{title:'Motion · revealValue',pattern:patterns.motion}].map(({title,pattern})=>({title,names:names.filter(name=>pattern.test(name))}));
 }
 export const statisticAccessibility=[
  'Results sit in a description list: the number and label are the term, the note is the description.',
  'With revealValue, screen readers read the whole number once. The moving letters are hidden from them.',
+ 'A spaced arrow is read as “to”; the decorative icon is hidden from screen readers.',
  'With reduced motion, the number appears without the letter animation.',
  'The orange number is at least 26px, so its 3.2:1 contrast on Paper meets the large-text level.',
 ];
