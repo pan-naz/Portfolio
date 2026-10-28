@@ -482,7 +482,7 @@ html[data-work-stage-layout='true'] .about-details::before { left: max(0px, calc
   .contact-description { margin-top: var(--space-6); }
   .contact-links { justify-self: stretch; }
   .footer { display: grid; grid-template-columns: max-content minmax(0, 1fr) var(--control-height-small); margin-top: var(--section-space); padding-block: var(--space-6) calc(var(--space-6) + var(--safe-bottom)); gap: var(--space-4); }
-  .footer > p:nth-child(2) { margin-left: auto; justify-self: end; }
+  .footer > p:nth-child(2) { margin-left: auto; justify-self: end; text-align: right; }
   .footer-icon-pile-rest .icon { left: var(--pile-mobile-x); bottom: var(--pile-mobile-y); transform: rotate(var(--pile-mobile-angle)); }
   .footer-icon-pile-rest .footer-pile-desktop-only { display: none; }
 }
