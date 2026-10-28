@@ -350,6 +350,7 @@
   --delay-filter-enter: 140ms;
   --stagger-about-reveal: 160ms;
   --delay-service-tooltip: 160ms;
+  --delay-footer-tooltip: 1000ms;
   --delay-walkthrough-pill: 1000ms;
   --delay-walkthrough-pill-start: 4000ms;
 

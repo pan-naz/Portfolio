@@ -1,4 +1,5 @@
 import { watchViewportPointer, type ViewportPointer } from './viewport-pointer.ts';
+import { readMotionToken } from './native-motion.ts';
 
 export const tooltipFollowTiming = { timeConstant: 72, maxElapsed: 64 };
 
@@ -29,6 +30,8 @@ const initTooltips = () => {
     let targetY = 0;
     let positioned = false;
     let tracking = false;
+    let hovering = false;
+    let delayTimer = 0;
 
     const writePosition = () => {
       card.style.setProperty('--tooltip-x', `${currentX}px`);
@@ -79,6 +82,9 @@ const initTooltips = () => {
     };
 
     const leave = () => {
+      hovering = false;
+      clearTimeout(delayTimer);
+      delayTimer = 0;
       card.classList.remove('is-pointer-hovered');
       tracking = false;
       positioned = false;
@@ -89,7 +95,15 @@ const initTooltips = () => {
     const fine = matchMedia('(hover: hover) and (pointer: fine)');
     const unwatch = watchViewportPointer(pointer => {
       if (pointer.active && fine.matches && pointer.target?.closest('[data-tooltip-target]') === card && !card.closest('[inert]')) {
-        card.classList.add('is-pointer-hovered');
+        if (!hovering) {
+          hovering = true;
+          const delay = card.dataset.tooltipDelay ? readMotionToken(getComputedStyle(card), card.dataset.tooltipDelay) : 0;
+          if (delay > 0) delayTimer = window.setTimeout(() => {
+            delayTimer = 0;
+            if (hovering && fine.matches && !card.closest('[inert]')) card.classList.add('is-pointer-hovered');
+          }, delay);
+          else card.classList.add('is-pointer-hovered');
+        }
         followPointer(pointer);
       } else leave();
     });
@@ -97,16 +111,18 @@ const initTooltips = () => {
         if (!card.matches(':focus-visible')) return;
         leave();
         const rect = card.getBoundingClientRect();
-        const center = rect.left + card.clientLeft + card.clientWidth / 2;
+        const width = card.clientWidth || rect.width;
+        const center = rect.left + card.clientLeft + width / 2;
         const clamped = tooltipLocalX(center, rect.left + card.clientLeft, tooltip.offsetWidth, innerWidth);
-        card.style.setProperty('--tooltip-x', clamped === card.clientWidth / 2 ? '50%' : `${clamped}px`);
+        card.style.setProperty('--tooltip-x', clamped === width / 2 ? '50%' : `${clamped}px`);
         card.style.setProperty('--tooltip-y', '50%');
         tooltip.dataset.placement = 'above';
     };
     card.addEventListener('focusin', () => requestAnimationFrame(positionFocus));
+    fine.addEventListener('change', leave);
     window.addEventListener('resize', positionFocus);
     window.addEventListener('pagehide', event => {
-      if (!event.persisted) { leave(); unwatch(); window.removeEventListener('resize', positionFocus); }
+      if (!event.persisted) { leave(); unwatch(); fine.removeEventListener('change', leave); window.removeEventListener('resize', positionFocus); }
     });
   });
 };
