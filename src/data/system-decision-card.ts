@@ -16,7 +16,7 @@ export function decisionSource(file:string,title:string){
  if(!match)throw Error('Missing genuine decision: '+file+' / '+title);
  return match[0];
 }
-export const voxDecision=decisionSource('VoximplantCaseStudy','A canvas, not a form builder.');
+export const voxDecision=decisionSource('VoximplantCaseStudy','A canvas, not a form builder');
 export const hookoDecision=decisionSource('HookoCaseStudy','Niche benchmark');
 export const decisionInner=(source:string)=>source.slice(source.indexOf('>')+1,source.lastIndexOf('</CaseStudyDecisionCard>'));
 export const voxImpact=decisionInner(voxDecision).match(/<Fragment slot="impact">([\s\S]*?)<\/Fragment>/)![1];

@@ -129,7 +129,7 @@ assert.deepEqual(first.animation.frames[0], { opacity: '.43', transform: 'matrix
 controller.select('selected');
 assert.equal(location.hash, '', 'Selected work clears the hash');
 assert.equal(eyebrow.textContent, '01 / Selected work');
-assert.equal(heading.textContent, 'Projects worth a closer look.');
+assert.equal(heading.textContent, 'Projects worth a closer look');
 controller.select('websites');
 for (const animation of created) animation.finish();
 await flush();

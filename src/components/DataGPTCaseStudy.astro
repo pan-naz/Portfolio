@@ -21,7 +21,7 @@ const { project } = Astro.props;
       <ul slot="secondary"><li>Product owner</li><li>Product manager</li><li>Engineering team</li></ul>
     </CaseStudyOverview>
     <section aria-labelledby="dg-problem">
-      <SectionHeading id="dg-problem" label="Problem" layout="stacked" reveal={false}><span class="case-study-heading-line">Dashboards showed what happened.</span><span class="case-study-heading-line">Nobody could simply ask why.</span></SectionHeading>
+      <SectionHeading id="dg-problem" label="Problem" layout="stacked" reveal={false}><span class="case-study-heading-line">Dashboards showed what happened</span><span class="case-study-heading-line">Nobody could simply ask why</span></SectionHeading>
       <div class="case-study-columns dg-block">
         <div class="dg-copy-stack"><div><h3 class="case-study-section-title">Business context</h3><p data-case-secondary>Companies spend heavily on BI tools, but getting from data to a decision still went through a data team. Dashboards were static, and business users couldn't ask follow-up questions.</p></div><div><h3 class="case-study-section-title">User pains</h3><p data-case-secondary>Executives waited for the next meeting to learn why revenue moved. Analysts were "drowning in ad hoc requests". Marketers pieced a story together from dozens of reports.</p></div><div class="dg-goal"><h3 class="case-study-section-title">Goal</h3><p data-case-secondary>Let anyone ask a complex question in plain English and get an answer they can trust.</p></div></div>
         <div class="dg-card dg-voices">
@@ -61,7 +61,7 @@ const { project } = Astro.props;
       </div>
     </section>
     <section aria-labelledby="dg-pilot">
-      <SectionHeading id="dg-pilot" label="Pilot launch" layout="stacked" reveal={false}>After launch we surfaced <span class="dg-accent">two problems.</span></SectionHeading><p class="dg-lede">We rolled DataGPT out to a small group of pilot customers, including Papa John's, to test usability, accuracy and fit with their workflows before full release. I ran testing during the pilot and again after release.</p>
+      <SectionHeading id="dg-pilot" label="Pilot launch" layout="stacked" reveal={false}>After launch we surfaced <span class="dg-accent">two problems</span></SectionHeading><p class="dg-lede">We rolled DataGPT out to a small group of pilot customers, including Papa John's, to test usability, accuracy and fit with their workflows before full release. I ran testing during the pilot and again after release.</p>
       <div class="dg-block"><CaseStudyMedia {...media.pilot} /></div>
       <div class="dg-subsection" id="dg-pilot-problem-one"><p class="case-study-eyebrow dg-accent">1 Problem</p><h3 class="case-study-heading">Ambiguous questions got confident but wrong answers</h3>
         <div class="dg-grid dg-grid--two dg-block"><article class="dg-card"><h4>Signal</h4><p>Pilot users often phrased questions in ways that could be read more than one way.</p><p class="dg-question">What's my best-selling product?</p><p class="dg-answer">Coffee is your best-selling product.</p></article><article class="dg-card"><h4>Cause</h4><p>"Best-selling" could mean most units, most revenue or highest margin. The model picked units, while the user meant revenue. The answer was technically correct but wrong for the question, so people had to rephrase or ask follow-ups, and insights took longer.</p></article></div>
