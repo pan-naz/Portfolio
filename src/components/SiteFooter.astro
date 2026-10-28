@@ -2,6 +2,7 @@
 import IconButton from './IconButton.astro';
 import { profile } from '../data/portfolio';
 import Icon from './Icon.astro';
+import Tooltip from './Tooltip.astro';
 import { waterfallIconNodes } from '../scripts/waterfall/waterfall-icon-data';
 import { waterfallIconSize } from '../scripts/waterfall/waterfall-constants';
 import { FooterPile, pilePreviewWidth, pilePreviewHeight, pileBleed, pileAbove } from '../scripts/footer-pile/footer-pile-model';
@@ -19,7 +20,7 @@ const definitions = [...new Set([...desktop.icons, ...mobile.icons].map(icon => 
 const position = (icon: typeof desktop.icons[number], width: number) => ({ x: `calc(50% + ${icon.x - width / 2 - waterfallIconSize / 2}px)`, y: `${-icon.y - waterfallIconSize / 2}px`, angle: `${icon.angle}rad` });
 ---
 <footer class="footer container">
-  <p>© {new Date().getFullYear()} {profile.name}</p><p><a href="https://www.google.com/maps/search/?api=1&query=48.69944%2C24.63944" target="_blank" rel="noopener noreferrer" aria-label="Pererisl, Ukraine, on Google Maps (opens in a new tab)" tabindex="0">48°41′58″N 24°38′22″E</a></p><IconButton href="/design-system/" variant="secondary" size="small" icon="layers" label="Design system" />
+  <p>© {new Date().getFullYear()} {profile.name}</p><p><a href="https://www.google.com/maps/search/?api=1&query=48.69944%2C24.63944" target="_blank" rel="noopener noreferrer" aria-label="Pererisl, Ukraine, on Google Maps (opens in a new tab)" aria-describedby="footer-coordinates-tooltip" data-tooltip-target data-tooltip-delay="--delay-footer-tooltip" tabindex="0">48°41′58″N 24°38′22″E<Tooltip id="footer-coordinates-tooltip" label="Grew up here" /></a></p><IconButton href="/design-system/" variant="secondary" size="small" icon="layers" label="Design system" />
   <div class="footer-icon-pile-layer" aria-hidden="true" style={`--pile-icon-size:${waterfallIconSize}px;--pile-height:${pilePreviewHeight}px;--pile-bleed:${pileBleed}px;--pile-above:${pileAbove}px`}>
     <div class="footer-icon-pile" data-footer-pile>
       <Icon definitions={definitions} style="position:absolute;width:0;height:0;overflow:hidden" />

@@ -153,7 +153,8 @@ function validate(entries) {
     if (!sections.has(id)) errors.push(`Navigation target missing: ${id}`);
   }
   const footer = read('src/components/SiteFooter.astro');
-  if (/Tooltip|data-tooltip-target|aria-labelledby/.test(footer)) errors.push('Footer icon link must have only its accessible label, without a tooltip.');
+  const footerIcon = footer.match(/<IconButton\b[^>]*label="Design system"[^>]*\/>/)?.[0] || '';
+  if (/Tooltip|data-tooltip-target|aria-labelledby/.test(footerIcon)) errors.push('Footer icon link must have only its accessible label, without a tooltip.');
   if (!/label="Design system"/.test(footer)) errors.push('Footer icon link must retain its accessible name.');
   const preview = read('src/components/DSToolCards.astro');
   errors.push(...validateNavigationExamples(read('src/components/DSNavigationSpecimen.astro'), read('src/scripts/design-system-navigation.ts')));
