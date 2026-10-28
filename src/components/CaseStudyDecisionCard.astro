@@ -17,7 +17,7 @@ const { title, titleHidden = false, label, labelVariant = 'text', layout = 'stac
   </div>
   <div class:list={['case-study-decision-card__copy', titleHidden && 'case-study-decision-card__copy--without-heading']}><slot /></div>
   {Astro.slots.has('impact') && <div class="case-study-decision-card__impact" data-color-zone="dark" data-zone-keep="section shadows">
-    <h4>Impact:</h4>
+    <h4>Impact</h4>
     <slot name="impact" />
   </div>}
   </div>

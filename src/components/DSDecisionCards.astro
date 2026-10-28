@@ -19,7 +19,7 @@ const {component}=Astro.props,figure=blaustromConfiguratorSteps[0],groups=decisi
      <div class="ds-button-stage ds-decision-stage" inert aria-hidden="true">
       <div class:list={['ds-decision-art','ds-specimens','case-study-narrative',card.id==='media'&&'case-study-content--hooko']} data-decision-art={card.id} data-ds-example={`decision-${card.id}`} data-ds-target=".case-study-decision-card">
        {card.id==='figure'&&<CaseStudyDecisionCard title={figure.title} label={figure.label} layout="figure"><CaseStudyMedia slot="media" {...figure.media} priority/><p>{figure.description}</p></CaseStudyDecisionCard>}
-       {card.id==='stack'&&<CaseStudyDecisionCard title="A canvas, not a form builder."><Fragment set:html={voxText}/><Fragment slot="impact" set:html={voxImpact}/></CaseStudyDecisionCard>}
+       {card.id==='stack'&&<CaseStudyDecisionCard title="A canvas, not a form builder"><Fragment set:html={voxText}/><Fragment slot="impact" set:html={voxImpact}/></CaseStudyDecisionCard>}
        {card.id==='media'&&<div class="hk-decisions floating-control-theme" data-color-zone="light" data-zone-keep="shadows"><CaseStudyDecisionCard title="Niche benchmark" label="Context" labelVariant="accent" layout="media"><Fragment set:html={hookoText}/><ResponsiveImage slot="media" src={hookoImage.src} alt={hookoImage.alt} width={Number(hookoImage.width)} height={Number(hookoImage.height)} style={hookoImage.style} loading="eager"/></CaseStudyDecisionCard></div>}
       </div>
      </div>

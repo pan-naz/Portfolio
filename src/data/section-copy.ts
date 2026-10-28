@@ -2,7 +2,7 @@
 export interface SectionCopy { label:string; title:string; description?:string; }
 export const impactHeading: SectionCopy = {
   "label": "02 / Impact",
-  "title": "The numbers behind the latest work.",
+  "title": "The numbers behind the latest work",
   "description": "Results from DataGPT and Voximplant Kit — products I helped take from zero to launch."
 };
 
