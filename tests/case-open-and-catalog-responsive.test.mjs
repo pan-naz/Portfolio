@@ -8,6 +8,8 @@ assert(controller.includes("source?.dataset.src ? new URL(source.dataset.src, do
 assert(controller.includes("for (const type of ['pointerover', 'focusin', 'pointerdown'])"),'Hover, keyboard focus and press prepare the destination');
 assert.match(controller,/preparedImage\.decode\(\)\.then\(\(\) => \{\s*if \(ticket !== revision \|\| phase !== 'open' \|\| !borrowedImage\) return;/,'Only a decoded destination can replace a settled, current image');
 assert(!/currentTime\s*=/.test(artwork+controller),'A media handoff never rewinds playback');
+const closing=controller.slice(controller.indexOf('const close = async'),controller.indexOf('function requestClose'));
+assert(closing.includes('await Promise.all([travel, imageTravel])')&&closing.indexOf('await Promise.all([travel, imageTravel])')<closing.indexOf('home.replaceChildren(video)')&&closing.indexOf('home.replaceChildren(video)')<closing.indexOf("dialog.classList.remove('is-closing')")&&closing.indexOf("dialog.classList.remove('is-closing')")<closing.indexOf('await captionFade'),'Return the media and end the layer after travel, before awaiting the caption fade');
 for(const file of ['DSButtons','DSChips','DSProjectCards','DSNavigationExamples']){
  const source=read('src/components/'+file+'.astro');assert(source.includes('class="ds-value-item"'),file+' preserves each semantic value item');assert(!/<dd>\{card\.(?:used|style|value)\}<\/dd>/.test(source),file+' must not break inside a value item');
 }

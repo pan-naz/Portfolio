@@ -302,7 +302,12 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     card.style.removeProperty('visibility');
     // Counter the panel's travel so the caption fades in while rising gently
     // from 16px below, together with the surface and hero return.
+    const captionFrames = [
+      { opacity: 0, transform: contentOffset() },
+      { opacity: 1, transform: 'none' },
+    ];
     let captionFade: Promise<unknown> | undefined;
+    let captionAnimation: Animation | undefined;
     if (clone) {
       clone.style.opacity = '1';
       clone.style.transform = 'none';
@@ -310,17 +315,15 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
         { left: `${parseFloat(destination.left) - parseFloat(start.left)}px`, top: `${parseFloat(destination.top) - parseFloat(start.top)}px` },
         { left: '0px', top: '0px' },
       ], { duration: motion.closeDuration });
-      captionFade = play(clone, [
-        { opacity: 0, transform: contentOffset() },
-        { opacity: 1, transform: 'none' },
-      ], { delay: motion.captionEnterDelay, duration: motion.captionEnterDuration });
+      captionFade = play(clone, captionFrames, { delay: motion.captionEnterDelay, duration: motion.captionEnterDuration });
+      captionAnimation = animations.at(-1);
     }
     const returnScrollY = window.scrollY;
     const followPageScroll = () => { panel.style.transform = `translateY(${returnScrollY - window.scrollY}px)`; };
     window.addEventListener('scroll', followPageScroll, { passive: true });
     const travel = play(panel, [{ ...start, borderRadius: destination.borderRadius }, destination], { duration: motion.closeDuration });
     const imageTravel = play(artwork!, [imageStart, { ...imageDestination, borderColor: frameColor(cardMedia) }], { duration: motion.closeDuration });
-    await Promise.all([travel, imageTravel, captionFade]);
+    await Promise.all([travel, imageTravel]);
     window.removeEventListener('scroll', followPageScroll);
     if (ticket !== revision) return;
     if (borrowedVideo) {
@@ -344,13 +347,26 @@ export function initializeCaseStudies(cursor: Cursor | undefined, onChange: (ope
     caseImages = undefined;
     cardMedia.style.removeProperty('visibility');
     cardCaption.style.removeProperty('visibility');
-    control.hidden = true;
-    control.querySelector('button')!.removeEventListener('click', requestClose);
+    if (captionAnimation && !reduced.matches) {
+      const continuation = cardCaption.animate(captionFrames, {
+        delay: motion.captionEnterDelay, duration: motion.captionEnterDuration,
+        easing: motion.travelEasing, fill: 'both',
+      });
+      // Share the clone's clock so reparenting cannot restart or jump the fade.
+      continuation.startTime = captionAnimation.startTime;
+      animations.push(continuation);
+      captionFade = continuation.finished.catch(() => {});
+      captionAnimation.cancel();
+    }
     dialog.classList.remove('is-closing');
     panel.style.removeProperty('transform');
-    cancelAnimations();
     artwork?.remove(); artwork = null;
     clone?.remove(); clone = null;
+    await captionFade;
+    if (ticket !== revision) return;
+    control.hidden = true;
+    control.querySelector('button')!.removeEventListener('click', requestClose);
+    cancelAnimations();
     scroll.replaceChildren();
     lockScroll(false);
     document.title = oldTitle;
