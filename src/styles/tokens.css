@@ -347,6 +347,7 @@
   --stagger-title-reveal: 35ms;
   --stagger-copy-reveal: 100ms;
   --delay-work-filter-scroll-return: 80ms;
+  --delay-work-projects: 200ms;
   --delay-filter-enter: 140ms;
   --stagger-about-reveal: 160ms;
   --delay-service-tooltip: 160ms;

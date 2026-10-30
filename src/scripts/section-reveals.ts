@@ -54,15 +54,16 @@ export function sectionItemStart(
   hasDescription = true,
   itemInterval = contentDuration * stageProgress,
   hasIndex = true,
+  titleRelativeStart?: number,
 ) {
-  const { firstContentStart } = sectionHeadingTiming(titleDuration, contentDuration, stageProgress, hasIndex, hasDescription);
-  return firstContentStart + itemIndex * itemInterval;
+  const { titleStart, firstContentStart } = sectionHeadingTiming(titleDuration, contentDuration, stageProgress, hasIndex, hasDescription);
+  return (titleRelativeStart === undefined ? firstContentStart : titleStart + titleRelativeStart) + itemIndex * itemInterval;
 }
 
 /**
  * Build one top-to-bottom section timeline. The shared default keeps the hero's
- * 50% handoff; chapters may opt into a faster content duration and interval while
- * preserving the same heading, subtitle and first-content handoff.
+ * 50% handoff; chapters may opt into a content duration, interval or start relative
+ * to the title without changing the heading and subtitle timing.
  */
 export function sectionRevealEffects(
   title: HTMLElement,
@@ -76,10 +77,11 @@ export function sectionRevealEffects(
   const progress = number('--intro-stage-progress');
   const itemDuration = number('--section-item-reveal-duration') || duration;
   const itemInterval = number('--section-item-reveal-interval') || duration * progress;
+  const itemStart = number('--section-item-reveal-start');
   const distance = number('--distance-text-reveal');
   const easing = tokens.getPropertyValue('--ease-entrance').trim();
   const heading = headingRevealEffects(title, index, description);
-  let nextStart = sectionItemStart(0, number('--duration-title-reveal'), duration, progress, Boolean(description), itemInterval, Boolean(index));
+  let nextStart = sectionItemStart(0, number('--duration-title-reveal'), duration, progress, Boolean(description), itemInterval, Boolean(index), Number.isFinite(itemStart) ? itemStart : undefined);
   const items = content.flatMap(element => {
     const delay = nextStart;
     if (element.hasAttribute('data-title-reveal-row')) {
