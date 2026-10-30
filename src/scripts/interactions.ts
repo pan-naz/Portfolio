@@ -20,6 +20,7 @@ const header = document.querySelector<HTMLElement>('.site-header')!;
 const hero = document.querySelector<HTMLElement>('.hero')!;
 const workStage = initializeWorkStage();
 const heroIntro = initializeHeroIntro(workStage);
+if (heroIntro) workStage?.revealAfterIntro(heroIntro.finished);
 const waterfall = initializeWaterfall();
 const footerPile = initializeFooterPile();
 void heroIntro?.finished.then(() => footerPile?.prefetchWhenIdle());

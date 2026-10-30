@@ -726,18 +726,18 @@
   },
   {
     "file": "src/styles/global.css",
-    "selector": ".hero-description",
+    "selector": ".hero",
     "context": "@layer system > @media (max-width: 1439px)",
-    "property": "max-width",
-    "value": "min(625px, 100%)",
+    "property": "--hero-description-max",
+    "value": "625px",
     "kind": "size",
     "reason": "Existing 600/625px editorial text measure."
   },
   {
     "file": "src/styles/global.css",
-    "selector": ".skill-marquee",
+    "selector": ".hero",
     "context": "@layer system > @media (max-width: 1439px)",
-    "property": "width",
+    "property": "--hero-chip-column-width",
     "value": "170px",
     "kind": "size",
     "reason": "Existing ticker viewport size/position, independent of title motion."
@@ -745,7 +745,7 @@
   {
     "file": "src/styles/global.css",
     "selector": ".skill-marquee",
-    "context": "@layer system > @media (max-width: 1023px)",
+    "context": "@layer system > @media (max-width: 767px)",
     "property": "max-width",
     "value": "240px",
     "kind": "size",
@@ -754,7 +754,7 @@
   {
     "file": "src/styles/global.css",
     "selector": ".hero",
-    "context": "@layer system > @media (max-width: 767px)",
+    "context": "@layer system > @media (max-width: 1023px)",
     "property": "min-height",
     "value": "800px",
     "kind": "size",

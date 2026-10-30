@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import ts from 'typescript';
 import { createNativeMotion, readMotionToken, revealEffects } from '../src/scripts/native-motion.ts';
-import { canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent } from '../src/scripts/work-stage/work-stage-model.ts';
+import { canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent, shouldRevealWorkOnLoad } from '../src/scripts/work-stage/work-stage-model.ts';
 
 // Run the real stage controller and native-motion lifecycle with a controllable
 // browser clock. Glyph measurement is covered separately by the reveal tests.
@@ -36,7 +36,7 @@ class ElementDouble extends EventTarget {
   }
 }
 globalThis.workStageTestImports = {
-  createNativeMotion, readMotionToken, revealEffects, canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent,
+  createNativeMotion, readMotionToken, revealEffects, canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent, shouldRevealWorkOnLoad,
   sectionRevealEffects(title, index, description, content) {
     revealCalls++;
     title.style.opacity = '1';
@@ -48,15 +48,16 @@ globalThis.workStageTestImports = {
 };
 let runtime = readFileSync(new URL('../src/scripts/work-stage/work-stage.ts', import.meta.url), 'utf8');
 runtime = runtime.replace(/^import .*;\n/gm, '');
-runtime = 'const { createNativeMotion, readMotionToken, revealEffects, sectionRevealEffects, canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent } = globalThis.workStageTestImports;\n' + runtime;
+runtime = 'const { createNativeMotion, readMotionToken, revealEffects, sectionRevealEffects, canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent, shouldRevealWorkOnLoad } = globalThis.workStageTestImports;\n' + runtime;
 runtime = ts.transpileModule(runtime, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
 const { initializeWorkStage } = await import(`data:text/javascript;base64,${Buffer.from(runtime).toString('base64')}`);
 
-function fixture(fontsReady = Promise.resolve(), returningFromCase = false, floating = true, touch = false) {
+function fixture(fontsReady = Promise.resolve(), returningFromCase = false, floating = true, touch = false, viewport = {}) {
   created = []; revealCalls = 0;
   globalThis.document = { hidden: false, documentElement: { dataset: { workStageMotion: floating ? 'true' : undefined, workStageLayout: floating ? 'true' : undefined, workPreviewLayout: 'true' } }, timeline: { currentTime: 0 }, fonts: { ready: fontsReady } };
   if (returningFromCase) document.documentElement.dataset.caseReturn = 'true';
   const section = new ElementDouble(), surface = new ElementDouble(), panel = new ElementDouble(), rail = new ElementDouble();
+  section.top = viewport.top ?? 700;
   const heading = new ElementDouble(), title = new ElementDouble(), index = new ElementDouble(), description = new ElementDouble(), card = new ElementDouble();
   title.glyph = new ElementDouble();
   section.selectors = { '[data-work-stage-surface]': [surface], '.work-panel': [panel], '[data-work-rail]': [rail], '.section-heading': [heading], '[data-section-item]': [card] };
@@ -65,7 +66,7 @@ function fixture(fontsReady = Promise.resolve(), returningFromCase = false, floa
   const reduced = new EventTarget(); reduced.matches = false;
   globalThis.matchMedia = query => query.includes('reduced-motion') ? reduced : { matches: true };
   Object.defineProperty(globalThis, 'navigator', { value: { maxTouchPoints: 0 }, configurable: true });
-  globalThis.window = new EventTarget(); window.scrollY = 0; window.innerHeight = 900;
+  globalThis.window = new EventTarget(); window.scrollY = 0; window.innerHeight = viewport.height ?? 900; window.innerWidth = viewport.width ?? 1440; window.location = { hash: viewport.hash ?? '' };
   const frames = new Map(); let frameId = 0;
   globalThis.requestAnimationFrame = callback => { frames.set(++frameId, callback); return frameId; };
   globalThis.cancelAnimationFrame = id => frames.delete(id);
@@ -221,3 +222,31 @@ const keyboardTouch = fixture(Promise.resolve(), false, false, true);
 keyboardTouch.section.dispatchEvent(new Event('focusin'));
 assert.equal(keyboardTouch.description.style.opacity, '1', 'Keyboard access immediately reveals the description');
 console.log('PASS: touch heading shared motion, pause/resume, font waits, keyboard access, visit/case return and reduced motion.');
+
+for (const [width,height,top,shouldStart] of [[820,1106,600,true],[768,1024,600,true],[912,1000,600,true],[390,844,600,false],[1024,768,600,false],[1180,820,600,false],[1440,900,600,false],[912,650,600,false]]) {
+  let finishIntro;
+  const introFinished = new Promise(resolve => { finishIntro = resolve; });
+  const load = fixture(Promise.resolve(), false, false, false, {width,height,top});
+  load.controller.revealAfterIntro(introFinished);
+  await Promise.resolve();
+  assert.equal(revealCalls,0,`${width}: Work waits for the hero intro`);
+  finishIntro(); await Promise.resolve(); await Promise.resolve();
+  assert.equal(revealCalls,shouldStart?1:0,`${width}: only in-view tablet loads reveal without scrolling`);
+  assert.equal(window.scrollY,0);
+  if (width===912 && height===650) {
+    await load.scroll(40,top-40);
+    assert.equal(revealCalls,1,'A short tablet still reveals when a scroll reaches the line');
+  }
+}
+let finishEarlyIntro;
+const earlyIntro = new Promise(resolve => { finishEarlyIntro = resolve; });
+const earlyScroll = fixture(Promise.resolve(),false,false,true,{width:820,height:1106,top:600});
+earlyScroll.controller.revealAfterIntro(earlyIntro);
+await earlyScroll.scroll(40,560);
+assert.equal(revealCalls,1,'Scrolling before the intro ends retains the normal trigger');
+finishEarlyIntro(); await Promise.resolve(); await Promise.resolve();
+assert.equal(revealCalls,1,'Intro completion cannot replay a scroll-triggered reveal');
+const hashLoad = fixture(Promise.resolve(),false,false,true,{width:820,height:1106,top:600,hash:'#work'});
+hashLoad.controller.revealAfterIntro(Promise.resolve());await Promise.resolve();
+assert.equal(revealCalls,0,'Hash loads retain their existing scroll landing behaviour');
+console.log('PASS: in-view tablet Work waits for hero completion, other widths/short windows wait for scroll, and early scroll plays once.');

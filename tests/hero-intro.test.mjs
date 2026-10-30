@@ -62,6 +62,8 @@ assert.ok(source.includes("keyframes: [{ opacity: 0 }, { opacity: 1 }]"), 'Heade
 assert.ok(source.includes('headerIntro?.setPaused(document.hidden)') && source.includes('headerIntro?.cancel()'), 'Header uses the same lifecycle');
 assert.ok(!tokens.includes('--duration-header-reveal'), 'Retired header animation token removed');
 assert.ok(css.includes('.hero.is-tags-ready .skill-track'), 'Marquee waits until its own entrance is complete');
+const phoneRules=css.slice(css.indexOf('@media (max-width: 767px) {'));
+assert.ok(phoneRules.includes('.skill-marquee { position: relative;')&&!css.slice(0,css.indexOf('@media (max-width: 767px) {')).includes('.skill-marquee { position: relative;'), 'Only phones place skills in the document flow');
 const interactions = read('../src/scripts/interactions.ts');
 assert.ok(interactions.includes('initializeHeroIntro(workStage);') && interactions.indexOf('initializeHeroIntro(workStage)') < interactions.indexOf('initializeWaterfall()'), 'Intro starts before the decorative rain initializes');
 assert.ok(!source.includes('onComplete();') && !tokens.includes('--overlap-intro'), 'Retired completion callback and fixed overlap token removed');
