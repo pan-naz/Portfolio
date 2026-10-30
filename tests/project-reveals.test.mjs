@@ -26,6 +26,11 @@ assert.equal(sectionItemStart(0, 900, 900, .5), 1350, 'First content starts half
 assert.equal(sectionItemStart(1, 900, 900, .5), 1800, 'Second content starts halfway through the first item');
 assert.equal(sectionItemStart(2, 900, 900, .5), 2250, 'Third content continues the hero cadence');
 assert.equal(sectionItemStart(2, 900, 900, .5, true, 160), 1670, 'Experience rows can use a faster interval without changing the first row handoff');
+assert.deepEqual([0, 1, 2].map(i => sectionItemStart(i, 900, 900, .5, true, 450, true, 200)), [650, 1100, 1550], 'Work cards start 200ms after the title and keep their 450ms interval');
+assert.equal(sectionItemStart(0, 900, 900, .5, true, 450, true, undefined), 1350, 'Sections without a title-relative start keep their original handoff');
+assert.equal(sectionItemStart(0, 900, 900, .5, true, 450, true, 0), 450, 'An explicit zero start is relative to the title, not the subtitle');
+assert.ok(sectionReveals.includes("number('--section-item-reveal-start')") && css.includes('.work { --section-item-reveal-start: var(--delay-work-projects);'), 'Work alone opts into the shared title-relative content start');
+assert.ok(!sectionReveals.includes('--delay-work-projects'), 'Section heading tokens do not acquire the Work-only delay');
 assert.ok(card.includes('data-project-reveal={!compact || undefined} data-section-item={!compact || undefined}'), 'Selected cards reveal as complete section items; filtered cards use their independent shuffle');
 assert.ok(
   !css.includes('--color-bg-surface: var(--color-bg-surface)') &&

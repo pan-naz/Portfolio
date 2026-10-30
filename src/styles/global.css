@@ -251,7 +251,7 @@ main, .footer { position: relative; }
 .hero.is-motion-paused *, .hero.is-motion-paused *::before, .hero.is-motion-paused *::after { animation-play-state: paused !important; }
 @keyframes skills-up { to { transform: translateY(-50%); } }
 /* Homepage compositions from Figma 67:15; shared by catalog specimens. */
-.work { position: relative; isolation: isolate; margin-top: 0; }
+.work { --section-item-reveal-start: var(--delay-work-projects); position: relative; isolation: isolate; margin-top: 0; }
 .work-stage-surface { position: relative; isolation: isolate; width: 100%; padding-top: var(--space-24); }
 html[data-work-preview-layout='true'] .work { margin-top: calc(-1 * var(--work-preview-height)); }
 html[data-work-stage-motion='true'] .work-panel { transform: translate(var(--hero-visual-gutter), 0); }
