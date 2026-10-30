@@ -18,3 +18,8 @@ export function nextWorkStageExpanded(stageTop: number, scrollY: number, expande
 export function shouldRevealWorkContent(stageTop: number, scrollY: number, revealAt: number) {
   return scrollY > workStageCollapseScrollY && stageTop <= revealAt;
 }
+
+/** Only the shorter tablet hero may reveal its in-view Work content on load. */
+export function shouldRevealWorkOnLoad(width: number, stageTop: number, revealAt: number) {
+  return width >= 768 && width < 1024 && stageTop <= revealAt;
+}

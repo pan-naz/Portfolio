@@ -1,10 +1,11 @@
 import { createNativeMotion, readMotionToken, revealEffects } from '../native-motion.ts';
 import { sectionRevealEffects } from '../section-reveals';
-import { canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent } from './work-stage-model.ts';
+import { canShiftWorkStage, nextWorkStageExpanded, shouldRevealWorkContent, shouldRevealWorkOnLoad } from './work-stage-model.ts';
 
 interface IntroOptions { duration: number; delay: number; easing: string; }
 export interface WorkStageController {
   startIntro(options: IntroOptions): void;
+  revealAfterIntro(finished: Promise<void>): void;
   setPaused(value: boolean): void;
 }
 
@@ -46,6 +47,8 @@ export function initializeWorkStage(): WorkStageController | undefined {
   let paused = document.hidden;
   let scrollFrame = 0;
   const root = document.documentElement;
+  const loadReveal = !window.location.hash && !root.dataset.caseReturn && !reduced.matches && window.scrollY <= collapseAtScrollY && shouldRevealWorkOnLoad(window.innerWidth, section.getBoundingClientRect().top, window.innerHeight * sectionRevealRatio);
+  let introFinished = false;
   const canAnimate = typeof panel.animate === 'function';
   const floatingMotion = () => canAnimate && canShiftWorkStage(root.dataset.workStageLayout === 'true', reduced.matches);
   let preciseDesktop = floatingMotion();
@@ -130,7 +133,8 @@ export function initializeWorkStage(): WorkStageController | undefined {
   };
 
   const revealHeading = (stageTop = section.getBoundingClientRect().top) => {
-    if (!shouldRevealWorkContent(stageTop, window.scrollY, window.innerHeight * sectionRevealRatio)) return;
+    const readyOnLoad = loadReveal && introFinished && shouldRevealWorkOnLoad(window.innerWidth, stageTop, window.innerHeight * sectionRevealRatio);
+    if (!shouldRevealWorkContent(stageTop, window.scrollY, window.innerHeight * sectionRevealRatio) && !readyOnLoad) return;
     if (headingRevealed) {
       if (headingResolved) showHeadingImmediately();
       return;
@@ -324,6 +328,13 @@ export function initializeWorkStage(): WorkStageController | undefined {
 
   return {
     startIntro() { section.classList.add('is-work-intro-complete'); },
+    revealAfterIntro(finished) {
+      void finished.then(() => {
+        if (signal.aborted || !loadReveal) return;
+        introFinished = true;
+        revealHeading();
+      });
+    },
     setPaused(value) {
       paused = value;
       shiftMotion?.setPaused(value);

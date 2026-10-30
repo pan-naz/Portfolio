@@ -438,23 +438,26 @@ html[data-work-stage-layout='true'] .about-details::before { left: max(0px, calc
 @media (max-width: 1439px) {
   .process-tags { position: static; display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0 var(--gutter-right) var(--space-8) calc(var(--header-inset) + var(--safe-left)); }
   /* Move only the row and hero content; compensate below to retain the outer frame. */
-  .hero { --hero-process-rise: calc(var(--header-inset) + var(--control-icon) + var(--space-8) + var(--safe-top) - var(--hero-process-top)); padding-top: var(--hero-process-top); padding-bottom: calc(var(--hero-bottom-desktop) + var(--space-8) + var(--space-2) + var(--hero-process-rise)); }
-  .hero-description { max-width: min(625px, 100%); }
-  .skill-marquee { width: 170px; }
+  .hero { --hero-description-max: 625px; --hero-chip-column-width: 170px; --hero-process-rise: calc(var(--header-inset) + var(--control-icon) + var(--space-8) + var(--safe-top) - var(--hero-process-top)); padding-top: var(--hero-process-top); padding-bottom: calc(var(--hero-bottom-desktop) + var(--space-8) + var(--space-2) + var(--hero-process-rise)); }
+  .hero-description { max-width: min(var(--hero-description-max), 100%); }
+  .skill-marquee { width: var(--hero-chip-column-width); }
 }
 @media (max-width: 1023px) {
-  .skill-marquee { position: relative; top: auto; right: auto; margin: var(--space-8) var(--gutter-right) 0 auto; height: var(--hero-marquee-height-compact); width: 100%; max-width: 240px; }
-  .hero { padding-bottom: calc(var(--hero-bottom-compact) + var(--space-8) + var(--space-2) + var(--hero-process-rise)); }
+  .hero { min-height: 800px; }
   .tools-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: var(--space-6); }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hero-content { width: calc(100% - var(--header-inset) * 2 - var(--safe-left) - var(--safe-right)); margin-inline: calc(var(--header-inset) + var(--safe-left)) calc(var(--header-inset) + var(--safe-right)); }
+  .hero-description { max-width: min(var(--hero-description-max), calc(100% - var(--hero-chip-column-width) - var(--space-8))); }
 }
 @media (max-width: 767px) {
   html { scroll-padding-top: calc(var(--scroll-clearance) + var(--safe-top)); }
   .header-controls { gap: var(--space-3); }
-  .hero { padding-bottom: calc(var(--hero-bottom-compact) + var(--space-8) + var(--hero-process-rise)); min-height: 800px; }
+  .hero { padding-bottom: calc(var(--hero-bottom-compact) + var(--space-8) + var(--hero-process-rise)); }
   .hero-eyebrow { margin-bottom: var(--space-8); }
   .hero-description { margin-top: var(--space-6); }
   .process-tags { margin-bottom: var(--space-8); }
-  .skill-marquee { margin-top: var(--space-6); }
+  .skill-marquee { position: relative; top: auto; right: auto; margin: var(--space-6) var(--gutter-right) 0 auto; height: var(--hero-marquee-height-compact); width: 100%; max-width: 240px; }
   .work-stage-surface { padding-top: var(--space-12); }
   .work-panel { bottom: var(--space-24); }
   .section-heading { grid-template-columns: 1fr; gap: var(--space-6); }
